@@ -1,0 +1,28 @@
+{
+  "name": "soajs.installer",
+  "description": "soajs installer to install soajs dashboard",
+  "version": "0.0.1",
+  "author": {
+    "name": "soajs team",
+    "email": "team@soajs.org"
+  },
+  "keywords": [
+    "soajs",
+    "api",
+    "portal",
+    "analytics",
+    "visualizations",
+    "dashboards",
+    "dashboarding"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:soajs/soajs.installer.git"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": "*"
+  },
+  "dependencies": {
+  }
+}
