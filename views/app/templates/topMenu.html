@@ -1,0 +1,37 @@
+<div id="big">
+	<div id="bigImage">
+		<img ng-src="images/big2.png" border="0"/>
+	</div>
+</div>
+<div id="menu">
+	<div class="area">
+		<div class="title">
+			<img src='images/logo.png' height='40' alt='logo'/>
+		</div>
+		<div id="topMenu">
+			<div class="area">
+				<ul class="menu-tree">
+					<li class="menuItem" id="gi" ng-click="activateMenu('gi')"><a href="#/gi">
+						<div>General</div>
+					</a></li>
+					<li class="menuItem" id="security" ng-click="activateMenu('security')"><a href="#/security">
+						<div>Security</div>
+					</a></li>
+					<li class="menuItem" id="clusters" ng-click="activateMenu('clusters')"><a href="#/clusters">
+						<div>Clusters</div>
+					</a></li>
+					<li class="menuItem" id="deployment" ng-click="activateMenu('deployment')"><a href="#/deployment">
+						<div>Deployment</div>
+					</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="menu2">
+	<div class="area">
+		<div class="title">
+			<a class="btn btn-success" href="" ng-click="playSimulation();">Click Here to Start</a>
+		</div>
+	</div>
+</div>

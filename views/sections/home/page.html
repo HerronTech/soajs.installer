@@ -1,0 +1,66 @@
+<div class="area">
+	<form >
+		<div class="header">
+			<h3>Welcome to SOAJS Installer</h3>
+		</div>
+		<p>
+			Hello Beaver and welcome to the SOAJS installer.<br />
+			This Wizard will guide you through the steps needed to customize and install a fresh copy of SOAJS on your local or remote machine.
+		</p>
+		<hr>
+		<h3>Prerequisites:</h3>
+		<p>
+			Before you proceed, make sure that the following technologies are installed depending on the type of deployment you want:
+		</p>
+		<br />
+		<fieldset>
+			<legend>Manual Installation</legend>
+			<div>
+				<b>Ubuntu:</b>
+				<pre class="bash"># Install NodeJs, NPM, MongoDB & Nginx
+$ sudo apt-get update && sudo apt-get install -y npm nodejs mongodb nginx
+$ sudo ln -s /usr/bin/nodejs /usr/bin/node
+# Start MongoDB
+$ sudo service mongodb start</pre>
+				<br />
+				<b>Mac:</b>
+				<pre class="bash"># Install Brew
+$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+$ brew update
+$ brew upgrade
+$ brew services
+
+# Install NodeJS, MongoDB, Nginx
+$ brew install homebrew/versions/node012 mongodb nginx
+# Start MongoDB
+$ brew services start mongodb</pre>
+			</div>
+		</fieldset>
+		<br /><br />
+		<fieldset>
+			<legend>Docker Installation</legend>
+			<div>
+				<b>Ubuntu:</b>
+				<pre></pre>
+				<br />
+				<b>Mac:</b>
+				<pre></pre>
+			</div>
+		</fieldset>
+		<br />
+		<fieldset>
+			<legend>Kubernetes Installation</legend>
+			<div>
+				<b>Ubuntu:</b>
+				<pre></pre>
+				<br />
+				<b>Mac:</b>
+				<pre></pre>
+			</div>
+		</fieldset>
+		<br />
+		<div class="w-100 table">
+			<a href="#/gi" class="f-right btn btn-sm btn-primary">Proceed</a>
+		</div>
+	</form>
+</div>

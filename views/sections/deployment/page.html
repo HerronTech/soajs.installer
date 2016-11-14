@@ -1,0 +1,111 @@
+<div class="area" ng-controller="deploymentCtrl">
+	<div ng-show="alerts && alerts.length > 0">
+		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="deployment.closeAlert($index)">
+			{{alert.msg}}
+		</alert>
+	</div>
+	<form ng-hide="confirmation" name="deploymentForm" class="css-form" novalidate ng-submit="deploymentForm.$valid && fillDeployment();">
+		<div class="header">
+			<h3>Deployment Information</h3>
+		</div>
+		<table width="100%" cellspacing="0" cellpadding="0" border="0">
+			<tbody>
+				<tr class="form-group tr-code-wrapper">
+					<td class="form-select">
+						<div id="deployDriver-wrapper">
+							<label>Deployment Type</label>
+							<select ng-required="true" class="form-control" name="deployDriver" id="deployDriver" ng-model="deployment.deployDriver" ng-change="evaluateDeploymentChoice()">
+								<option value="manual">Manual Deployment</option>
+								<option value="container.docker.local">Docker Swarm Local</option>
+								<option value="container.docker.remote">Docker Swarm Remote</option>
+								<option value="container.kubernetes.local">Kubernetes Local</option>
+								<option value="container.kubernetes.remote">Kubernetes Remote</option>
+							</select>
+							<div class="fieldMsg hint">Specify how you want to deploy SOAJS</div>
+						</div>
+					</td>
+				</tr>
+				<tr class="form-group tr-code-wrapper" ng-show="ha && !local">
+					<td class="form-select">
+						<div id="containerHost-wrapper">
+							<label>Master Node Hostname/IP</label>
+							<input type="text" ng-required="false" class="form-control" name="containerHost" id="containerHost" ng-model="deployment.containerHost"/>
+							<div class="fieldMsg hint">Specify the Hostname/IP of the Master Node.</div>
+						</div>
+					</td>
+				</tr>
+				<tr class="form-group tr-code-wrapper" ng-show="ha && !local">
+					<td class="form-select">
+						<div id="containerDir-wrapper">
+							<label>Certificates Directory</label>
+							<input type="text" ng-required="false" class="form-control" name="containerDir" id="containerDir" ng-model="deployment.containerDir"/>
+							<div class="fieldMsg hint">Specify the Certificates Director for HA Deployment.</div>
+						</div>
+					</td>
+				</tr>
+				<tr class="form-group tr-code-wrapper" ng-show="ha">
+					<td class="form-select">
+						<div id="mongoExt-wrapper">
+							<input class="f-left form-control" id="mongoExt" name="mongoExt" ng-model="deployment.mongoExt" tooltip="Check the box if you want Mongo to be outside the container cloud." ng-required="false" type="checkbox"/>&nbsp;<label>External
+							Mongo</label>
+							
+							<div class="fieldMsg hint">Specify if Mongo should be outside the container cloud</div>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="footer c-both table w-100">
+			<br/>
+			<input value="Go Back" class="btn btn-sm btn-danger f-left" type="button" ng-click="goBack()"/>
+			<input value="Proceed" class="btn btn-sm btn-primary f-right" type="submit"/>
+		</div>
+	</form>
+	<div ng-show="confirmation" class="w-100 table">
+		<form>
+			<div class="header">
+				<h3>Overview</h3>
+			</div>
+		</form>
+		<div class="box">
+			<div class="box-heading">General Information</div>
+			<div class="box-content"><pre ng-bind-html="data.gi"></pre></div>
+		</div>
+		<div class="box">
+			<div class="box-heading">Security Information</div>
+			<div class="box-content"><pre ng-bind-html="data.security"></pre></div>
+		</div>
+		<div class="box">
+			<div class="box-heading">Clusters Information</div>
+			<div class="box-content"><pre ng-bind-html="data.clusters"></pre></div>
+		</div>
+		<div class="box">
+			<div class="box-heading">Deployment Information</div>
+			<div class="box-content"><pre ng-bind-html="data.deployment"></pre></div>
+		</div>
+		<input value="Go Back" class="btn btn-sm btn-danger f-left" type="button" ng-click="confirmation=false;"/>
+		<input type="button" value="Install / Re-Install SOAJS" class="btn btn-success f-right" ng-click="installSOAJS()"/>
+	</div>
+</div>
+<script type="text/ng-template" id="deployModal.tmpl">
+	<div class="modal-body">
+		<h4 style="text-align: center;">SOAJS Installed Successfully !</h4>
+		<p>
+			SOAJS Installation Script has been Generated.<br/>
+			Run the following command in your termnial and SOAJS will be installed and deployed.<br />
+		</p>
+		<pre class="bash"><code># Run this in your terminal
+{{cmd}}</code></pre>
+		<p>
+			Update your hosts file with the following entries:
+		</p>
+		<pre class="bash"><code>{{hosts.api}}
+{{hosts.site}}</code></pre>
+		<p>
+			Once you finish click the following link and you will be taken to the login page of the dashboard: <a href="{{ui}}" target="_blank">{{ui}}</a>
+		</p>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" ng-click="finalize()">OK</button>
+	</div>
+</script>

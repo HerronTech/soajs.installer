@@ -24,5 +24,11 @@
     "node": "*"
   },
   "dependencies": {
+    "async": "*",
+    "mkdirp": "*",
+    "ncp": "*",
+    "rimraf": "*",
+    "soajs": "*",
+    "whereis": "*"
   }
 }

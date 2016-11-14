@@ -1,0 +1,96 @@
+<div class="area" ng-controller="giCtrl">
+	<div ng-show="alerts && alerts.length > 0">
+		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="gi.closeAlert($index)">
+			{{alert.msg}}
+		</alert>
+	</div>
+	<form name="giForm" class="css-form" novalidate ng-submit="giForm.$valid && fillBI();">
+		<div class="header">
+			<h3>General Information</h3>
+		</div>
+		<fieldset>
+			<legend>Domain Information</legend>
+			<table width="100%" cellspacing="0" cellpadding="0" border="0">
+				<tbody>
+					<tr class="form-group tr-code-wrapper">
+						<td class="form-select">
+							<div id="domain-wrapper">
+								<label>Domain Name</label>
+								<input class="form-control" id="domain" name="domain" ng-model="gi.domain" value="{{gi.domain}}" placeholder="{{gi.domain}}" tooltip="Enter the Domain name of your application" ng-required="true" type="text" />
+								<div class="fieldMsg hint">Provide a domain name for your application and SOAJS will use it in the last step for deployment.</div>
+							</div>
+						</td>
+					</tr>
+					<tr class="form-group tr-code-wrapper">
+						<td class="form-select">
+							<div id="api-wrapper">
+								<label>API Prefix</label>
+								<input class="form-control" id="api" name="api" ng-model="gi.api" value="{{gi.api}}" placeholder="{{gi.api}}" tooltip="Provide an API prefix to the domain you entered above." ng-required="true" type="text" />
+								<div class="fieldMsg hint">Provide the API prefix to the domain you entered. <u>Ex:</u> api -> api.mydomain.com</div>
+							</div>
+						</td>
+					</tr>
+					<tr class="form-group tr-code-wrapper">
+						<td class="form-select">
+							<div id="site-wrapper">
+								<label>Site Prefix</label>
+								<input class="form-control" id="site" name="site" ng-model="gi.site" value="{{gi.site}}" placeholder="{{gi.site}}" tooltip="Provide a Site prefix to the domain you entered above." ng-required="true" type="text" />
+								<div class="fieldMsg hint">Provide the Site prefix to the domain you entered. <u>Ex:</u> site -> site.mydomain.com</div>
+							</div>
+						</td>
+					</tr>
+					<tr class="form-group tr-code-wrapper">
+						<td class="form-select">
+							<div id="wrkDir-wrapper">
+								<label>Work Directory</label>
+								<input class="form-control" id="wrkDir" name="wrkDir" ng-model="gi.wrkDir" value="{{gi.wrkDir}}" placeholder="{{gi.wrkDir}}" tooltip="Provide an optional Work Directory for your application." ng-required="true" type="text" />
+								<div class="fieldMsg hint">Work Directory is the location of where the soajs repositories will be installed.</div>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</fieldset>
+		<br /><br /><br />
+		<fieldset>
+			<legend>Administrator Account</legend>
+			<table width="100%" cellspacing="0" cellpadding="0" border="0">
+				<tbody>
+					<tr class="form-group tr-code-wrapper">
+						<td class="form-select">
+							<div id="email-wrapper">
+								<label>Email</label>
+								<input class="form-control" id="email" name="email" ng-model="gi.email" value="{{gi.email}}" placeholder="{{gi.email}}" tooltip="Enter the Owner Email" ng-required="true" type="text" />
+								<div class="fieldMsg hint">Provide an email for the owner of your application.</div>
+							</div>
+						</td>
+					</tr>
+					<tr class="form-group tr-code-wrapper">
+						<td class="form-select">
+							<div id="username-wrapper">
+								<label>Username</label>
+								<input class="form-control" id="username" name="username" ng-model="gi.username" value="{{gi.username}}" placeholder="{{gi.username}}" tooltip="Enter the Owner username of your application" ng-required="true" type="text" />
+								<div class="fieldMsg hint">Provide a username for the owner of your application.</div>
+							</div>
+						</td>
+					</tr>
+					<tr class="form-group tr-code-wrapper">
+						<td class="form-select">
+							<div id="password-wrapper">
+								<label>Password</label>
+								<input class="form-control" id="password" name="password" ng-model="gi.password" value="{{gi.password}}" placeholder="{{gi.password}}" tooltip="Enter the Owner password of your application." ng-required="true" type="text" />
+								<div class="fieldMsg hint">Provide a password for the owner of your application.</div>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</fieldset>
+		<div class="footer c-both table w-100">
+			<br />
+			<input value="Go Back" class="btn btn-sm btn-danger f-left" type="button" ng-click="goBack()"/>
+			<input value="Skip" class="f-right btn btn-sm btn-warning" type="button" ng-click="skip()" />
+			<input value="Proceed" class="f-right btn btn-sm btn-primary" type="Submit" />
+		</div>
+	</form>
+</div>

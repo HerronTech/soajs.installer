@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html ng-app="mainApp">
+<head>
+	<title>SOAJS Installer</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<meta name="robots" content="index, follow">
+	
+	<!--STYLES-->
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/page.css">
+	<link rel="stylesheet" href="css/form.css">
+	
+	<!--GLOBAL CONFIG-->
+	<script src="config.js"></script>
+	
+	<!--SCRIPTS-->
+	<script src="app/scripts/jquery.min.js"></script>
+	<script src="app/scripts/angular.min.js"></script>
+	<script src="app/scripts/angular-route.min.js"></script>
+	<script src="app/scripts/angular-sanitize.min.js"></script>
+	<script src="app/scripts/ui-bootstrap-tpls.js"></script>
+	<script src="app/scripts/require.js"></script>
+	<script src="app/navigation.js"></script>
+	<script src="app/controller.js"></script>
+	<script src="app/filters.js"></script>
+	<script src="app/services.js"></script>
+
+</head>
+<body ng-controller="mainCtrl">
+	<div id="wrapper">
+		<top-menu></top-menu>
+		<div id="content" ng-view></div>
+		<!--<div id="footer" ng-include="'app/templates/footer.html'"></div>-->
+	</div>
+</body>
+</html>

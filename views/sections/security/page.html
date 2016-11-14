@@ -1,0 +1,62 @@
+<div class="area" ng-controller="securityCtrl">
+	<div ng-show="alerts && alerts.length > 0">
+		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="security.closeAlert($index)">
+			{{alert.msg}}
+		</alert>
+	</div>
+	<form name="securityForm" class="css-form" novalidate ng-submit="securityForm.$valid && fillSecurity();">
+		<div class="header">
+			<h3>Security Information</h3>
+		</div>
+		<table width="100%" cellspacing="0" cellpadding="0" border="0">
+				<tbody>
+					<tr class="form-group tr-code-wrapper">
+						<td class="form-select">
+							<div id="key-wrapper">
+								<label>Key Security</label>
+								<input class="form-control" id="key" name="key" ng-model="security.key" value="{{security.key}}" placeholder="{{security.key}}" tooltip="Enter a key security key encryption phrase" ng-required="false" type="text" />
+								<div class="fieldMsg hint">Key Security phrase is used to encrypt and generate external keys that are used in the headers when making calls to your APIs.</div>
+							</div>
+						</td>
+					</tr>
+					<tr class="form-group tr-code-wrapper">
+						<td class="form-select">
+							<div id="cookie-wrapper">
+								<label>Cookie Security</label>
+								<input class="form-control" id="cookie" name="cookie" ng-model="security.cookie" value="{{security.cookie}}" placeholder="{{security.cookie}}" tooltip="Enter a cookie security encryption phrase" ng-required="false" type="text" />
+								<div class="fieldMsg hint">Cookie phrase is used to encrypt cookie values that are used when making calls to your APIs.</div>
+							</div>
+						</td>
+					</tr>
+					<tr class="form-group tr-code-wrapper">
+						<td class="form-select">
+							<div id="session-wrapper">
+								<label>Session Security</label>
+								<input class="form-control" id="session" name="session" ng-model="security.session" value="{{security.session}}" placeholder="{{security.session}}" tooltip="Enter a session security encryption phrase" ng-required="false" type="text" />
+								<div class="fieldMsg hint">Session phrase is used to encrypt session values on the server.</div>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		<div class="footer c-both table w-100">
+			<br />
+			<input value="Go Back" class="btn btn-sm btn-danger f-left" type="button" ng-click="goBack()"/>
+			<input value="Skip" class="f-right btn btn-sm btn-warning" type="button" ng-click="skip();"/>
+			<input value="Proceed" class="btn btn-sm btn-primary f-right" type="submit" />
+		</div>
+	</form>
+</div>
+<script type="text/ng-template" id="keyModal.tmpl">
+	<div class="modal-body">
+		<h4 style="text-align: center;">External Key Generated</h4>
+		<p>
+			Since you have changed the default key security phrase, a new external key has been generated for your application.<br />
+			Copy this new external key and put it in your custom UI config.js file along with the domain name you entered so that the dashboard UI can communicate with SOAJS cloud.
+		</p>
+		<textarea class="form-control">{{newExtKey}}</textarea>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" ng-click="proceedToClusters()">Proceed</button>
+	</div>
+</script>
