@@ -89,7 +89,7 @@
 		<div class="footer c-both table w-100">
 			<br />
 			<input value="Go Back" class="btn btn-sm btn-danger f-left" type="button" ng-click="goBack()"/>
-			<input value="Skip" class="f-right btn btn-sm btn-warning" type="button" ng-click="skip()" />
+			<input value="Skip" class="f-right btn btn-sm btn-warning" type="button" ng-confirm-click="Are you sure you want to skip? Your changes in this section will not be saved." ng-click="skip()" />
 			<input value="Proceed" class="f-right btn btn-sm btn-primary" type="Submit" />
 		</div>
 	</form>

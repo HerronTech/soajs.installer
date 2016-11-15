@@ -190,24 +190,29 @@ module.exports = {
 	"importMongo": function (folder, body, cb) {
 		//copy data.js to startup
 		//add prefix while copying
-		fs.readFile(dataDir + "data.js", "utf8", function (error, readData) {
-			if (error) {
-				return res.json(req.soajs.buildResponse({"code": 400, "msg": error.message}));
-			}
-			
-			var writeStream = fs.createWriteStream(folder + "data.js");
-			writeStream.write("var dbPrefix = '" + body.clusters.prefix + "';" + os.EOL);
-			writeStream.write(readData);
-			writeStream.end();
-			
-			//execute import data.js
-			var execString = "cd " + folder + " && mongo --host " + body.clusters.servers[0].host + ":" + body.clusters.servers[0].port;
-			if (body.clusters.credentials && body.clusters.credentials.username && body.clusters.credentials.password && body.clusters.URLParam && body.clusters.URLParam.authSource) {
-				execString += " -u " + body.clusters.credentials.username + " -p " + body.clusters.credentials.password + " --authenticationDatabase " + body.clusters.URLParam.authSource;
-			}
-			execString += " data.js";
-			exec(execString, cb);
-		});
+		if(body.deployment.deployType === 'manual'){
+			fs.readFile(dataDir + "data.js", "utf8", function (error, readData) {
+				if (error) {
+					return res.json(req.soajs.buildResponse({"code": 400, "msg": error.message}));
+				}
+				
+				var writeStream = fs.createWriteStream(folder + "data.js");
+				writeStream.write("var dbPrefix = '" + body.clusters.prefix + "';" + os.EOL);
+				writeStream.write(readData);
+				writeStream.end();
+				
+				//execute import data.js
+				var execString = "cd " + folder + " && mongo --host " + body.clusters.servers[0].host + ":" + body.clusters.servers[0].port;
+				if (body.clusters.credentials && body.clusters.credentials.username && body.clusters.credentials.password && body.clusters.URLParam && body.clusters.URLParam.authSource) {
+					execString += " -u " + body.clusters.credentials.username + " -p " + body.clusters.credentials.password + " --authenticationDatabase " + body.clusters.URLParam.authSource;
+				}
+				execString += " data.js";
+				exec(execString, cb);
+			});
+		}
+		else{
+			return cb(null, true);
+		}
 	},
 	
 	"unifyData": function (def, over) {
