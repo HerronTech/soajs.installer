@@ -4,6 +4,9 @@ var mongoHostname = "dashboard_soajsData";
 module.exports = {
 	"folder": process.env.SOAJS_DATA_FOLDER,
 	"profile": process.env.SOAJS_PROFILE,
+	"git":{
+		"branch": process.env.SOAJS_GIT_BRANCH || 'develop'
+	},
 	"mongo":{
 		"hostname": mongoHostname,
 		"services": {
@@ -21,6 +24,7 @@ module.exports = {
 			"https": process.env.NGINX_HTTPS_PORT || 443
 		}
 	},
+	"imagePrefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
 	"docker":{
 		"mongoCollection": 'docker',
 		"machineIP": process.env.CONTAINER_HOST || "127.0.0.1",
