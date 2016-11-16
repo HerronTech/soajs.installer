@@ -1,11 +1,12 @@
 'use strict';
+var config = require("../../config.js");
 
 var config = {
     servName: 'dashboard_soajsData',
     servReplica: 1,
     servNetwork: [
     	{
-		    Target: process.env.DOCKER_NETWORK || 'soajsnet'
+		    Target: config.docker.network
     	}
     ],
 
@@ -30,7 +31,7 @@ var config = {
     exposedPorts: [
         {
             "Protocol": "tcp",
-            "PublishedPort": process.env.MONGO_PORT,
+            "PublishedPort": config.mongo.port,
             "TargetPort": 27017
         }
     ]

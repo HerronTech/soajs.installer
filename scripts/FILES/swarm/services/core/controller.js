@@ -26,7 +26,7 @@ var config = {
 		
 		'SOAJS_DEPLOY_HA=true',
 		
-		'SOAJS_PROFILE=/opt/soajs/FILES/profiles/profile.js',
+		'SOAJS_PROFILE=/opt/soajs/FILES/profiles/'+config.profile,
 		'SOAJS_SRV_AUTOREGISTERHOST=true',
 		
 		'SOAJS_GIT_OWNER=' + src.owner,

@@ -1,9 +1,10 @@
 'use strict';
+var config = require("../../config.js");
 
 var src = {
 	owner: 'soajs',
 	repo: 'soajs.dashboard',
-	branch: process.env.SOAJS_GIT_BRANCH || 'develop'
+	branch: config.git.branch
 };
 
 var config = {
@@ -11,12 +12,12 @@ var config = {
 	servReplica: 1,
 	servNetwork: [
 		{
-			Target: process.env.DOCKER_NETWORK || 'soajsnet'
+			Target: config.docker.network
 		}
 	],
 	
 	image: {
-		prefix: process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
+		prefix: config.imagePrefix,
 		name: 'soajs'
 	},
 	env: [
@@ -25,7 +26,7 @@ var config = {
 		
 		'SOAJS_DEPLOY_HA=true',
 		
-		'SOAJS_PROFILE=/opt/soajs/FILES/profiles/profile.js',
+		'SOAJS_PROFILE=/opt/soajs/FILES/profiles/'+config.profile,
 		'SOAJS_SRV_AUTOREGISTERHOST=true',
 		
 		'SOAJS_GIT_OWNER=' + src.owner,
@@ -38,8 +39,8 @@ var config = {
 		{
 			"Type": "bind",
 			"ReadOnly": true,
-			"Source": process.env.SOAJS_DOCKER_SOCKET || '/var/run/docker.sock',
-			"Target": process.env.SOAJS_DOCKER_SOCKET || '/var/run/docker.sock',
+			"Source": config.docker.socketPath,
+			"Target": config.docker.socketPath,
 		}
 	],
 	labels: {
