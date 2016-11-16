@@ -3,8 +3,8 @@
 var mongoHostname = "dashboard_soajsData";
 module.exports = {
 	"masterDomain": process.env.MASTER_DOMAIN || 'soajs.org',
-	"apiPrefix": process.env.API_PREFIX,
-	"sitePrefix": process.env.SITE_PREFIX,
+	"apiPrefix": process.env.API_PREFIX || "dashboard-api",
+	"sitePrefix": process.env.SITE_PREFIX || "dashboard",
 	"folder": process.env.SOAJS_DATA_FOLDER,
 	"profile": process.env.SOAJS_PROFILE,
 	"git":{
@@ -35,7 +35,7 @@ module.exports = {
 			"http": process.env.NGINX_HTTP_PORT || 80,
 			"https": process.env.NGINX_HTTPS_PORT || 443
 		},
-		"ssl": process.env.SOAJS_NX_SSL || null,
+		"ssl": process.env.SOAJS_NX_SSL || false,
 	},
 	"imagePrefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
 	"docker":{
