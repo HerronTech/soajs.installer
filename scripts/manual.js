@@ -12,7 +12,7 @@ var exec = require("child_process").exec;
 process.env.NODE_ENV = "production";
 var LOC = (process.env.SOAJS_DEPLOY_DIR || "/opt") + "/";
 var DEPLOY_FROM = process.env.DEPLOY_FROM || "GIT";
-var GIT_BRANCH = process.env.DEPLOY_BRANCH || "develop";
+var GIT_BRANCH = process.env.SOAJS_GIT_BRANCH || "develop";
 var NODE = process.env.NODE_PATH || "node";
 var NPM = process.env.NPM_PATH || "npm";
 var WRK_DIR = LOC + 'soajs/node_modules';
@@ -233,29 +233,48 @@ function install(cb) {
 	
 }
 
-fs.exists(WRK_DIR, function (exists) {
-	if (!exists) {
-		mkdirp(WRK_DIR, function (error) {
-			if (error) {
-				throw error;
-			}
+function importData(cb){
+	var folder = process.env.SOAJS_DATA_FOLDER;
+	delete require.cache[process.env.SOAJS_PROFILE];
+	var profile = require(process.env.SOAJS_PROFILE);
+	
+	//execute import data.js
+	var execString = "cd " + folder + " && mongo --host " + profile.clusters.servers[0].host + ":" + profile.clusters.servers[0].port;
+	if (profile.clusters.credentials && profile.clusters.credentials.username && profile.clusters.credentials.password && profile.clusters.URLParam && profile.clusters.URLParam.authSource) {
+		execString += " -u " + profile.clusters.credentials.username + " -p " + profile.clusters.credentials.password + " --authenticationDatabase " + profile.clusters.URLParam.authSource;
+	}
+	execString += " data.js";
+	exec(execString, cb);
+}
 
+importData(function(error){
+	if(error){
+		throw error;
+	}
+	fs.exists(WRK_DIR, function (exists) {
+		if (!exists) {
+			mkdirp(WRK_DIR, function (error) {
+				if (error) {
+					throw error;
+				}
+				
+				install(function (error) {
+					if (error) {
+						throw error;
+					}
+					
+					console.log("SOAJS has been deployed !");
+				});
+			});
+		}
+		else {
 			install(function (error) {
 				if (error) {
 					throw error;
 				}
-
+				
 				console.log("SOAJS has been deployed !");
 			});
-		});
-	}
-	else {
-		install(function (error) {
-			if (error) {
-				throw error;
-			}
-
-			console.log("SOAJS has been deployed !");
-		});
-	}
+		}
+	});
 });
