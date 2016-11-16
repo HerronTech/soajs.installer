@@ -1,21 +1,21 @@
 'use strict';
-var config = require("../../config.js");
+var gConfig = require("../../config.js");
 
 var dashUISrc = {
-	branch: config.dashUISrc.branch
+	branch: gConfig.dashUISrc.branch
 };
 
 var customUISrc = {
-	owner: config.customUISrc.owner,
-	repo: config.customUISrc.repo,
-	branch: config.customUISrc.branch,
-	token: config.customUISrc.token
+	owner: gConfig.customUISrc.owner,
+	repo: gConfig.customUISrc.repo,
+	branch: gConfig.customUISrc.branch,
+	token: gConfig.customUISrc.token
 };
 
-var ssl = config.nginx.ssl;
+var ssl = gConfig.nginx.ssl;
 var deployerExtra = (ssl) ? ' -s' : '';
 
-var masterDomain = config.masterDomain;
+var masterDomain = gConfig.masterDomain;
 
 var controllerServiceName = 'dashboard_soajs_controller';
 var controllerServicePort = '4000';
@@ -25,20 +25,20 @@ var config = {
 	servReplica: 1,
 	servNetwork: [
 		{
-			Target: config.docker.network
+			Target: gConfig.docker.network
 		}
 	],
 	
 	image: {
-		prefix: config.imagePrefix,
+		prefix: gConfig.imagePrefix,
 		name: 'nginx'
 	},
 	env: [
 		'SOAJS_ENV=dashboard',
 		
 		'SOAJS_GIT_DASHBOARD_BRANCH=' + dashUISrc.branch,
-		'SOAJS_NX_API_DOMAIN=' + config.apiPrefix + '.' + masterDomain,
-		'SOAJS_NX_SITE_DOMAIN=' + config.sitePrefix + '.' + masterDomain,
+		'SOAJS_NX_API_DOMAIN=' + gConfig.apiPrefix + '.' + masterDomain,
+		'SOAJS_NX_SITE_DOMAIN=' + gConfig.sitePrefix + '.' + masterDomain,
 		
 		'SOAJS_NX_CONTROLLER_NB=1',
 		'SOAJS_NX_CONTROLLER_IP_1=' + controllerServiceName,
@@ -59,12 +59,12 @@ var config = {
 	exposedPorts: [
 		{
 			"Protocol": "tcp",
-			"PublishedPort": config.nginx.port.http,
+			"PublishedPort": gConfig.nginx.port.http,
 			"TargetPort": 80
 		},
 		{
 			"Protocol": "tcp",
-			"PublishedPort": config.nginx.port.https,
+			"PublishedPort": gConfig.nginx.port.https,
 			"TargetPort": 443
 		}
 	]
@@ -75,7 +75,7 @@ if (customUISrc.repo && customUISrc.owner) {
 	config.env.push('SOAJS_GIT_OWNER=' + customUISrc.owner);
 	
 	if (customUISrc.branch) {
-		config.env.push('SOAJS_GIT_DASHBOARD_BRANCH=' + config.git.branch || "develop");
+		config.env.push('SOAJS_GIT_DASHBOARD_BRANCH=' + gConfig.git.branch || "develop");
 	}
 	if (customUISrc.token) {
 		config.env.push('SOAJS_GIT_TOKEN=' + customUISrc.token);
