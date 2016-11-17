@@ -13,20 +13,20 @@ var profile = require(config.profile);
 var mongo = new soajs.mongo(profile);
 
 var lib = {
-	
-	ifSwarmExists: function (deployer, cb) {
-		deployer.info(function (error, info) {
-			if (error) return cb(error);
-			
-			var swarmExists = false;
-			if (info.Swarm) {
-				swarmExists = (info.Swarm.LocalNodeState === 'active' && info.Swarm.Nodes > 0);
-			}
-			
-			return cb(null, swarmExists);
-		});
-	},
-	
+
+    ifSwarmExists: function (deployer, cb) {
+        deployer.info(function (error, info) {
+            if (error) return cb(error);
+
+            var swarmExists = false;
+            if (info.Swarm) {
+                swarmExists = (info.Swarm.LocalNodeState === 'active' && info.Swarm.Nodes > 0);
+            }
+
+            return cb(null, swarmExists);
+        });
+    },
+
     printProgress: function (message, counter) {
         process.stdout.clearLine();
         process.stdout.write(showTimestamp() + ' - ' + message + ' ' + showDots() + '\r');
@@ -34,7 +34,9 @@ var lib = {
         function showDots() {
             var output = '';
             var numOfDots = counter % 5;
-            for (var i = 0; i < numOfDots; i++) { output += '.'; }
+            for (var i = 0; i < numOfDots; i++) {
+                output += '.';
+            }
             return output;
         }
 
@@ -42,16 +44,17 @@ var lib = {
             var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             var now = new Date();
             return '' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getHours() + ':' +
-                    ((now.getMinutes().toString().length === 2) ? now.getMinutes() : '0' + now.getMinutes()) + ':' +
-                    ((now.getSeconds().toString().length === 2) ? now.getSeconds() : '0' + now.getSeconds());
+                ((now.getMinutes().toString().length === 2) ? now.getMinutes() : '0' + now.getMinutes()) + ':' +
+                ((now.getSeconds().toString().length === 2) ? now.getSeconds() : '0' + now.getSeconds());
         }
     },
 
-    getDeployer: function (deployerConfig, cb) {
-        if(typeof (deployerConfig) === 'string' && deployerConfig === '127.0.0.1'){
-            return cb(new Docker({socketPath: config.docker.socketPath}));
-        }
-        else if (deployerConfig.host === '127.0.0.1') {
+    getDeployer: function (dockerObj, cb) {
+        var deployerConfig = {
+            "host": dockerObj.machineIP,
+            "port": dockerObj.machinePort
+        };
+        if (typeof (deployerConfig.host) === 'string' && deployerConfig.host === '127.0.0.1') {
             return cb(new Docker({socketPath: config.docker.socketPath}));
         }
         else {
@@ -67,21 +70,21 @@ var lib = {
         var path = config.services.path.dir + group + '/';
         fs.exists(path, function (exists) {
             if (!exists) {
-                console.log ('Folder [' + path + '] does not exist, skipping ...');
+                console.log('Folder [' + path + '] does not exist, skipping ...');
                 return cb(null, true);
             }
 
             fs.readdir(path, function (error, content) {
                 if (error) return cb(error);
 
-                var regex = new RegExp ('[a-zA-Z0-9]*\.' + config.services.path.fileType, 'g');
+                var regex = new RegExp('[a-zA-Z0-9]*\.' + config.services.path.fileType, 'g');
                 var loadContent, allContent = [];
                 content.forEach(function (oneContent) {
                     if (oneContent.match(regex)) {
                         try {
                             loadContent = require(path + oneContent);
                         }
-                        catch(e) {
+                        catch (e) {
                             return cb(e);
                         }
                         allContent.push(loadContent);
@@ -94,12 +97,12 @@ var lib = {
 
     deployGroup: function (type, services, deployer, cb) {
         if (services.length === 0) {
-            console.log ('No services of type [' + type + '] found, skipping ...');
+            console.log('No services of type [' + type + '] found, skipping ...');
             return cb(null, true);
         }
 
         if (type === 'db' && config.mongo.external) {
-            console.log ('External Mongo deployment detected, data containers will not be deployed ...');
+            console.log('External Mongo deployment detected, data containers will not be deployed ...');
             return cb(null, true);
         }
 
@@ -109,13 +112,13 @@ var lib = {
     },
 
     importData: function (mongoInfo, cb) {
-        console.log ('Importing provision data to:', profile.servers[0].host + ":" + profile.servers[0].port);
-	    var execString = "cd " + folder + " && mongo --host " + profile.servers[0].host + ":" + profile.servers[0].port;
-	    if (profile.credentials && profile.credentials.username && profile.credentials.password && profile.URLParam && profile.URLParam.authSource) {
-		    execString += " -u " + profile.credentials.username + " -p " + profile.credentials.password + " --authenticationDatabase " + profile.URLParam.authSource;
-	    }
-	    execString += " data.js";
-	    exec(execString, cb);
+        console.log('Importing provision data to:', profile.servers[0].host + ":" + profile.servers[0].port);
+        var execString = "cd " + folder + " && mongo --host " + profile.servers[0].host + ":" + profile.servers[0].port;
+        if (profile.credentials && profile.credentials.username && profile.credentials.password && profile.URLParam && profile.URLParam.authSource) {
+            execString += " -u " + profile.credentials.username + " -p " + profile.credentials.password + " --authenticationDatabase " + profile.URLParam.authSource;
+        }
+        execString += " data.js";
+        exec(execString, cb);
     },
 
     deployService: function (deployer, options, cb) {
@@ -142,7 +145,7 @@ var lib = {
             if (error) return cb(error);
 
             async.each(services, function (oneService, callback) {
-                var serviceOptions = { id: oneService.ID };
+                var serviceOptions = {id: oneService.ID};
                 lib.deleteService(deployer, serviceOptions, callback);
             }, function (error, result) {
                 if (error) return cb(error);
@@ -153,7 +156,7 @@ var lib = {
                     if (error) return cb(error);
 
                     async.each(containers, function (oneContainer, callback) {
-                        var containerOptions = { id: oneContainer.Id };
+                        var containerOptions = {id: oneContainer.Id};
                         lib.deleteContainer(deployer, containerOptions, callback);
                     }, cb);
                 });
@@ -197,11 +200,11 @@ var lib = {
 
     addMongoInfo: function (services, mongoInfo, cb) {
         var mongoEnv = [];
-	
+
         if (config.mongo.external) {
             // if (!config.dataLayer.mongo.url || !config.dataLayer.mongo.port) {
             if (!profile.servers[0].host || !profile.servers[0].port) {
-                console.log ('ERROR: External Mongo information is missing URL or port, make sure SOAJS_MONGO_EXTERNAL_URL and SOAJS_MONGO_EXTERNAL_PORT are set ...');
+                console.log('ERROR: External Mongo information is missing URL or port, make sure SOAJS_MONGO_EXTERNAL_URL and SOAJS_MONGO_EXTERNAL_PORT are set ...');
                 return cb('ERROR: missing mongo information');
             }
 
@@ -214,10 +217,10 @@ var lib = {
                 mongoEnv.push('SOAJS_MONGO_PASSWORD=' + profile.credentials.password);
                 mongoEnv.push('SOAJS_MONGO_AUTH_DB=' + profile.URLParam.authSource);
             }
-	        
-            if(profile.URLParam.ssl){
-		        mongoEnv.push('SOAJS_MONGO_SSL=' + profile.URLParam.ssl);
-	        }
+
+            if (profile.URLParam.ssl) {
+                mongoEnv.push('SOAJS_MONGO_SSL=' + profile.URLParam.ssl);
+            }
         }
         else {
             mongoEnv.push('SOAJS_MONGO_NB=' + mongoInfo.dashboard.ips.length);
@@ -304,11 +307,11 @@ var lib = {
             }
 
             if (found) {
-                console.log (netName + ' network found, proceeding ...');
+                console.log(netName + ' network found, proceeding ...');
                 return cb(null, true);
             }
             else {
-                console.log (netName + ' network not found, creating ...');
+                console.log(netName + ' network not found, creating ...');
                 var networkParams = {
                     Name: netName,
                     Driver: 'overlay',
@@ -374,7 +377,7 @@ var lib = {
 
         var replicaCount = serviceOptions.Mode.Replicated.Replicas;
 
-        console.log ('Registering ' + serviceName + ' containers in docker collection ...');
+        console.log('Registering ' + serviceName + ' containers in docker collection ...');
 
         info.env = serviceEnv;
         info.running = true;
