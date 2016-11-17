@@ -16,6 +16,11 @@ module.exports = {
 	"errors": {},
 	"schema": {
 		'get': {
+			'/overview' :{
+				"_apiInfo":{
+					"l": "Load Overview"
+				}
+			},
 			'/installer/gi' :{
 				"_apiInfo":{
 					"l": "Load General Information"
@@ -43,6 +48,27 @@ module.exports = {
 			}
 		},
 		'post': {
+			'/overview' :{
+				"_apiInfo":{
+					"l": "Fill Overview"
+				},
+				'overview': {
+					"source":['body.overview'],
+					"required": false,
+					'validation':{
+						"type": "object",
+						"properties": {
+							"deployType" : {"type": "string", "required": true, "enum": ["manual", "container"]},
+							"deployDriver": {
+								"type": "string",
+								"required": true,
+								"enum": ["manual", "container.docker.local", "container.docker.remote", "container.kubernetes.local", "container.kubernetes.remote"]
+							}
+						},
+						"additionalProperties": false
+					}
+				}
+			},
 			'/installer/gi' :{
 				"_apiInfo":{
 					"l": "Override General Information"
@@ -129,12 +155,6 @@ module.exports = {
 					"validation":{
 						"type": "object",
 						"properties": {
-							"deployType" : {"type": "string", "required": true, "enum": ["manual", "container"]},
-							"deployDriver": {
-								"type": "string",
-								"required": true,
-								"enum": ["manual", "container.docker.local", "container.docker.remote", "container.kubernetes.local", "container.kubernetes.remote"]
-							},
 							"containerDir": {"type": "string", "required": false},
 							"containerHost": {"type": "string", "required": false, "format": "ipv4"},
 							"deployDockerNodes": {"type": "array", "required": false, "items": {"type": "string"}},

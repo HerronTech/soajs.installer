@@ -342,8 +342,12 @@ module.exports = {
 							"API_PREFIX": body.gi.api,
 							"SITE_PREFIX": body.gi.site,
 							"MASTER_DOMAIN": body.gi.domain,
+							"MONGO_EXT": body.deployment.mongoExt,
+							"MONGO_IP": "",
 							"CONTAINER_HOST": body.deployment.containerHost,
-							"MONGO_EXT": body.deployment.mongoExt
+							"SOAJS_DOCKER_REPLICA": 1,
+							"SOAJS_IMAGE_PREFIX": "",
+							"SOAJS_DATA_FOLDER": ""
 						};
 						for (var e in envs) {
 							runner.write("export " + e + "=" + envs[e] + os.EOL);
@@ -370,38 +374,5 @@ module.exports = {
 				return cb(null, true);
 			}
 		}
-		/*
-		 if local:
-		 
-		 1- check if previous swarm exists [ dsd.js 21 ]
-		 1.1- if yes, inspect swarm and get tokens [ dsd.js 26 ]
-		 1.1.1- delete previous containers [ dsd.js 32]
-		 1.1.2- deploy SOAJS [ dsd.js 36 ]
-		 
-		 1.2- if not, init Swarm [dsd.js 42 ]
-		 1.2.1- create new swarm [ dsd.js 49 ]
-		 1.2.2- repeat step 1.1 [ above ]
-		 
-		 2- deploy soajs
-		 2.1- start by creating swarm network [ dsd.js 68 ]
-		 2.2- read files from services.db
-		 2.2.1- if mongo external do nothing
-		 2.2.2- else
-		 2.2.2.1- create a container for mongo
-		 2.2.2.2- get mongo container ip to assure the container is up
-		 2.2.2.3- invoke fill files and generate the data folder [ already done ]
-		 2.2.2.4- import data to mongo container [ aya ip ??? ]
-		 
-		 2.3- read files from services.core folder and inject mongo info [dsd.js 107]
-		 2.3.1- for each service get service ip to assure that the service is up and running [ index.js 468 ]
-		 2.3.2- register the service in the docker collection [ index.js 491 ]
-		 
-		 2.4- read files from services.nginx folder and inject mongo info [dsd.js 114]
-		 */
-		
-		
-		/*
-		 if remote:
-		 */
 	}
 };

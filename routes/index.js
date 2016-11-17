@@ -1,13 +1,70 @@
 "use strict";
+var os = require("os");
+var path = require("path");
+
 var utils = require("./utils");
 
 //configuration file
 var dataDir = __dirname + "/../data/";
 
 var routes = {
+	"getOverview": function(req, res){
+		
+		var data = {
+			"manual": "",
+			"docker": "",
+			"kubernetes": ""
+		};
+		
+		if(process.platform === 'linux'){
+			data.manual = {
+				"v": path.resolve(__dirname + "/../scripts/pre/manual-linux.sh"),
+				"t": "sh"
+			};
+			data.docker = {
+				"v": path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
+				"t": "sh"
+			};
+			data.kubernetes = {
+				"v": path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
+				"l": "sh"
+			};
+		}
+		else if(process.platform === 'darwin'){
+			data.manual = {
+				"v": path.resolve(__dirname + "/../scripts/pre/manual-mac.sh"),
+				"t": "sh"
+			};
+			data.docker = {
+				"v": "https://download.docker.com/mac/beta/Docker.dmg",
+				"t": "link"
+			};
+			data.kubernetes = {
+				"v": path.resolve(__dirname + "/../scripts/pre/kubernetes-mac.sh"),
+				"l": "sh"
+			};
+		}
+		
+		utils.loadCustomData('deployment', function (customData) {
+			data.deployer = {
+				deployType: customData.deployType,
+				deployDriver: customData.deployDriver
+			};
+			return res.json(req.soajs.buildResponse(null, data));
+		});
+	},
+	"postOverview": function(req, res){
+		utils.updateCustomData(req, res, req.soajs.inputmaskData.overview, "deployment");
+	},
+	
 	"getGi": function (req, res) {
-		utils.loadCustomData('gi', function (customData) {
-			return res.json(req.soajs.buildResponse(null, customData || null));
+		utils.loadCustomData(null, function (customData) {
+			var data = null;
+			if(customData && customData.gi){
+				data = customData.gi;
+				data.disableWrkDir = (customData.deployment && customData.deployment !== 'manual');
+			}
+			return res.json(req.soajs.buildResponse(null, data));
 		});
 	},
 	"postGi": function (req, res) {

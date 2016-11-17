@@ -55,6 +55,8 @@ giApp.controller('giCtrl', ['$scope', 'ngDataApi', function($scope, ngDataApi) {
 				username: (response && response.username)? response.username : "owner",
 				password: (response && response.password)? response.password : "password"
 			};
+			
+			$scope.disableWrkDir = response.disableWrkDir;
 		});
 	};
 	$scope.loadBI();

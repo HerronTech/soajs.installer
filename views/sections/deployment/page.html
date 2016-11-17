@@ -10,22 +10,7 @@
 		</div>
 		<table width="100%" cellspacing="0" cellpadding="0" border="0">
 			<tbody>
-				<tr class="form-group tr-code-wrapper">
-					<td class="form-select">
-						<div id="deployDriver-wrapper">
-							<label>Deployment Type</label>
-							<select ng-required="true" class="form-control" name="deployDriver" id="deployDriver" ng-model="deployment.deployDriver" ng-change="evaluateDeploymentChoice()">
-								<option value="manual">Manual Deployment</option>
-								<option value="container.docker.local">Docker Swarm Local</option>
-								<option value="container.docker.remote">Docker Swarm Remote</option>
-								<option value="container.kubernetes.local">Kubernetes Local</option>
-								<option value="container.kubernetes.remote">Kubernetes Remote</option>
-							</select>
-							<div class="fieldMsg hint">Specify how you want to deploy SOAJS</div>
-						</div>
-					</td>
-				</tr>
-				<tr class="form-group tr-code-wrapper" ng-show="ha && !local">
+				<tr class="form-group tr-code-wrapper" ng-show="ha">
 					<td class="form-select">
 						<div id="containerHost-wrapper">
 							<label>Master Node Hostname/IP</label>
@@ -34,12 +19,30 @@
 						</div>
 					</td>
 				</tr>
-				<tr class="form-group tr-code-wrapper" ng-show="ha && !local">
+				<tr class="form-group tr-code-wrapper" ng-show="ha">
 					<td class="form-select">
 						<div id="containerDir-wrapper">
 							<label>Certificates Directory</label>
 							<input type="text" ng-required="false" class="form-control" name="containerDir" id="containerDir" ng-model="deployment.containerDir"/>
 							<div class="fieldMsg hint">Specify the Certificates Director for HA Deployment.</div>
+						</div>
+					</td>
+				</tr>
+				<tr class="form-group tr-code-wrapper" ng-show="ha">
+					<td class="form-select">
+						<div id="imagePrefix-wrapper">
+							<label>Image Prefix</label>
+							<input type="text" ng-required="false" class="form-control" name="imagePrefix" id="imagePrefix" ng-model="deployment.imagePrefix"/>
+							<div class="fieldMsg hint">Specify the Image Prefix to use for containers.</div>
+						</div>
+					</td>
+				</tr>
+				<tr class="form-group tr-code-wrapper" ng-show="ha">
+					<td class="form-select">
+						<div id="initialReplica-wrapper">
+							<label>Initial Number of Replicas</label>
+							<input type="number" ng-required="true" class="form-control" name="dockerReplica" id="dockerReplica" ng-model="deployment.dockerReplica" min="1" />
+							<div class="fieldMsg hint">Specify the Initial number of replicas per container to start with.</div>
 						</div>
 					</td>
 				</tr>

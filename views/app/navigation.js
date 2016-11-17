@@ -7,7 +7,8 @@ var navigation = [
 		'description': '',
 		'keywords': '',
 		'url': '#/',
-		'tplPath': 'sections/home/page.html'
+		'tplPath': 'sections/home/page.html',
+		'scripts': ['sections/home/controller.js']
 	},
 	{
 		'id': 'gi',

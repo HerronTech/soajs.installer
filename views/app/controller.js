@@ -61,11 +61,17 @@ app.controller('mainCtrl', ['$scope', '$location', '$routeParams', '$timeout', f
 		$scope.currentLocation = $location.path();
 		if(previous || ['/gi','/security', '/clusters','/deployment'].indexOf($scope.currentLocation) !== -1 ){
 			$scope.playSimulation(true);
-			$scope.activateMenu($scope.currentLocation.replace("/", ""));
+			if($scope.currentLocation.replace("/", "") === ""){
+				$scope.activateMenu("home");
+			}
+			else{
+				$scope.activateMenu($scope.currentLocation.replace("/", ""));
+			}
 		}
 		else{
 			if(document.cookie === 'soajsInstall=true'){
 				$scope.playSimulation(true);
+				$scope.activateMenu("home");
 			}
 		}
 

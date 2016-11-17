@@ -1,4 +1,4 @@
-<div class="area">
+<div class="area" ng-controller="overviewCtrl">
 	<form >
 		<div class="header">
 			<h3>Welcome to SOAJS Installer</h3>
@@ -8,59 +8,67 @@
 			This Wizard will guide you through the steps needed to customize and install a fresh copy of SOAJS on your local or remote machine.
 		</p>
 		<hr>
-		<h3>Prerequisites:</h3>
+		<h3>Deployment</h3>
 		<p>
-			Before you proceed, make sure that the following technologies are installed depending on the type of deployment you want:
+			Before you proceed, pick a deployment type.
+			
 		</p>
 		<br />
-		<fieldset>
-			<legend>Manual Installation</legend>
-			<div>
-				<b>Ubuntu:</b>
-				<pre class="bash"># Install NodeJs, NPM, MongoDB & Nginx
-$ sudo apt-get update && sudo apt-get install -y npm nodejs mongodb nginx
-$ sudo ln -s /usr/bin/nodejs /usr/bin/node
-# Start MongoDB
-$ sudo service mongodb start</pre>
-				<br />
-				<b>Mac:</b>
-				<pre class="bash"># Install Brew
-$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-$ brew update
-$ brew upgrade
-$ brew services
-
-# Install NodeJS, MongoDB, Nginx
-$ brew install homebrew/versions/node012 mongodb nginx
-# Start MongoDB
-$ brew services start mongodb</pre>
-			</div>
-		</fieldset>
-		<br /><br />
-		<fieldset>
-			<legend>Docker Installation</legend>
-			<div>
-				<b>Ubuntu:</b>
-				<pre></pre>
-				<br />
-				<b>Mac:</b>
-				<pre></pre>
-			</div>
-		</fieldset>
-		<br />
-		<fieldset>
-			<legend>Kubernetes Installation</legend>
-			<div>
-				<b>Ubuntu:</b>
-				<pre></pre>
-				<br />
-				<b>Mac:</b>
-				<pre></pre>
-			</div>
-		</fieldset>
+		<accordion close-others="true">
+			
+			<accordion-group heading="Manual Deployment" ng-click="selectDeployment('manual')" is-open="manual">
+				<p>
+					<b>Overview:</b><br />
+					This deployment will perform an NPM install of all SOAJS ready made services on your local machine.<br />
+					Once installed, the services will be started and you can interact with them via a User Interface.
+				</p>
+				<pre ng-if="style.manual.t==='sh'" class="bash"><code># Install needed technologies for manual deployment
+{{style.manual.v}}</code></pre>
+				<p>
+					Copy the command line above and run it in your terminal to install both MongoDB and Nginx; both are needed if you wish to proceed.<br />
+					Once installed, click proceed at the bottom of this page to move on to the next sections.
+				</p>
+			</accordion-group>
+			
+			<accordion-group heading="Docker Swarm Deployment" ng-click="selectDeployment('docker')" is-open="docker">
+				<p>
+					<b>Overview:</b><br />
+					This deployment will install docker swarm and then deploy SOAJS ready made services as containers in it.<br />
+					Once deployed, you can interact with these services via a User Interface.<br />
+				</p>
+				<b><u>Location:</u></b><br />
+				<input type="radio" name="docker-loc" value="container.docker.local" ng-model="data.deployDriver" />&nbsp;Local Machine<br />
+				<input type="radio" name="docker-loc" value="container.docker.remote" ng-model="data.deployDriver" />&nbsp;Remote Machine<br /><br />
+				<p>
+					Choose an option from the above and make sure Docker is installed by following the instruction below.<br />
+					Once Docker is installed click proceed at the bottom of this page.
+				</p>
+				<pre ng-if="style.docker.t==='sh'" class="bash"><code># Install needed technologies for docker swarm deployment
+{{style.docker.v}}</code></pre>
+				<div ng-if="style.docker.t === 'link'"><b>Download Link:</b> <a href="{{style.docker.v}}">{{style.docker.v}}</a></div>
+			</accordion-group>
+			
+			<accordion-group heading="Kubernetes Deployment" ng-click="selectDeployment('kubernetes')"  is-open="kubernetes">
+				<p>
+					<b>Overview:</b>
+					This deployment will install Kubernetes and then deploy SOAJS ready made services as containers in it.
+					Once deployed, you can interact with these services via a User Interface.
+				</p>
+				<b><u>Location:</u></b><br />
+				<input type="radio" name="kubernetes-loc" value="container.kubernetes.local" ng-model="data.deployDriver" />&nbsp;Local Machine<br />
+				<input type="radio" name="kubernetes-loc" value="container.kubernetes.remote" ng-model="data.deployDriver" />&nbsp;Remote Machine<br /><br />
+				<p>
+					Choose an option from the above and make sure Kubernetes is installed by following the instruction below.<br />
+					Once Kubernetes is installed click proceed at the bottom of this page.
+				</p>
+				<pre ng-if="style.kubernetes.t==='sh'" class="bash"><code># Install needed technologies for kubernetes deployment
+{{style.kubernetes.v}}</code></pre>
+			</accordion-group>
+			
+		</accordion>
 		<br />
 		<div class="w-100 table">
-			<a href="#/gi" class="f-right btn btn-sm btn-primary">Proceed</a>
+			<input type="button" class="f-right btn btn-sm btn-primary" value="Proceed" ng-click="fillOverView()"/>
 		</div>
 	</form>
 </div>

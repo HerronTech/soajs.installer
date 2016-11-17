@@ -11,6 +11,10 @@ var routes = require("./routes/");
 var installer = new soajs.server.service(config);
 installer.init(function () {
 	
+	//overview
+	installer.get('/overview', routes.getOverview);
+	installer.post('/overview', routes.postOverview);
+	
 	//General Information APIs
 	installer.get('/installer/gi', routes.getGi);
 	installer.post('/installer/gi', routes.postGi);

@@ -9,7 +9,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; //to avoid self signed certifica
 
 console.log ('SOAJS High Availability Deployer');
 console.log ('Current configuration: Machine IP/URL: ' + config.docker.machineIP + ' | Certificates Local Path: ' + config.docker.certsPath);
-console.log ('You can change this configuration by setting SOAJS_MACHINE_IP & SOAJS_DOCKER_CERTS_PATH environment variables\n');
+console.log ('You can change this configuration by setting CONTAINER_HOST & SOAJS_DOCKER_CERTS_PATH environment variables\n');
 
 lib.getDeployer(config.docker.machineIP, function (deployer) {
 	lib.ifSwarmExists(deployer, function (error, exists) {
