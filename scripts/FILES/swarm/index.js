@@ -109,7 +109,7 @@ var lib = {
     },
 
     importData: function (mongoInfo, cb) {
-        console.log ('Importing provision data ...');
+        console.log ('Importing provision data to:', profile.servers[0].host + ":" + profile.servers[0].port);
 	    var execString = "cd " + folder + " && mongo --host " + profile.servers[0].host + ":" + profile.servers[0].port;
 	    if (profile.credentials && profile.credentials.username && profile.credentials.password && profile.URLParam && profile.URLParam.authSource) {
 		    execString += " -u " + profile.credentials.username + " -p " + profile.credentials.password + " --authenticationDatabase " + profile.URLParam.authSource;

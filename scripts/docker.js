@@ -99,8 +99,10 @@ function deploy (group, deployer, cb) {
 				
 				if (group === 'db') {
 					if (config.mongo.external) {
-						console.log ('External Mongo deployment detected, provision data will not be imported ...');
-						return cb(null, true);
+						console.log ('External Mongo deployment detected, will not create a container for mongo.');
+						lib.importData(config.mongo.services, function(error){
+							return cb(error, true);
+						});
 					}
 					
 					return importProvisionData(services, deployer, cb);

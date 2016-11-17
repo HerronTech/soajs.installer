@@ -239,9 +239,9 @@ function importData(cb){
 	var profile = require(process.env.SOAJS_PROFILE);
 	
 	//execute import data.js
-	var execString = "cd " + folder + " && mongo --host " + profile.clusters.servers[0].host + ":" + profile.clusters.servers[0].port;
-	if (profile.clusters.credentials && profile.clusters.credentials.username && profile.clusters.credentials.password && profile.clusters.URLParam && profile.clusters.URLParam.authSource) {
-		execString += " -u " + profile.clusters.credentials.username + " -p " + profile.clusters.credentials.password + " --authenticationDatabase " + profile.clusters.URLParam.authSource;
+	var execString = "cd " + folder + " && mongo --host " + profile.servers[0].host + ":" + profile.servers[0].port;
+	if (profile.credentials && profile.credentials.username && profile.credentials.password && profile.URLParam && profile.URLParam.authSource) {
+		execString += " -u " + profile.credentials.username + " -p " + profile.credentials.password + " --authenticationDatabase " + profile.URLParam.authSource;
 	}
 	execString += " data.js";
 	exec(execString, cb);

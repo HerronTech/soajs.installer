@@ -28,7 +28,7 @@ var config = {
 		
 		'SOAJS_PROFILE=/opt/soajs/FILES/profiles/profile.js',
 		'SOAJS_SRV_AUTOREGISTERHOST=true',
-		
+		'SOAJS_MONGO_PREFIX=' + gConfig.mongo.prefix,
 		'SOAJS_GIT_OWNER=' + src.owner,
 		'SOAJS_GIT_REPO=' + src.repo,
 		'SOAJS_GIT_BRANCH=' + src.branch
