@@ -30,7 +30,7 @@ module.exports = {
 			}
 		},
 		"external": (process.env.MONGO_EXT === "true") || false,
-		"port": process.env.MONGO_PORT || 27017
+		"port": profile.servers[0].port || 27017
 	},
 	"nginx":{
 		"port": {
