@@ -12,7 +12,7 @@ CERTS_PATH=${HOME}/certs
 #Need machine IP address or domain name pointing to it in order to generate certificates properly
 DOMAIN_NAME=${1}
 if [ -z ${DOMAIN_NAME} ]; then
-    echo "You need to specify the domain name as first argument, example: ./initMachine.sh soajs.org"
+    echo "You need to specify the domain name as first argument, example: ./init.sh soajs.org"
     echo "Exiting ..."
     exit 1
 fi
