@@ -9,7 +9,7 @@ var src = {
 
 var config = {
 	servName: 'dashboard_soajs_dashboard',
-	servReplica: 1,
+	servReplica: parseInt(gConfig.docker.replicas),
 	servNetwork: [
 		{
 			Target: gConfig.docker.network
@@ -26,7 +26,7 @@ var config = {
 		
 		'SOAJS_DEPLOY_HA=true',
 		
-		'SOAJS_PROFILE=/opt/soajs/FILES/profiles/'+gConfig.profile,
+		'SOAJS_PROFILE=/opt/soajs/FILES/profiles/profile.js',
 		'SOAJS_SRV_AUTOREGISTERHOST=true',
 		
 		'SOAJS_GIT_OWNER=' + src.owner,

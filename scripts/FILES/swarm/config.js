@@ -1,6 +1,6 @@
 "use strict";
 
-var mongoHostname = "dashboard_soajsData";
+var mongoHostname = process.env.MONGO_IP || "dashboard_soajsData";
 module.exports = {
 	"masterDomain": process.env.MASTER_DOMAIN || 'soajs.org',
 	"apiPrefix": process.env.API_PREFIX || "dashboard-api",
@@ -27,7 +27,7 @@ module.exports = {
 				"ips": []
 			}
 		},
-		"external": process.env.MONGO_EXT || false,
+		"external": (process.env.MONGO_EXT === "true") || false,
 		"port": process.env.MONGO_PORT || 27017
 	},
 	"nginx":{
@@ -40,6 +40,7 @@ module.exports = {
 	"imagePrefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
 	"docker":{
 		"mongoCollection": 'docker',
+		"replicas": process.env.SOAJS_DOCKER_REPLICA || 1,
 		"machineIP": process.env.CONTAINER_HOST || "127.0.0.1",
 		"machinePort": process.env.CONTAINER_PORT || 2376,
 		"certsPath": process.env.SOAJS_DOCKER_CERTS_PATH || process.env.HOME + '/.docker',
