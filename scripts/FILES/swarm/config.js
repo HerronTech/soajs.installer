@@ -1,6 +1,7 @@
 "use strict";
 
-var mongoHostname = process.env.MONGO_IP || "dashboard_soajsData";
+var profile = require(process.env.SOAJS_PROFILE);
+var mongoHostname = profile.servers[0].host || "dashboard_soajsData";
 module.exports = {
 	"masterDomain": process.env.MASTER_DOMAIN || 'soajs.org',
 	"apiPrefix": process.env.API_PREFIX || "dashboard-api",
@@ -20,6 +21,7 @@ module.exports = {
 		"token": process.env.SOAJS_GIT_TOKEN || null
 	},
 	"mongo":{
+		"prefix": profile.prefix,
 		"hostname": mongoHostname,
 		"services": {
 			"dashboard": {
