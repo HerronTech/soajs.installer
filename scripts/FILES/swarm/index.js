@@ -11,6 +11,7 @@ var folder = config.folder;
 delete require.cache[config.profile];
 var profile = require(config.profile);
 var mongo = new soajs.mongo(profile);
+config.mongo.prefix = profile.prefix;
 
 var lib = {
 	

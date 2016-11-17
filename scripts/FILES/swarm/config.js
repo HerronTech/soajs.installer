@@ -27,7 +27,6 @@ module.exports = {
 				"ips": []
 			}
 		},
-		"prefix": process.env.SOAJS_MONGO_PREFIX || "",
 		"external": (process.env.MONGO_EXT === "true") || false,
 		"port": process.env.MONGO_PORT || 27017
 	},
