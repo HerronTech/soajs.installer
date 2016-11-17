@@ -104,8 +104,9 @@ function deploy (group, deployer, cb) {
 							return cb(error, true);
 						});
 					}
-					
-					return importProvisionData(services, deployer, cb);
+					else{
+						return importProvisionData(services, deployer, cb);
+					}
 				}
 				else {
 					return cb(null, true);
