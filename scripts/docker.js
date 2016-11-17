@@ -60,7 +60,6 @@ function initSwarm(deployer) {
 function deploySOAJS(deployer) {
 	lib.prepareSwarmNetwork(deployer, function (error) {
 		if (error) throw new Error(error);
-		
 		async.eachSeries(config.deployGroups, function (oneGroup, callback) {
 			deploy(oneGroup, deployer, function (error, result) {
 				if (error) return callback(error);
@@ -77,7 +76,7 @@ function deploySOAJS(deployer) {
 				console.log('Swarm node has been registered ...');
 				lib.configureEnvDeployer(function (error, result) {
 					if (error) throw new Error(error);
-					lib.closeDbCon();
+					lib.closeDbCon(function(){});
 				});
 			});
 		});

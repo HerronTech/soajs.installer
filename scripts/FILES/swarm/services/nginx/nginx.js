@@ -22,7 +22,7 @@ var controllerServicePort = '4000';
 
 var config = {
 	servName: 'dashboard_nginx',
-	servReplica: 1,
+	servReplica: parseInt(gConfig.docker.replicas),
 	servNetwork: [
 		{
 			Target: gConfig.docker.network

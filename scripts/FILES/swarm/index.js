@@ -7,7 +7,6 @@ var soajs = require('soajs');
 var request = require('request');
 
 var config = require('./config.js');
-
 var folder = config.folder;
 delete require.cache[config.profile];
 var profile = require(config.profile);
@@ -49,7 +48,10 @@ var lib = {
     },
 
     getDeployer: function (deployerConfig, cb) {
-        if (deployerConfig.host === '127.0.0.1') {
+        if(typeof (deployerConfig) === 'string' && deployerConfig === '127.0.0.1'){
+            return cb(new Docker({socketPath: config.docker.socketPath}));
+        }
+        else if (deployerConfig.host === '127.0.0.1') {
             return cb(new Docker({socketPath: config.docker.socketPath}));
         }
         else {
@@ -62,7 +64,7 @@ var lib = {
     },
 
     getContent: function (type, group, cb) {
-        var path = config.services.path[type].dir + group + '/';
+        var path = config.services.path.dir + group + '/';
         fs.exists(path, function (exists) {
             if (!exists) {
                 console.log ('Folder [' + path + '] does not exist, skipping ...');
@@ -72,7 +74,7 @@ var lib = {
             fs.readdir(path, function (error, content) {
                 if (error) return cb(error);
 
-                var regex = new RegExp ('[a-zA-Z0-9]*\.' + config.services.path[type].fileType, 'g');
+                var regex = new RegExp ('[a-zA-Z0-9]*\.' + config.services.path.fileType, 'g');
                 var loadContent, allContent = [];
                 content.forEach(function (oneContent) {
                     if (oneContent.match(regex)) {
@@ -108,9 +110,9 @@ var lib = {
 
     importData: function (mongoInfo, cb) {
         console.log ('Importing provision data ...');
-	    var execString = "cd " + folder + " && mongo --host " + profile.clusters.servers[0].host + ":" + profile.clusters.servers[0].port;
-	    if (profile.clusters.credentials && profile.clusters.credentials.username && profile.clusters.credentials.password && profile.clusters.URLParam && profile.clusters.URLParam.authSource) {
-		    execString += " -u " + profile.clusters.credentials.username + " -p " + profile.clusters.credentials.password + " --authenticationDatabase " + profile.clusters.URLParam.authSource;
+	    var execString = "cd " + folder + " && mongo --host " + profile.servers[0].host + ":" + profile.servers[0].port;
+	    if (profile.credentials && profile.credentials.username && profile.credentials.password && profile.URLParam && profile.URLParam.authSource) {
+		    execString += " -u " + profile.credentials.username + " -p " + profile.credentials.password + " --authenticationDatabase " + profile.URLParam.authSource;
 	    }
 	    execString += " data.js";
 	    exec(execString, cb);
@@ -179,7 +181,6 @@ var lib = {
                     });
                 }
             }
-
             if (ips.length !== replicaCount) {
                 //Containers may not have been attached to network yet
                 lib.printProgress('Waiting for ' + serviceName + ' containers to become available', counter++);
@@ -381,12 +382,10 @@ var lib = {
 
         lib.getServiceIPs(dockerServiceName, deployer, replicaCount, function (error, serviceIPs) {
             if (error) return cb(error);
-
             async.map(serviceIPs, function (oneServiceInfo, callback) {
                 var container = deployer.getContainer(oneServiceInfo.name);
                 container.inspect(function (error, containerInfo) {
                     if (error) return callback(error);
-
                     var record = JSON.parse(JSON.stringify(info));
                     record.taskName = containerInfo.Config.Labels['com.docker.swarm.task.name'];
                     record.serviceName = containerInfo.Config.Labels['com.docker.swarm.service.name'];
@@ -401,7 +400,6 @@ var lib = {
                 });
             }, function (error, records) {
                 if (error) return cb(error);
-
                 mongo.insert(config.docker.mongoCollection, records, cb);
             });
         });
