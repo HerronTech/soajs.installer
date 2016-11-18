@@ -21,7 +21,7 @@
                     <div id="containerHost-wrapper">
                         <label>Master Node Hostname/IP</label>
                         <input type="text" ng-required="false" class="form-control" name="containerHost"
-                               id="containerHost" ng-model="deployment.containerHost"/>
+                               id="containerHost" ng-model="deployment.containerHost" placeholder="deployment.containerHost"/>
                         <div class="fieldMsg hint">Specify the Hostname/IP of the Master Node.</div>
                     </div>
                 </td>
@@ -31,7 +31,7 @@
                     <div id="containerDir-wrapper">
                         <label>Certificates Directory</label>
                         <input type="text" ng-required="false" class="form-control" name="containerDir"
-                               id="containerDir" ng-model="deployment.containerDir"/>
+                               id="containerDir" ng-model="deployment.containerDir" placeholder="Directory of the docker certificates"/>
                         <div class="fieldMsg hint">Specify the Certificates Director for HA Deployment.</div>
                     </div>
                 </td>
@@ -41,7 +41,7 @@
                     <div id="imagePrefix-wrapper">
                         <label>Image Prefix</label>
                         <input type="text" ng-required="false" class="form-control" name="imagePrefix" id="imagePrefix"
-                               ng-model="deployment.imagePrefix"/>
+                               ng-model="deployment.imagePrefix" placeholder="deployment.imagePrefix"/>
                         <div class="fieldMsg hint">Specify the Image Prefix to use for containers.</div>
                     </div>
                 </td>
@@ -63,7 +63,7 @@
                     <div id="gitOwner-wrapper">
                         <label>Git Owner</label>
                         <input type="text" ng-required="false" class="form-control" name="gitOwner" id="gitOwner"
-                               ng-model="deployment.gitOwner"/>
+                               ng-model="deployment.gitOwner" placeholder="soajs"/>
                         <div class="fieldMsg hint">Specify the owner of the git repository.</div>
                     </div>
                 </td>
@@ -73,7 +73,7 @@
                     <div id="gitRepo-wrapper">
                         <label>Git Repository</label>
                         <input type="text" ng-required="false" class="form-control" name="gitRepo" id="gitRepo"
-                               ng-model="deployment.gitRepo"/>
+                               ng-model="deployment.gitRepo" placeholder="customUI"/>
                         <div class="fieldMsg hint">Specify the name of the git repository.</div>
                     </div>
                 </td>
@@ -82,19 +82,9 @@
                 <td class="form-select">
                     <div id="gitToken-wrapper">
                         <label>Git Token</label>
-                        <input type="text" ng-required="false" class="form-control" name="gitRepo" id="gitToken"
-                               ng-model="deployment.gitToken"/>
+                        <input type="text" ng-required="false" class="form-control" name="gitToken" id="gitToken"
+                               ng-model="deployment.gitToken" placeholder="Token ID"/>
                         <div class="fieldMsg hint">Specify the token of the git repository.</div>
-                    </div>
-                </td>
-            </tr>
-            <tr class="form-group tr-code-wrapper" ng-show="ha">
-                <td class="form-select">
-                    <div id="soajsImagePrefix-wrapper">
-                        <label>SOAJS Image Prefix</label>
-                        <input type="text" ng-required="false" class="form-control" name="soajsImagePrefix" id="soajsImagePrefix"
-                               ng-model="deployment.soajsImagePrefix"/>
-                        <div class="fieldMsg hint">Specify the prefix of the SOAJS image.</div>
                     </div>
                 </td>
             </tr>
@@ -103,7 +93,7 @@
                     <div id="nginxPort-wrapper">
                         <label>NGINX Port</label>
                         <input type="number" ng-required="false" class="form-control" name="nginxPort"
-                               id="nginxPort" ng-model="deployment.nginxPort" min="1"/>
+                               id="nginxPort" ng-model="deployment.nginxPort" placeholder="deployment.nginxPort" min="1"/>
                         <div class="fieldMsg hint">Specify the NGINX port number.</div>
                     </div>
                 </td>
@@ -113,7 +103,7 @@
                     <div id="nginxSecurePort-wrapper">
                         <label>NGINX Secure Port</label>
                         <input type="number" ng-required="false" class="form-control" name="nginxSecurePort"
-                               id="nginxSecurePort" ng-model="deployment.nginxSecurePort" min="1"/>
+                               id="nginxSecurePort" ng-model="deployment.nginxSecurePort" placeholder="deployment.nginxSecurePort" min="1"/>
                         <div class="fieldMsg hint">Specify the NGINX secure port number.</div>
                     </div>
                 </td>
@@ -133,7 +123,7 @@
                     <div id="dockerSocket-wrapper">
                         <label>Docker Socket Directory</label>
                         <input type="text" ng-required="false" class="form-control" name="dockerSocket" id="dockerSocket"
-                               ng-model="deployment.dockerSocket"/>
+                               ng-model="deployment.dockerSocket" placeholder="deployment.dockerSocket"/>
                         <div class="fieldMsg hint">Specify the directory of the docker socket.</div>
                     </div>
                 </td>
@@ -143,7 +133,7 @@
                     <div id="networkName-wrapper">
                         <label>Network Name</label>
                         <input type="text" ng-required="false" class="form-control" name="networkName" id="networkName"
-                               ng-model="deployment.networkName"/>
+                               ng-model="deployment.networkName" placeholder="deployment.networkName"/>
                         <div class="fieldMsg hint">Specify the network name.</div>
                     </div>
                 </td>
@@ -153,7 +143,7 @@
                     <div id="containerPort-wrapper">
                         <label>Docker Container Port Number</label>
                         <input type="number" ng-required="false" class="form-control" name="containerPort" ng-model="deployment.containerPort"
-                               id="containerPort" min="1"/>
+                               id="containerPort" placeholder="deployment.containerPort" min="1"/>
                         <div class="fieldMsg hint">Specify the docker container port number.</div>
                     </div>
                 </td>
@@ -162,7 +152,7 @@
                     <div id="dockerInternalPort-wrapper">
                         <label>Docker Internal Port Number</label>
                         <input type="number" ng-required="false" class="form-control" name="dockerInternalPort" ng-model="deployment.dockerInternalPort"
-                               id="dockerInternalPort" min="1"/>
+                               id="dockerInternalPort" placeholder="deployment.dockerInternalPort" min="1"/>
                         <div class="fieldMsg hint">Specify the docker internal port number.</div>
                     </div>
                 </td>
@@ -172,19 +162,9 @@
                     <div id="initialReplica-wrapper">
                         <label>Initial Number of Replicas</label>
                         <input type="number" ng-required="false" class="form-control" name="dockerReplica" ng-model="deployment.dockerReplica"
-                               id="dockerReplica" min="1"/>
+                               placeholder="deployment.dockerReplica" id="dockerReplica" min="1"/>
                         <div class="fieldMsg hint">Specify the Initial number of replicas per container to start with.
                         </div>
-                    </div>
-                </td>
-            </tr>
-            <tr class="form-group tr-code-wrapper" ng-show="ha">
-                <td class="form-select">
-                    <div id="certificatesFolder-wrapper">
-                        <label>Docker Certificates</label>
-                        <input type="text" ng-required="false" class="form-control" name="certificatesFolder" id="certificatesFolder"
-                               ng-model="deployment.certificatesFolder"/>
-                        <div class="fieldMsg hint">Specify the directory containing the docker certificates.</div>
                     </div>
                 </td>
             </tr>
