@@ -1,3 +1,3 @@
-var appConfig = {
-	url: "http://localhost:1337"
+appConfig = {
+    url: "http://localhost:1337"
 };

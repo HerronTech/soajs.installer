@@ -107,7 +107,20 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				"deployDockerNodes": (response && response.deployDockerNodes) ? response.deployDockerNodes : [],
 				"containerHost": (response && response.containerHost) ? response.containerHost : "127.0.0.1",
 				"containerDir": (response && response.containerDir) ? response.containerDir : "",
-				"mongoExt": (response && response.mongoExt) ? response.mongoExt : false
+				"mongoExt": (response && response.mongoExt) ? response.mongoExt : false,
+				"gitOwner": (response && response.gitOwner) ? response.gitOwner : null,
+                "gitRepo": (response && response.gitRepo) ? response.gitRepo : null,
+                "gitToken": (response && response.gitToken) ? response.gitToken : null,
+				"soajsImagePrefix": (response && response.soajsImagePrefix) ? response.soajsImagePrefix : "soajsorg",
+                "nginxPort": (response && response.nginxPort) ? response.nginxPort : 80,
+                "nginxSecurePort": (response && response.nginxSecurePort) ? response.nginxSecurePort : 443,
+                "nginxSsl": (response && response.nginxSsl) ? response.nginxSsl : false,
+				"dockerSocket": (response && response.dockerSocket) ? response.dockerSocket : "/var/run/docker.sock",
+				"networkName": (response && response.networkName) ? response.networkName : "soajsnet",
+                "containerPort": (response && response.containerPort) ? response.containerPort : 2376,
+                "dockerInternalPort": (response && response.dockerInternalPort) ? response.dockerInternalPort : 2377,
+                "dockerReplica": (response && response.dockerReplica) ? response.dockerReplica : 1,
+				"certificatesFolder": (response && response.certificatesFolder) ? response.certificatesFolder : null,
 			};
 			
 			$scope.evaluateDeploymentChoice();
