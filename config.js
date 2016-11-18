@@ -156,9 +156,25 @@ module.exports = {
 						"type": "object",
 						"properties": {
 							"containerDir": {"type": "string", "required": false},
-							"containerHost": {"type": "string", "required": false, "format": "ipv4"},
+							"containerHost": {"type": "string", "required": false},
 							"deployDockerNodes": {"type": "array", "required": false, "items": {"type": "string"}},
-							"mongoExt": {"type": "boolean", "required": false}
+							"mongoExt": {"type": "boolean", "required": false},
+
+                            "gitOwner": {"type": "string", "required": false},
+                            "gitRepo": {"type": "string", "required": false},
+                            "gitToken": {"type": "string", "required": false},
+
+                            "soajsImagePrefix": {"type": "string", "required": false},
+                            "nginxPort": {"type": "number", "required": false},
+                            "nginxSecurePort": {"type": "number", "required": false},
+                            "nginxSsl": {"type": "boolean", "required": false},
+
+                            "dockerSocket": {"type": "string", "required": false},
+                            "networkName": {"type": "string", "required": false},
+                            "containerPort": {"type": "number", "required": false},
+                            "dockerInternalPort": {"type": "number", "required": false},
+                            "dockerReplica": {"type": "number", "required": false},
+                            "certificatesFolder": {"type": "string", "required": false}
 						},
 						"additionalProperties": false
 					}

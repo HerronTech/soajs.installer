@@ -30,27 +30,27 @@ module.exports = {
 			}
 		},
 		"external": (process.env.MONGO_EXT === "true") || false,
-		"port": profile.servers[0].port || 27017
+		"port": parseInt(profile.servers[0].port) || 27017
 	},
 	"nginx":{
 		"port": {
-			"http": process.env.NGINX_HTTP_PORT || 80,
-			"https": process.env.NGINX_HTTPS_PORT || 443
+			"http": parseInt(process.env.NGINX_HTTP_PORT) || 80,
+			"https": parseInt(process.env.NGINX_HTTPS_PORT) || 443
 		},
-		"ssl": process.env.SOAJS_NX_SSL || false,
+		"ssl": (process.env.SOAJS_NX_SSL === "true") || false,
 	},
 	"imagePrefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
 	"docker":{
 		"mongoCollection": 'docker',
-		"replicas": process.env.SOAJS_DOCKER_REPLICA || 1,
+		"replicas": parseInt(process.env.SOAJS_DOCKER_REPLICA) || 1,
 		"machineIP": process.env.CONTAINER_HOST || "127.0.0.1",
-		"machinePort": process.env.CONTAINER_PORT || 2376,
+		"machinePort": parseInt(process.env.CONTAINER_PORT) || 2376,
 		"certsPath": process.env.SOAJS_DOCKER_CERTS_PATH || process.env.HOME + '/.docker',
 		"socketPath": process.env.SOAJS_DOCKER_SOCKET || '/var/run/docker.sock',
 		"network": process.env.DOCKER_NETWORK ||  'soajsnet',
 		"options": {
-			"ListenAddr": "0.0.0.0:" + (process.env.SWARM_INTERNAL_PORT || 2377),
-			"AdvertiseAddr": (process.env.CONTAINER_HOST || "127.0.0.1") + ':' + (process.env.SWARM_INTERNAL_PORT || 2377),
+			"ListenAddr": "0.0.0.0:" + (parseInt(process.env.SWARM_INTERNAL_PORT) || 2377),
+			"AdvertiseAddr": (process.env.CONTAINER_HOST || "127.0.0.1") + ':' + (parseInt(process.env.SWARM_INTERNAL_PORT) || 2377),
 			"ForceNewCluster": true,
 			"Spec": {
 				"Orchestration": {},
