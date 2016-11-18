@@ -154,13 +154,13 @@ module.exports = {
 					"required": true,
 					"validation":{
 						"type": "object",
-						"properties": {
-							"containerDir": {"type": "string", "required": false},
-							"containerHost": {"type": "string", "required": false, "format": "ipv4"},
-							"deployDockerNodes": {"type": "array", "required": false, "items": {"type": "string"}},
-							"mongoExt": {"type": "boolean", "required": false}
-						},
-						"additionalProperties": false
+						// "properties": {
+						// 	"containerDir": {"type": "string", "required": false},
+						// 	"containerHost": {"type": "string", "required": false, "format": "ipv4"},
+						// 	"deployDockerNodes": {"type": "array", "required": false, "items": {"type": "string"}},
+						// 	"mongoExt": {"type": "boolean", "required": false}
+						// },
+						// "additionalProperties": false
 					}
 				}
 			}
