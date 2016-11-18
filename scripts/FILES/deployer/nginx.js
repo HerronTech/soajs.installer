@@ -12,23 +12,25 @@ var nxSitePath = process.env.SOAJS_NX_SITE_PATH || "/opt/soajs/site";
 var nxOs = process.env.SOAJS_NX_OS || "ubuntu";
 var nxLocation = process.env.SOAJS_NX_LOC || "/etc/nginx";
 
+var utilLog = require('util');
+
 var lib = {
 	"writeUpstream": function (param, cb) {
-		console.log("writing upstream.conf in " + param.loc);
+		utilLog.log("writing upstream.conf in " + param.loc);
 		var wstream = fs.createWriteStream(param.loc + 'upstream.conf');
 		wstream.write("upstream " + param.upstreamName + " {\n");
 		for (var i = 1; i <= param.count; i++) {
 			if (process.env[param.ipEnvName + i])
 				wstream.write("  server " + process.env[param.ipEnvName + i] + ":" + param.port + ";\n");
 			else
-				console.log("ERROR: Unable to find environment variable " + param.ipEnvName + i);
+				utilLog.log("ERROR: Unable to find environment variable " + param.ipEnvName + i);
 		}
 		wstream.write("}\n");
 		wstream.end();
 		return cb(null);
 	},
 	"writeApiConf": function (param, cb) {
-		console.log("writing api conf in " + param.loc + " " + param.confFileName);
+		utilLog.log("writing api conf in " + param.loc + " " + param.confFileName);
 		var wstream = fs.createWriteStream(param.loc + param.confFileName);
 		wstream.write("server {\n");
 		wstream.write("  listen       " + param.port + ";\n");
@@ -46,7 +48,7 @@ var lib = {
 		return cb(null);
 	},
 	"writeSiteConf": function (param, cb) {
-		console.log("writing site conf in " + param.loc + " " + param.confFileName);
+		utilLog.log("writing site conf in " + param.loc + " " + param.confFileName);
 		var wstream = fs.createWriteStream(param.loc + param.confFileName);
 		wstream.write("server {\n");
 		wstream.write("  server_name  " + param.domain + ";\n");
@@ -69,7 +71,7 @@ lib.writeUpstream({
 	"upstreamName": "soajs.controller",
 	"count": controllerNb
 }, function (err) {
-	console.log("NGINX UPSTREAM DONE.");
+	utilLog.log("NGINX UPSTREAM DONE.");
 });
 
 lib.writeApiConf({
@@ -79,7 +81,7 @@ lib.writeApiConf({
 	"domain": nxApiDomain,
 	"upstreamName": "soajs.controller"
 }, function (err) {
-	console.log("NGINX API CONF DONE.");
+	utilLog.log("NGINX API CONF DONE.");
 });
 
 if (nxSiteDomain) {
@@ -90,6 +92,6 @@ if (nxSiteDomain) {
 		"port": nxSitePort,
 		"path": nxSitePath
 	}, function (err) {
-		console.log("NGINX DASH CONF DONE.");
+		utilLog.log("NGINX DASH CONF DONE.");
 	});
 }

@@ -6,8 +6,8 @@ module.exports = {
 	"masterDomain": process.env.MASTER_DOMAIN || 'soajs.org',
 	"apiPrefix": process.env.API_PREFIX || "dashboard-api",
 	"sitePrefix": process.env.SITE_PREFIX || "dashboard",
-	"folder": process.env.SOAJS_DATA_FOLDER,
-	"profile": process.env.SOAJS_PROFILE,
+	"folder": process.env.SOAJS_DATA_FOLDER || "/opt/soajs/node_modules/soajs.installer/data/startup/",
+	"profile": process.env.SOAJS_PROFILE || "/opt/soajs/node_modules/soajs.installer/data/startup/profile.js",
 	"git":{
 		"branch": process.env.SOAJS_GIT_BRANCH || 'develop'
 	},

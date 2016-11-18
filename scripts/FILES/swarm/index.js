@@ -12,6 +12,7 @@ delete require.cache[config.profile];
 var profile = require(config.profile);
 var mongo = new soajs.mongo(profile);
 
+var utilLog = require('util');
 var lib = {
 
     ifSwarmExists: function (deployer, cb) {
@@ -70,7 +71,7 @@ var lib = {
         var path = config.services.path.dir + group + '/';
         fs.exists(path, function (exists) {
             if (!exists) {
-                console.log('Folder [' + path + '] does not exist, skipping ...');
+                utilLog.log('Folder [' + path + '] does not exist, skipping ...');
                 return cb(null, true);
             }
 
@@ -97,12 +98,12 @@ var lib = {
 
     deployGroup: function (type, services, deployer, cb) {
         if (services.length === 0) {
-            console.log('No services of type [' + type + '] found, skipping ...');
+            utilLog.log('No services of type [' + type + '] found, skipping ...');
             return cb(null, true);
         }
 
         if (type === 'db' && config.mongo.external) {
-            console.log('External Mongo deployment detected, data containers will not be deployed ...');
+            utilLog.log('External Mongo deployment detected, data containers will not be deployed ...');
             return cb(null, true);
         }
 
@@ -112,7 +113,7 @@ var lib = {
     },
 
     importData: function (mongoInfo, cb) {
-        console.log('Importing provision data to:', profile.servers[0].host + ":" + profile.servers[0].port);
+        utilLog.log('Importing provision data to:', profile.servers[0].host + ":" + profile.servers[0].port);
         var execString = "cd " + folder + " && mongo --host " + profile.servers[0].host + ":" + profile.servers[0].port;
         if (profile.credentials && profile.credentials.username && profile.credentials.password && profile.URLParam && profile.URLParam.authSource) {
             execString += " -u " + profile.credentials.username + " -p " + profile.credentials.password + " --authenticationDatabase " + profile.URLParam.authSource;
@@ -192,7 +193,7 @@ var lib = {
                 }, 1000);
             }
             else {
-                console.log(""); //intentional, to force writting a new line.
+                utilLog.log(""); //intentional, to force writting a new line.
                 return cb(null, ips);
             }
         });
@@ -204,7 +205,7 @@ var lib = {
         if (config.mongo.external) {
             // if (!config.dataLayer.mongo.url || !config.dataLayer.mongo.port) {
             if (!profile.servers[0].host || !profile.servers[0].port) {
-                console.log('ERROR: External Mongo information is missing URL or port, make sure SOAJS_MONGO_EXTERNAL_URL and SOAJS_MONGO_EXTERNAL_PORT are set ...');
+                utilLog.log('ERROR: External Mongo information is missing URL or port, make sure SOAJS_MONGO_EXTERNAL_URL and SOAJS_MONGO_EXTERNAL_PORT are set ...');
                 return cb('ERROR: missing mongo information');
             }
 
@@ -307,11 +308,11 @@ var lib = {
             }
 
             if (found) {
-                console.log(netName + ' network found, proceeding ...');
+                utilLog.log(netName + ' network found, proceeding ...');
                 return cb(null, true);
             }
             else {
-                console.log(netName + ' network not found, creating ...');
+                utilLog.log(netName + ' network not found, creating ...');
                 var networkParams = {
                     Name: netName,
                     Driver: 'overlay',
@@ -377,7 +378,7 @@ var lib = {
 
         var replicaCount = serviceOptions.Mode.Replicated.Replicas;
 
-        console.log('Registering ' + serviceName + ' containers in docker collection ...');
+        utilLog.log('Registering ' + serviceName + ' containers in docker collection ...');
 
         info.env = serviceEnv;
         info.running = true;

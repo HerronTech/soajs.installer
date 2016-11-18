@@ -5,34 +5,36 @@ var async = require('async');
 var config = require(__dirname + '/FILES/swarm/config.js');
 var lib = require(__dirname + '/FILES/swarm/index.js');
 
+var utilLog = require('util');
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; //to avoid self signed certificates error
 
-console.log ('SOAJS High Availability Deployer');
-console.log ('Current configuration: Machine IP/URL: ' + config.docker.machineIP + ' | Certificates Local Path: ' + config.docker.certsPath);
-console.log ('You can change this configuration by setting CONTAINER_HOST & SOAJS_DOCKER_CERTS_PATH environment variables\n');
+utilLog.log ('SOAJS High Availability Deployer');
+utilLog.log ('Current configuration: Machine IP/URL: ' + config.docker.machineIP + ' | Certificates Local Path: ' + config.docker.certsPath);
+utilLog.log ('You can change this configuration by setting CONTAINER_HOST & SOAJS_DOCKER_CERTS_PATH environment variables\n');
 
 lib.getDeployer(config.docker, function (deployer) {
 	lib.ifSwarmExists(deployer, function (error, exists) {
 		if (error) throw new Error(error);
 		
 		if (exists) {
-			console.log ("Swarm exists, inspecting ...");
+			utilLog.log ("Swarm exists, inspecting ...");
 			lib.inspectSwarm(deployer, function (error, swarmInfo) {
 				if (error) throw new Error(error);
 				
 				lib.saveSwarmTokens(swarmInfo);
 				
-				console.log('Cleaning previous docker services ...');
+				utilLog.log('Cleaning previous docker services ...');
 				lib.deletePreviousServices(deployer, function (error, result) {
 					if (error) throw new Error(error);
 					
-					console.log ('Deploying SOAJS ...');
+					utilLog.log ('Deploying SOAJS ...');
 					return deploySOAJS(deployer);
 				});
 			});
 		}
 		else {
-			console.log ('No swarm exists on this machine, initializing new swarm ...');
+			utilLog.log ('No swarm exists on this machine, initializing new swarm ...');
 			return initSwarm(deployer);
 		}
 	});
@@ -47,8 +49,8 @@ function initSwarm(deployer) {
 			
 			lib.saveSwarmTokens(swarmInfo);
 			
-			console.log ('New swarm initialized ...');
-			console.log ('Deploying SOAJS ...');
+			utilLog.log ('New swarm initialized ...');
+			utilLog.log ('Deploying SOAJS ...');
 			
 			setTimeout(function () {
 				deploySOAJS(deployer);
@@ -64,7 +66,7 @@ function deploySOAJS(deployer) {
 			deploy(oneGroup, deployer, function (error, result) {
 				if (error) return callback(error);
 				
-				console.log(oneGroup + ' services deployed successfully ...');
+				utilLog.log(oneGroup + ' services deployed successfully ...');
 				return callback(null, true);
 			});
 		}, function (error, result) {
@@ -73,7 +75,7 @@ function deploySOAJS(deployer) {
 			lib.registerNode(deployer, config.docker.swarmConfig, function (error, result) {
 				if (error) throw new Error(error);
 				
-				console.log('Swarm node has been registered ...');
+				utilLog.log('Swarm node has been registered ...');
 				lib.configureEnvDeployer(function (error, result) {
 					if (error) throw new Error(error);
 					lib.closeDbCon(function(){});
@@ -99,7 +101,7 @@ function deploy (group, deployer, cb) {
 				
 				if (group === 'db') {
 					if (config.mongo.external) {
-						console.log ('External Mongo deployment detected, will not create a container for mongo.');
+						utilLog.log ('External Mongo deployment detected, will not create a container for mongo.');
 						lib.importData(config.mongo.services, function(error){
 							return cb(error, true);
 						});
@@ -123,8 +125,8 @@ function importProvisionData (dbServices, deployer, cb) {
 		}
 	}
 	
-	console.log ("Fetching data containers' IP addresses ... ");
-	console.log ('This step might take some time if docker is currently pulling the containers\' image ...');
+	utilLog.log ("Fetching data containers' IP addresses ... ");
+	utilLog.log ('This step might take some time if docker is currently pulling the containers\' image ...');
 	lib.getServiceIPs(config.mongo.services.dashboard.name, deployer, config.mongo.services.dashboard.count, function (error, dashMongoIPs) {
 		if (error) return cb(error);
 		

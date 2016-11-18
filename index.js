@@ -9,6 +9,8 @@ var config = require("./config.js");
 var routes = require("./routes/");
 
 var installer = new soajs.server.service(config);
+var utilLog = require('util');
+
 installer.init(function () {
 	
 	//overview
@@ -40,6 +42,6 @@ installer.init(function () {
 	//start the service
 	installer.start();
 	setTimeout(function(){
-		console.log('Application Started, Open this link in your browser [ http://localhost:1337/ ]');
+		utilLog.log('Application Started, Open this link in your browser [ http://localhost:1337/ ]');
 	}, 500);
 });

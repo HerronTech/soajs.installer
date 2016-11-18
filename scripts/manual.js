@@ -9,6 +9,8 @@ var fs = require("fs");
 var spawn = require("child_process").spawn;
 var exec = require("child_process").exec;
 
+var utilLog = require('util');
+
 process.env.NODE_ENV = "production";
 var LOC = (process.env.SOAJS_DEPLOY_DIR || "/opt") + "/";
 var DEPLOY_FROM = process.env.DEPLOY_FROM || "GIT";
@@ -32,9 +34,9 @@ process.env.SOAJS_NX_SITE_PATH = WRK_DIR + "/soajs.dashboard/ui";
 var NGINX_DEST = (process.platform === 'linux') ? "/etc/nginx/" : "/usr/local/etc/nginx/servers/";
 
 function setupNginx(cb) {
-	console.log("\n=====================================");
-	console.log("CONFIGURING NGINX");
-	console.log("=====================================");
+	utilLog.log("\n=====================================");
+	utilLog.log("CONFIGURING NGINX");
+	utilLog.log("=====================================");
 	mkdirp(path.normalize(WRK_DIR + "/../nginx"), function (err) {
 		if (err) return cb(err);
 		
@@ -87,15 +89,15 @@ function setupNginx(cb) {
 	});
 	
 	function copyConf(opts, cb){
-		console.log(">>> copying", opts.s, "to", opts.d);
+		utilLog.log(">>> copying", opts.s, "to", opts.d);
 		ncp(opts.s, opts.d, cb);
 	}
 }
 
 function startDashboard(cb) {
-	console.log("\n=====================================");
-	console.log("INSTALLING COMPONENTS");
-	console.log("=====================================");
+	utilLog.log("\n=====================================");
+	utilLog.log("INSTALLING COMPONENTS");
+	utilLog.log("=====================================");
 	mkdirp(path.normalize(WRK_DIR + "/../logs/"), function (error) {
 		if (error) {
 			return cb(error);
@@ -115,10 +117,10 @@ function startDashboard(cb) {
 	});
 	
 	function launchService(serviceName, mcb) {
-		console.log('\nstarting', serviceName, '....');
+		utilLog.log('\nstarting', serviceName, '....');
 		var out = fs.openSync(path.normalize(WRK_DIR + "/../logs/manual-" + serviceName + "-out.log"), "w");
 		var err = fs.openSync(path.normalize(WRK_DIR + "/../logs/manual-" + serviceName + "-err.log"), "w");
-		console.log(NODE, WRK_DIR + "/soajs." + serviceName + "/index.js");
+		utilLog.log(NODE, WRK_DIR + "/soajs." + serviceName + "/index.js");
 		var child = spawn(NODE, [WRK_DIR + "/soajs." + serviceName + "/index.js"], {
 			"cwd": WRK_DIR + "/soajs." + serviceName,
 			"env": process.env,
@@ -151,7 +153,7 @@ function loadDependencies(location, skip) {
 }
 
 function cloneInstallRepo(repoName, noCore, cb) {
-	console.log("\ninstalling", repoName, "...");
+	utilLog.log("\ninstalling", repoName, "...");
 	exec("git clone  git@github.com:soajs/" + repoName + ".git --branch " + GIT_BRANCH, {
 		"cwd": WRK_DIR,
 		"env": process.env
@@ -161,16 +163,16 @@ function cloneInstallRepo(repoName, noCore, cb) {
 				return cb(error);
 			}
 			else {
-				console.log(repoName, "already exists!");
+				utilLog.log(repoName, "already exists!");
 			}
 		}
 		
-		console.log("installing dependencies ...");
+		utilLog.log("installing dependencies ...");
 		var modules = loadDependencies(WRK_DIR + "/" + repoName + "/package.json", noCore);
 		if (modules.length === 0) {
 			return cb();
 		}
-		console.log(">>> ", NPM + " install " + modules.join(" "));
+		utilLog.log(">>> ", NPM + " install " + modules.join(" "));
 		exec(NPM + " install " + modules.join(" "), {
 			"cwd": WRK_DIR + "/" + repoName,
 			"env": process.env
@@ -184,12 +186,12 @@ function cloneInstallRepo(repoName, noCore, cb) {
 }
 
 function install(cb) {
-	console.log("\n=====================================");
-	console.log("STARTING SERVICES");
-	console.log("=====================================");
+	utilLog.log("\n=====================================");
+	utilLog.log("STARTING SERVICES");
+	utilLog.log("=====================================");
 	
 	if (DEPLOY_FROM === "GIT") {
-		console.log("working in:", WRK_DIR);
+		utilLog.log("working in:", WRK_DIR);
 		async.series([
 			function (mcb) {
 				cloneInstallRepo("soajs", false, mcb);
@@ -210,15 +212,15 @@ function install(cb) {
 		], cb);
 	}
 	else if (DEPLOY_FROM === "NPM") {
-		console.log("working in:", WRK_DIR + "/../");
+		utilLog.log("working in:", WRK_DIR + "/../");
 		async.series([
 			function (mcb) {
-				console.log("\ninstalling soajs.controller soajs.urac soajs.dashboard soajs.gcs ...");
+				utilLog.log("\ninstalling soajs.controller soajs.urac soajs.dashboard soajs.gcs ...");
 				npm.load({prefix: WRK_DIR + "/../"}, function (err) {
 					if (err) return mcb(err);
 					npm.commands.install(["soajs.controller", "soajs.urac", "soajs.dashboard", "soajs.gcs"], function (error, data) {
 						if (error) {
-							console.log('error', error);
+							utilLog.log('error', error);
 						}
 						return mcb();
 					});
@@ -263,7 +265,7 @@ importData(function(error){
 						throw error;
 					}
 					
-					console.log("SOAJS has been deployed !");
+					utilLog.log("SOAJS has been deployed !");
 				});
 			});
 		}
@@ -273,7 +275,7 @@ importData(function(error){
 					throw error;
 				}
 				
-				console.log("SOAJS has been deployed !");
+				utilLog.log("SOAJS has been deployed !");
 			});
 		}
 	});
