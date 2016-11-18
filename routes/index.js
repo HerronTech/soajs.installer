@@ -46,10 +46,13 @@ var routes = {
 		}
 		
 		utils.loadCustomData('deployment', function (customData) {
-			data.deployer = {
-				deployType: customData.deployType,
-				deployDriver: customData.deployDriver
-			};
+			if(customData){
+				data.deployer = {
+					deployType: customData.deployType,
+					deployDriver: customData.deployDriver
+				};
+			}
+			
 			return res.json(req.soajs.buildResponse(null, data));
 		});
 	},
