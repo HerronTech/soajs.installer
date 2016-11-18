@@ -8,7 +8,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 	};
 	
 	$scope.closeAlert = function (i) {
-		$scope.alerts = $scope.alerts.splice(i, 1);
+		$scope.alerts.splice(i, 1);
 	};
 	
 	$scope.evaluateDeploymentChoice = function () {

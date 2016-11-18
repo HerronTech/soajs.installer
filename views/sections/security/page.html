@@ -1,6 +1,6 @@
 <div class="area" ng-controller="securityCtrl">
 	<div ng-show="alerts && alerts.length > 0">
-		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="security.closeAlert($index)">
+		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
 			{{alert.msg}}
 		</alert>
 	</div>

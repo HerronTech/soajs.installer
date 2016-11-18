@@ -1,6 +1,6 @@
 <div class="area" ng-controller="giCtrl">
 	<div ng-show="alerts && alerts.length > 0">
-		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="gi.closeAlert($index)">
+		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
 			{{alert.msg}}
 		</alert>
 	</div>
