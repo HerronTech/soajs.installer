@@ -51,6 +51,23 @@ module.exports = {
 		"deployType": "manual",
 		"deployDriver": "manual",
 		"deployDockerNodes": [],
-		"containerHost": "127.0.0.1"
+		"containerHost": "127.0.0.1",
+		"mongoExt": false,
+		
+		"gitOwner": null,
+		"gitRepo": null,
+		"gitToken": null,
+		
+		"soajsImagePrefix": "soajsorg",
+		"nginxPort": 80,
+		"nginxSecurePort": 443,
+		"nginxSsl": null,
+		
+		"dockerSocket": "/var/run/docker.sock",
+		"networkName": "soajsnet",
+		"containerPort": 2376,
+		"dockerInternalPort": 2377,
+		"dockerReplica": 1,
+		"certificatesFolder": "process.env.HOME + '/.docker'"
 	}
 };

@@ -131,18 +131,17 @@ module.exports = {
 			delete clusters.URLParam.authSource;
 		}
 		
-		if (body.deployment.deployType === 'container' && !body.deployment.mongExt) {
-			delete require.cache[require.resolve(__dirname + "/../scripts/FILES/swarm/config.js")];
-			var swarmSettings = require(__dirname + "/../scripts/FILES/swarm/config.js");
-			clusters.servers[0].host = swarmSettings.mongo.hostname;
-			body.clusters.servers[0].host = swarmSettings.mongo.hostname;
-			delete require.cache[require.resolve(__dirname + "/../scripts/FILES/swarm/config.js")];
-		}
-		
 		if (clusters.servers[0].host.indexOf("https") !== -1) {
 			clusters.URLParam.ssl = true;
 			body.clusters.URLParam.ssl = true;
 		}
+		
+		//generate profile
+		var profileData = '"use strict;"' + os.EOL;
+		clusters.name = "core_provision";
+		clusters.prefix = body.clusters.prefix || "";
+		profileData += 'module.exports = ' + JSON.stringify(clusters, null, 2) + ';';
+		fs.writeFileSync(folder + "profile.js", profileData, "utf8");
 		
 		//modify users file
 		var userData = fs.readFileSync(folder + "urac/users/owner.js", "utf8");
@@ -158,8 +157,8 @@ module.exports = {
 		userData = userData.replace(/%password%/g, hashedPwd);
 		fs.writeFile(folder + "urac/users/owner.js", userData, "utf8");
 		
-		if(body.deployment.deployType === 'manual' || body.deployment.deployDriver.indexOf("local") !== -1){
-			body.deployment.deployDockerNodes =[];
+		if (body.deployment.deployType === 'manual' || body.deployment.deployDriver.indexOf("local") !== -1) {
+			body.deployment.deployDockerNodes = [];
 		}
 		
 		//modify environments file
@@ -193,13 +192,6 @@ module.exports = {
 		tntData = tntData.replace(/%extKey2%/g, body.security.extKey2);
 		fs.writeFile(folder + "extKeys/keys.js", tntData, "utf8");
 		
-		//generate profile
-		var profileData = '"use strict;"' + os.EOL;
-		clusters.name = "core_provision";
-		clusters.prefix = body.clusters.prefix || "";
-		profileData += 'module.exports = ' + JSON.stringify(clusters, null, 2) + ';';
-		fs.writeFileSync(folder + "profile.js", profileData, "utf8");
-		
 		//remove unneeded file
 		fs.unlinkSync(folder + "tenants/info.js");
 	},
@@ -207,7 +199,6 @@ module.exports = {
 	"importMongo": function (folder, body, cb) {
 		//copy data.js to startup
 		//add prefix while copying
-		
 		fs.readFile(dataDir + "data.js", "utf8", function (error, readData) {
 			if (error) {
 				return res.json(req.soajs.buildResponse({"code": 400, "msg": error.message}));
@@ -218,18 +209,10 @@ module.exports = {
 			writeStream.write(readData);
 			writeStream.end();
 			
-			// if (body.deployment.deployType === 'manual' || body.deployment.mongoExt === true) {
-			// 	//execute import data.js
-			// 	var execString = "cd " + folder + " && mongo --host " + body.clusters.servers[0].host + ":" + body.clusters.servers[0].port;
-			// 	if (body.clusters.credentials && body.clusters.credentials.username && body.clusters.credentials.password && body.clusters.URLParam && body.clusters.URLParam.authSource) {
-			// 		execString += " -u " + body.clusters.credentials.username + " -p " + body.clusters.credentials.password + " --authenticationDatabase " + body.clusters.URLParam.authSource;
-			// 	}
-			// 	execString += " data.js";
-			// 	exec(execString, cb);
-			// }
-			// else {
+			//wait 500ms for the write to ensure it finished then return the cb
+			setTimeout(function () {
 				return cb(null, true);
-			// }
+			}, 500);
 		});
 	},
 	
@@ -317,57 +300,70 @@ module.exports = {
 		}
 		if (driver === 'docker') {
 			if (loc === 'local') {
-				//launch deployer
+				var runner = fs.createWriteStream(path.normalize(__dirname + "/../scripts/swarm-local-deploy.sh"));
+				runner.write("#!/bin/bash" + os.EOL + os.EOL);
+				
+				var envs = {
+					"SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "master",
+					"SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "master",
+					"SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
+					
+					"API_PREFIX": body.gi.api,
+					"SITE_PREFIX": body.gi.site,
+					"MASTER_DOMAIN": body.gi.domain,
+					
+					"MONGO_EXT": body.deployment.mongoExt,
+					
+					"SOAJS_GIT_OWNER": body.deployment.gitOwner,
+					"SOAJS_GIT_REPO": body.deployment.gitRepo,
+					"SOAJS_GIT_TOKEN": body.deployment.gitToken,
+					
+					"SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
+					"SOAJS_IMAGE_PREFIX": body.deployment.soajsImagePrefix,
+					
+					"NGINX_HTTP_PORT": body.deployment.nginxPort,
+					"NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
+					"SOAJS_NX_SSL": body.deployment.nginxSsl,
+					
+					"SOAJS_DOCKER_CERTS_PATH": body.deployment.certificatesFolder,
+					"SWARM_INTERNAL_PORT": body.deployment.dockerInternalPort,
+					"SOAJS_DOCKER_SOCKET": body.deployment.dockerSocket,
+					"DOCKER_NETWORK": body.deployment.networkName,
+					"CONTAINER_HOST": body.deployment.containerHost,
+					"CONTAINER_PORT": body.deployment.containerPort,
+					"SOAJS_DOCKER_REPLICA": body.deployment.dockerReplica
+				};
+				
+				for (var e in envs) {
+					if(envs[e] !== null){
+						runner.write("export " + e + "=" + envs[e] + os.EOL);
+					}
+				}
+				
 				whereis('node', function (err, nodePath) {
 					if (err) {
 						return cb(err);
 					}
-					whereis("npm", function (err, npmPath) {
-						if (err) {
-							return cb(err);
-						}
-						
-						var runner = fs.createWriteStream(path.normalize(__dirname + "/../scripts/swarm-local-deploy.sh"));
-						runner.write("#!/bin/bash" + os.EOL + os.EOL);
-						
-						var envs = {
-							"NODE_PATH": nodePath,
-							"NPM_PATH": npmPath,
-							"DEPLOY_FROM": process.env.DEPLOY_FROM || "NPM",
-							"SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "master",
-							"SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "master",
-							"SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
-							"INSTALLER_DIR": path.normalize(__dirname + "/../scripts/"),
-							"SOAJS_DEPLOY_DIR": body.gi.wrkDir,
-							"API_PREFIX": body.gi.api,
-							"SITE_PREFIX": body.gi.site,
-							"MASTER_DOMAIN": body.gi.domain,
-							"MONGO_EXT": body.deployment.mongoExt,
-							"MONGO_IP": "",
-							"CONTAINER_HOST": body.deployment.containerHost,
-							"SOAJS_DOCKER_REPLICA": 1,
-							"SOAJS_IMAGE_PREFIX": "",
-							"SOAJS_DATA_FOLDER": ""
-						};
-						for (var e in envs) {
-							runner.write("export " + e + "=" + envs[e] + os.EOL);
-						}
-						
-						runner.write(os.EOL + nodePath + " " + __dirname + "/../scripts/docker.js" + os.EOL);
-						runner.write("ps aux | grep node" + os.EOL);
-						runner.end();
-						
-						fs.chmodSync(path.normalize(__dirname + "/../scripts/swarm-local-deploy.sh"), "0755");
-						
-						return cb(null, {
-							"hosts": {
-								"api": "127.0.0.1 " + body.gi.api + "." + body.gi.domain,
-								"site": "127.0.0.1 " + body.gi.site + "." + body.gi.domain
-							},
-							"ui": "http://" + body.gi.site + "." + body.gi.domain,
-							"cmd": path.normalize(__dirname + "/../scripts/swarm-local-deploy.sh")
-						});
-					});
+					
+					runner.write(os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/docker.js") + os.EOL);
+					runner.end();
+					
+					fs.chmodSync(path.normalize(__dirname + "/../scripts/swarm-local-deploy.sh"), "0755");
+					
+					var obj = {
+						"hosts": {
+							"api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
+							"site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
+						},
+						"ui": "http://" + body.gi.site + "." + body.gi.domain,
+						"cmd": path.normalize(__dirname + "/../scripts/swarm-local-deploy.sh")
+					};
+					
+					if(!body.deployment.mongoExt){
+						obj['hosts'].mongo = body.deployment.containerHost + " dashboard_soajsData";
+					}
+					
+					return cb(null, obj);
 				});
 			}
 			else {
