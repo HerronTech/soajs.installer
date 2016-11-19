@@ -155,6 +155,12 @@ module.exports = {
 					"validation":{
 						"type": "object",
 						"properties": {
+							"deployType" : {"type": "string", "required": true, "enum": ["manual", "container"]},
+							"deployDriver": {
+								"type": "string",
+								"required": true,
+								"enum": ["manual", "container.docker.local", "container.docker.remote", "container.kubernetes.local", "container.kubernetes.remote"]
+							},
 							"containerDir": {"type": "string", "required": false},
 							"containerHost": {"type": "string", "required": false},
 							"deployDockerNodes": {"type": "array", "required": false, "items": {"type": "string"}},
@@ -164,7 +170,7 @@ module.exports = {
                             "gitRepo": {"type": "string", "required": false},
                             "gitToken": {"type": "string", "required": false},
 
-                            "soajsImagePrefix": {"type": "string", "required": false},
+                            "imagePrefix": {"type": "string", "required": false},
                             "nginxPort": {"type": "number", "required": false},
                             "nginxSecurePort": {"type": "number", "required": false},
                             "nginxSsl": {"type": "boolean", "required": false},

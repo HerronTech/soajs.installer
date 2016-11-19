@@ -58,7 +58,7 @@ module.exports = {
 		"gitRepo": null,
 		"gitToken": null,
 		
-		"soajsImagePrefix": "soajsorg",
+		"imagePrefix": "soajsorg",
 		"nginxPort": 80,
 		"nginxSecurePort": 443,
 		"nginxSsl": null,

@@ -299,7 +299,7 @@ module.exports = {
 			return cb(null, true);
 		}
 		else if (driver === 'docker') {
-			var runner = fs.createWriteStream(path.normalize(__dirname + "/../scripts/swarm-local-deploy.sh"));
+			var runner = fs.createWriteStream(path.normalize(__dirname + "/../scripts/swarm-deploy.sh"));
 			runner.write("#!/bin/bash" + os.EOL + os.EOL);
 			
 			var envs = {
@@ -318,7 +318,7 @@ module.exports = {
 				"SOAJS_GIT_TOKEN": body.deployment.gitToken,
 				
 				"SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
-				"SOAJS_IMAGE_PREFIX": body.deployment.soajsImagePrefix,
+				"SOAJS_IMAGE_PREFIX": body.deployment.imagePrefix,
 				
 				"NGINX_HTTP_PORT": body.deployment.nginxPort,
 				"NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
@@ -347,7 +347,7 @@ module.exports = {
 				runner.write(os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/docker.js") + os.EOL);
 				runner.end();
 				
-				fs.chmodSync(path.normalize(__dirname + "/../scripts/swarm-local-deploy.sh"), "0755");
+				fs.chmodSync(path.normalize(__dirname + "/../scripts/swarm-deploy.sh"), "0755");
 				
 				var obj = {
 					"hosts": {
@@ -355,7 +355,7 @@ module.exports = {
 						"site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
 					},
 					"ui": "http://" + body.gi.site + "." + body.gi.domain,
-					"cmd": path.normalize(__dirname + "/../scripts/swarm-local-deploy.sh")
+					"cmd": path.normalize(__dirname + "/../scripts/swarm-deploy.sh")
 				};
 				
 				if(!body.deployment.mongoExt){

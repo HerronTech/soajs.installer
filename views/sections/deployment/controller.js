@@ -32,6 +32,12 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 	
 	$scope.fillDeployment = function () {
 		var data = angular.copy($scope.deployment);
+		for(var i in data){
+			if(data[i] === null){
+				delete data[i];
+			}
+		}
+		
 		var options = {
 			url: appConfig.url + "/installer/deployment",
 			method: "post",
