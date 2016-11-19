@@ -347,6 +347,11 @@ module.exports = {
 					return cb(err);
 				}
 				
+				if(!body.deployment.mongoExt){
+					runner.write("sudo " +
+						"killall mongo" + os.EOL);
+				}
+				
 				runner.write(os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/docker.js") + os.EOL);
 				runner.end();
 				

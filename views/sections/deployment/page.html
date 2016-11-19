@@ -216,16 +216,16 @@
         <h4 style="text-align: center;">SOAJS Installed Successfully !</h4>
         <p>
             SOAJS Installation Script has been Generated.<br/>
-            Run the following command in your termnial and SOAJS will be installed and deployed.<br/>
+	        Update your hosts file with the following entries:
         </p>
-        <pre class="bash"><code># Run this in your terminal
-{{cmd}}</code></pre>
-        <p>
-            Update your hosts file with the following entries:
-        </p>
-        <pre class="bash"><code>{{hosts.api}}
+	    <pre class="bash"><code>{{hosts.api}}
 {{hosts.site}}
 {{hosts.mongo}}</code></pre>
+        <p>
+	        Run the following command in your termnial and SOAJS will be installed and deployed:
+        </p>
+	    <pre class="bash"><code># Run this in your terminal
+{{cmd}}</code></pre>
         <p>
             Once you finish click the following link and you will be taken to the login page of the dashboard: <a
                 href="{{ui}}" target="_blank">{{ui}}</a>
