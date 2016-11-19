@@ -226,7 +226,7 @@ var lib = {
         else {
             mongoEnv.push('SOAJS_MONGO_NB=' + mongoInfo.dashboard.ips.length);
             for (var i = 0; i < mongoInfo.dashboard.ips.length; i++) {
-                mongoEnv.push('SOAJS_MONGO_IP_' + (i + 1) + '=' + mongoInfo.dashboard.ips[i].ip);
+                mongoEnv.push('SOAJS_MONGO_IP_' + (i + 1) + '=' + profile.servers[0].host);
                 mongoEnv.push('SOAJS_MONGO_PORT_' + (i + 1) + '=' + profile.servers[0].port);
             }
         }

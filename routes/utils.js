@@ -140,6 +140,9 @@ module.exports = {
 		var profileData = '"use strict;"' + os.EOL;
 		clusters.name = "core_provision";
 		clusters.prefix = body.clusters.prefix || "";
+		if(body.deployment.deployDriver === "container.docker.local" && !body.deployment.mongoExt){
+			clusters.servers[0].host = "dashboard_soajsData";
+		}
 		profileData += 'module.exports = ' + JSON.stringify(clusters, null, 2) + ';';
 		fs.writeFileSync(folder + "profile.js", profileData, "utf8");
 		
