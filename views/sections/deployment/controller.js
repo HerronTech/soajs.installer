@@ -54,10 +54,10 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			
 			$scope.confirmation = true;
 			$scope.data = {
-				"gi": syntaxHighlight(JSON.stringify(response.gi, null, 4)),
-				"security": syntaxHighlight(JSON.stringify(response.security, null, 2)),
-				"clusters": syntaxHighlight(response.clusters),
-				"deployment": syntaxHighlight(response.deployment)
+				"gi": (response.gi) ? syntaxHighlight(JSON.stringify(response.gi, null, 4)) : JSON.stringify({}),
+				"security": (response.security) ? syntaxHighlight(JSON.stringify(response.security, null, 2)): JSON.stringify({}),
+				"clusters": (response.clusters) ? syntaxHighlight(response.clusters): JSON.stringify({}),
+				"deployment": (response.deployment) ? syntaxHighlight(response.deployment): JSON.stringify({})
 			};
 			$timeout(function(){
 				resizeContent();

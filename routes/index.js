@@ -150,9 +150,13 @@ var routes = {
 	"postDeployment": function (req, res) {
 		utils.updateCustomData(req, res, req.soajs.inputmaskData.deployment, "deployment", function(){
 			utils.loadCustomData(null, function(data){
-				delete data.security.extKey1;
-				delete data.security.extKey2;
-				data.gi.password = "******";
+				if(data.security){
+					delete data.security.extKey1;
+					delete data.security.extKey2;
+				}
+				if(data.gi){
+					data.gi.password = "******";
+				}
 				return res.json(req.soajs.buildResponse(null, data));
 			});
 		});

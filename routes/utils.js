@@ -220,29 +220,38 @@ module.exports = {
 	},
 	
 	"unifyData": function (def, over) {
-		for (var i in def.gi) {
-			if (over.gi[i] && over.gi[i] !== "") {
-				def.gi[i] = over.gi[i];
-			}
-		}
-		for (var i in def.security) {
-			if (over.security[i] && over.security[i] !== "") {
-				def.security[i] = over.security[i];
+		if(over.gi){
+			for (var i in def.gi) {
+				if (over.gi[i] && over.gi[i] !== "") {
+					def.gi[i] = over.gi[i];
+				}
 			}
 		}
 		
-		for (var i in def.deployment) {
-			if (over.deployment[i]) {
-				def.deployment[i] = over.deployment[i];
+		if(over.security){
+			for (var i in def.security) {
+				if (over.security[i] && over.security[i] !== "") {
+					def.security[i] = over.security[i];
+				}
 			}
 		}
 		
-		for (var j in over.clusters) {
-			def.clusters[j] = over.clusters[j];
+		if(over.deployment){
+			for (var i in def.deployment) {
+				if (over.deployment[i]) {
+					def.deployment[i] = over.deployment[i];
+				}
+			}
+			
+			for (var j in over.deployment) {
+				def.deployment[j] = over.deployment[j];
+			}
 		}
 		
-		for (var j in over.deployment) {
-			def.deployment[j] = over.deployment[j];
+		if(over.clusters){
+			for (var j in over.clusters) {
+				def.clusters[j] = over.clusters[j];
+			}
 		}
 		
 		return def;
@@ -306,8 +315,8 @@ module.exports = {
 			runner.write("#!/bin/bash" + os.EOL + os.EOL);
 			
 			var envs = {
-				"SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "master",
-				"SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "master",
+				"SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "develop",
+				"SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "develop",
 				"SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
 				
 				"API_PREFIX": body.gi.api,
