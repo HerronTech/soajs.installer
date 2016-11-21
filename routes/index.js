@@ -9,14 +9,15 @@ var dataDir = __dirname + "/../data/";
 
 var routes = {
 	"getOverview": function(req, res){
-		
+		var osName;
 		var data = {
 			"manual": "",
 			"docker": "",
 			"kubernetes": ""
 		};
-		
-		if(process.platform === 'linux'){
+		var platform = process.platform;
+		if(platform === 'linux'){
+			osName = 'linux';
 			data.manual = {
 				"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-linux.sh"),
 				"t": "sh"
@@ -30,7 +31,8 @@ var routes = {
 				"l": "sh"
 			};
 		}
-		else if(process.platform === 'darwin'){
+		else if(platform === 'darwin'){
+			osName = 'mac';
 			data.manual = {
 				"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-mac.sh"),
 				"t": "sh"
@@ -49,7 +51,8 @@ var routes = {
 			if(customData){
 				data.deployer = {
 					deployType: customData.deployType,
-					deployDriver: customData.deployDriver
+					deployDriver: customData.deployDriver,
+					os : osName
 				};
 			}
 			

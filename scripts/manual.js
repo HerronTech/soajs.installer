@@ -157,7 +157,7 @@ function loadDependencies(location, skip) {
 
 function cloneInstallRepo(repoName, noCore, cb) {
 	utilLog.log("\ninstalling", repoName, "...");
-	exec("git clone  git@github.com:soajs/" + repoName + ".git --branch " + GIT_BRANCH, {
+	exec("git clone  https://github.com/soajs/" + repoName + ".git --branch " + GIT_BRANCH, {
 		"cwd": WRK_DIR,
 		"env": process.env
 	}, function (error, stdout, stderr) {
