@@ -18,21 +18,21 @@ var routes = {
 		
 		if(process.platform === 'linux'){
 			data.manual = {
-				"v": path.resolve(__dirname + "/../scripts/pre/manual-linux.sh"),
+				"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-linux.sh"),
 				"t": "sh"
 			};
 			data.docker = {
-				"v": path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
+				"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
 				"t": "sh"
 			};
 			data.kubernetes = {
-				"v": path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
+				"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
 				"l": "sh"
 			};
 		}
 		else if(process.platform === 'darwin'){
 			data.manual = {
-				"v": path.resolve(__dirname + "/../scripts/pre/manual-mac.sh"),
+				"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-mac.sh"),
 				"t": "sh"
 			};
 			data.docker = {
@@ -40,7 +40,7 @@ var routes = {
 				"t": "link"
 			};
 			data.kubernetes = {
-				"v": path.resolve(__dirname + "/../scripts/pre/kubernetes-mac.sh"),
+				"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-mac.sh"),
 				"l": "sh"
 			};
 		}

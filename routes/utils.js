@@ -292,8 +292,18 @@ module.exports = {
 					runner.write("export " + e + "=" + envs[e] + os.EOL);
 				}
 				
-				runner.write(os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/manual.js") + os.EOL);
-				runner.write("ps aux | grep node" + os.EOL);
+				runner.write(os.EOL + "#Run Deployment Script ..." + os.EOL);
+				runner.write(nodePath + " " + path.normalize(__dirname + "/../scripts/manual.js") + os.EOL);
+				runner.write(os.EOL + "#Start Nginx ..." + os.EOL);
+				
+				if(process.platform === 'darwin'){
+					runner.write("brew services start nginx" + os.EOL);
+				}
+				else {
+					runner.write("sudo service nginx start" + os.EOL);
+				}
+				
+				runner.write(os.EOL + "ps aux | grep node" + os.EOL);
 				runner.end();
 				
 				fs.chmodSync(path.normalize(__dirname + "/../scripts/manual-deploy.sh"), "0755");
