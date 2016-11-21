@@ -146,6 +146,9 @@ module.exports = {
 		profileData += 'module.exports = ' + JSON.stringify(clusters, null, 2) + ';';
 		fs.writeFileSync(folder + "profile.js", profileData, "utf8");
 		
+		delete clusters.name;
+		delete clusters.prefix;
+		
 		//modify users file
 		var userData = fs.readFileSync(folder + "urac/users/owner.js", "utf8");
 		userData = userData.replace(/%username%/g, body.gi.username);
@@ -154,7 +157,7 @@ module.exports = {
 		var Hasher = soajs.hasher;
 		Hasher.init({
 			"hashIterations": 1024,
-			"seedLength": 32,
+			"seedLength": 32
 		});
 		var hashedPwd = Hasher.hash(body.gi.password);
 		userData = userData.replace(/%password%/g, hashedPwd);
@@ -301,7 +304,7 @@ module.exports = {
 						"site": "127.0.0.1 " + body.gi.site + "." + body.gi.domain
 					},
 					"ui": "http://" + body.gi.site + "." + body.gi.domain,
-					"cmd": path.normalize(__dirname + "/../scripts/manual-deploy.sh")
+					"cmd": "sudo " + path.normalize(__dirname + "/../scripts/manual-deploy.sh")
 				});
 			});
 		});

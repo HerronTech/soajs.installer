@@ -104,13 +104,16 @@ function startDashboard(cb) {
 		}
 		async.series([
 			function (mcb) {
-				launchService('controller', mcb);
-			},
-			function (mcb) {
 				launchService('urac', mcb);
 			},
 			function (mcb) {
 				launchService('dashboard', mcb);
+			},
+			function (mcb) {
+				//wait 5 seconds, then start the controller
+				setTimeout(function(){
+					launchService('controller', mcb);
+				}, 5000);
 			},
 			setupNginx
 		], cb);
@@ -218,11 +221,16 @@ function install(cb) {
 				utilLog.log("\ninstalling soajs.controller soajs.urac soajs.dashboard soajs.gcs ...");
 				npm.load({prefix: WRK_DIR + "/../"}, function (err) {
 					if (err) return mcb(err);
-					npm.commands.install(["soajs.controller", "soajs.urac", "soajs.dashboard", "soajs.gcs"], function (error, data) {
+					npm.commands.install(["soajs.urac", "soajs.dashboard", "soajs.gcs"], function (error) {
 						if (error) {
 							utilLog.log('error', error);
 						}
-						return mcb();
+						npm.commands.install(["soajs.controller"], function(error){
+							if (error) {
+								utilLog.log('error', error);
+							}
+							return mcb();
+						});
 					});
 				});
 			},
