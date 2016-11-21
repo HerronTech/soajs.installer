@@ -2,6 +2,7 @@
 var deploymentApp = app.components;
 deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$timeout', function ($scope, ngDataApi, $modal, $timeout) {
 	$scope.alerts = [];
+	$scope.confirmation = false;
 	
 	$scope.goBack = function () {
 		$scope.$parent.go("#/clusters");
@@ -20,7 +21,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			var types = ["container.docker.remote", "container.kubernetes.remote"];
 			$scope.local = (types.indexOf($scope.deployment.deployDriver) ===  -1);
 			
-			if(!$scope.local){
+			if($scope.deployment.deployDriver.indexOf("remote") !== -1){
 				$scope.deployment.deployDockerNodes = [];
 				$scope.deployment.deployDockerNodes.push($scope.deployment.containerHost);
 			}
@@ -125,6 +126,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				return false;
 			}
 			
+			$scope.ha = (response.deployType !== 'manual');
 			$scope.deployment = {
 				"deployType": (response && response.deployType) ? response.deployType : "manual",
 				"deployDriver": (response && response.deployDriver) ? response.deployDriver : "manual",

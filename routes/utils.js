@@ -386,7 +386,7 @@ module.exports = {
 						"site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
 					},
 					"ui": "http://" + body.gi.site + "." + body.gi.domain,
-					"cmd": path.normalize(__dirname + "/../scripts/swarm-deploy.sh")
+					"cmd": "sudo " + path.normalize(__dirname + "/../scripts/swarm-deploy.sh")
 				};
 				
 				if(!body.deployment.mongoExt){
