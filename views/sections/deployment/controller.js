@@ -30,6 +30,12 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 		}
 	};
 	
+	$scope.goToFinal = function(){
+		$timeout(function(){
+			$scope.fillDeployment();
+		}, 1000);
+	};
+	
 	$scope.fillDeployment = function () {
 		var data = angular.copy($scope.deployment);
 		for(var i in data){
@@ -53,12 +59,24 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			}
 			
 			$scope.confirmation = true;
-			$scope.data = {
-				"gi": (response.gi) ? syntaxHighlight(JSON.stringify(response.gi, null, 4)) : JSON.stringify({}),
-				"security": (response.security) ? syntaxHighlight(JSON.stringify(response.security, null, 2)): JSON.stringify({}),
-				"clusters": (response.clusters) ? syntaxHighlight(response.clusters): JSON.stringify({}),
-				"deployment": (response.deployment) ? syntaxHighlight(response.deployment): JSON.stringify({})
-			};
+			$scope.data = {};
+			
+			if(response.gi) {
+				$scope.data.gi = syntaxHighlight(JSON.stringify(response.gi, null, 4));
+			}
+			
+			if(response.security) {
+				$scope.data.security = syntaxHighlight(JSON.stringify(response.security, null, 4));
+			}
+			
+			if(response.clusters) {
+				$scope.data.clusters = syntaxHighlight(JSON.stringify(response.clusters, null, 4));
+			}
+			
+			if(response.deployment) {
+				$scope.data.deployment = syntaxHighlight(JSON.stringify(response.deployment, null, 4));
+			}
+			
 			$timeout(function(){
 				resizeContent();
 			}, 10);

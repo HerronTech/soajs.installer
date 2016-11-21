@@ -4,18 +4,25 @@
             {{alert.msg}}
         </alert>
     </div>
+	<div ng-show="!ha" ng-hide="confirmation">
+		<form class="css-form" novalidate>
+				<div class="header">
+					<h3>Deployment Information</h3>
+				</div>
+		</form>
+		<p>
+			You have selected manual deployment in <b>Overview</b> section.<br />
+			Manual Deployment has no extra configuration, click proceed to start the deployment.
+			<span ng-init="goToFinal()"></span>
+		</p>
+	</div>
     <form ng-hide="confirmation" name="deploymentForm" class="css-form" novalidate
-          ng-submit="deploymentForm.$valid && fillDeployment();">
+          ng-submit="deploymentForm.$valid && fillDeployment();" ng-show="ha">
         <div class="header">
             <h3>Deployment Information</h3>
         </div>
         <table width="100%" cellspacing="0" cellpadding="0" border="0">
             <tbody>
-            <tr class="form-group tr-code-wrapper" ng-show="!ha">
-                <td class="form-select">
-                    <p>In case manual was selected</p>
-                </td>
-            </tr>
             <tr class="form-group tr-code-wrapper" ng-show="ha">
                 <td class="form-select">
                     <div id="containerHost-wrapper">
@@ -147,7 +154,8 @@
                         <div class="fieldMsg hint">Specify the docker container port number.</div>
                     </div>
                 </td>
-            </tr><tr class="form-group tr-code-wrapper" ng-show="ha">
+            </tr>
+            <tr class="form-group tr-code-wrapper" ng-show="ha">
                 <td class="form-select">
                     <div id="dockerInternalPort-wrapper">
                         <label>Docker Internal Port Number</label>
@@ -182,25 +190,25 @@
                 <h3>Overview</h3>
             </div>
         </form>
-        <div class="box">
+        <div class="box" ng-show="data.gi">
             <div class="box-heading">General Information</div>
             <div class="box-content">
                 <pre ng-bind-html="data.gi"></pre>
             </div>
         </div>
-        <div class="box">
+        <div class="box" ng-show="data.security">
             <div class="box-heading">Security Information</div>
             <div class="box-content">
                 <pre ng-bind-html="data.security"></pre>
             </div>
         </div>
-        <div class="box">
+        <div class="box" ng-show="data.clusters">
             <div class="box-heading">Clusters Information</div>
             <div class="box-content">
                 <pre ng-bind-html="data.clusters"></pre>
             </div>
         </div>
-        <div class="box">
+        <div class="box" ng-show="data.deployment">
             <div class="box-heading">Deployment Information</div>
             <div class="box-content">
                 <pre ng-bind-html="data.deployment"></pre>
