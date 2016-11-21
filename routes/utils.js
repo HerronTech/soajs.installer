@@ -277,6 +277,7 @@ module.exports = {
 					"DEPLOY_FROM": process.env.DEPLOY_FROM || "NPM",
 					"SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "master",
 					"SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "master",
+					"SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
 					"SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
 					"INSTALLER_DIR": path.normalize(__dirname + "/../scripts/"),
 					"SOAJS_DEPLOY_DIR": body.gi.wrkDir,
@@ -288,7 +289,7 @@ module.exports = {
 					runner.write("export " + e + "=" + envs[e] + os.EOL);
 				}
 				
-				runner.write(os.EOL + nodePath + " " + __dirname + "/../scripts/manual.js" + os.EOL);
+				runner.write(os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/manual.js") + os.EOL);
 				runner.write("ps aux | grep node" + os.EOL);
 				runner.end();
 				

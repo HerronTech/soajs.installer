@@ -65,7 +65,7 @@ var routes = {
 			var data = null;
 			if(customData && customData.gi){
 				data = customData.gi;
-				data.disableWrkDir = (customData.deployment && customData.deployment !== 'manual');
+				data.disableWrkDir = (customData.deployment && customData.deployment.deployType !== 'manual');
 			}
 			return res.json(req.soajs.buildResponse(null, data));
 		});
