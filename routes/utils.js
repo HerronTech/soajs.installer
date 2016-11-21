@@ -350,7 +350,7 @@ module.exports = {
 				"NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
 				"SOAJS_NX_SSL": body.deployment.nginxSsl,
 				
-				"SOAJS_DOCKER_CERTS_PATH": body.deployment.certificatesFolder,
+				"SOAJS_DOCKER_CERTS_PATH": body.deployment.containerDir || body.deployment.certificatesFolder,
 				"SWARM_INTERNAL_PORT": body.deployment.dockerInternalPort,
 				"SOAJS_DOCKER_SOCKET": body.deployment.dockerSocket,
 				"DOCKER_NETWORK": body.deployment.networkName,
