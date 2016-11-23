@@ -13,13 +13,22 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 	
 	$scope.evaluateDeploymentChoice = function () {
 		$scope.ha = false;
-		
+		$scope.docker = false;
+		$scope.kubernetes = false;
+
 		if ($scope.deployment.deployDriver !== "manual") {
 			$scope.ha = true;
 			$scope.deployment.deployType = "container";
 			var types = ["container.docker.remote", "container.kubernetes.remote"];
 			$scope.local = (types.indexOf($scope.deployment.deployDriver) ===  -1);
-			
+
+			if($scope.deployment.deployDriver.indexOf("docker") !== -1){
+                $scope.docker = true;
+            }
+            if($scope.deployment.deployDriver.indexOf("kubernetes") !== -1) {
+                $scope.kubernetes = true;
+            }
+
 			if(!$scope.local){
 				$scope.deployment.deployDockerNodes = [];
 				$scope.deployment.deployDockerNodes.push($scope.deployment.containerHost);
@@ -113,7 +122,6 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				"deployDockerNodes": (response && response.deployDockerNodes) ? response.deployDockerNodes : [],
 				"containerHost": (response && response.containerHost) ? response.containerHost : "127.0.0.1",
 				"containerDir": (response && response.containerDir) ? response.containerDir : "",
-				"mongoExt": (response && response.mongoExt) ? response.mongoExt : false,
 				"gitOwner": (response && response.gitOwner) ? response.gitOwner : null,
                 "gitRepo": (response && response.gitRepo) ? response.gitRepo : null,
                 "gitToken": (response && response.gitToken) ? response.gitToken : null,

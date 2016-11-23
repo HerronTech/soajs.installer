@@ -13,7 +13,7 @@
 				<tr class="form-group servers-wrapper">
 					<td>
 						<alert type="warning"><b><u>Note:</u></b><br />
-							If you are planning to deploy SOAJS using <b>Docker</b> or <b>Kubernetes</b> locally and you don't want <b>Mongo</b> to be a container but at the same time on your local machine, in this case the Mongo hostname under <b>Servers List</b> should contain your machine's network IP address instead of ( 127.0.0.1 or localhost )
+							If you are planning to deploy SOAJS using <b>Docker</b> or <b>Kubernetes</b> locally, but you don't want <b>Mongo</b> to be instantiated in a container, then the Mongo hostname under <b>Servers List</b> should contain the designated machine's network IP address instead of (<i><b>127.0.0.1</b></i> or <i><b>localhost</b></i>)
 						</alert>
 						<fieldset class="serversList">
 							<legend>Servers List</legend>
@@ -61,6 +61,16 @@
 							<label class="f-left  ">Cluster Prefix</label>
 							<input type="text" class="form-control" ng-required="false" ng-model="clusters.prefix" name="clusterPrefix" id="clusterPrefix" value="{{clusterPrefix}}" />
 							<div class="fieldMsg hint">Provide a prefix for your database names</div>
+						</div>
+					</td>
+				</tr>
+				<tr class="form-group tr-code-wrapper" ng-show="containerDeployment">
+					<td class="form-select">
+						<div id="mongoExt-wrapper">
+							<input class="f-left form-control" id="mongoExt" name="mongoExt" ng-model="clusters.mongoExt"
+								   tooltip="Check the box if you want Mongo to be outside the container cloud."
+								   ng-required="false" type="checkbox"/>&nbsp;<label>External Mongo</label>
+							<div class="fieldMsg hint">Specify if Mongo should be outside the container cloud</div>
 						</div>
 					</td>
 				</tr>
