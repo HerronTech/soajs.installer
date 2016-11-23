@@ -5,16 +5,18 @@
         </alert>
     </div>
 	<div ng-show="!confirmation && deployment.deployType ==='manual'">
-		<form class="css-form" novalidate>
-			<div class="header">
-				<h3>Deployment Information</h3>
-			</div>
-		</form>
-		<p>
-			You have selected manual deployment in <b>Overview</b> section.<br />
-			Manual Deployment has no extra configuration, click proceed to start the deployment.
-			<input value="Proceed" class="btn btn-sm btn-primary f-right" type="button" ng-click="goToFinal()"/>
-		</p>
+		<div ng-hide="ha">
+			<form class="css-form" novalidate>
+				<div class="header">
+					<h3>Deployment Information</h3>
+				</div>
+			</form>
+			<p>
+				You have selected manual deployment in <b>Overview</b> section.<br />
+				Manual Deployment has no extra configuration, click proceed to start the deployment.
+				<input type="button" class="btn btn-sm btn-primary" value="Proceed" ng-click="goToFinal()" />
+			</p>
+		</div>
 	</div>
     <form ng-hide="confirmation" name="deploymentForm" class="css-form" novalidate
           ng-submit="deploymentForm.$valid && fillDeployment();" ng-show="ha">

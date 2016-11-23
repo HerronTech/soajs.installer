@@ -1,104 +1,66 @@
-'use strict';
+"use strict";
 
-var fs = require('fs');
-
-var machineIP = process.env.SOAJS_MACHINE_IP || '127.0.0.1';
-var machinePort = process.env.SOAJS_MACHINE_PORT || 8443;
-
-var dataLayer = {
-    mongo: {
-        external: process.env.SOAJS_MONGO_OBJECTROCKET || process.env.SOAJS_MONGO_EXTERNAL || false,
-        srvCount: 1
-    },
-    elasticsearch: {
-        external: process.env.SOAJS_ELASTIC_EXTERNAL || false
-    }
+var profile = require(process.env.SOAJS_PROFILE);
+var mongoHostname = profile.servers[0].host;
+module.exports = {
+	"masterDomain": process.env.MASTER_DOMAIN || 'soajs.org',
+	"apiPrefix": process.env.API_PREFIX || "dashboard-api",
+	"sitePrefix": process.env.SITE_PREFIX || "dashboard",
+	"folder": process.env.SOAJS_DATA_FOLDER || "/opt/soajs/node_modules/soajs.installer/data/startup/",
+	"profile": process.env.SOAJS_PROFILE || "/opt/soajs/node_modules/soajs.installer/data/startup/profile.js",
+	"git":{
+		"branch": process.env.SOAJS_GIT_BRANCH || 'develop'
+	},
+	"dashUISrc": {
+		"branch": process.env.SOAJS_GIT_DASHBOARD_BRANCH || 'develop'
+	},
+	"customUISrc":{
+		"owner": process.env.SOAJS_GIT_OWNER || null,
+		"repo": process.env.SOAJS_GIT_REPO || null,
+		"branch": process.env.SOAJS_GIT_BRANCH || null,
+		"token": process.env.SOAJS_GIT_TOKEN || null
+	},
+	"mongo":{
+		"prefix": profile.prefix,
+		"hostname": mongoHostname,
+		"services": {
+			"dashboard": {
+				"name": mongoHostname,
+				"ips": []
+			}
+		},
+		"external": (process.env.MONGO_EXT === "true") || false,
+		"port": parseInt(profile.servers[0].port) || 31000
+	},
+	"nginx":{
+		"port": {
+			"http": parseInt(process.env.NGINX_HTTP_PORT) || 80,
+			"https": parseInt(process.env.NGINX_HTTPS_PORT) || 443
+		},
+		"ssl": (process.env.SOAJS_NX_SSL === "true") || false
+	},
+	"imagePrefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
+	"kubernetes": {
+		"config":{
+			"url": 'https://' + (process.env.CONTAINER_HOST || "127.0.0.1") + ':' + (parseInt(process.env.CONTAINER_PORT) || 8443),
+			"namespace": 'default'
+		},
+		"mongoCollection": 'docker',
+		"replicas": parseInt(process.env.SOAJS_DOCKER_REPLICA) || 1,
+		"machineIP": process.env.CONTAINER_HOST || "127.0.0.1",
+		"machinePort": parseInt(process.env.CONTAINER_PORT) || 8443,
+		"certsPath": process.env.SOAJS_DOCKER_CERTS_PATH || process.env.HOME + '/.minikube',
+		"network": process.env.DOCKER_NETWORK ||  'soajsnet',
+		"swarmConfig": {
+			"tokens": {}
+		}
+	},
+	
+	"deployGroups": ['db', 'core', 'nginx'],
+	"services":{
+		"path": {
+			"dir": __dirname + '/services/',
+			"fileType": 'js'
+		}
+	}
 };
-
-if (dataLayer.mongo.external) {
-    dataLayer.mongo.url = process.env.SOAJS_MONGO_OBJECTROCKET_URL || process.env.SOAJS_MONGO_EXTERNAL_URL;
-    dataLayer.mongo.port = process.env.SOAJS_MONGO_OBJECTROCKET_URL_PORT || process.env.SOAJS_MONGO_EXTERNAL_PORT;
-    dataLayer.mongo.username = process.env.SOAJS_MONGO_USERNAME;
-    dataLayer.mongo.password = process.env.SOAJS_MONGO_PASSWORD;
-    dataLayer.mongo.ssl = process.env.SOAJS_MONGO_SSL;
-    dataLayer.mongo.authDb = process.env.SOAJS_MONGO_AUTH_DB;
-}
-
-if (dataLayer.elasticsearch.external) {
-    dataLayer.elasticsearch.url = process.env.SOAJS_ELASTIC_EXTERNAL_URL;
-    dataLayer.elasticsearch.port = process.env.SOAJS_ELASTIC_EXTERNAL_PORT;
-    dataLayer.elasticsearch.username = process.env.SOAJS_ELASTIC_USERNAME;
-    dataLayer.elasticsearch.password = process.env.SOAJS_ELASTIC_PASSWORD;
-}
-
-var config = {
-
-    dataLayer: dataLayer,
-
-    coreDB: {
-        "name": "core_provision",
-        "prefix": "",
-        "servers": [
-            {
-                "host": ((dataLayer.mongo.external) ? dataLayer.mongo.url : machineIP),
-                "port": 31000
-            }
-        ],
-        "credentials": ((dataLayer.mongo.username && dataLayer.mongo.password) ? { username: dataLayer.mongo.username, password: dataLayer.mongo.password } : null),
-        "URLParam": {
-            "maxPoolSize": 2,
-            "ssl": ((dataLayer.mongo.ssl) ? dataLayer.mongo.ssl : null)
-        },
-        "extraParam": {
-            "db": {
-                "authSource": ((dataLayer.mongo.authDb) ? dataLayer.mongo.authDb : null),
-                "bufferMaxEntries": 0
-            }
-        }
-    },
-
-    dockerCollName: 'docker',
-
-    defaultMasterDomain: 'soajs.org',
-    servicesPath: __dirname + '/services/',
-    mappingsPath: __dirname + '/mappings/',
-
-    paths: {
-        services: {
-            dir: __dirname + '/services/',
-            fileType: 'js'
-        }
-    },
-
-    machineIP: machineIP,
-    machinePort: machinePort,
-    certsPath: process.env.SOAJS_KUBE_CERTS_PATH || process.env.HOME + '/.minikube',
-
-    defaultMongoPort: 27017,
-
-    objectRocket: process.env.SOAJS_MONGO_OBJECTROCKET,
-
-    mongoServices: {
-        dashboard: {
-            name: 'dashboard-soajsdata',
-            ips: []
-        },
-        dev: {
-            name: 'dev-soajsData',
-            ips: []
-        }
-    },
-
-    deployGroups: ['db', 'core', 'nginx'],
-
-    kubeConfig: {
-        url: 'https://' + machineIP + ':' + machinePort,
-        namespace: 'default'
-    },
-
-    swarmConfig: {
-        tokens: {}
-    }
-};
-
-module.exports = config;

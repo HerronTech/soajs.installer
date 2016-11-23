@@ -121,20 +121,29 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				"deployDriver": (response && response.deployDriver) ? response.deployDriver : "manual",
 				"deployDockerNodes": (response && response.deployDockerNodes) ? response.deployDockerNodes : [],
 				"containerHost": (response && response.containerHost) ? response.containerHost : "127.0.0.1",
-				"containerDir": (response && response.containerDir) ? response.containerDir : "",
 				"gitOwner": (response && response.gitOwner) ? response.gitOwner : null,
                 "gitRepo": (response && response.gitRepo) ? response.gitRepo : null,
                 "gitToken": (response && response.gitToken) ? response.gitToken : null,
 				"imagePrefix": (response && response.imagePrefix) ? response.imagePrefix : "soajsorg",
-                "nginxPort": (response && response.nginxPort) ? response.nginxPort : 80,
+                
+				"nginxPort": (response && response.nginxPort) ? response.nginxPort : 80,
                 "nginxSecurePort": (response && response.nginxSecurePort) ? response.nginxSecurePort : 443,
                 "nginxSsl": (response && response.nginxSsl) ? response.nginxSsl : false,
-				"dockerSocket": (response && response.dockerSocket) ? response.dockerSocket : "/var/run/docker.sock",
-				"networkName": (response && response.networkName) ? response.networkName : "soajsnet",
-                "containerPort": (response && response.containerPort) ? response.containerPort : 2376,
-                "dockerInternalPort": (response && response.dockerInternalPort) ? response.dockerInternalPort : 2377,
+				
                 "dockerReplica": (response && response.dockerReplica) ? response.dockerReplica : 1
 			};
+			
+			if($scope.deployment.deployDriver.indexOf("docker") !== -1){
+				$scope.deployment.containerDir = (response && response.docker.containerDir) ? response.docker.containerDir : "";
+				$scope.deployment.containerPort = (response && response.docker.containerPort) ? response.docker.containerPort : 2376;
+				$scope.deployment.dockerSocket = (response && response.docker.dockerSocket) ? response.docker.dockerSocket : "/var/run/docker.sock";
+				$scope.deployment.networkName = (response && response.docker.networkName) ? response.docker.networkName : "soajsnet";
+				$scope.deployment.dockerInternalPort = (response && response.docker.dockerInternalPort) ? response.docker.dockerInternalPort : 2377;
+			}
+			else if ($scope.deployment.deployDriver.indexOf("kubernetes") !== -1){
+				$scope.deployment.containerDir = (response && response.kubernetes.containerDir) ? response.kubernetes.containerDir : "";
+				$scope.deployment.kubeContainerPort = (response && response.kubernetes.containerPort) ? response.kubernetes.containerPort : 8443;
+			}
 			
 			$scope.evaluateDeploymentChoice();
 			resizeContent();

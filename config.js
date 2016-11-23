@@ -180,7 +180,8 @@ module.exports = {
                             "containerPort": {"type": "number", "required": false},
                             "dockerInternalPort": {"type": "number", "required": false},
                             "dockerReplica": {"type": "number", "required": false},
-                            "certificatesFolder": {"type": "string", "required": false}
+                            "certificatesFolder": {"type": "string", "required": false},
+                            "kubeContainerPort": {"type": "number", "required": false}
 						},
 						"additionalProperties": false
 					}

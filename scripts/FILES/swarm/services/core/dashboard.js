@@ -40,7 +40,7 @@ var config = {
 			"Type": "bind",
 			"ReadOnly": true,
 			"Source": gConfig.docker.socketPath,
-			"Target": gConfig.docker.socketPath,
+			"Target": gConfig.docker.socketPath
 		}
 	],
 	labels: {

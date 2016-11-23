@@ -140,12 +140,29 @@ module.exports = {
 		var profileData = '"use strict;"' + os.EOL;
 		clusters.name = "core_provision";
 		clusters.prefix = body.clusters.prefix || "";
-		if(body.deployment.deployDriver === "container.docker.local" && !body.deployment.mongoExt){
-			clusters.servers[0].host = "dashboard_soajsData";
+		var flavors = ["container.docker.local", "container.kubernetes.local"];
+		if(flavors.indexOf(body.deployment.deployDriver) !== -1 && !clusters.mongoExt){
+			if(body.deployment.deployDriver === "container.docker.local"){
+				clusters.servers = [
+					{
+						host: "dashboard-soajsdata",
+						port: 27017
+					}
+				];
+			}
+			if(body.deployment.deployDriver === "container.kubernetes.local"){
+				clusters.servers = [
+					{
+						host: "dashboard-soajsdata",
+						port: 5000 + 27017
+					}
+				];
+			}
 		}
 		profileData += 'module.exports = ' + JSON.stringify(clusters, null, 2) + ';';
 		fs.writeFileSync(folder + "profile.js", profileData, "utf8");
 		
+		delete clusters.mongoExt;
 		delete clusters.name;
 		delete clusters.prefix;
 		
@@ -321,89 +338,134 @@ module.exports = {
 	},
 	
 	"deployContainer": function (body, driver, loc, cb) {
-		if (driver === 'kubernetes') {
-			return cb(null, true);
-		}
-		else if (driver === 'docker') {
-			var runner = fs.createWriteStream(path.normalize(__dirname + "/../scripts/swarm-deploy.sh"));
-			runner.write("#!/bin/bash" + os.EOL + os.EOL);
-			
-			var envs = {
-				"SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "develop",
-				"SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "develop",
-				"SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
-				
-				"API_PREFIX": body.gi.api,
-				"SITE_PREFIX": body.gi.site,
-				"MASTER_DOMAIN": body.gi.domain,
-				
-				"MONGO_EXT": body.deployment.mongoExt,
-				
-				"SOAJS_GIT_OWNER": body.deployment.gitOwner,
-				"SOAJS_GIT_REPO": body.deployment.gitRepo,
-				"SOAJS_GIT_TOKEN": body.deployment.gitToken,
-				
-				"SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
-				"SOAJS_IMAGE_PREFIX": body.deployment.imagePrefix,
-				
-				"NGINX_HTTP_PORT": body.deployment.nginxPort,
-				"NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
-				"SOAJS_NX_SSL": body.deployment.nginxSsl,
-				
-				"SOAJS_DOCKER_CERTS_PATH": body.deployment.containerDir || body.deployment.certificatesFolder,
-				"SWARM_INTERNAL_PORT": body.deployment.dockerInternalPort,
-				"SOAJS_DOCKER_SOCKET": body.deployment.dockerSocket,
-				"DOCKER_NETWORK": body.deployment.networkName,
-				"CONTAINER_HOST": body.deployment.containerHost,
-				"CONTAINER_PORT": body.deployment.containerPort,
-				"SOAJS_DOCKER_REPLICA": body.deployment.dockerReplica
-			};
-			
-			for (var e in envs) {
-				if(envs[e] !== null){
-					runner.write("export " + e + "=" + envs[e] + os.EOL);
-				}
+		whereis('node', function (err, nodePath) {
+			if (err) {
+				return cb(err);
 			}
 			
-			whereis('node', function (err, nodePath) {
-				if (err) {
-					return cb(err);
+			if (driver === 'docker') {
+				var runner = fs.createWriteStream(path.normalize(__dirname + "/../scripts/swarm-deploy.sh"));
+				runner.write("#!/bin/bash" + os.EOL + os.EOL);
+				
+				var envs = {
+					"SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "develop",
+					"SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "develop",
+					"SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
+					
+					"API_PREFIX": body.gi.api,
+					"SITE_PREFIX": body.gi.site,
+					"MASTER_DOMAIN": body.gi.domain,
+					
+					"MONGO_EXT": body.clusters.mongoExt,
+					
+					"SOAJS_GIT_OWNER": body.deployment.gitOwner,
+					"SOAJS_GIT_REPO": body.deployment.gitRepo,
+					"SOAJS_GIT_TOKEN": body.deployment.gitToken,
+					
+					"SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
+					"SOAJS_IMAGE_PREFIX": body.deployment.imagePrefix,
+					
+					"NGINX_HTTP_PORT": body.deployment.nginxPort,
+					"NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
+					"SOAJS_NX_SSL": body.deployment.nginxSsl,
+					
+					"SOAJS_DOCKER_CERTS_PATH": body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder,
+					"SWARM_INTERNAL_PORT": body.deployment.docker.dockerInternalPort,
+					"SOAJS_DOCKER_SOCKET": body.deployment.docker.dockerSocket,
+					"DOCKER_NETWORK": body.deployment.docker.networkName,
+					"CONTAINER_HOST": body.deployment.containerHost,
+					"CONTAINER_PORT": body.deployment.docker.containerPort,
+					"SOAJS_DOCKER_REPLICA": body.deployment.dockerReplica
+				};
+				
+				for (var e in envs) {
+					if(envs[e] !== null){
+						runner.write("export " + e + "=" + envs[e] + os.EOL);
+					}
 				}
 				
-				if(!body.deployment.mongoExt){
-					runner.write("sudo " +
-						"killall mongo" + os.EOL);
+				if(!body.clusters.mongoExt){
+					runner.write("sudo " + "killall mongo" + os.EOL);
 				}
 				
 				runner.write(os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/docker.js") + os.EOL);
 				runner.end();
 				
-				fs.chmodSync(path.normalize(__dirname + "/../scripts/swarm-deploy.sh"), "0755");
+				generateResponse("swarm");
+			}
+			else if (driver === 'kubernetes') {
 				
-				var obj = {
-					"hosts": {
-						"api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
-						"site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
-					},
-					"ui": "http://" + body.gi.site + "." + body.gi.domain,
-					"cmd": "sudo " + path.normalize(__dirname + "/../scripts/swarm-deploy.sh")
+				var runner = fs.createWriteStream(path.normalize(__dirname + "/../scripts/kubernetes-deploy.sh"));
+				runner.write("#!/bin/bash" + os.EOL + os.EOL);
+				
+				var envs = {
+					"SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "develop",
+					"SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "develop",
+					"SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
+					
+					"API_PREFIX": body.gi.api,
+					"SITE_PREFIX": body.gi.site,
+					"MASTER_DOMAIN": body.gi.domain,
+					
+					"MONGO_EXT": body.clusters.mongoExt,
+					
+					"SOAJS_GIT_OWNER": body.deployment.gitOwner,
+					"SOAJS_GIT_REPO": body.deployment.gitRepo,
+					"SOAJS_GIT_TOKEN": body.deployment.gitToken,
+					
+					"SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
+					"SOAJS_IMAGE_PREFIX": body.deployment.imagePrefix,
+					
+					"NGINX_HTTP_PORT": body.deployment.nginxPort,
+					"NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
+					"SOAJS_NX_SSL": body.deployment.nginxSsl,
+					
+					"CONTAINER_HOST": body.deployment.containerHost,
+					"SOAJS_DOCKER_CERTS_PATH": body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder,
+					"CONTAINER_PORT": body.deployment.kubernetes.containerPort,
+					"SOAJS_DOCKER_REPLICA": body.deployment.dockerReplica
 				};
 				
-				if(!body.deployment.mongoExt){
-					obj['hosts'].mongo = body.deployment.containerHost + " dashboard_soajsData";
-				}
-				else{
-					obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard_soajsData";
+				for (var e in envs) {
+					if(envs[e] !== null){
+						runner.write("export " + e + "=" + envs[e] + os.EOL);
+					}
 				}
 				
-				return cb(null, obj);
-			});
-		}
-		else if (driver === 'kubernetes') {
-			return cb(null, true);
-		}
-		else{
-			return cb(new Error("Invalid Deployment Strategy Requested: " + driver));
+				if(!body.clusters.mongoExt){
+					runner.write("sudo " + "killall mongo" + os.EOL);
+				}
+				
+				runner.write(os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/kubernetes.js") + os.EOL);
+				runner.end();
+				
+				generateResponse("kubernetes");
+			}
+			else{
+				return cb(new Error("Invalid Deployment Strategy Requested: " + driver));
+			}
+		});
+		
+		function generateResponse(type){
+			fs.chmodSync(path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh"), "0755");
+			
+			var obj = {
+				"hosts": {
+					"api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
+					"site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
+				},
+				"ui": "http://" + body.gi.site + "." + body.gi.domain,
+				"cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
+			};
+			
+			if(!body.clusters.mongoExt){
+				obj['hosts'].mongo = body.deployment.containerHost + " dashboard_soajsData";
+			}
+			else{
+				obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard_soajsData";
+			}
+			
+			return cb(null, obj);
 		}
 	}
 };

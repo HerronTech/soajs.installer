@@ -1,18 +1,18 @@
 'use strict';
-
 var K8Api = require('kubernetes-client');
-var util = require('util');
 var async = require('async');
 var fs = require('fs');
-var shell = require('shelljs');
+var exec = require('child_process').exec;
 var soajs = require('soajs');
 var request = require('request');
 
-var config = require('../config.js');
-
-var profile = config.coreDB;
+var config = require('./config.js');
+var folder = config.folder;
+delete require.cache[config.profile];
+var profile = require(config.profile);
 var mongo = new soajs.mongo(profile);
 
+var utilLog = require('util');
 var lib = {
 
     printProgress: function (message, counter) {
@@ -30,17 +30,20 @@ var lib = {
             var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             var now = new Date();
             return '' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getHours() + ':' +
-                    ((now.getMinutes().toString().length === 2) ? now.getMinutes() : '0' + now.getMinutes()) + ':' +
-                    ((now.getSeconds().toString().length === 2) ? now.getSeconds() : '0' + now.getSeconds());
+                ((now.getMinutes().toString().length === 2) ? now.getMinutes() : '0' + now.getMinutes()) + ':' +
+                ((now.getSeconds().toString().length === 2) ? now.getSeconds() : '0' + now.getSeconds());
         }
     },
 
     getDeployer: function (deployerConfig, cb) {
+	        if(!config.kubernetes.certsPath){
+		        return cb(new Error('No certificates found for remote machine.'));
+	        }
         var deployer = {};
 
-        deployerConfig.ca = fs.readFileSync(config.certsPath + '/ca.crt');
-        deployerConfig.cert = fs.readFileSync(config.certsPath + '/apiserver.crt');
-        deployerConfig.key = fs.readFileSync(config.certsPath + '/apiserver.key');
+        deployerConfig.ca = fs.readFileSync(config.kubernetes.certsPath + '/ca.crt');
+        deployerConfig.cert = fs.readFileSync(config.kubernetes.certsPath + '/apiserver.crt');
+        deployerConfig.key = fs.readFileSync(config.kubernetes.certsPath + '/apiserver.key');
 
         deployerConfig.version = 'v1beta1';
         deployer.extensions = new K8Api.Extensions(deployerConfig);
@@ -48,28 +51,28 @@ var lib = {
         deployerConfig.version = 'v1';
         deployer.core = new K8Api.Core(deployerConfig);
 
-        return cb(deployer);
+        return cb(null, deployer);
     },
 
     getContent: function (type, group, cb) {
-        var path = config.paths[type].dir + group + '/';
+        var path = config.services.path.dir + group + '/';
         fs.exists(path, function (exists) {
             if (!exists) {
-                util.log ('Folder [' + path + '] does not exist, skipping ...');
+                utilLog.log('Folder [' + path + '] does not exist, skipping ...');
                 return cb(null, true);
             }
 
             fs.readdir(path, function (error, content) {
                 if (error) return cb(error);
 
-                var regex = new RegExp ('[a-zA-Z0-9]*\.' + config.paths[type].fileType, 'g');
+                var regex = new RegExp('[a-zA-Z0-9]*\.' + config.services.path.fileType, 'g');
                 var loadContent, allContent = [];
                 content.forEach(function (oneContent) {
                     if (oneContent.match(regex)) {
                         try {
                             loadContent = require(path + oneContent);
                         }
-                        catch(e) {
+                        catch (e) {
                             return cb(e);
                         }
                         allContent.push(loadContent);
@@ -82,68 +85,34 @@ var lib = {
 
     deployGroup: function (type, services, deployer, cb) {
         if (services.length === 0) {
-            util.log ('No services of type [' + type + '] found, skipping ...');
+            utilLog.log('No services of type [' + type + '] found, skipping ...');
             return cb(null, true);
         }
 
-        if (type === 'db' && config.dataLayer.mongo.external) {
-            util.log ('External Mongo deployment detected, data containers will not be deployed ...');
+        if (type === 'db' && config.mongo.external) {
+            utilLog.log('External Mongo deployment detected, data containers will not be deployed ...');
             return cb(null, true);
         }
 
         async.eachSeries(services, function (oneService, callback) {
-            if (oneService.Name === 'elasticsearch' && config.dataLayer.elasticsearch.external) {
-                util.log ('External Elasticsearch deployment detected, elasticsearch containers will not be deployed ...');
-                return callback(null, true);
-            }
-
             lib.deployService(deployer, oneService, callback);
         }, cb);
     },
 
     importData: function (mongoInfo, cb) {
-        // return cb(null, true);
-        //TODO: add exposed port for mongo containers
-        var deploymentType = 'KUBERNETES', deploymentTarget = '';
-        if (config.machineIP === '127.0.0.1' || config.machineIP === 'localhost') {
-            deploymentTarget = 'LOCAL';
+        utilLog.log('Importing provision data to:', profile.servers[0].host + ":" + profile.servers[0].port);
+        var execString = "cd " + folder + " && mongo --host " + profile.servers[0].host + ":" + profile.servers[0].port;
+        if (profile.credentials && profile.credentials.username && profile.credentials.password && profile.URLParam && profile.URLParam.authSource) {
+            execString += " -u " + profile.credentials.username + " -p " + profile.credentials.password + " --authenticationDatabase " + profile.URLParam.authSource;
         }
-        else {
-            deploymentTarget = 'REMOTE';
-        }
-
-        var importProvision = 'node index data import provision ' + config.machineIP + ' ' + deploymentType + ' ' + deploymentTarget;
-        var importUrac = 'node index data import urac ' + config.machineIP;
-        var path = '../';
-        util.log ('Importing provision data ...');
-        shell.pushd(path);
-        shell.exec(importProvision, function (code, output) {
-            util.log ('Importing urac data ...');
-            shell.exec(importUrac, function (code, output) {
-                util.log ('Updating registry, settings data layer information ...');
-                mongo.find('environment', {}, function (error, envs) {
-                    if (error) return cb(error);
-
-                    async.each(envs, function (oneEnv, callback) {
-                        //NOTE: assuming only one cluster and one server
-                        var cluster = Object.keys(oneEnv.dbs.clusters)[0];
-                        oneEnv.dbs.clusters[cluster].servers[0].host = oneEnv.code.toLowerCase() + '-soajsdata-service';
-                        mongo.save('environment', oneEnv, callback);
-                    }, function (error) {
-                        if (error) return cb(error);
-
-                        return cb(null, true);
-                    });
-                });
-            });
-        });
+        execString += " data.js";
+        exec(execString, cb);
     },
 
     deployService: function (deployer, options, cb) {
         if (options.service) {
-            deployer.core.namespaces.services.post({body: options.service}, function (error, result) {
+            deployer.core.namespaces.services.post({body: options.service}, function (error) {
                 if (error) return cb(error);
-
                 return createDeployment();
             });
         }
@@ -154,7 +123,6 @@ var lib = {
         function createDeployment() {
             deployer.extensions.namespaces.deployments.post({body: options.deployment}, function (error, result) {
                 if (error) return cb(error);
-
                 lib.registerContainers(deployer, options, cb);
             });
         }
@@ -197,10 +165,10 @@ var lib = {
             cb = counter; //counter wasn't passed as param
             counter = 0;
         }
-
+	    
         deployer.core.namespaces.pods.get({}, function (error, podList) {
             if (error) return cb(error);
-
+	        
             var onePod, ips = [];
             podList.items.forEach(function (onePod) {
                 if (onePod.metadata.labels['soajs-app'] === serviceName && onePod.status.phase === 'Running') {
@@ -219,7 +187,7 @@ var lib = {
                 }, 1000);
             }
             else {
-                console.log ();
+                utilLog.log(""); //intentional, to force writting a new line.
                 return cb(null, ips);
             }
         });
@@ -227,30 +195,38 @@ var lib = {
 
     addMongoInfo: function (services, mongoInfo, cb) {
         var mongoEnv = [];
-
-        if (config.dataLayer.mongo.external) {
-            if (!config.dataLayer.mongo.url || !config.dataLayer.mongo.port) {
-                util.log ('ERROR: External Mongo information is missing URL or port, make sure SOAJS_MONGO_EXTERNAL_URL and SOAJS_MONGO_EXTERNAL_PORT are set ...');
+	
+	    if(config.mongo.prefix && config.mongo.prefix !== ""){
+		    mongoEnv.push({name: 'SOAJS_MONGO_PREFIX', value: config.mongo.prefix});
+	    }
+	    
+        if (config.mongo.external) {
+            // if (!config.dataLayer.mongo.url || !config.dataLayer.mongo.port) {
+            if (!profile.servers[0].host || !profile.servers[0].port) {
+                utilLog.log('ERROR: External Mongo information is missing URL or port, make sure SOAJS_MONGO_EXTERNAL_URL and SOAJS_MONGO_EXTERNAL_PORT are set ...');
                 return cb('ERROR: missing mongo information');
             }
 
-            mongoEnv.push({ name: 'SOAJS_MONGO_NB', value: config.dataLayer.mongo.srvCount });
-            mongoEnv.push({ name: 'SOAJS_MONGO_IP_1', value: config.dataLayer.mongo.url });
-            mongoEnv.push({ name: 'SOAJS_MONGO_PORT_1', value: config.dataLayer.mongo.port });
+            mongoEnv.push({ name: 'SOAJS_MONGO_NB', value: profile.servers.length });
+	        for(var i =1; i <= profile.servers.length; i++){
+		        mongoEnv.push({name: 'SOAJS_MONGO_IP_' + i, value: profile.servers[i].host});
+		        mongoEnv.push({name: 'SOAJS_MONGO_PORT_' + i, value: '' + profile.servers[i].port});
+	        }
 
-            if (config.dataLayer.mongo.username && config.dataLayer.mongo.password) {
-                mongoEnv.push({ name: 'SOAJS_MONGO_USERNAME', value: config.dataLayer.mongo.username });
-                mongoEnv.push({ name: 'SOAJS_MONGO_PASSWORD', value: config.dataLayer.mongo.password });
-                mongoEnv.push({ name: 'SOAJS_MONGO_SSL', value: config.dataLayer.mongo.ssl });
-                mongoEnv.push({ name: 'SOAJS_MONGO_AUTH_DB', value: config.dataLayer.mongo.authDb });
+            if (profile.credentials && profile.credentials.username && profile.credentials.password) {
+                mongoEnv.push({ name: 'SOAJS_MONGO_USERNAME', value: profile.credentials.username });
+                mongoEnv.push({ name: 'SOAJS_MONGO_PASSWORD', value: profile.credentials.password });
+	            mongoEnv.push({ name: 'SOAJS_MONGO_AUTH_DB', value: profile.URLParam.authSource });
+            }
+            
+            if(profile.URLParam.ssl){
+	            mongoEnv.push({ name: 'SOAJS_MONGO_SSL', value: profile.URLParam.ssl });
             }
         }
         else {
-            mongoEnv.push({ name: 'SOAJS_MONGO_NB', value: '' + mongoInfo.dashboard.ips.length });
-            for (var i = 0; i < mongoInfo.dashboard.ips.length; i++) {
-                mongoEnv.push({ name: 'SOAJS_MONGO_IP_' + (i + 1), value: mongoInfo.dashboard.ips[i].ip });
-                mongoEnv.push({ name: 'SOAJS_MONGO_PORT_' + (i + 1), value: '' + config.defaultMongoPort });
-            }
+            mongoEnv.push({ name: 'SOAJS_MONGO_NB', value: '1' });
+	        mongoEnv.push({ name: 'SOAJS_MONGO_IP_1', value: profile.servers[0].host});
+	        mongoEnv.push({ name: 'SOAJS_MONGO_PORT_1', value: '27017'});
         }
 
         services.forEach(function (oneService) {
@@ -305,7 +281,7 @@ var lib = {
                     }
                 }
 
-                mongo.insert(config.dockerCollName, nodeRecords, cb);
+                mongo.insert(config.kubernetes.mongoCollection, nodeRecords, cb);
             });
         });
     },
@@ -359,12 +335,11 @@ var lib = {
 
         var replicaCount = serviceOptions.deployment.spec.replicas;
 
-        util.log ('Registering ' + serviceName + ' containers in docker collection ...');
+        utilLog.log ('Registering ' + serviceName + ' containers in docker collection ...');
 
         info.env = serviceEnv;
         info.running = true;
         info.recordType = 'container';
-        // info.deployer = lib.buildDeployerObject();
 
         lib.getServiceIPs(kubeServiceName, deployer, replicaCount, function (error, serviceIPs) {
             if (error) return cb(error);
@@ -372,7 +347,6 @@ var lib = {
             async.map(serviceIPs, function (oneServiceInfo, callback) {
                 deployer.core.namespaces.pods.get({name: oneServiceInfo.name}, function (error, pod) {
                     if (error) return callback(error);
-
                     var record = JSON.parse(JSON.stringify(info));
                     record.taskName = oneServiceInfo.name;
                     record.serviceName = kubeServiceName;
@@ -382,8 +356,7 @@ var lib = {
                 });
             }, function (error, records) {
                 if (error) return cb(error);
-
-                mongo.insert(config.dockerCollName, records, cb);
+                mongo.insert(config.kubernetes.mongoCollection, records, cb);
             });
         });
     },
@@ -392,7 +365,6 @@ var lib = {
         mongo.closeDb();
         return cb();
     }
-
 };
 
 module.exports = lib;

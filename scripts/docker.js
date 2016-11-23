@@ -121,18 +121,11 @@ function deploy (group, deployer, cb) {
 }
 
 function importProvisionData (dbServices, deployer, cb) {
-	for (var i = 0; i < dbServices.length; i++) {
-		if (dbServices[i].Name === config.mongo.services.dashboard.name) {
-			config.mongo.services.dashboard.count = dbServices[i].Mode.Replicated.Replicas;
-		}
-	}
-	
 	utilLog.log ("Fetching data containers' IP addresses ... ");
 	utilLog.log ('This step might take some time if docker is currently pulling the containers\' image ...');
-	lib.getServiceIPs(config.mongo.services.dashboard.name, deployer, config.mongo.services.dashboard.count, function (error, dashMongoIPs) {
+	lib.getServiceIPs(config.mongo.services.dashboard.name, deployer, 1, function (error) {
 		if (error) return cb(error);
 		
-		config.mongo.services.dashboard.ips = dashMongoIPs;
 		setTimeout(function () {
 			lib.importData(config.mongo.services, cb);
 		}, 5000);

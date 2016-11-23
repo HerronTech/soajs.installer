@@ -1,4 +1,5 @@
 'use strict';
+var gConfig = require("../../config.js");
 
 var components = {
     service: {
@@ -35,7 +36,7 @@ var components = {
             }
         },
         "spec": {
-            "replicas": 1,
+            "replicas": gConfig.kubernetes.replicas,
             "selector": {
                 "matchLabels": {
                     "soajs-app": "dashboard-controller"
@@ -52,7 +53,7 @@ var components = {
                     "containers": [
                         {
                             "name": "dashboard-controller",
-                            "image": "ameerfaraj/soajs",
+                            "image": gConfig.imagePrefix + "/soajs",
                             "workingDir": "/opt/soajs/FILES/deployer/",
                             "command": ["./soajsDeployer.sh"],
                             "args": ["-T", "service", "-X", "deploy", "-L"],
@@ -85,7 +86,7 @@ var components = {
                                 },
                                 {
                                     "name": "SOAJS_GIT_BRANCH",
-                                    "value": "develop"
+                                    "value": gConfig.git.branch
                                 },
                                 {
                                     "name": "SOAJS_GIT_REPO",
@@ -94,18 +95,6 @@ var components = {
                                 {
                                     "name": "SOAJS_DEPLOY_HA",
                                     "value": "true"
-                                },
-                                {
-                                    "name": "SOAJS_MONGO_NB",
-                                    "value": "1"
-                                },
-                                {
-                                    "name": "SOAJS_MONGO_IP_1",
-                                    "value": "dashboard-soajsdata-service"
-                                },
-                                {
-                                    "name": "SOAJS_MONGO_PORT_1",
-                                    "value": "27017"
                                 },
                                 {
                                     "name": "SOAJS_DEPLOY_KUBE",
