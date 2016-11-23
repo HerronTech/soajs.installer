@@ -68,6 +68,6 @@ module.exports = {
 		"containerPort": 2376,
 		"dockerInternalPort": 2377,
 		"dockerReplica": 1,
-		"certificatesFolder": "process.env.HOME + '/.docker'"
+		"certificatesFolder": process.env.HOME + '/.docker'
 	}
 };
