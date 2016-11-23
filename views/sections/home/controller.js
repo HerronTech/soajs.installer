@@ -45,20 +45,19 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function(
 			$scope.kubernetes = false;
 		}
 		
-		if(type === 'docker'){
-			$scope.style.deployType = "docker";
+		if(type === 'local'){
+			//$scope.style.deployType = "docker";
 			$scope.data.deployType = "container";
 			$scope.manual = false;
-			$scope.docker = true;
-			$scope.kubernetes = false;
+
 		}
 		
-		if(type === 'kubernetes'){
-			$scope.style.deployType = "kubernetes";
+		if(type === 'remote'){
+			//$scope.style.deployType = "kubernetes";
 			$scope.data.deployType = "container";
 			$scope.manual = false;
-			$scope.docker = false;
-			$scope.kubernetes = true;
+			//$scope.docker = false;
+			//$scope.kubernetes = true;
 		}
 	};
 	
@@ -81,7 +80,7 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function(
 			$scope.osName = response.deployer.os;
 			if($scope.data.deployDriver.indexOf('docker') !== -1){
 				$scope.style.deployType = 'docker';
-				$scope.docker = true;
+				$scope.docker = false;
 				$scope.manual = false;
 				$scope.kubernetes = false;
 			}

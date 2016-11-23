@@ -15,7 +15,6 @@
 		</p>
 		<br />
 		<accordion close-others="true">
-			
 			<accordion-group heading="Manual Deployment" ng-click="selectDeployment('manual')" is-open="manual">
 				<p>
 					<b>Overview:</b><br />
@@ -30,15 +29,15 @@
 				</p>
 			</accordion-group>
 			
-			<accordion-group heading="Docker Swarm Deployment" ng-click="selectDeployment('docker')" is-open="docker">
+			<accordion-group heading="Local Cloud Deployment" ng-click="selectDeployment('local')" is-open="local">
 				<p>
 					<b>Overview:</b><br />
-					This deployment will install docker swarm and then deploy SOAJS ready made services as containers in it.<br />
+					This deployment will deploy SOAJS ready made services in containers on your local machine.<br />
 					Once deployed, you can interact with these services via a User Interface.<br />
 				</p>
-				<b><u>Location:</u></b><br />
-				<input type="radio" name="docker-loc" value="container.docker.local" ng-model="data.deployDriver" />&nbsp;Local Machine<br />
-				<input type="radio" name="docker-loc" value="container.docker.remote" ng-model="data.deployDriver" />&nbsp;Remote Machine<br /><br />
+				<b><u>Deployment Type:</u></b><br />
+				<input type="radio" name="docker-loc" value="container.docker.local" ng-model="data.deployDriver" />&nbsp;Docker Deployment (Linux or Mac Machines)<br />
+				<input type="radio" name="kubernetes-loc" value="container.kubernetes.local" ng-model="data.deployDriver" />&nbsp;Kubernetes Deployment (Linux or Mac Machines)<br /><br />
 				<p>
 					Choose an option from the above and make sure Docker is installed ( Link below ).<br />
 					Once Docker is installed click proceed at the bottom of this page.
@@ -75,15 +74,15 @@
 				</alert>
 			</accordion-group>
 			
-			<accordion-group heading="Kubernetes Deployment" ng-click="selectDeployment('kubernetes')"  is-open="kubernetes">
+			<accordion-group heading="Remote Cloud Deployment" ng-click="selectDeployment('remote')"  is-open="remote">
 				<p>
 					<b>Overview:</b>
 					This deployment will install Kubernetes and then deploy SOAJS ready made services as containers in it.
 					Once deployed, you can interact with these services via a User Interface.
 				</p>
-				<b><u>Location:</u></b><br />
-				<input type="radio" name="kubernetes-loc" value="container.kubernetes.local" ng-model="data.deployDriver" />&nbsp;Local Machine<br />
-				<input type="radio" name="kubernetes-loc" value="container.kubernetes.remote" ng-model="data.deployDriver" />&nbsp;Remote Machine<br /><br />
+				<b><u>Deployment Type:</u></b><br />
+				<input type="radio" name="docker-loc" value="container.docker.remote" ng-model="data.deployDriver" />&nbsp;Docker Deployment (Linux Machines Only)<br />
+				<input type="radio" name="kubernetes-loc" value="container.kubernetes.remote" ng-model="data.deployDriver" />&nbsp;Kubernetes Deployment (Linux Machines Only)<br /><br />
 				<p>
 					Choose an option from the above and make sure Kubernetes is installed by following the instruction below.<br />
 					Once Kubernetes is installed click proceed at the bottom of this page.
