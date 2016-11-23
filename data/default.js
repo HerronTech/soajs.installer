@@ -18,6 +18,7 @@ module.exports = {
 	},
 	"clusters": {
 		"prefix": "",
+		"mongoExt": false,
 		"servers": [
 			{
 				"host": "127.0.0.1",
@@ -52,7 +53,6 @@ module.exports = {
 		"deployDriver": "manual",
 		"deployDockerNodes": [],
 		"containerHost": "127.0.0.1",
-		"mongoExt": false,
 		
 		"gitOwner": null,
 		"gitRepo": null,

@@ -151,7 +151,35 @@ var routes = {
 		});
 	},
 	"postDeployment": function (req, res) {
-		utils.updateCustomData(req, res, req.soajs.inputmaskData.deployment, "deployment", function(){
+		var deployment = JSON.parse(JSON.stringify(req.soajs.inputmaskData.deployment));
+		if(deployment.deployDriver.indexOf("docker") !== -1){
+			deployment.docker = {
+				"networkName": deployment.networkName,
+				"dockerSocket": deployment.dockerSocket,
+				"containerPort": deployment.containerPort,
+				"dockerInternalPort": deployment.dockerInternalPort,
+				"containerDir": deployment.containerDir
+			};
+			
+			delete deployment.networkName;
+			delete deployment.dockerSocket;
+			delete deployment.containerPort;
+			delete deployment.dockerInternalPort;
+			delete deployment.containerDir;
+		}
+		else if (deployment.deployDriver.indexOf("kubernetes") !== -1){
+			deployment.kubernetes = {
+				"containerPort": deployment.kubeContainerPort,
+				"containerDir": deployment.containerDir
+			};
+			delete deployment.containerPort;
+			delete deployment.containerDir;
+			delete deployment.dockerSocket;
+			delete deployment.networkName;
+			delete deployment.dockerInternalPort;
+			delete deployment.kubeContainerPort;
+		}
+		utils.updateCustomData(req, res, deployment, "deployment", function(){
 			utils.loadCustomData(null, function(data){
 				if(data.security){
 					delete data.security.extKey1;

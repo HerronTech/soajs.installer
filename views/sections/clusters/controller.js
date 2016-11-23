@@ -56,9 +56,8 @@ clustersApp.controller('clustersCtrl', ['$scope', 'ngDataApi', function ($scope,
 				"clusters": data
 			}
 		};
-        console.log(JSON.stringify(options.data,null,2))
 
-		ngDataApi.post($scope, options, function (error, response) {
+		ngDataApi.post($scope, options, function (error) {
 			if (error) {
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
 				return false;
@@ -79,12 +78,10 @@ clustersApp.controller('clustersCtrl', ['$scope', 'ngDataApi', function ($scope,
 				return false;
 			}
 			$scope.deployment = {
-                "deployType": (response && response.deployment.deployType) ? response.deployment.deployType : "manual",
-			}
-			$scope.containerDeployment = false;
-			if($scope.deployment.deployType === "container"){
-                $scope.containerDeployment = true;
-			}
+                "deployType": (response && response.deployment.deployType) ? response.deployment.deployType : "manual"
+			};
+			
+			$scope.containerDeployment = $scope.deployment.deployType === "container";
 
 			$scope.clusters = {
 				"prefix": (response && response.clusters.prefix) ? response.clusters.prefix : "",

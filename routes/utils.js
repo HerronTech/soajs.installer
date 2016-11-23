@@ -141,7 +141,7 @@ module.exports = {
 		clusters.name = "core_provision";
 		clusters.prefix = body.clusters.prefix || "";
 		var flavors = ["container.docker.local", "container.kubernetes.local"];
-		if(flavors.indexOf(body.deployment.deployDriver) !== -1 && !body.deployment.mongoExt){
+		if(flavors.indexOf(body.deployment.deployDriver) !== -1 && !clusters.mongoExt){
 			if(body.deployment.deployDriver === "container.docker.local"){
 				clusters.servers = [
 					{
@@ -162,6 +162,7 @@ module.exports = {
 		profileData += 'module.exports = ' + JSON.stringify(clusters, null, 2) + ';';
 		fs.writeFileSync(folder + "profile.js", profileData, "utf8");
 		
+		delete clusters.mongoExt;
 		delete clusters.name;
 		delete clusters.prefix;
 		
@@ -355,7 +356,7 @@ module.exports = {
 					"SITE_PREFIX": body.gi.site,
 					"MASTER_DOMAIN": body.gi.domain,
 					
-					"MONGO_EXT": body.deployment.mongoExt,
+					"MONGO_EXT": body.clusters.mongoExt,
 					
 					"SOAJS_GIT_OWNER": body.deployment.gitOwner,
 					"SOAJS_GIT_REPO": body.deployment.gitRepo,
@@ -368,7 +369,7 @@ module.exports = {
 					"NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
 					"SOAJS_NX_SSL": body.deployment.nginxSsl,
 					
-					"SOAJS_DOCKER_CERTS_PATH": body.deployment.containerDir || body.deployment.docker.certificatesFolder,
+					"SOAJS_DOCKER_CERTS_PATH": body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder,
 					"SWARM_INTERNAL_PORT": body.deployment.docker.dockerInternalPort,
 					"SOAJS_DOCKER_SOCKET": body.deployment.docker.dockerSocket,
 					"DOCKER_NETWORK": body.deployment.docker.networkName,
@@ -383,7 +384,7 @@ module.exports = {
 					}
 				}
 				
-				if(!body.deployment.mongoExt){
+				if(!body.clusters.mongoExt){
 					runner.write("sudo " + "killall mongo" + os.EOL);
 				}
 				
@@ -406,7 +407,7 @@ module.exports = {
 					"SITE_PREFIX": body.gi.site,
 					"MASTER_DOMAIN": body.gi.domain,
 					
-					"MONGO_EXT": body.deployment.mongoExt,
+					"MONGO_EXT": body.clusters.mongoExt,
 					
 					"SOAJS_GIT_OWNER": body.deployment.gitOwner,
 					"SOAJS_GIT_REPO": body.deployment.gitRepo,
@@ -420,7 +421,7 @@ module.exports = {
 					"SOAJS_NX_SSL": body.deployment.nginxSsl,
 					
 					"CONTAINER_HOST": body.deployment.containerHost,
-					"SOAJS_DOCKER_CERTS_PATH": body.deployment.containerDir || body.deployment.kubernetes.certificatesFolder,
+					"SOAJS_DOCKER_CERTS_PATH": body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder,
 					"CONTAINER_PORT": body.deployment.kubernetes.containerPort,
 					"SOAJS_DOCKER_REPLICA": body.deployment.dockerReplica
 				};
@@ -431,7 +432,7 @@ module.exports = {
 					}
 				}
 				
-				if(!body.deployment.mongoExt){
+				if(!body.clusters.mongoExt){
 					runner.write("sudo " + "killall mongo" + os.EOL);
 				}
 				
@@ -457,7 +458,7 @@ module.exports = {
 				"cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
 			};
 			
-			if(!body.deployment.mongoExt){
+			if(!body.clusters.mongoExt){
 				obj['hosts'].mongo = body.deployment.containerHost + " dashboard_soajsData";
 			}
 			else{
