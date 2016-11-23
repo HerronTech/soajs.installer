@@ -62,12 +62,18 @@ module.exports = {
 		"nginxPort": 80,
 		"nginxSecurePort": 443,
 		"nginxSsl": null,
-		
-		"dockerSocket": "/var/run/docker.sock",
-		"networkName": "soajsnet",
-		"containerPort": 2376,
-		"dockerInternalPort": 2377,
 		"dockerReplica": 1,
-		"certificatesFolder": process.env.HOME + '/.docker'
+		
+		"docker":{
+			"networkName": "soajsnet",
+			"dockerSocket": "/var/run/docker.sock",
+			"containerPort": 2376,
+			"dockerInternalPort": 2377,
+			"certificatesFolder": process.env.HOME + '/.docker'
+		},
+		"kubernetes":{
+			"containerPort": 8443,
+			"certificatesFolder": process.env.HOME + '/.minikube'
+		}
 	}
 };

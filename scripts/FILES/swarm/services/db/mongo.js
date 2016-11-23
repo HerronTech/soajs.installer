@@ -2,7 +2,7 @@
 var gConfig = require("../../config.js");
 
 var config = {
-    servName: 'dashboard_soajsData',
+    servName: 'dashboard-soajsdata-service',
     servReplica: 1,
     servNetwork: [
     	{
@@ -25,7 +25,7 @@ var config = {
         {
             "Type": "volume",
             "Source": "dashboard-soajsData",
-            "Target": "/data/db/",
+            "Target": "/data/db/"
         }
     ],
     exposedPorts: [

@@ -205,6 +205,9 @@ var lib = {
     addMongoInfo: function (services, mongoInfo, cb) {
         var mongoEnv = [];
 
+        if(config.mongo.prefix && config.mongo.prefix !== ""){
+	        mongoEnv.push('SOAJS_MONGO_PREFIX=' + config.mongo.prefix);
+        }
         if (config.mongo.external) {
             // if (!config.dataLayer.mongo.url || !config.dataLayer.mongo.port) {
             if (!profile.servers[0].host || !profile.servers[0].port) {
@@ -213,8 +216,10 @@ var lib = {
             }
 
             mongoEnv.push('SOAJS_MONGO_NB=' + profile.servers.length);
-            mongoEnv.push('SOAJS_MONGO_IP_1=' + profile.servers[0].host);
-            mongoEnv.push('SOAJS_MONGO_PORT_1=' + profile.servers[0].port);
+            for(var i =1; i <= profile.servers.length; i++){
+	            mongoEnv.push('SOAJS_MONGO_IP_' + i + '=' + profile.servers[i].host);
+	            mongoEnv.push('SOAJS_MONGO_PORT_' + i + '=' + profile.servers[i].port);
+            }
 
             if (profile.credentials && profile.credentials.username && profile.credentials.password) {
                 mongoEnv.push('SOAJS_MONGO_USERNAME=' + profile.credentials.username);
@@ -227,11 +232,10 @@ var lib = {
             }
         }
         else {
-            mongoEnv.push('SOAJS_MONGO_NB=' + mongoInfo.dashboard.ips.length);
-            for (var i = 0; i < mongoInfo.dashboard.ips.length; i++) {
-                mongoEnv.push('SOAJS_MONGO_IP_' + (i + 1) + '=' + profile.servers[0].host);
-                mongoEnv.push('SOAJS_MONGO_PORT_' + (i + 1) + '=' + profile.servers[0].port);
-            }
+        	//only one server in this case, internal mongo container id
+	        mongoEnv.push({ name: 'SOAJS_MONGO_NB', value: '1' });
+	        mongoEnv.push('SOAJS_MONGO_IP_1=' + profile.servers[0].host);
+	        mongoEnv.push('SOAJS_MONGO_PORT_1=' + profile.servers[0].port);
         }
 
         services.forEach(function (oneService) {

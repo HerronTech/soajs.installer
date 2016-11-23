@@ -1,7 +1,7 @@
 "use strict";
 
 var profile = require(process.env.SOAJS_PROFILE);
-var mongoHostname = profile.servers[0].host || "dashboard_soajsData";
+var mongoHostname = profile.servers[0].host;
 module.exports = {
 	"masterDomain": process.env.MASTER_DOMAIN || 'soajs.org',
 	"apiPrefix": process.env.API_PREFIX || "dashboard-api",
@@ -37,7 +37,7 @@ module.exports = {
 			"http": parseInt(process.env.NGINX_HTTP_PORT) || 80,
 			"https": parseInt(process.env.NGINX_HTTPS_PORT) || 443
 		},
-		"ssl": (process.env.SOAJS_NX_SSL === "true") || false,
+		"ssl": (process.env.SOAJS_NX_SSL === "true") || false
 	},
 	"imagePrefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
 	"docker":{
@@ -61,7 +61,7 @@ module.exports = {
 		},
 		"swarmConfig": {
 			"tokens": {}
-		},
+		}
 	},
 	
 	"deployGroups": ['db', 'core', 'nginx'],

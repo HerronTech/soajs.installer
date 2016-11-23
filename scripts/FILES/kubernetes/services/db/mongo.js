@@ -1,11 +1,12 @@
 'use strict';
+var gConfig = require("../../config.js");
 
 var components = {
     service: {
         "apiVersion": "v1",
         "kind": "Service",
         "metadata": {
-            "name": "dashboard-soajsdata-service",
+            "name": "dashboard-soajsdata",
             "labels": {
                 "type": "soajs-service"
             }
@@ -20,7 +21,7 @@ var components = {
                     "protocol": "TCP",
                     "port": 27017,
                     "targetPort": 27017,
-                    "nodePort": 31000
+                    "nodePort": ( 5000 + 27017 )
                 }
             ]
         }
@@ -32,7 +33,7 @@ var components = {
             "name": "dashboard-soajsdata"
         },
         "spec": {
-            "replicas": 1,
+            "replicas": gConfig.kubernetes.replicas,
             "selector": {
                 "matchLabels": {
                     "soajs-app": "dashboard-soajsdata"
