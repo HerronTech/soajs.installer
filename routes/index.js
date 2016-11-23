@@ -137,7 +137,7 @@ var routes = {
 	},
 	
 	"getClusters": function (req, res) {
-		utils.loadCustomData('clusters', function (customData) {
+		utils.loadCustomData(null, function (customData) {
 			return res.json(req.soajs.buildResponse(null, customData || null));
 		});
 	},

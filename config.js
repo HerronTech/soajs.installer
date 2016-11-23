@@ -120,6 +120,7 @@ module.exports = {
 						"type": "object",
 						"properties": {
 							"prefix": {"type": "string"},
+                            "mongoExt": {"type": "boolean", "required": false},
 							"servers": {
 								"type": "array",
 								"required": false,
@@ -139,7 +140,7 @@ module.exports = {
 							},
 							"URLParam": {"type": "object", "properties": {}},
 							"extraParam": {"type": "object", "properties": {}},
-							"streaming": {"type": "object", "properties": {}},
+							"streaming": {"type": "object", "properties": {}}
 						},
 						"additionalProperties": false
 					}
@@ -164,7 +165,6 @@ module.exports = {
 							"containerDir": {"type": "string", "required": false},
 							"containerHost": {"type": "string", "required": false},
 							"deployDockerNodes": {"type": "array", "required": false, "items": {"type": "string"}},
-							"mongoExt": {"type": "boolean", "required": false},
 
                             "gitOwner": {"type": "string", "required": false},
                             "gitRepo": {"type": "string", "required": false},

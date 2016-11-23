@@ -254,3 +254,14 @@ pre {background: #fff; padding: 5px; margin: 5px; }
 pre.bash{
     background: #f0f0f0;
 }
+
+fieldset {
+    border-radius: 5px;
+    border: solid 1px #1A1A1A;
+    margin: 5px 0;
+    padding: 10px;
+}
+
+fieldset legend {
+    float: left;
+}

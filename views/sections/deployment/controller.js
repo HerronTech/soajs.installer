@@ -2,7 +2,6 @@
 var deploymentApp = app.components;
 deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$timeout', function ($scope, ngDataApi, $modal, $timeout) {
 	$scope.alerts = [];
-	$scope.confirmation = false;
 	
 	$scope.goBack = function () {
 		$scope.$parent.go("#/clusters");
@@ -14,14 +13,23 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 	
 	$scope.evaluateDeploymentChoice = function () {
 		$scope.ha = false;
-		
+		$scope.docker = false;
+		$scope.kubernetes = false;
+
 		if ($scope.deployment.deployDriver !== "manual") {
 			$scope.ha = true;
 			$scope.deployment.deployType = "container";
 			var types = ["container.docker.remote", "container.kubernetes.remote"];
 			$scope.local = (types.indexOf($scope.deployment.deployDriver) ===  -1);
-			
-			if($scope.deployment.deployDriver.indexOf("remote") !== -1){
+
+			if($scope.deployment.deployDriver.indexOf("docker") !== -1){
+                $scope.docker = true;
+            }
+            if($scope.deployment.deployDriver.indexOf("kubernetes") !== -1) {
+                $scope.kubernetes = true;
+            }
+
+			if(!$scope.local){
 				$scope.deployment.deployDockerNodes = [];
 				$scope.deployment.deployDockerNodes.push($scope.deployment.containerHost);
 			}
@@ -29,12 +37,6 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 		else{
 			$scope.deployment.deployType = "manual";
 		}
-	};
-	
-	$scope.goToFinal = function(){
-		$timeout(function(){
-			$scope.fillDeployment();
-		}, 1000);
 	};
 	
 	$scope.fillDeployment = function () {
@@ -60,24 +62,12 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			}
 			
 			$scope.confirmation = true;
-			$scope.data = {};
-			
-			if(response.gi) {
-				$scope.data.gi = syntaxHighlight(JSON.stringify(response.gi, null, 4));
-			}
-			
-			if(response.security) {
-				$scope.data.security = syntaxHighlight(JSON.stringify(response.security, null, 4));
-			}
-			
-			if(response.clusters) {
-				$scope.data.clusters = syntaxHighlight(JSON.stringify(response.clusters, null, 4));
-			}
-			
-			if(response.deployment) {
-				$scope.data.deployment = syntaxHighlight(JSON.stringify(response.deployment, null, 4));
-			}
-			
+			$scope.data = {
+				"gi": (response.gi) ? syntaxHighlight(JSON.stringify(response.gi, null, 4)) : JSON.stringify({}),
+				"security": (response.security) ? syntaxHighlight(JSON.stringify(response.security, null, 2)): JSON.stringify({}),
+				"clusters": (response.clusters) ? syntaxHighlight(response.clusters): JSON.stringify({}),
+				"deployment": (response.deployment) ? syntaxHighlight(response.deployment): JSON.stringify({})
+			};
 			$timeout(function(){
 				resizeContent();
 			}, 10);
@@ -126,14 +116,12 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				return false;
 			}
 			
-			$scope.ha = (response.deployType !== 'manual');
 			$scope.deployment = {
 				"deployType": (response && response.deployType) ? response.deployType : "manual",
 				"deployDriver": (response && response.deployDriver) ? response.deployDriver : "manual",
 				"deployDockerNodes": (response && response.deployDockerNodes) ? response.deployDockerNodes : [],
 				"containerHost": (response && response.containerHost) ? response.containerHost : "127.0.0.1",
 				"containerDir": (response && response.containerDir) ? response.containerDir : "",
-				"mongoExt": (response && response.mongoExt) ? response.mongoExt : false,
 				"gitOwner": (response && response.gitOwner) ? response.gitOwner : null,
                 "gitRepo": (response && response.gitRepo) ? response.gitRepo : null,
                 "gitToken": (response && response.gitToken) ? response.gitToken : null,
