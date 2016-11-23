@@ -9,30 +9,32 @@ var dataDir = __dirname + "/../data/";
 
 var routes = {
 	"getOverview": function(req, res){
-		
+		var osName;
 		var data = {
 			"manual": "",
 			"docker": "",
 			"kubernetes": ""
 		};
-		
-		if(process.platform === 'linux'){
+		var platform = process.platform;
+		if(platform === 'linux'){
+			osName = 'linux';
 			data.manual = {
-				"v": path.resolve(__dirname + "/../scripts/pre/manual-linux.sh"),
+				"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-linux.sh"),
 				"t": "sh"
 			};
 			data.docker = {
-				"v": path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
+				"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
 				"t": "sh"
 			};
 			data.kubernetes = {
-				"v": path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
+				"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
 				"l": "sh"
 			};
 		}
-		else if(process.platform === 'darwin'){
+		else if(platform === 'darwin'){
+			osName = 'mac';
 			data.manual = {
-				"v": path.resolve(__dirname + "/../scripts/pre/manual-mac.sh"),
+				"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-mac.sh"),
 				"t": "sh"
 			};
 			data.docker = {
@@ -40,7 +42,7 @@ var routes = {
 				"t": "link"
 			};
 			data.kubernetes = {
-				"v": path.resolve(__dirname + "/../scripts/pre/kubernetes-mac.sh"),
+				"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-mac.sh"),
 				"l": "sh"
 			};
 		}
@@ -49,7 +51,8 @@ var routes = {
 			if(customData){
 				data.deployer = {
 					deployType: customData.deployType,
-					deployDriver: customData.deployDriver
+					deployDriver: customData.deployDriver,
+					os : osName
 				};
 			}
 			

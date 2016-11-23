@@ -9,6 +9,16 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function(
 	
 	$scope.fillOverView = function(){
 		var data = angular.copy($scope.data);
+		
+		if(!data.deployType){
+			return false;
+		}
+		
+		if(data.deployType !== 'manual' && (!data.deployDriver || data.deployDriver === '') ){
+			return false;
+		}
+		
+		
 		var options = {
 			url: appConfig.url + "/overview",
 			method: "post",
@@ -68,7 +78,7 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function(
 			$scope.data = {};
 			$scope.data.deployDriver = $scope.style.deployer.deployDriver;
 			$scope.data.deployType = $scope.style.deployer.deployType;
-			
+			$scope.osName = response.deployer.os;
 			if($scope.data.deployDriver.indexOf('docker') !== -1){
 				$scope.style.deployType = 'docker';
 				$scope.docker = true;

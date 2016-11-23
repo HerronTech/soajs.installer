@@ -146,6 +146,9 @@ module.exports = {
 		profileData += 'module.exports = ' + JSON.stringify(clusters, null, 2) + ';';
 		fs.writeFileSync(folder + "profile.js", profileData, "utf8");
 		
+		delete clusters.name;
+		delete clusters.prefix;
+		
 		//modify users file
 		var userData = fs.readFileSync(folder + "urac/users/owner.js", "utf8");
 		userData = userData.replace(/%username%/g, body.gi.username);
@@ -154,7 +157,7 @@ module.exports = {
 		var Hasher = soajs.hasher;
 		Hasher.init({
 			"hashIterations": 1024,
-			"seedLength": 32,
+			"seedLength": 32
 		});
 		var hashedPwd = Hasher.hash(body.gi.password);
 		userData = userData.replace(/%password%/g, hashedPwd);
@@ -289,8 +292,18 @@ module.exports = {
 					runner.write("export " + e + "=" + envs[e] + os.EOL);
 				}
 				
-				runner.write(os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/manual.js") + os.EOL);
-				runner.write("ps aux | grep node" + os.EOL);
+				runner.write(os.EOL + "#Run Deployment Script ..." + os.EOL);
+				runner.write(nodePath + " " + path.normalize(__dirname + "/../scripts/manual.js") + os.EOL);
+				runner.write(os.EOL + "#Start Nginx ..." + os.EOL);
+				
+				if(process.platform === 'darwin'){
+					runner.write("brew services start nginx" + os.EOL);
+				}
+				else {
+					runner.write("sudo service nginx start" + os.EOL);
+				}
+				
+				runner.write(os.EOL + "ps aux | grep node" + os.EOL);
 				runner.end();
 				
 				fs.chmodSync(path.normalize(__dirname + "/../scripts/manual-deploy.sh"), "0755");
@@ -301,7 +314,7 @@ module.exports = {
 						"site": "127.0.0.1 " + body.gi.site + "." + body.gi.domain
 					},
 					"ui": "http://" + body.gi.site + "." + body.gi.domain,
-					"cmd": path.normalize(__dirname + "/../scripts/manual-deploy.sh")
+					"cmd": "sudo " + path.normalize(__dirname + "/../scripts/manual-deploy.sh")
 				});
 			});
 		});
@@ -337,7 +350,7 @@ module.exports = {
 				"NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
 				"SOAJS_NX_SSL": body.deployment.nginxSsl,
 				
-				"SOAJS_DOCKER_CERTS_PATH": body.deployment.certificatesFolder,
+				"SOAJS_DOCKER_CERTS_PATH": body.deployment.containerDir || body.deployment.certificatesFolder,
 				"SWARM_INTERNAL_PORT": body.deployment.dockerInternalPort,
 				"SOAJS_DOCKER_SOCKET": body.deployment.dockerSocket,
 				"DOCKER_NETWORK": body.deployment.networkName,
@@ -373,7 +386,7 @@ module.exports = {
 						"site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
 					},
 					"ui": "http://" + body.gi.site + "." + body.gi.domain,
-					"cmd": path.normalize(__dirname + "/../scripts/swarm-deploy.sh")
+					"cmd": "sudo " + path.normalize(__dirname + "/../scripts/swarm-deploy.sh")
 				};
 				
 				if(!body.deployment.mongoExt){

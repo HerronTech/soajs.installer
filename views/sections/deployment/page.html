@@ -4,8 +4,20 @@
             {{alert.msg}}
         </alert>
     </div>
+	<div ng-show="!confirmation && deployment.deployType ==='manual'">
+		<form class="css-form" novalidate>
+			<div class="header">
+				<h3>Deployment Information</h3>
+			</div>
+		</form>
+		<p>
+			You have selected manual deployment in <b>Overview</b> section.<br />
+			Manual Deployment has no extra configuration, click proceed to start the deployment.
+			<input value="Proceed" class="btn btn-sm btn-primary f-right" type="button" ng-click="goToFinal()"/>
+		</p>
+	</div>
     <form ng-hide="confirmation" name="deploymentForm" class="css-form" novalidate
-          ng-submit="deploymentForm.$valid && fillDeployment();">
+          ng-submit="deploymentForm.$valid && fillDeployment();" ng-show="ha">
         <div class="header">
             <h3>Deployment Information</h3>
         </div>
@@ -214,25 +226,25 @@
                 <h3>Overview</h3>
             </div>
         </form>
-        <div class="box">
+        <div class="box" ng-show="data.gi">
             <div class="box-heading">General Information</div>
             <div class="box-content">
                 <pre ng-bind-html="data.gi"></pre>
             </div>
         </div>
-        <div class="box">
+        <div class="box" ng-show="data.security">
             <div class="box-heading">Security Information</div>
             <div class="box-content">
                 <pre ng-bind-html="data.security"></pre>
             </div>
         </div>
-        <div class="box">
+        <div class="box" ng-show="data.clusters">
             <div class="box-heading">Clusters Information</div>
             <div class="box-content">
                 <pre ng-bind-html="data.clusters"></pre>
             </div>
         </div>
-        <div class="box">
+        <div class="box" ng-show="data.deployment">
             <div class="box-heading">Deployment Information</div>
             <div class="box-content">
                 <pre ng-bind-html="data.deployment"></pre>

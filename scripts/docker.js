@@ -13,7 +13,9 @@ utilLog.log ('SOAJS High Availability Deployer');
 utilLog.log ('Current configuration: Machine IP/URL: ' + config.docker.machineIP + ' | Certificates Local Path: ' + config.docker.certsPath);
 utilLog.log ('You can change this configuration by setting CONTAINER_HOST & SOAJS_DOCKER_CERTS_PATH environment variables\n');
 
-lib.getDeployer(config.docker, function (deployer) {
+lib.getDeployer(config.docker, function (error, deployer) {
+	if(error){ throw new Error(error); }
+	
 	lib.ifSwarmExists(deployer, function (error, exists) {
 		if (error) throw new Error(error);
 		

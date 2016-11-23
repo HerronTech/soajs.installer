@@ -40,12 +40,39 @@
 				<input type="radio" name="docker-loc" value="container.docker.local" ng-model="data.deployDriver" />&nbsp;Local Machine<br />
 				<input type="radio" name="docker-loc" value="container.docker.remote" ng-model="data.deployDriver" />&nbsp;Remote Machine<br /><br />
 				<p>
-					Choose an option from the above and make sure Docker is installed by following the instruction below.<br />
+					Choose an option from the above and make sure Docker is installed ( Link below ).<br />
 					Once Docker is installed click proceed at the bottom of this page.
 				</p>
 				<pre ng-if="style.docker.t==='sh'" class="bash"><code># Install needed technologies for docker swarm deployment
 {{style.docker.v}}</code></pre>
 				<div ng-if="style.docker.t === 'link'"><b>Download Link:</b> <a href="{{style.docker.v}}">{{style.docker.v}}</a></div>
+				<alert type="warning" ng-show="data.deployDriver ==='container.docker.remote'">
+					<b><u>Note:</u></b><br />
+					You have chose to deploy SOAJS on a remote machine.<br />
+					This means you need to:<br /><br />
+					<div ng-if="osName ==='linux'">
+						<b>Either:</b>
+						<ol>
+							<li>Create a remote machine with linux on it.</li>
+							<li>Either run the Script above and it will install docker and generate self-signed certificates for you.</li>
+							<li>Copy these certificates to a folder on this machine.</li>
+							<li>Provide the IP address of the remote machine and the certificates location in the last Step of this wizard when asked.</li>
+						</ol>
+						<b>Or:</b>
+						<ol>
+							<li>Create a remote machine with linux on it.</li>
+							<li>Purchase certificates for a third party provider.</li>
+							<li>Copy these certificates to folder '~/.docker/' on the remote machine.</li>
+							<li>Run the Script above and it will install docker using these certificates.</li>
+							<li>Copy these certificates to a folder on this machine.</li>
+							<li>Provide the IP address of the remote machine and the certificates location in the last Step of this wizard when asked.</li>
+						</ol>
+					</div>
+					<div ng-if="osName ==='mac'">
+						
+					</div>
+					This will allow the deployment script to deploy the containers and install SOAJS on the remote machine.
+				</alert>
 			</accordion-group>
 			
 			<accordion-group heading="Kubernetes Deployment" ng-click="selectDeployment('kubernetes')"  is-open="kubernetes">

@@ -56,14 +56,17 @@ var lib = {
             "port": dockerObj.machinePort
         };
         if (typeof (deployerConfig.host) === 'string' && deployerConfig.host === '127.0.0.1') {
-            return cb(new Docker({socketPath: config.docker.socketPath}));
+            return cb(null, new Docker({socketPath: config.docker.socketPath}));
         }
         else {
+        	if(!config.docker.certsPath){
+        		return cb(new Error('No certificates found for remote machine.'));
+	        }
             deployerConfig.ca = fs.readFileSync(config.docker.certsPath + '/ca.pem');
             deployerConfig.cert = fs.readFileSync(config.docker.certsPath + '/cert.pem');
             deployerConfig.key = fs.readFileSync(config.docker.certsPath + '/key.pem');
 
-            return cb(new Docker(deployerConfig));
+            return cb(null, new Docker(deployerConfig));
         }
     },
 
