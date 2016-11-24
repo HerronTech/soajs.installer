@@ -87,6 +87,7 @@ clustersApp.controller('clustersCtrl', ['$scope', 'ngDataApi', function ($scope,
 				"prefix": (response && response.clusters.prefix) ? response.clusters.prefix : "",
                 "mongoExt": (response && response.clusters.mongoExt) ? response.clusters.mongoExt : false,
                 "servers": (response && response.clusters.servers) ? response.clusters.servers : [{"host": "127.0.0.1", "port": 27017}],
+                "isReplica": (response && response.clusters.isReplica) ? response.clusters.isReplica : "",
 				"replicaSet": (response && response.clusters.replicaSet) ? response.clusters.replicaSet : "",
 				"credentials": (response && response.clusters.credentials) ? response.clusters.credentials : {
 					"username": "",
