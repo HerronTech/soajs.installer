@@ -55,6 +55,11 @@ var routes = {
 					os : osName
 				};
 			}
+			else {
+                data.deployer = {
+                    os : osName
+                };
+			}
 			
 			return res.json(req.soajs.buildResponse(null, data));
 		});
