@@ -23,6 +23,12 @@ clustersApp.controller('clustersCtrl', ['$scope', 'ngDataApi', function ($scope,
 		$scope.clusters.servers.splice(index, 1);
 	};
 
+	$scope.uncheckReplica = function(){
+		if(!$scope.clusters.mongoExt) {
+            $scope.clusters.isReplica = false;
+        }
+	}
+
 	$scope.fillClusters = function () {
 		var data = angular.copy($scope.clusters);
 

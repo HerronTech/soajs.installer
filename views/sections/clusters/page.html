@@ -27,7 +27,7 @@
                     <div id="mongoExt-wrapper">
                         <input class="f-left form-control" id="mongoExt" name="mongoExt" ng-model="clusters.mongoExt"
                                tooltip="Check the box if you want Mongo to be outside the container cloud."
-                               ng-required="false" type="checkbox"/>&nbsp;<label>External Mongo</label>
+                               ng-required="false" type="checkbox" ng-click="uncheckReplica()"/>&nbsp;<label>External Mongo</label>
                         <div class="fieldMsg hint">Specify if Mongo should be outside the container cloud</div>
                     </div>
                 </td>
@@ -42,7 +42,7 @@
                     </div>
                 </td>
             </tr>
-            <tr class="form-group replicaSet-wrapper" ng-show="clusters.isReplica">
+            <tr class="form-group replicaSet-wrapper" ng-show="clusters.isReplica&&clusters.mongoExt">
                 <td>
                     <div id="replicaSet-wrapper">
                         <label class="f-left  ">Replica Set Name</label>
@@ -86,7 +86,7 @@
 						</fieldset>
 					</td>
 				</tr>
-            <tr class="form-group addServer-wrapper" ng-show="clusters.isReplica">
+            <tr class="form-group addServer-wrapper" ng-show="clusters.isReplica&&clusters.mongoExt">
                 <td class="typeHtml">
                     <br />
                     <input class="btn btn-sm btn-success f-right" value="Add New Server" type="button" ng-click="AddNewServer()" />
