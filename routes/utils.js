@@ -140,9 +140,9 @@ module.exports = {
 		var profileData = '"use strict;"' + os.EOL;
 		clusters.name = "core_provision";
 		clusters.prefix = body.clusters.prefix || "";
-		var flavors = ["container.docker.local", "container.kubernetes.local"];
-		if(flavors.indexOf(body.deployment.deployDriver) !== -1 && !clusters.mongoExt){
-			if(body.deployment.deployDriver === "container.docker.local"){
+		
+		if(!clusters.mongoExt){
+			if(body.deployment.deployDriver === "container.docker"){
 				clusters.servers = [
 					{
 						host: "dashboard-soajsdata",
@@ -150,7 +150,7 @@ module.exports = {
 					}
 				];
 			}
-			if(body.deployment.deployDriver === "container.kubernetes.local"){
+			if(body.deployment.deployDriver.indexOf("container.kubernetes") !== -1){
 				clusters.servers = [
 					{
 						host: "dashboard-soajsdata",
@@ -161,6 +161,10 @@ module.exports = {
 		}
 		profileData += 'module.exports = ' + JSON.stringify(clusters, null, 2) + ';';
 		fs.writeFileSync(folder + "profile.js", profileData, "utf8");
+		
+		if(body.deployment.deployDriver.indexOf("kubernetes") !== -1 && !clusters.mongoExt){
+			clusters.servers[0].port = 27017;
+		}
 		
 		delete clusters.mongoExt;
 		delete clusters.name;
