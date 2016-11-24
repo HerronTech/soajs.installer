@@ -40,11 +40,12 @@
 				<input type="radio" name="localButtons" ng-value="docker" ng-click="selectDeployment('docker')"/>&nbsp;Docker Deployment (Ubuntu or Mac only)<br />
 				<input type="radio" name="localButtons" ng-value="kubernetes" ng-click="selectDeployment('kubernetes')"/>&nbsp;Kubernetes Deployment (Ubuntu Mac only)<br /><br />
 				
-				<pre ng-show="style.docker.t==='sh'" class="bash"><code># Install needed technologies for docker swarm deployment
+				<pre ng-show="docker&&osName==='linux'" class="bash"><code># Install needed technologies for docker swarm deployment
 {{style.docker.v}}</code></pre>
-				<div ng-show="style.docker.t === 'link'"><b>Download Link:</b> <a href="{{style.docker.v}}">{{style.docker.v}}</a></div>
+				<div ng-show="docker&&osName==='mac'"><b>Download Link:</b> <a href="{{style.docker.v}}">{{style.docker.v}}</a></div>
 			</accordion-group>
-			
+			<pre ng-if="kubernetes&&osName==='linux'" class="bash"><code># Install needed technologies for kubernetes deployment
+{{style.kubernetes.v}}</code></pre>
 			<accordion-group heading="Remote Cloud Deployment" is-open="remote" ng-click="selectLocation('remote')">
 				<p>
 					<b>Overview:</b>
