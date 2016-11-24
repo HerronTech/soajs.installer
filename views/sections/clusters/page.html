@@ -48,13 +48,21 @@
 						</fieldset>
 					</td>
 				</tr>
-				<tr class="form-group addServer-wrapper">
+				<tr class="form-group addServer-wrapper" ng-show="clusters.replicaSet && clusters.replicaSet !== '' ">
 					<td class="typeHtml">
 						<br />
 						<input class="btn btn-sm btn-success f-right" value="Add New Server" type="button" ng-click="AddNewServer()" />
 					</td>
 				</tr>
-				
+				<tr class="form-group replicaSet-wrapper">
+					<td>
+						<div id="replicaSet-wrapper">
+							<label class="f-left  ">Replica Set Name</label>
+							<input type="text" class="form-control" ng-required="false" ng-model="clusters.replicaSet" name="replicaSet" id="replicaSet" value="{{replicaSet}}" />
+							<div class="fieldMsg hint">Provide the name of the replica Set you are connecting to.</div>
+						</div>
+					</td>
+				</tr>
 				<tr class="form-group credentials-wrapper">
 					<td>
 						<div id="clusterPrefix-wrapper">

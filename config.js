@@ -120,6 +120,7 @@ module.exports = {
 						"type": "object",
 						"properties": {
 							"prefix": {"type": "string"},
+							"replicaSet": {"type": "string"},
                             "mongoExt": {"type": "boolean", "required": false},
 							"servers": {
 								"type": "array",
