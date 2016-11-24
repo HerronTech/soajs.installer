@@ -40,12 +40,7 @@
 				<input type="radio" name="localButtons" ng-value="docker" ng-click="selectDeployment('docker')"/>&nbsp;Docker Deployment (Ubuntu or Mac only)<br />
 				<input type="radio" name="localButtons" ng-value="kubernetes" ng-click="selectDeployment('kubernetes')"/>&nbsp;Kubernetes Deployment (Ubuntu Mac only)<br /><br />
 				
-				<pre ng-show="docker&&local&&osName==='linux'" class="bash"><code>
-					#Navigate, on the terminal, to the directory containing the SOAJS installer.
-					#Navigate to the following directory inside the SOAJS installer.
-					cd /scripts/pre/
-					#Execute the command below on your terminal to install Docker on your local Ubuntu machine
-					./docker-linux.sh</code></pre>
+				<pre ng-show="docker&&local&&osName==='linux'" class="bash"><code>#Navigate, on the terminal, to the directory containing the SOAJS installer.<br />#Navigate to the following directory inside the SOAJS installer.<br />cd /scripts/pre/<br />#Execute the command below on your terminal to install Docker on your local Ubuntu machine<br />./docker-linux.sh</code></pre>
 				<div ng-show="docker&&local&&osName==='mac'"><b>Click on this link to download Docker for Mac:</b> <a href="https://download.docker.com/mac/stable/Docker.dmg">https://download.docker.com/mac/stable/Docker.dmg</a></div>
 				<pre ng-show="kubernetes&&local&&osName==='linux'" class="bash"><code> We don't have Kubernetes for linux yet</code></pre>
 				<pre ng-show="kubernetes&&local&&osName==='mac'" class="bash"><code>#Execute the command below on your terminal to install Kubernetes on your local Mac machine
