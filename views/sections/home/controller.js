@@ -8,7 +8,6 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function(
 	};
 	
 	$scope.fillOverView = function(){
-		//var data = angular.copy($scope);
 		var output = {};
 		//check if no deplyment type is clicked
 		if(!$scope.manual && !$scope.local && !$scope.remote){
@@ -116,15 +115,22 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function(
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
 				return false;
 			}
-			
+
 			$scope.style = response;
 			$scope.data = {};
-			$scope.data.deployDriver = $scope.style.deployer.deployDriver;
-			$scope.data.deployType = $scope.style.deployer.deployType;
+			if($scope.style.deployer) {
+                $scope.data.deployDriver = $scope.style.deployer.deployDriver;
+                $scope.data.deployType = $scope.style.deployer.deployType;
+            }
 			$scope.osName = response.deployer.os;
-
-			if($scope.data.deployDriver === 'manual'){
-				$scope.style.deployType = 'manual';
+            if(!$scope.data.deployDriver){
+                $scope.manual = false;
+                $scope.docker = false;
+                $scope.kubernetes = false;
+                $scope.local = false;
+                $scope.remote = false;
+            }
+			else if($scope.data.deployDriver === 'manual'){
 				$scope.manual = true;
                 $scope.docker = false;
                 $scope.kubernetes = false;
