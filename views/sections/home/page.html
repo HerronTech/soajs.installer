@@ -32,55 +32,58 @@
 			<accordion-group heading="Local Cloud Deployment" is-open="local" ng-click="selectLocation('local')">
 				<p>
 					<b>Overview:</b><br />
-					This deployment will install SOAJS ready made services in containers on your local machine.<br />
-					Once deployed, you can interact with these services via a User Interface.<br />
-					<b>This type of deployment is only supported on machines running Linux or Mac operating systems</b>
+					Deploy SOAJS cloud on your local machine.<br />
+					Once deployed, you can interact with SOAJS ready made services via a User Interface.<br />
+					This type of deployment is only supported on machines running Ubuntu or Mac.
 				</p>
 				<b><u>Deployment Type:</u></b><br />
-				<input type="radio" name="localButtons" ng-value="docker" ng-click="selectDeployment('docker')"/>&nbsp;Docker Deployment (Linux or Mac machines only)<br />
-				<input type="radio" name="localButtons" ng-value="kubernetes" ng-click="selectDeployment('kubernetes')"/>&nbsp;Kubernetes Deployment (Linux or Mac machines only)<br /><br />
-				<p>
-					Choose an option from the above and make sure Docker is installed (Link below).<br />
-					Once Docker is installed, click the <b>proceed</b> bottom located at the bottom of the page.
-				</p>
-				<pre ng-if="style.docker.t==='sh'" class="bash"><code># Install needed technologies for docker swarm deployment
+				<input type="radio" name="localButtons" ng-value="docker" ng-click="selectDeployment('docker')"/>&nbsp;Docker Deployment (Ubuntu or Mac only)<br />
+				<input type="radio" name="localButtons" ng-value="kubernetes" ng-click="selectDeployment('kubernetes')"/>&nbsp;Kubernetes Deployment (Ubuntu Mac only)<br /><br />
+				
+				<pre ng-show="style.docker.t==='sh'" class="bash"><code># Install needed technologies for docker swarm deployment
 {{style.docker.v}}</code></pre>
-				<div ng-if="style.docker.t === 'link'"><b>Download Link:</b> <a href="{{style.docker.v}}">{{style.docker.v}}</a></div>
+				<div ng-show="style.docker.t === 'link'"><b>Download Link:</b> <a href="{{style.docker.v}}">{{style.docker.v}}</a></div>
 			</accordion-group>
 			
 			<accordion-group heading="Remote Cloud Deployment" is-open="remote" ng-click="selectLocation('remote')">
 				<p>
 					<b>Overview:</b>
-					This deployment will install Kubernetes and then deploy SOAJS ready made services as containers in it. <br />
-					Once deployed, you can interact with these services via a User Interface. <br />
+					Deploy SOAJS cloud on a remote machine.<br />
+					Once deployed, you can interact with SOAJS ready made services via a User Interface.<br />
+					This type of deployment is only supported on machines running Ubuntu.
 
 				</p>
 				<b><u>Deployment Type:</u></b><br />
-				<input type="radio" name="remoteButtons" ng-value="docker" ng-click="selectDeployment('docker')"/>&nbsp;Docker Deployment (Linux Machines Only)<br />
-				<input type="radio" name="remoteButtons" ng-value="kubernetes" ng-click="selectDeployment('kubernetes')"/>&nbsp;Kubernetes Deployment (Linux Machines Only)<br /><br />
-				<p>
-					Choose an option from the above and make sure Kubernetes is installed by following the instruction below.<br />
-					Once Kubernetes is installed click proceed at the bottom of this page.
-				</p>
-				<pre ng-if="style.kubernetes.t==='sh'" class="bash"><code># Install needed technologies for kubernetes deployment
+				<input type="radio" name="remoteButtons" ng-value="docker" ng-click="selectDeployment('docker')"/>&nbsp;Docker Deployment (Ubuntu Only)<br />
+				<input type="radio" name="remoteButtons" ng-value="kubernetes" ng-click="selectDeployment('kubernetes')"/>&nbsp;Kubernetes Deployment (Ubuntu Only)<br /><br />
+				
+				<pre ng-if="kubernetes" class="bash"><code># Install needed technologies for kubernetes deployment
 {{style.kubernetes.v}}</code></pre>
-				<alert type="warning" ng-show="data.deployDriver.indexOf('remote') !== -1">
+				
+				<pre ng-if="docker" class="bash"><code># Install needed technologies for docker deployment
+{{style.docker.v}}</code></pre>
+				
+				<alert type="warning">
 					<b><u>Note:</u></b><br />
 					You have chosen to deploy SOAJS on a remote machine.<br />
-					<b>This type of deployment is only supported on machines running Linux operating systems</b><br />
+					<b>This type of deployment is only supported on machines running Ubuntu operating systems</b><br />
 					Follow the instructions below before proceeding to the next page:<br /><br />
 					<div>
 						<ol>
-							<li>Create a remote machine with linux on it.</li>
+							<li>Create a remote machine with Ubuntu on it.</li>
 							<li>Run the Script above and it will install docker and generate self-signed certificates for you.</li>
 							<li>Copy these certificates to a folder on this machine.</li>
 							<li>Provide the IP address of the remote machine and the certificates location in the last Step of this wizard when asked.</li>
 						</ol>
 						<b>Or:</b>
 						<ol>
-							<li>Create a remote machine with linux on it.</li>
+							<li>Create a remote machine with Ubuntu on it.</li>
 							<li>Purchase certificates for a third party provider.</li>
-							<li>Copy these certificates to folder '~/.docker/' on the remote machine.</li>
+							<li>Copy these certificates to a folder on the remote machine.<br />
+								<u>ex:</u><br />
+								- <b>Docker:</b>&nbsp;'~/.docker/'<br>
+								- <b>Kubernetes:</b>&nbsp;'~/.minikube/'
+							</li>
 							<li>Run the Script above and it will install docker using these certificates.</li>
 							<li>Copy the same certificates to a folder on this machine.</li>
 							<li>Provide the IP address of the remote machine and the certificates location in the last Step of this wizard when asked.</li>
