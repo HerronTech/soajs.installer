@@ -32,9 +32,10 @@
             </tr>
             </tbody>
         </table>
+        <fieldset ng-show="docker||kubernetes">
         <table width="100%" cellspacing="0" cellpadding="0" border="0">
             <tbody>
-            <tr class="form-group tr-code-wrapper" ng-show="ha">
+            <tr class="form-group tr-code-wrapper">
                 <td class="form-select">
                     <div id="containerHost-wrapper">
                         <label>Master Node Hostname/IP</label>
@@ -44,7 +45,7 @@
                     </div>
                 </td>
             </tr>
-            <tr class="form-group tr-code-wrapper" ng-show="ha">
+            <tr class="form-group tr-code-wrapper">
                 <td class="form-select">
                     <div id="containerDir-wrapper">
                         <label>Certificates Directory</label>
@@ -54,7 +55,7 @@
                     </div>
                 </td>
             </tr>
-            <tr class="form-group tr-code-wrapper" ng-show="ha">
+            <tr class="form-group tr-code-wrapper">
                 <td class="form-select">
                     <div id="imagePrefix-wrapper">
                         <label>Image Prefix</label>
@@ -64,7 +65,7 @@
                     </div>
                 </td>
             </tr>
-            <tr class="form-group tr-code-wrapper" ng-show="ha">
+            <tr class="form-group tr-code-wrapper">
                 <td class="form-select">
                     <div id="initialReplica-wrapper">
                         <label>Initial Number of Replicas</label>
@@ -77,12 +78,13 @@
             </tr>
             </tbody>
         </table>
+        </fieldset>
         <br />
-        <fieldset ng-show="ha">
+        <fieldset ng-show="docker||kubernetes">
             <legend>Git Account</legend>
             <table width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tbody>
-                <tr class="form-group tr-code-wrapper" ng-show="ha">
+                <tr class="form-group tr-code-wrapper">
                     <td class="form-select">
                         <div id="gitOwner-wrapper">
                             <label>Git Owner</label>
@@ -92,7 +94,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr class="form-group tr-code-wrapper" ng-show="ha">
+                <tr class="form-group tr-code-wrapper">
                     <td class="form-select">
                         <div id="gitRepo-wrapper">
                             <label>Git Repository</label>
@@ -102,7 +104,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr class="form-group tr-code-wrapper" ng-show="ha">
+                <tr class="form-group tr-code-wrapper">
                     <td class="form-select">
                         <div id="gitToken-wrapper">
                             <label>Git Token</label>
@@ -116,11 +118,11 @@
             </table>
         </fieldset>
         <br />
-        <fieldset ng-show="ha">
+        <fieldset ng-show="docker||kubernetes">
             <legend>NGINX</legend>
             <table width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tbody>
-                <tr class="form-group tr-code-wrapper" ng-show="ha">
+                <tr class="form-group tr-code-wrapper">
                     <td class="form-select">
                         <div id="nginxPort-wrapper">
                             <label>NGINX Port</label>
@@ -130,7 +132,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr class="form-group tr-code-wrapper" ng-show="ha">
+                <tr class="form-group tr-code-wrapper">
                     <td class="form-select">
                         <div id="nginxSecurePort-wrapper">
                             <label>NGINX Secure Port</label>
@@ -140,7 +142,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr class="form-group tr-code-wrapper" ng-show="ha">
+                <tr class="form-group tr-code-wrapper">
                     <td class="form-select">
                         <div id="nginxSsl-wrapper">
                             <input class="f-left form-control" id="nginxSsl" name="nginxSsl" ng-model="deployment.nginxSsl"
@@ -158,7 +160,7 @@
             <legend>Docker</legend>
             <table width="100%" cellspacing="0" cellpadding="0" border="0"width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tbody>
-                <tr class="form-group tr-code-wrapper" ng-show="ha">
+                <tr class="form-group tr-code-wrapper">
                     <td class="form-select">
                         <div id="dockerSocket-wrapper">
                             <label>Docker Socket Directory</label>
@@ -168,7 +170,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr class="form-group tr-code-wrapper" ng-show="ha">
+                <tr class="form-group tr-code-wrapper">
                     <td class="form-select">
                         <div id="networkName-wrapper">
                             <label>Network Name</label>
@@ -178,7 +180,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr class="form-group tr-code-wrapper" ng-show="ha">
+                <tr class="form-group tr-code-wrapper">
                     <td class="form-select">
                         <div id="containerPort-wrapper">
                             <label>Docker Container Port Number</label>
@@ -188,7 +190,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr class="form-group tr-code-wrapper" ng-show="ha">
+                <tr class="form-group tr-code-wrapper">
                     <td class="form-select">
                         <div id="dockerInternalPort-wrapper">
                             <label>Docker Internal Port Number</label>
@@ -204,7 +206,7 @@
         <fieldset ng-show="kubernetes">
             <legend>Kubernetes</legend>
             <table width="100%" cellspacing="0" cellpadding="0" border="0"width="100%" cellspacing="0" cellpadding="0" border="0">
-            <tr class="form-group tr-code-wrapper" ng-show="ha">
+            <tr class="form-group tr-code-wrapper">
                 <td class="form-select">
                     <div id="kubeContainerPort-wrapper">
                         <label>Kubernetes Container Port Number</label>

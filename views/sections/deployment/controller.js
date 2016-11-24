@@ -115,7 +115,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
 				return false;
 			}
-			
+
 			$scope.deployment = {
 				"deployType": (response && response.deployType) ? response.deployType : "manual",
 				"deployDriver": (response && response.deployDriver) ? response.deployDriver : "manual",
@@ -132,17 +132,17 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				
                 "dockerReplica": (response && response.dockerReplica) ? response.dockerReplica : 1
 			};
-			
+
 			if($scope.deployment.deployDriver.indexOf("docker") !== -1){
-				$scope.deployment.containerDir = (response && response.docker.containerDir) ? response.docker.containerDir : "";
-				$scope.deployment.containerPort = (response && response.docker.containerPort) ? response.docker.containerPort : 2376;
-				$scope.deployment.dockerSocket = (response && response.docker.dockerSocket) ? response.docker.dockerSocket : "/var/run/docker.sock";
-				$scope.deployment.networkName = (response && response.docker.networkName) ? response.docker.networkName : "soajsnet";
-				$scope.deployment.dockerInternalPort = (response && response.docker.dockerInternalPort) ? response.docker.dockerInternalPort : 2377;
+				$scope.deployment.containerDir = (response && response.docker && response.docker.containerDir) ? response.docker.containerDir : "";
+				$scope.deployment.containerPort = (response && response.docker && response.docker.containerPort) ? response.docker.containerPort : 2376;
+				$scope.deployment.dockerSocket = (response && response.docker && response.docker.dockerSocket) ? response.docker.dockerSocket : "/var/run/docker.sock";
+				$scope.deployment.networkName = (response && response.docker && response.docker.networkName) ? response.docker.networkName : "soajsnet";
+				$scope.deployment.dockerInternalPort = (response && response.docker && response.docker.dockerInternalPort) ? response.docker.dockerInternalPort : 2377;
 			}
 			else if ($scope.deployment.deployDriver.indexOf("kubernetes") !== -1){
-				$scope.deployment.containerDir = (response && response.kubernetes.containerDir) ? response.kubernetes.containerDir : "";
-				$scope.deployment.kubeContainerPort = (response && response.kubernetes.containerPort) ? response.kubernetes.containerPort : 8443;
+				$scope.deployment.containerDir = (response && response.kubernetes && response.kubernetes.containerDir) ? response.kubernetes.containerDir : "";
+				$scope.deployment.kubeContainerPort = (response && response.kubernetes && response.kubernetes.containerPort) ? response.kubernetes.containerPort : 8443;
 			}
 			
 			$scope.evaluateDeploymentChoice();
