@@ -37,7 +37,7 @@
                     <div id="isReplica-wrapper">
                         <input class="f-left form-control" id="isReplica" name="isReplica" ng-model="clusters.isReplica"
                                tooltip="Check the box if the Mongo Database is a replica set"
-                               ng-required="false" type="checkbox" ng-click="resetMongoInput()"/>&nbsp;<label>Replicated Database</label>
+                               ng-required="false" type="checkbox" ng-change="resetMongoInput()"/>&nbsp;<label>Replicated Database</label>
                         <div class="fieldMsg hint">Check the box if the Mongo Database is a replica set</div>
                     </div>
                 </td>
