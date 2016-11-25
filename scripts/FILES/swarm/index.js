@@ -177,7 +177,7 @@ var lib = {
         var network = deployer.getNetwork(config.docker.network);
         network.inspect(function (error, result) {
             if (error) return cb(error);
-
+            
             var oneContainer, ips = [];
             for (var cid in result.Containers) {
                 oneContainer = result.Containers[cid];
@@ -188,6 +188,7 @@ var lib = {
                     });
                 }
             }
+            
             if (ips.length !== replicaCount) {
                 //Containers may not have been attached to network yet
                 lib.printProgress('Waiting for ' + serviceName + ' containers to become available', counter++);
@@ -233,7 +234,7 @@ var lib = {
         }
         else {
         	//only one server in this case, internal mongo container id
-	        mongoEnv.push({ name: 'SOAJS_MONGO_NB', value: '1' });
+	        mongoEnv.push('SOAJS_MONGO_NB=1');
 	        mongoEnv.push('SOAJS_MONGO_IP_1=' + profile.servers[0].host);
 	        mongoEnv.push('SOAJS_MONGO_PORT_1=' + profile.servers[0].port);
         }
