@@ -73,7 +73,7 @@ module.exports = {
 		},
 		"kubernetes":{
 			"containerPort": 8443,
-			"certificatesFolder": process.env.HOME + '/.minikube'
+			"certificatesFolder": process.env.HOME + '/.kubernetes'
 		}
 	}
 };
