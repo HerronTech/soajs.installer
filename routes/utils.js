@@ -154,7 +154,7 @@ module.exports = {
 		clusters.prefix = body.clusters.prefix || "";
 		var mongoExt = clusters.mongoExt;
 		if(!mongoExt){
-			if(body.deployment.deployDriver === "container.docker"){
+			if(body.deployment.deployDriver.indexOf("container.docker") !== -1){
 				clusters.servers = [
 					{
 						host: "dashboard-soajsdata",
@@ -493,10 +493,10 @@ module.exports = {
 			};
 
 			if(!body.clusters.mongoExt){
-				obj['hosts'].mongo = body.deployment.containerHost + " dashboard_soajsData";
+				obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsData";
 			}
 			else{
-				obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard_soajsData";
+				obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard-soajsData";
 			}
 
 			return cb(null, obj);
