@@ -35,7 +35,6 @@ clustersApp.controller('clustersCtrl', ['$scope', 'ngDataApi', function ($scope,
 			$scope.clusters.replicaSet = "";
         	$scope.clusters.servers = [$scope.clusters.servers[0]];
     	}
-    	console.log($scope.clusters);
 	};
 
 	$scope.fillClusters = function () {
@@ -99,23 +98,23 @@ clustersApp.controller('clustersCtrl', ['$scope', 'ngDataApi', function ($scope,
 			$scope.containerDeployment = $scope.deployment.deployType === "container";
 
 			$scope.clusters = {
-				"prefix": (response && response.clusters.prefix) ? response.clusters.prefix : "",
-                "mongoExt": (response && response.clusters.mongoExt) ? response.clusters.mongoExt : false,
-                "servers": (response && response.clusters.servers) ? response.clusters.servers : [{"host": "127.0.0.1", "port": 27017}],
-                "isReplica": (response && response.clusters.replicaSet) ? true : false,
-				"replicaSet": (response && response.clusters.replicaSet) ? response.clusters.replicaSet : "",
-				"credentials": (response && response.clusters.credentials) ? response.clusters.credentials : {
+				"prefix": (response && response.clusters && response.clusters.prefix) ? response.clusters.prefix : "",
+                "mongoExt": (response && response.clusters && response.clusters.mongoExt) ? response.clusters.mongoExt : false,
+                "servers": (response && response.clusters && response.clusters.servers) ? response.clusters.servers : [{"host": "127.0.0.1", "port": 27017}],
+                "isReplica": (response && response.clusters && response.clusters.replicaSet) ? true : false,
+				"replicaSet": (response && response.clusters && response.clusters.replicaSet) ? response.clusters.replicaSet : "",
+				"credentials": (response && response.clusters && response.clusters.credentials) ? response.clusters.credentials : {
 					"username": "",
 					"password": ""
 				},
-				"URLParam": (response && response.clusters.URLParam) ? JSON.stringify(response.clusters.URLParam, null, 2) : JSON.stringify({
+				"URLParam": (response && response.clusters && response.clusters.URLParam) ? JSON.stringify(response.clusters.URLParam, null, 2) : JSON.stringify({
 					"connectTimeoutMS": 0,
 					"socketTimeoutMS": 0,
 					"maxPoolSize": 5,
 					"wtimeoutMS": 0,
 					"slaveOk": true
 				}, null, 2),
-				"extraParam": (response && response.clusters.extraParam) ? JSON.stringify(response.clusters.extraParam, null, 2) : JSON.stringify({
+				"extraParam": (response && response.clusters && response.clusters.extraParam) ? JSON.stringify(response.clusters.extraParam, null, 2) : JSON.stringify({
 					"db": {
 						"native_parser": true,
 						"bufferMaxEntries": 0
@@ -123,9 +122,9 @@ clustersApp.controller('clustersCtrl', ['$scope', 'ngDataApi', function ($scope,
 					"server": {
 					}
 				}, null, 2),
-				"streaming": (response && response.clusters.streaming) ? JSON.stringify(response.clusters.streaming, null, 2) : JSON.stringify({})
+				"streaming": (response && response.clusters && response.clusters.streaming) ? JSON.stringify(response.clusters.streaming, null, 2) : JSON.stringify({})
 			};
-			
+
 			resizeContent();
 		});
 	};

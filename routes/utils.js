@@ -392,7 +392,7 @@ module.exports = {
 					"NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
 					"SOAJS_NX_SSL": body.deployment.nginxSsl,
 
-					"SOAJS_DOCKER_CERTS_PATH": body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder,
+
 					"SWARM_INTERNAL_PORT": body.deployment.docker.dockerInternalPort,
 					"SOAJS_DOCKER_SOCKET": body.deployment.docker.dockerSocket,
 					"DOCKER_NETWORK": body.deployment.docker.networkName,
@@ -403,6 +403,10 @@ module.exports = {
 
 				if(body.clusters.replicaSet){
 					envs['SOAJS_MONGO_RSNAME'] = body.clusters.replicaSet;
+				}
+
+				if(body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder) {
+					envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder;
 				}
 
 				for (var e in envs) {
@@ -448,10 +452,13 @@ module.exports = {
 					"SOAJS_NX_SSL": body.deployment.nginxSsl,
 
 					"CONTAINER_HOST": body.deployment.containerHost,
-					"SOAJS_DOCKER_CERTS_PATH": body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder,
 					"CONTAINER_PORT": body.deployment.kubernetes.containerPort,
 					"SOAJS_DOCKER_REPLICA": body.deployment.dockerReplica
 				};
+
+				if(body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder) {
+					envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder;
+				}
 
 				for (var e in envs) {
 					if(envs[e] !== null){
