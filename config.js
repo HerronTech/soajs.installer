@@ -121,6 +121,7 @@ module.exports = {
 						"properties": {
 							"prefix": {"type": "string"},
 							"replicaSet": {"type": "string"},
+							"isReplica":{"type":"boolean", "required": false},
                             "mongoExt": {"type": "boolean", "required": false},
 							"servers": {
 								"type": "array",
