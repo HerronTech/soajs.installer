@@ -23,10 +23,19 @@ clustersApp.controller('clustersCtrl', ['$scope', 'ngDataApi', function ($scope,
 		$scope.clusters.servers.splice(index, 1);
 	};
 
-	$scope.uncheckReplica = function(){
+	$scope.uncheckReplica = function() {
 		if(!$scope.clusters.mongoExt) {
             $scope.clusters.isReplica = false;
+            $scope.resetMongoInput();
         }
+	}
+
+	$scope.resetMongoInput = function() {
+        console.log("here" + $scope.clusters.isReplica)
+        if($scope.clusters.isReplica === false) {
+			$scope.clusters.replicaSet = "";
+        	$scope.clusters.servers = [{"host": "127.0.0.1", "port": 27017}];
+    	}
 	}
 
 	$scope.fillClusters = function () {
@@ -93,7 +102,7 @@ clustersApp.controller('clustersCtrl', ['$scope', 'ngDataApi', function ($scope,
 				"prefix": (response && response.clusters.prefix) ? response.clusters.prefix : "",
                 "mongoExt": (response && response.clusters.mongoExt) ? response.clusters.mongoExt : false,
                 "servers": (response && response.clusters.servers) ? response.clusters.servers : [{"host": "127.0.0.1", "port": 27017}],
-                "isReplica": (response && response.clusters.isReplica) ? response.clusters.isReplica : "",
+                "isReplica": (response && response.clusters.isReplica) ? response.clusters.isReplica : false,
 				"replicaSet": (response && response.clusters.replicaSet) ? response.clusters.replicaSet : "",
 				"credentials": (response && response.clusters.credentials) ? response.clusters.credentials : {
 					"username": "",
