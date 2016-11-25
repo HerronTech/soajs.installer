@@ -20,8 +20,10 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function(
 		//if manual deployment is selected
 		else if($scope.manual && !$scope.local && !$scope.remote){
 			output = {
-                "deployDriver": "manual"
+                "deployDriver": "manual",
+				"deployType": "manual"
 			}
+			
 		}
 		//if docker local is selected
 		else if(!$scope.manual && $scope.local && !$scope.remote && $scope.docker && !$scope.kubernetes){
