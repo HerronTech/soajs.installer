@@ -2,7 +2,7 @@
 var gConfig = require("../../config.js");
 
 var config = {
-    servName: 'dashboard-soajsdata-service',
+    servName: 'dashboard-soajsData',
     servReplica: 1,
     servNetwork: [
     	{

@@ -238,7 +238,7 @@ var lib = {
 	        mongoEnv.push('SOAJS_MONGO_IP_1=' + profile.servers[0].host);
 	        mongoEnv.push('SOAJS_MONGO_PORT_1=' + profile.servers[0].port);
         }
-
+        
         services.forEach(function (oneService) {
             oneService.TaskTemplate.ContainerSpec.Env = oneService.TaskTemplate.ContainerSpec.Env.concat(mongoEnv);
         });

@@ -157,7 +157,7 @@ module.exports = {
 			if(body.deployment.deployDriver.indexOf("container.docker") !== -1){
 				clusters.servers = [
 					{
-						host: "dashboard-soajsdata",
+						host: "dashboard-soajsData",
 						port: 27017
 					}
 				];
@@ -165,7 +165,7 @@ module.exports = {
 			if(body.deployment.deployDriver.indexOf("container.kubernetes") !== -1){
 				clusters.servers = [
 					{
-						host: "dashboard-soajsdata",
+						host: "dashboard-soajsData",
 						port: 5000 + 27017
 					}
 				];
