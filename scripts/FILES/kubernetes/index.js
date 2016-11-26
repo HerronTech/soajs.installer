@@ -178,7 +178,7 @@ var lib = {
                     });
                 }
             });
-
+	        
             if (ips.length !== replicaCount) {
                 //pod containers may not be ready yet
                 lib.printProgress('Waiting for ' + serviceName + ' containers to become available', counter++);

@@ -2,7 +2,7 @@
 var gConfig = require("../../config.js");
 
 var config = {
-    servName: 'dashboard-soajsData',
+    servName: 'dashboard-soajsdata',
     servReplica: 1,
     servNetwork: [
     	{
@@ -24,7 +24,7 @@ var config = {
     mounts: [
         {
             "Type": "volume",
-            "Source": "dashboard-soajsData",
+            "Source": "dashboard-soajsdata",
             "Target": "/data/db/"
         }
     ],

@@ -157,7 +157,7 @@ module.exports = {
 			if(body.deployment.deployDriver.indexOf("container.docker") !== -1){
 				clusters.servers = [
 					{
-						host: "dashboard-soajsData",
+						host: "dashboard-soajsdata",
 						port: 27017
 					}
 				];
@@ -165,7 +165,7 @@ module.exports = {
 			if(body.deployment.deployDriver.indexOf("container.kubernetes") !== -1){
 				clusters.servers = [
 					{
-						host: "dashboard-soajsData",
+						host: "dashboard-soajsdata",
 						port: 5000 + 27017
 					}
 				];
@@ -493,10 +493,10 @@ module.exports = {
 			};
 
 			if(!body.clusters.mongoExt){
-				obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsData";
+				obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata";
 			}
 			else{
-				obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard-soajsData";
+				obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard-soajsdata";
 			}
 
 			return cb(null, obj);
