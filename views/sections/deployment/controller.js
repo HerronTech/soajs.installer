@@ -129,6 +129,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 					$scope.deployment = currentScope.deployment;
 					$scope.finalize = function () {
 						keyModal.close();
+						currentScope.$parent.go("#/progress");
 					};
 				}
 			});

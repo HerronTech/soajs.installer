@@ -274,6 +274,46 @@ var routes = {
 				
 			});
 		});
+	},
+	
+	"progressInfo": function(req, res){
+		utils.loadCustomData(null, function(customData){
+			var type;
+			switch(customData.deployment.deployDriver){
+				case 'manual':
+					type = 'manual';
+					break;
+				case 'container.docker.local':
+				case 'container.docker.remote':
+					type = 'swarm';
+					break;
+				
+				case 'container.kubernetes.local':
+				case 'container.kubernetes.remote':
+					type = 'kubernetes';
+					break;
+			}
+			
+			utils.regenerateInfo(type, customData, function(error, response){
+				if(error){
+					return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message }));
+				}
+				return res.json(req.soajs.buildResponse(null, response));
+			});
+		});
+	},
+	
+	"progress": function(req, res){
+		utils.loadCustomData(null, function (customData) {
+			
+			utils.returnInstallProgress(customData, function(error, response){
+				if(error){
+					return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message }));
+				}
+				return res.json(req.soajs.buildResponse(null, response));
+			});
+		});
+		
 	}
 };
 

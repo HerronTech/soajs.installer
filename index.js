@@ -36,6 +36,10 @@ installer.init(function () {
 	//Launch Installer
 	installer.get('/installer/go', routes.installSOAJS);
 	
+	//Show Installation Progress
+	installer.get('/progress/info', routes.progressInfo);
+	installer.get('/progress', routes.progress);
+	
 	//bind the ui
 	installer.app.use(express.static(path.join(__dirname, './views')));
 	

@@ -49,6 +49,16 @@ var navigation = [
 		'url': '#/deployment',
 		'tplPath': 'sections/deployment/page.html',
 		'scripts': ['sections/deployment/controller.js']
+	},
+	{
+		'id': 'progress',
+		'label': 'Progress',
+		'title': 'SOAJS Installer | Progress',
+		'description': '',
+		'keywords': '',
+		'url': '#/progress',
+		'tplPath': 'sections/progress/page.html',
+		'scripts': ['sections/progress/controller.js']
 	}
 ];
 

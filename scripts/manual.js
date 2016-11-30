@@ -31,7 +31,7 @@ process.env.SOAJS_NX_SITE_DOMAIN = process.env.SITE_PREFIX + "." + process.env.M
 process.env.SOAJS_NX_CONTROLLER_NB = 1;
 process.env.SOAJS_NX_CONTROLLER_IP_1 = process.env.SOAJS_SRVIP;
 process.env.SOAJS_NX_SITE_PATH = WRK_DIR + "/soajs.dashboard/ui";
-var NGINX_DEST = (process.platform === 'linux') ? "/etc/nginx/" : "/usr/local/etc/nginx/servers/";
+var NGINX_DEST = (process.platform === 'linux') ? "/etc/nginx/" : "/usr/local/etc/nginx/conf.d/";
 
 function setupNginx(cb) {
 	utilLog.log("\n=====================================");

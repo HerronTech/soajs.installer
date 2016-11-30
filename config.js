@@ -45,6 +45,16 @@ module.exports = {
 				"_apiInfo":{
 					"l": "Proceed with Installing SOAJS"
 				}
+			},
+			'/progress/info' :{
+				"_apiInfo":{
+					"l": "Return Installation Progress Information"
+				}
+			},
+			'/progress' :{
+				"_apiInfo":{
+					"l": "Return Installation Progress"
+				}
 			}
 		},
 		'post': {

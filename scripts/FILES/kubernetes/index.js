@@ -36,9 +36,9 @@ var lib = {
     },
 
     getDeployer: function (deployerConfig, cb) {
-	        if(!config.kubernetes.certsPath){
-		        return cb(new Error('No certificates found for remote machine.'));
-	        }
+        if(!config.kubernetes.certsPath){
+	        return cb(new Error('No certificates found for remote machine.'));
+        }
         var deployer = {};
 
         deployerConfig.ca = fs.readFileSync(config.kubernetes.certsPath + '/ca.crt');
@@ -149,6 +149,7 @@ var lib = {
     },
 
     deletePreviousServices: function (deployer, cb) {
+    	//todo: need to provide --grace-period=0 using the javascript syntax
         lib.deleteDeployments(deployer, {}, function (error) {
             if (error) return cb(error);
 
