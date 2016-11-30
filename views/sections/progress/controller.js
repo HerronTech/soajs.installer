@@ -37,6 +37,7 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 			$scope.info = response;
 			if($scope.info.download){
 				$scope.info.download.progress = ($scope.info.download.count / $scope.info.download.total) * 100;
+				$scope.info.download.progress = $scope.info.download.progress.toFixed(2);
 				$scope.download = ($scope.info.download && $scope.info.download.count === $scope.info.download.total);
 				if($scope.info.download.progress < 50){
 					$scope.info.download.barType = "warning";
@@ -48,6 +49,7 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 			
 			if($scope.info.install){
 				$scope.info.install.progress = ($scope.info.install.count / $scope.info.install.total) * 100;
+				$scope.info.install.progress = $scope.info.install.progress.toFixed(2);
 				$scope.install = ($scope.info.install && $scope.info.install.count === $scope.info.install.total);
 				if($scope.info.install.progress < 50){
 					$scope.info.install.barType = "warning";
