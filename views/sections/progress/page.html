@@ -4,7 +4,21 @@
 			<h3>Progress</h3>
 		</div>
 	</form>
-	<div ng-show="!download">
+	<p>
+		SOAJS Installation Script has been Generated.<br/>
+		Update your hosts file with the following entries:
+	</p>
+	<pre class="bash"><code>{{hosts.api}}
+{{hosts.site}}
+{{hosts.mongo}}</code></pre>
+	<p>
+		Run the following command in your termnial and SOAJS will be downloaded and installed:
+	</p>
+	<pre class="bash"><code># Run this in your terminal
+{{cmd}}</code></pre>
+	<hr>
+	<div ng-show="!download && info.download.progress">
+		<h4><u>Progress Details:</u></h4>
 		<p>
 			The download is affected by your internet speed, do not close this page.<br />
 			Downloading Components, please wait {{info.download.progress}}% ...
@@ -12,6 +26,7 @@
 		<progressbar class="progress-striped active" value="info.download.progress" type="{{info.download.barType}}"></progressbar>
 	</div>
 	<div ng-show="download">
+		<h4><u>Progress Details:</u></h4>
 		<p>
 			All Components Downloaded, Installing ...
 		</p>

@@ -553,7 +553,7 @@ module.exports = {
 			var dest = path.normalize(body.gi.wrkDir + "/soajs/node_modules/");
 			fs.exists(dest, function (exists) {
 				if (!exists) {
-					
+					return cb(null, false);
 				}
 				
 				fs.readdir(dest, function (err, files) {
