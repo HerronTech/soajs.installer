@@ -60,7 +60,7 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 					$scope.info.install.barType = "info";
 				}
 			}
-			console.log($scope.install, $scope.download);
+			
 			if((!$scope.install || $scope.install === false) || (!$scope.download || $scope.download === false)){
 				$timeout(function(){
 					$scope.getProgress();
