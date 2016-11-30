@@ -531,7 +531,7 @@ module.exports = {
 				"cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
 			};
 			
-			if (!body.clusters.mongoExt) {
+			if (!body.clusters || !body.clusters.mongoExt) {
 				obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata";
 			}
 			else {
