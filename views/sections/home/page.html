@@ -45,18 +45,24 @@
 				<input type="radio" name="localButtons" ng-model="data.deployDriver" value="container.kubernetes.local" ng-change="selectDeployment('kubernetes')"/>&nbsp;Kubernetes
 				Deployment (Ubuntu or Mac only)<br/><br/>
 				
-				<pre ng-show="docker&&local&&osName==='linux'" class="bash"><code>#Navigate, on the terminal, to the directory containing the SOAJS installer.<br/>#Navigate to the following directory inside the SOAJS installer.<br/>cd /scripts/pre/<br/>#Execute the command below on your terminal to install Docker on your local Ubuntu machine<br/>sudo ./docker-linux.sh</code></pre>
-				<div ng-show="docker&&local&&osName==='mac'"><b>Click on this link to download Docker for Mac:</b>
-					<a href="https://download.docker.com/mac/stable/Docker.dmg">https://download.docker.com/mac/stable/Docker.dmg</a>
+				<pre ng-show="docker && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
+{{style.kubernetes.local.v}}</code></pre>
+				
+				
+				<div ng-show="docker && local && osName==='mac'"><b>Click on this link to download Docker for Mac:</b>
+					<a href="{{style.docker.local.v}}" target="_blank">{{style.docker.local.v}}</a>
 				</div>
-				<pre ng-show="kubernetes&&local&&osName==='linux'" class="bash"><code>#Navigate, on the terminal, to the directory containing the SOAJS installer.<br/>#Navigate to the following directory inside the SOAJS installer.<br/>cd /scripts/pre/<br/>#Execute the command below on your terminal to install Docker on your local Ubuntu machine<br/>sudo ./kubernetes-linux.sh</code></pre>
-				<pre ng-show="kubernetes&&local&&osName==='mac'" class="bash"><code>#Execute the command below on your terminal to install Kubernetes on your local Mac machine
-curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.12.2/minikube-darwin-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/</code></pre>
+				
+				<pre ng-show="kubernetes && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
+{{style.kubernetes.local.v}}</code></pre>
+				
+				<pre ng-show="kubernetes && local && osName==='mac'" class="bash"><code># Execute the command below in your terminal on your local machine
+{{style.kubernetes.local.v}}</code></pre>
 			</accordion-group>
 			
 			<accordion-group heading="Remote Cloud Deployment" is-open="remote" ng-click="selectLocation('remote')">
 				<p>
-					<b>Overview:</b>
+					<b>Overview:</b><br />
 					Deploy SOAJS cloud on a remote machine.<br/>
 					Once deployed, you can interact with SOAJS ready made services via a User Interface.<br/>
 					This type of deployment is only supported on machines running Ubuntu.
@@ -67,28 +73,22 @@ curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.12.2/minik
 				<input type="radio" name="remoteButtons" ng-model="data.deployDriver" value="container.kubernetes.remote" ng-change="selectDeployment('kubernetes')"/>&nbsp;Kubernetes
 				Deployment (Ubuntu Only)<br/><br/>
 				
-				<alert ng-show="docker&&remote" type="warning">
-					execute the /soajs.installer/scripts/pre/<b>docker-linux.sh</b> script, with root privileges (sudo command), on your remote machine to install docker on that machine.
-				</alert>
-				<alert ng-show="kubernetes&&remote" type="warning">
-					execute the /soajs.installer/scripts/pre/<b>kubernetes-linux.sh</b> script, with root privileges (sudo command), on your remote machine to install kubernetes on that machine.
-				</alert>
+				<pre ng-show="data.deployDriver ==='container.docker.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+{{style.docker.remote.v}}</code></pre>
+				
+				<pre ng-show="data.deployDriver ==='container.kubernetes.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+{{style.kubernetes.remote.v}}</code></pre>
 				
 				<alert type="warning">
 					<b><u>Note:</u></b><br/>
-					You have chosen to deploy SOAJS on a remote machine.<br/>
-					<b>This type of deployment is only supported on machines running Ubuntu operating systems</b><br/>
+					This deployment is only supported on machines running Ubuntu<br />
 					Follow the instructions below before proceeding to the next page:<br/><br/>
 					<div>
 						<ol>
 							<li>Create a remote machine with Ubuntu on it.</li>
-							<li>The instructions above will guide you to install the chosen driver, and generate
-								self-signed certificates for you.
-							</li>
+							<li>The script above will install the chosen driver, and generate self-signed certificates for you.</li>
 							<li>Copy these certificates to a folder on this machine.</li>
-							<li>Provide the IP address of the remote machine and the certificates location in the last
-								Step of this wizard when asked.
-							</li>
+							<li>Provide the IP address of the remote machine and the certificates location in the last step of this wizard when asked.</li>
 						</ol>
 						<b>Or:</b>
 						<ol>
@@ -97,15 +97,11 @@ curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.12.2/minik
 							<li>Copy these certificates to a folder on the remote machine.<br/>
 								<u>ex:</u><br/>
 								- <b>Docker:</b>&nbsp;'~/.docker/'<br>
-								- <b>Kubernetes:</b>&nbsp;'~/.minikube/'
+								- <b>Kubernetes:</b>&nbsp;'/etc/kubernetes/pki/'
 							</li>
-							<li>The instructions above will guide you to install the chosen driver, and use your
-								certficates.
-							</li>
+							<li>The instructions above will guide you to install the chosen driver, and use your certificates.</li>
 							<li>Copy the same certificates to a folder on this machine.</li>
-							<li>Provide the IP address of the remote machine and the certificates location in the last
-								Step of this wizard when asked.
-							</li>
+							<li>Provide the IP address of the remote machine and the certificates location in the last step of this wizard when asked.</li>
 						</ol>
 					</div>
 				</alert>

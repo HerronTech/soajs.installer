@@ -23,12 +23,25 @@ var routes = {
 				"t": "sh"
 			};
 			data.docker = {
-				"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
-				"t": "sh"
+				local: {
+					"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
+					"t": "sh"
+				},
+				remote:{
+					"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
+					"t": "sh"
+				}
 			};
+			
 			data.kubernetes = {
-				"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
-				"l": "sh"
+				local: {
+					"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
+					"l": "sh"
+				},
+				remote: {
+					"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
+					"l": "sh"
+				}
 			};
 		}
 		else if(platform === 'darwin'){
@@ -37,13 +50,27 @@ var routes = {
 				"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-mac.sh"),
 				"t": "sh"
 			};
+			
 			data.docker = {
-				"v": "https://download.docker.com/mac/beta/Docker.dmg",
-				"t": "link"
+				local: {
+					"v": "https://download.docker.com/mac/beta/Docker.dmg",
+					"t": "link"
+				},
+				remote:{
+					"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
+					"t": "sh"
+				}
 			};
+			
 			data.kubernetes = {
-				"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-mac.sh"),
-				"l": "sh"
+				local: {
+					"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-mac.sh"),
+					"l": "sh"
+				},
+				remote: {
+					"v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
+					"l": "sh"
+				}
 			};
 		}
 		

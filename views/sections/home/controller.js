@@ -53,7 +53,7 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function(
                 "deployType": "container"
             }
         }
-        console.log(output)
+        
 		var options = {
 			url: appConfig.url + "/overview",
 			method: "post",
@@ -62,7 +62,7 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function(
 			}
 		};
 		
-		ngDataApi.post($scope, options, function(error, response){
+		ngDataApi.post($scope, options, function(error){
 			if(error){
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
 				return false;
@@ -88,7 +88,10 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function(
             $scope.local = false;
             $scope.remote = true;
         }
-    }
+        setTimeout(function(){
+	        resizeContent();
+        }, 500);
+    };
 
     $scope.selectDeployment = function(type){
 
