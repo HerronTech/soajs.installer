@@ -111,28 +111,12 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			method: "get"
 		};
 		
-		ngDataApi.get($scope, options, function (error, response) {
+		ngDataApi.get($scope, options, function (error) {
 			if (error) {
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
 				return false;
 			}
-			var currentScope = $scope;
-			var keyModal = $modal.open({
-				templateUrl: 'deployModal.tmpl',
-				size: 'lg',
-				backdrop: false,
-				keyboard: false,
-				controller: function ($scope) {
-					$scope.hosts = response.hosts;
-					$scope.ui = response.ui;
-					$scope.cmd = response.cmd;
-					$scope.deployment = currentScope.deployment;
-					$scope.finalize = function () {
-						keyModal.close();
-						currentScope.$parent.go("#/progress");
-					};
-				}
-			});
+			$scope.$parent.go("#/progress");
 		});
 	};
 	

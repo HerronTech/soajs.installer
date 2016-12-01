@@ -531,7 +531,7 @@ module.exports = {
 				"cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
 			};
 			
-			if (!body.clusters.mongoExt) {
+			if (!body.clusters || !body.clusters.mongoExt) {
 				obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata";
 			}
 			else {
@@ -553,7 +553,7 @@ module.exports = {
 			var dest = path.normalize(body.gi.wrkDir + "/soajs/node_modules/");
 			fs.exists(dest, function (exists) {
 				if (!exists) {
-					
+					return cb(null, false);
 				}
 				
 				fs.readdir(dest, function (err, files) {

@@ -19,6 +19,8 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 				return false;
 			}
 			$scope.ui = response.ui;
+			$scope.cmd = response.cmd;
+			$scope.hosts = response.hosts;
 		});
 	};
 	
@@ -61,14 +63,8 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 			
 			if((!$scope.install || $scope.install === false) || (!$scope.download || $scope.download === false)){
 				$timeout(function(){
-					if($scope.download){
-						$scope.info.install.count++;
-					}
-					else{
-						$scope.info.download.count++;
-					}
 					$scope.getProgress();
-				}, 2000);
+				}, 3000);
 			}
 		});
 	};
@@ -76,6 +72,6 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 	$timeout(function(){
 		$scope.getInfo();
 		$scope.getProgress();
-	}, 1500);
+	}, 2000);
 	
 }]);

@@ -259,23 +259,3 @@
                ng-click="installSOAJS()"/>
     </div>
 </div>
-<script type="text/ng-template" id="deployModal.tmpl">
-    <div class="modal-body">
-        <h4 style="text-align: center;">SOAJS Installed Successfully !</h4>
-        <p>
-            SOAJS Installation Script has been Generated.<br/>
-            Update your hosts file with the following entries:
-        </p>
-        <pre class="bash"><code>{{hosts.api}}
-{{hosts.site}}
-{{hosts.mongo}}</code></pre>
-        <p>
-            Run the following command in your termnial and SOAJS will be installed and deployed:
-        </p>
-        <pre class="bash"><code># Run this in your terminal
-{{cmd}}</code></pre>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="finalize()">See Progress</button>
-    </div>
-</script>
