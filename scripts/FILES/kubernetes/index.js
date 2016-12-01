@@ -1,6 +1,8 @@
 'use strict';
 var K8Api = require('kubernetes-client');
 var async = require('async');
+
+var path = require('path');
 var fs = require('fs');
 var exec = require('child_process').exec;
 var soajs = require('soajs');
@@ -14,6 +16,21 @@ var mongo = new soajs.mongo(profile);
 
 var utilLog = require('util');
 var lib = {
+
+    "loadCustomData": function (cb) {
+        var dataDir = process.env.SOAJS_DATA_FOLDER;
+
+        fs.exists(path.normalize(dataDir + "/../custom.js"), function (exists) {
+            if (!exists) {
+                return cb(null);
+            }
+            else {
+                delete require.cache[require.resolve(path.normalize(dataDir + "/../custom.js"))];
+                var customData = require(path.normalize(dataDir + "/../custom.js"));
+                return cb(customData);
+            }
+        });
+    },
 
     printProgress: function (message, counter) {
         process.stdout.clearLine();
@@ -41,17 +58,31 @@ var lib = {
         }
         var deployer = {};
 
-        deployerConfig.ca = fs.readFileSync(config.kubernetes.certsPath + '/ca.crt');
-        deployerConfig.cert = fs.readFileSync(config.kubernetes.certsPath + '/apiserver.crt');
-        deployerConfig.key = fs.readFileSync(config.kubernetes.certsPath + '/apiserver.key');
+        var certsName = {
+            "ca": '/ca.pem',
+            "cert": '/apiserver.pem',
+            "key": '/apiserver-key.pem'
+        };
+        lib.loadCustomData(function(body){
+            if(body.deployment.deployDriver === 'container.kubernetes.local' && process.platform === 'darwin'){
+                certsName = {
+                    "ca": '/ca.crt',
+                    "cert": '/apiserver.crt',
+                    "key": '/apiserver.key'
+                };
+            }
 
-        deployerConfig.version = 'v1beta1';
-        deployer.extensions = new K8Api.Extensions(deployerConfig);
+            deployerConfig.ca = fs.readFileSync(config.kubernetes.certsPath + certsName.ca);
+            deployerConfig.cert = fs.readFileSync(config.kubernetes.certsPath + certsName.cert);
+            deployerConfig.key = fs.readFileSync(config.kubernetes.certsPath + certsName.key);
 
-        deployerConfig.version = 'v1';
-        deployer.core = new K8Api.Core(deployerConfig);
+            deployerConfig.version = 'v1beta1';
+            deployer.extensions = new K8Api.Extensions(deployerConfig);
 
-        return cb(null, deployer);
+            deployerConfig.version = 'v1';
+            deployer.core = new K8Api.Core(deployerConfig);
+            return cb(null, deployer);
+        });
     },
 
     getContent: function (type, group, cb) {
@@ -169,7 +200,6 @@ var lib = {
 	    
         deployer.core.namespaces.pods.get({}, function (error, podList) {
             if (error) return cb(error);
-	        
             var onePod, ips = [];
             podList.items.forEach(function (onePod) {
                 if (onePod.metadata.labels['soajs-app'] === serviceName && onePod.status.phase === 'Running') {
@@ -179,7 +209,8 @@ var lib = {
                     });
                 }
             });
-	        
+
+            console.log(ips.length, replicaCount)
             if (ips.length !== replicaCount) {
                 //pod containers may not be ready yet
                 lib.printProgress('Waiting for ' + serviceName + ' containers to become available', counter++);

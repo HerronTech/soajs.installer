@@ -62,14 +62,21 @@ function installKubernetes(){
     apt-get install -y kubernetes-cni
 
     echo "Kubernetes-cni successfully installed"
+
+    echo "Installing Flannel driver"
+    curl -o flannel.yml https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+    echo "Flannel driver successfully installed"
+
 }
 
 function initKubernetes(){
     echo "Initializing the master node"
+
     kubeadm reset
-    chmod +x /usr/bin/kubelet
     systemctl start kubelet.service
-    kubeadm init
+    kubeadm init --pod-network-cidr=10.244.0.0/16
+    kubectl taint nodes --all dedicated-
+    kubectl apply -f flannel.yml
 }
 #Start here########
 installTools

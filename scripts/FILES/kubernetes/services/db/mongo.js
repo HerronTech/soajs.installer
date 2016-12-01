@@ -33,7 +33,7 @@ var components = {
             "name": "dashboard-soajsdata"
         },
         "spec": {
-            "replicas": gConfig.kubernetes.replicas,
+            "replicas": 1,
             "selector": {
                 "matchLabels": {
                     "soajs-app": "dashboard-soajsdata"

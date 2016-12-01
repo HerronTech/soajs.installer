@@ -720,13 +720,26 @@ module.exports = {
 					return cb(new Error('No certificates found for remote machine.'));
 				}
 				body.deployment.kubernetes.certsPath = body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder;
-				
+
+				var certsName = {
+                    "ca": '/ca.pem',
+                    "cert": '/apiserver.pem',
+                    "key": '/apiserver-key.pem'
+				};
+				if(body.deployment.deployDriver === 'container.kubernetes.local' && process.platform === 'darwin'){
+                    certsName = {
+                        "ca": '/ca.crt',
+                        "cert": '/apiserver.crt',
+                        "key": '/apiserver.key'
+                    };
+				}
+
 				var deployerConfig = {
 					"url": 'https://' + (body.deployment.containerHost || "127.0.0.1") + ':' + (parseInt(body.deployment.kubernetes.containerPort) || 8443),
 					"namespace": 'default',
-					"ca": fs.readFileSync(body.deployment.kubernetes.certsPath + '/ca.crt'),
-					"cert": fs.readFileSync(body.deployment.kubernetes.certsPath + '/apiserver.crt'),
-					"key": fs.readFileSync(body.deployment.kubernetes.certsPath + '/apiserver.key'),
+					"ca": fs.readFileSync(body.deployment.kubernetes.certsPath + certsName.ca),
+					"cert": fs.readFileSync(body.deployment.kubernetes.certsPath + certsName.cert),
+					"key": fs.readFileSync(body.deployment.kubernetes.certsPath + certsName.key),
 					"version": "v1beta1"
 				};
 				
