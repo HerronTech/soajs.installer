@@ -277,7 +277,7 @@ var lib = {
                     id: oneNode.metadata.uid,
                     name: oneNode.metadata.name,
                     ip: getIP(oneNode.status.addresses),
-                    kubePort: config.machinePort,
+                    kubePort: config.kubernetes.machinePort,
                     availability: ((!oneNode.spec.unschedulable) ? 'active' : 'drained'),
                     role: ((oneNode.metadata.labels['kubeadm.alpha.kubernetes.io/role'] === 'master') ? 'manager' : 'worker'),
                     resources: {
