@@ -197,7 +197,7 @@ var lib = {
             cb = counter; //counter wasn't passed as param
             counter = 0;
         }
-	    
+
         deployer.core.namespaces.pods.get({}, function (error, podList) {
             if (error) return cb(error);
             var onePod, ips = [];
@@ -226,11 +226,11 @@ var lib = {
 
     addMongoInfo: function (services, mongoInfo, cb) {
         var mongoEnv = [];
-	
+
 	    if(config.mongo.prefix && config.mongo.prefix !== ""){
 		    mongoEnv.push({name: 'SOAJS_MONGO_PREFIX', value: config.mongo.prefix});
 	    }
-	    
+
         if (config.mongo.external) {
             // if (!config.dataLayer.mongo.url || !config.dataLayer.mongo.port) {
             if (!profile.servers[0].host || !profile.servers[0].port) {
@@ -249,7 +249,7 @@ var lib = {
                 mongoEnv.push({ name: 'SOAJS_MONGO_PASSWORD', value: profile.credentials.password });
 	            mongoEnv.push({ name: 'SOAJS_MONGO_AUTH_DB', value: profile.URLParam.authSource });
             }
-            
+
             if(profile.URLParam.ssl){
 	            mongoEnv.push({ name: 'SOAJS_MONGO_SSL', value: profile.URLParam.ssl });
             }
@@ -267,20 +267,6 @@ var lib = {
         return cb(null, services);
     },
 
-    inspectSwarm: function (deployer, cb) {
-        //TODO: re-implement
-        // deployer.swarmInspect(cb);
-    },
-
-    saveSwarmTokens: function (swarmInfo) {
-        //TODO: re-implement
-
-
-        // Object.keys(swarmInfo.JoinTokens).forEach(function (oneType) {
-        //     config.swarmConfig.tokens[oneType.toLowerCase()] = swarmInfo.JoinTokens[oneType];
-        // });
-    },
-
     registerNode: function (deployer, swarmConfig, cb) {
         deployer.core.nodes.get({}, function (error, nodeList) {
             if (error) return cb(error);
@@ -290,14 +276,13 @@ var lib = {
                     recordType: 'node',
                     id: oneNode.metadata.uid,
                     name: oneNode.metadata.name,
-                    ip: '',
+                    ip: getIP(oneNode.status.addresses),
                     kubePort: config.machinePort,
-                    swarmPort: oneNode.status.daemonEndpoints.kubeletEndpoint.Port,
-                    availability: 'active', //TODO: make dynamic
-                    role: 'manager', //TODO: make dynamic
+                    availability: ((!oneNode.spec.unschedulable) ? 'active' : 'drained'),
+                    role: ((oneNode.metadata.labels['kubeadm.alpha.kubernetes.io/role'] === 'master') ? 'manager' : 'worker'),
                     resources: {
                         cpuCount: oneNode.status.capacity.cpu,
-                        memory: oneNode.status.capacity.memory
+                        memory: calcMemory(oneNode.status.capacity.memory)
                     },
                     tokens: {}
                 };
@@ -312,17 +297,33 @@ var lib = {
                     }
                 }
 
-                mongo.insert(config.kubernetes.mongoCollection, nodeRecords, cb);
+                mongo.insert(config.dockerCollName, nodeRecords, cb);
             });
         });
+
+        function calcMemory (memory) {
+			var value = memory.substring(0, memory.length - 2);
+			var unit = memory.substring(memory.length - 2);
+
+			if (unit === 'Ki') value += '000';
+			else if (unit === 'Mi') value += '000000';
+
+			return parseInt(value);
+		}
+
+        function getIP (addresses) {
+			var ip = '';
+			for (var i = 0; i < addresses.length; i++) {
+				if (addresses[i].type === 'LegacyHostIP') {
+					ip = addresses[i].address;
+				}
+			}
+
+			return ip;
+		}
     },
 
     configureEnvDeployer: function (cb) {
-        // if (config.machineIP === '127.0.0.1' || config.machineIP === 'localhost') {
-        //     //local deployment, unix socket is used, no need to add node information
-        //     return cb(null, true);
-        // }
-
         var criteria = {role: 'manager'};
         mongo.find('docker', criteria, function (error, managerNodes) {
             if (error) return cb(error);
