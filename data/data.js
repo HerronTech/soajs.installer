@@ -39,6 +39,17 @@ records.push(dsbrdProduct);
 provDb.products.insert(records);
 
 /*
+ Services
+ */
+files = listFiles('./services');
+files.forEach(function(oneFile){
+	load(oneFile.name);
+});
+records = [];
+records.push(controller);
+provDb.services.insert(records);
+
+/*
  Tenants
  */
 files = listFiles('./tenants');
