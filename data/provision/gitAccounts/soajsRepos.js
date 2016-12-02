@@ -6,6 +6,7 @@ var soajs_account = {
 	"owner": "soajs",
 	"provider": "github",
 	"type": "organization",
+	"domain": "github.com",
 	"access": "public",
 	"repos": [
 		{
