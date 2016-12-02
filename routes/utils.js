@@ -745,16 +745,26 @@ module.exports = {
                     };
 				}
 
-				var deployerConfig = {
-					"url": 'https://' + (body.deployment.containerHost || "127.0.0.1") + ':' + (parseInt(body.deployment.kubernetes.containerPort) || 8443),
-					"namespace": 'default',
-					"ca": fs.readFileSync(body.deployment.kubernetes.certsPath + certsName.ca),
-					"cert": fs.readFileSync(body.deployment.kubernetes.certsPath + certsName.cert),
-					"key": fs.readFileSync(body.deployment.kubernetes.certsPath + certsName.key),
-					"version": "v1beta1"
-				};
+				try{
+					var deployerConfig = {
+						"url": 'https://' + (body.deployment.containerHost || "127.0.0.1") + ':' + (parseInt(body.deployment.kubernetes.containerPort) || 8443),
+						"namespace": 'default',
+						"ca": fs.readFileSync(body.deployment.kubernetes.certsPath + certsName.ca),
+						"cert": fs.readFileSync(body.deployment.kubernetes.certsPath + certsName.cert),
+						"key": fs.readFileSync(body.deployment.kubernetes.certsPath + certsName.key),
+						"version": "v1beta1"
+					};
+					var deployer = new K8Api.Extensions(deployerConfig);
+				}
+				catch(e){
+					return cb(null, {
+						download: {
+							count: 0,
+							total: services.length
+						}
+					});
+				}
 				
-				var deployer = new K8Api.Extensions(deployerConfig);
 				deployer.namespaces.deployments.get({}, function (error, deploymentList) {
 					if (error) return cb(error);
 					async.map(deploymentList.items, function (oneService, mcb) {
