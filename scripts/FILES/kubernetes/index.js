@@ -297,7 +297,7 @@ var lib = {
                     }
                 }
 
-                mongo.insert(config.dockerCollName, nodeRecords, cb);
+                mongo.insert(config.kubernetes.mongoCollection, nodeRecords, cb);
             });
         });
 
