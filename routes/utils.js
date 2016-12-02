@@ -530,6 +530,17 @@ module.exports = {
 				"ui": "http://" + body.gi.site + "." + body.gi.domain,
 				"cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
 			};
+
+			if(type === 'kubernetes'){
+                obj = {
+                    "hosts": {
+                        "api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
+                        "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
+                    },
+                    "ui": "http://" + body.gi.site + "." + body.gi.domain + ":" + (30000 + body.deployment.nginxPort),
+                    "cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
+                };
+			}
 			
 			if (!body.clusters || !body.clusters.mongoExt) {
 				obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata";
