@@ -2,6 +2,7 @@
 var dsbrd = {
 	"_id": ObjectId("5551aca9e179c39b760f7a1a"),
 	"locked": true,
+	"type": "admin",
 	"code": "DBTN",
 	"name": "Dashboard Owner Tenant",
 	"description": "this is the main dashboard tenant",
