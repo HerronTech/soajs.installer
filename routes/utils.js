@@ -209,7 +209,12 @@ module.exports = {
 		envData = envData.replace(/%domain%/g, body.gi.domain);
 		envData = envData.replace(/%site%/g, body.gi.site);
 		envData = envData.replace(/%api%/g, body.gi.api);
-		envData = envData.replace(/%wrkDir%/g, body.gi.wrkDir);
+		if(body.deployment.deployType === 'manual'){
+			envData = envData.replace(/%wrkDir%/g, body.gi.wrkDir);
+		}
+		else{
+			envData = envData.replace(/%wrkDir%/g, "/opt/soajs/FILES/profiles/profile.js");
+		}
 		envData = envData.replace(/%deployType%/g, body.deployment.deployType);
 		envData = envData.replace(/%deployDriver%/g, body.deployment.deployDriver);
 		envData = envData.replace(/%deployDockerNodes%/g, body.deployment.deployDockerNodes);
