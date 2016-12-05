@@ -30,7 +30,7 @@
     "mkdirp": "*",
     "ncp": "*",
     "rimraf": "*",
-    "soajs": "*",
+    "soajs": "0.4.*",
     "util": "*",
     "whereis": "*"
   }
