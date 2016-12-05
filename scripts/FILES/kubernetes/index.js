@@ -238,10 +238,10 @@ var lib = {
                 return cb('ERROR: missing mongo information');
             }
 
-            mongoEnv.push({ name: 'SOAJS_MONGO_NB', value: profile.servers.length });
-	        for(var i =1; i <= profile.servers.length; i++){
-		        mongoEnv.push({name: 'SOAJS_MONGO_IP_' + i, value: profile.servers[i].host});
-		        mongoEnv.push({name: 'SOAJS_MONGO_PORT_' + i, value: '' + profile.servers[i].port});
+            mongoEnv.push({ name: 'SOAJS_MONGO_NB', value: '' + profile.servers.length });
+	        for(var i = 0; i < profile.servers.length; i++){
+		        mongoEnv.push({name: 'SOAJS_MONGO_IP_' + (i + 1), value: profile.servers[i].host});
+		        mongoEnv.push({name: 'SOAJS_MONGO_PORT_' + (i + 1), value: '' + profile.servers[i].port});
 	        }
 
             if (profile.credentials && profile.credentials.username && profile.credentials.password) {

@@ -177,7 +177,7 @@ var lib = {
         var network = deployer.getNetwork(config.docker.network);
         network.inspect(function (error, result) {
             if (error) return cb(error);
-            
+
             var oneContainer, ips = [];
             for (var cid in result.Containers) {
                 oneContainer = result.Containers[cid];
@@ -188,7 +188,7 @@ var lib = {
                     });
                 }
             }
-            
+
             if (ips.length !== replicaCount) {
                 //Containers may not have been attached to network yet
                 lib.printProgress('Waiting for ' + serviceName + ' containers to become available', counter++);
@@ -217,9 +217,9 @@ var lib = {
             }
 
             mongoEnv.push('SOAJS_MONGO_NB=' + profile.servers.length);
-            for(var i =1; i <= profile.servers.length; i++){
-	            mongoEnv.push('SOAJS_MONGO_IP_' + i + '=' + profile.servers[i].host);
-	            mongoEnv.push('SOAJS_MONGO_PORT_' + i + '=' + profile.servers[i].port);
+            for(var i = 0; i < profile.servers.length; i++){
+	            mongoEnv.push('SOAJS_MONGO_IP_' + (i + 1) + '=' + profile.servers[i].host);
+	            mongoEnv.push('SOAJS_MONGO_PORT_' + (i + 1) + '=' + profile.servers[i].port);
             }
 
             if (profile.credentials && profile.credentials.username && profile.credentials.password) {
@@ -238,7 +238,7 @@ var lib = {
 	        mongoEnv.push('SOAJS_MONGO_IP_1=' + profile.servers[0].host);
 	        mongoEnv.push('SOAJS_MONGO_PORT_1=' + profile.servers[0].port);
         }
-        
+
         services.forEach(function (oneService) {
             oneService.TaskTemplate.ContainerSpec.Env = oneService.TaskTemplate.ContainerSpec.Env.concat(mongoEnv);
         });
