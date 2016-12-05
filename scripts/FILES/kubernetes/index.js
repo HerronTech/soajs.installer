@@ -279,7 +279,7 @@ var lib = {
                     ip: getIP(oneNode.status.addresses),
                     kubePort: config.kubernetes.machinePort,
                     availability: ((!oneNode.spec.unschedulable) ? 'active' : 'drained'),
-                    role: ((oneNode.metadata.labels['kubeadm.alpha.kubernetes.io/role'] === 'master') ? 'manager' : 'worker'),
+                    role: 'manager',
                     resources: {
                         cpuCount: oneNode.status.capacity.cpu,
                         memory: calcMemory(oneNode.status.capacity.memory)
