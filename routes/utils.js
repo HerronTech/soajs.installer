@@ -213,7 +213,7 @@ module.exports = {
 			envData = envData.replace(/%wrkDir%/g, body.gi.wrkDir);
 		}
 		else{
-			envData = envData.replace(/%wrkDir%/g, "/opt/soajs/FILES/profiles/profile.js");
+			envData = envData.replace(/%wrkDir%/g, "/opt");
 		}
 		envData = envData.replace(/%deployType%/g, body.deployment.deployType);
 		envData = envData.replace(/%deployDriver%/g, body.deployment.deployDriver);
