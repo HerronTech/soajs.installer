@@ -1,6 +1,6 @@
 'use strict';
 var dsbrd = {
-	"_id": ObjectId("5551aca9e179c39b760f7a1a"),
+	"_id": "5551aca9e179c39b760f7a1a",
 	"locked": true,
 	"type": "admin",
 	"code": "DBTN",
@@ -11,7 +11,7 @@ var dsbrd = {
 		{
 			"product": "DSBRD",
 			"package": "DSBRD_MAIN",
-			"appId": ObjectId('5512926a7a1f0e2123f638de'),
+			"appId": '5512926a7a1f0e2123f638de',
 			"description": "This application uses the Dashboard Public Package.",
 			"keys": [
 				{
@@ -76,7 +76,7 @@ var dsbrd = {
         {
             "product": "DSBRD",
             "package": "DSBRD_OWNER",
-            "appId": ObjectId('55cc56a3c3aca9179e5048e6'),
+            "appId": '55cc56a3c3aca9179e5048e6',
             "description": "This application uses the Dashboard Owner Package.",
             "keys": [
                 {
@@ -139,3 +139,5 @@ var dsbrd = {
         }
 	]
 };
+
+module.exports = dsbrd;

@@ -13,7 +13,7 @@ var rimraf = require("rimraf");
 var async = require("async");
 
 var dataDir = __dirname + "/../data/";
-
+var dataImportDir = __dirname + "/../scripts/FILES/dataImport/";
 module.exports = {
 	"updateCustomData": function (req, res, body, section, cb) {
 		fs.exists(dataDir + "custom.js", function (exists) {
@@ -247,9 +247,10 @@ module.exports = {
 	"importMongo": function (folder, body, cb) {
 		//copy data.js to startup
 		//add prefix while copying
-		fs.readFile(dataDir + "data.js", "utf8", function (error, readData) {
+
+		fs.readFile(dataImportDir + "index.js", "utf8", function (error, readData) {
 			if (error) {
-				return res.json(req.soajs.buildResponse({"code": 400, "msg": error.message}));
+				return cb(error);
 			}
 			
 			var writeStream = fs.createWriteStream(folder + "data.js");

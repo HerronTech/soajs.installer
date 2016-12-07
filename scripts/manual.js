@@ -249,12 +249,9 @@ function importData(cb){
 	var profile = require(process.env.SOAJS_PROFILE);
 	
 	//execute import data.js
-	var execString = "cd " + folder + " && mongo --host " + profile.servers[0].host + ":" + profile.servers[0].port;
-	if (profile.credentials && profile.credentials.username && profile.credentials.password && profile.URLParam && profile.URLParam.authSource) {
-		execString += " -u " + profile.credentials.username + " -p " + profile.credentials.password + " --authenticationDatabase " + profile.URLParam.authSource;
-	}
-	execString += " data.js";
-	exec(execString, cb);
+    var dataImportFile = __dirname + "/FILES/dataImport/index.js";
+    var execString = "node " + dataImportFile;
+    exec(execString, cb);
 }
 
 importData(function(error){

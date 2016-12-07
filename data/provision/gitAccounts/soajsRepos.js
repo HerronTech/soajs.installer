@@ -1,7 +1,7 @@
 'use strict';
 //need to update configSHA, set to correct values when config files on master branch get updated
 var soajs_account = {
-	"_id": ObjectId('56f1189430f153a571b9c8be'),
+	"_id": '56f1189430f153a571b9c8be',
 	"label": "SOAJS Open Source",
 	"owner": "soajs",
 	"provider": "github",
@@ -31,3 +31,5 @@ var soajs_account = {
 		}
 	]
 };
+
+module.exports = soajs_account;

@@ -1,6 +1,6 @@
 'use strict';
 var dashboard = {
-    "_id": ObjectId('55128442e603d7e01ab1688c'),
+    "_id": '55128442e603d7e01ab1688c',
     "code": "DASHBOARD",
     "domain": "%domain%",
     "sitePrefix": "%site%",
@@ -118,3 +118,5 @@ var dashboard = {
         }
     }
 };
+
+module.exports = dashboard;

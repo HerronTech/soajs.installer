@@ -53,7 +53,7 @@ var routes = {
 			
 			data.docker = {
 				local: {
-					"v": "https://download.docker.com/mac/beta/Docker.dmg",
+					"v": "https://download.docker.com/mac/stable/Docker.dmg",
 					"t": "link"
 				},
 				remote:{
