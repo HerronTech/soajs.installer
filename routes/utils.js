@@ -243,28 +243,7 @@ module.exports = {
 		//remove unneeded file
 		fs.unlinkSync(folder + "tenants/info.js");
 	},
-	
-	"importMongo": function (folder, body, cb) {
-		//copy data.js to startup
-		//add prefix while copying
 
-		fs.readFile(dataImportDir + "index.js", "utf8", function (error, readData) {
-			if (error) {
-				return cb(error);
-			}
-			
-			var writeStream = fs.createWriteStream(folder + "data.js");
-			writeStream.write("var dbPrefix = '" + body.clusters.prefix + "';" + os.EOL);
-			writeStream.write(readData);
-			writeStream.end();
-			
-			//wait 500ms for the write to ensure it finished then return the cb
-			setTimeout(function () {
-				return cb(null, true);
-			}, 500);
-		});
-	},
-	
 	"unifyData": function (def, over) {
 		if (over.gi) {
 			for (var i in def.gi) {

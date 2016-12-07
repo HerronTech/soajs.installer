@@ -16,17 +16,18 @@ var mongo = new soajs.mongo(profile);
 mongo.dropDatabase(function(){
     addExtKeys(function(){
         addEnvs(function(){
-            addProducts(function(){
-                addTenants(function(){
-                    addGitAccounts(function(){
-                        provisionIndex(function(){
+            addProducts(function() {
+                addServices(function() {
+                addTenants(function () {
+                    addGitAccounts(function () {
+                        provisionIndex(function () {
                             mongo.closeDb();
                             profile.name = "DBTN_urac";
                             mongo = new soajs.mongo(profile);
-                            mongo.dropDatabase(function(){
-                                addUsers(function(){
-                                    addGroups(function() {
-                                        uracIndex(function(){
+                            mongo.dropDatabase(function () {
+                                addUsers(function () {
+                                    addGroups(function () {
+                                        uracIndex(function () {
                                             mongo.closeDb();
                                         });
                                     });
@@ -35,6 +36,7 @@ mongo.dropDatabase(function(){
                         });
                     });
                 });
+            });
             });
         });
     });
@@ -64,6 +66,14 @@ var addProducts = function(cb){
     var record = require(dataFolder + "products/dsbrd.js");
     record._id = mongo.ObjectId(record._id);
     mongo.insert("products", record, cb);
+};
+
+/*
+ Services
+ */
+var addServices = function(cb){
+    var record = require(dataFolder + "services/index.js");
+    mongo.insert("services", record, cb);
 };
 
 /*
