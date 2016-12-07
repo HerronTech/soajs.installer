@@ -1,7 +1,7 @@
 'use strict';
 
 var dsbrdProduct = {
-	"_id": ObjectId("5512867be603d7e01ab1688d"),
+	"_id": "5512867be603d7e01ab1688d",
 	"locked": true,
 	"code": "DSBRD",
 	"name": "Dashboard Product",
@@ -92,3 +92,5 @@ var dsbrdProduct = {
 		}
 	]
 };
+
+module.exports = dsbrdProduct;

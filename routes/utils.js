@@ -13,7 +13,7 @@ var rimraf = require("rimraf");
 var async = require("async");
 
 var dataDir = __dirname + "/../data/";
-
+var dataImportDir = __dirname + "/../scripts/FILES/dataImport/";
 module.exports = {
 	"updateCustomData": function (req, res, body, section, cb) {
 		fs.exists(dataDir + "custom.js", function (exists) {
@@ -213,7 +213,7 @@ module.exports = {
 			envData = envData.replace(/%wrkDir%/g, body.gi.wrkDir);
 		}
 		else{
-			envData = envData.replace(/%wrkDir%/g, "/opt/soajs/FILES/profiles/profile.js");
+			envData = envData.replace(/%wrkDir%/g, "/opt");
 		}
 		envData = envData.replace(/%deployType%/g, body.deployment.deployType);
 		envData = envData.replace(/%deployDriver%/g, body.deployment.deployDriver);
@@ -243,27 +243,7 @@ module.exports = {
 		//remove unneeded file
 		fs.unlinkSync(folder + "tenants/info.js");
 	},
-	
-	"importMongo": function (folder, body, cb) {
-		//copy data.js to startup
-		//add prefix while copying
-		fs.readFile(dataDir + "data.js", "utf8", function (error, readData) {
-			if (error) {
-				return res.json(req.soajs.buildResponse({"code": 400, "msg": error.message}));
-			}
-			
-			var writeStream = fs.createWriteStream(folder + "data.js");
-			writeStream.write("var dbPrefix = '" + body.clusters.prefix + "';" + os.EOL);
-			writeStream.write(readData);
-			writeStream.end();
-			
-			//wait 500ms for the write to ensure it finished then return the cb
-			setTimeout(function () {
-				return cb(null, true);
-			}, 500);
-		});
-	},
-	
+
 	"unifyData": function (def, over) {
 		if (over.gi) {
 			for (var i in def.gi) {

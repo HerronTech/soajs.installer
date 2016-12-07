@@ -6,3 +6,5 @@ var extKeys = [
         "key": "%extKey2%"
     }
 ];
+
+module.exports = extKeys;

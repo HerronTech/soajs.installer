@@ -19,3 +19,5 @@ var owner = {
 		"code": 'DBTN'
 	}
 };
+
+module.exports = owner;

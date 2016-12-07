@@ -132,11 +132,8 @@ var lib = {
 
     importData: function (mongoInfo, cb) {
         utilLog.log('Importing provision data to:', profile.servers[0].host + ":" + profile.servers[0].port);
-        var execString = "cd " + folder + " && mongo --host " + profile.servers[0].host + ":" + profile.servers[0].port;
-        if (profile.credentials && profile.credentials.username && profile.credentials.password && profile.URLParam && profile.URLParam.authSource) {
-            execString += " -u " + profile.credentials.username + " -p " + profile.credentials.password + " --authenticationDatabase " + profile.URLParam.authSource;
-        }
-        execString += " data.js";
+        var dataImportFile = __dirname + "/../dataImport/index.js";
+        var execString = "node " + dataImportFile;
         exec(execString, cb);
     },
 
@@ -336,7 +333,9 @@ var lib = {
                     if (error) return cb(error);
 
                     async.each(envs, function (oneEnv, callback) {
-                        oneEnv.deployer.container.kubernetes.remote.nodes = nodeHostnames;
+                        var target = oneEnv.deployer.selected.split('.')[2];
+
+                        oneEnv.deployer.container.kubernetes[target].nodes = nodeHostnames;
                         mongo.save('environment', oneEnv, callback);
                     }, cb);
                 });
