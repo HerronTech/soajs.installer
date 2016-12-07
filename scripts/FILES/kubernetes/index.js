@@ -333,7 +333,9 @@ var lib = {
                     if (error) return cb(error);
 
                     async.each(envs, function (oneEnv, callback) {
-                        oneEnv.deployer.container.kubernetes.remote.nodes = nodeHostnames;
+                        var target = oneEnv.deployer.selected.split('.')[2];
+
+                        oneEnv.deployer.container.kubernetes[target].nodes = nodeHostnames;
                         mongo.save('environment', oneEnv, callback);
                     }, cb);
                 });
