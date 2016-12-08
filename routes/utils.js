@@ -323,13 +323,14 @@ module.exports = {
 				runner.write(os.EOL + "#Start Nginx ..." + os.EOL);
 				
 				if (process.platform === 'darwin') {
-					runner.write("brew services start nginx" + os.EOL);
+					runner.write("sudo nginx" + os.EOL);
 				}
 				else {
 					runner.write("sudo service nginx start" + os.EOL);
 				}
 				
 				runner.write(os.EOL + "ps aux | grep node" + os.EOL);
+				runner.write("ps aux | grep nginx" + os.EOL);
 				runner.end();
 				
 				fs.chmodSync(path.normalize(__dirname + "/../scripts/manual-deploy.sh"), "0755");
@@ -360,6 +361,7 @@ module.exports = {
 					"SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "develop",
 					"SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "develop",
 					"SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
+					"NODE_PATH": nodePath,
 					
 					"API_PREFIX": body.gi.api,
 					"SITE_PREFIX": body.gi.site,
@@ -419,6 +421,7 @@ module.exports = {
 					"SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "develop",
 					"SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "develop",
 					"SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
+					"NODE_PATH": nodePath,
 					
 					"API_PREFIX": body.gi.api,
 					"SITE_PREFIX": body.gi.site,

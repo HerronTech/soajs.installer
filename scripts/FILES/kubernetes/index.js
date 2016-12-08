@@ -133,7 +133,7 @@ var lib = {
     importData: function (mongoInfo, cb) {
         utilLog.log('Importing provision data to:', profile.servers[0].host + ":" + profile.servers[0].port);
         var dataImportFile = __dirname + "/../dataImport/index.js";
-        var execString = "node " + dataImportFile;
+        var execString = process.env.NODE_PATH + " " + dataImportFile;
         exec(execString, cb);
     },
 

@@ -244,14 +244,19 @@ function install(cb) {
 }
 
 function importData(cb){
-	var folder = process.env.SOAJS_DATA_FOLDER;
-	delete require.cache[process.env.SOAJS_PROFILE];
-	var profile = require(process.env.SOAJS_PROFILE);
 	
-	//execute import data.js
-    var dataImportFile = __dirname + "/FILES/dataImport/index.js";
-    var execString = "node " + dataImportFile;
-    exec(execString, cb);
+	mkdirp(LOC + "soajs/FILES/profiles/", function(error){
+		if(error){
+			return cb(error);
+		}
+		
+		fs.createReadStream(process.env.SOAJS_PROFILE).pipe(fs.createWriteStream(LOC + "soajs/FILES/profiles/profile.js"));
+		process.env.SOAJS_PROFILE = LOC + "soajs/FILES/profiles/profile.js";
+		//execute import data.js
+		var dataImportFile = __dirname + "/FILES/dataImport/index.js";
+		var execString = process.env.NODE_PATH + " " + dataImportFile;
+		exec(execString, cb);
+	});
 }
 
 importData(function(error){

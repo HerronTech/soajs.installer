@@ -7,8 +7,11 @@
  *
  ***************************************************************/
 var soajs = require("soajs");
-var profile = require("../../../data/startup/profile.js");
-var dataFolder = "../../../data/startup/";
+
+var dataFolder = process.env.SOAJS_DATA_FOLDER;
+delete require.cache[process.env.SOAJS_PROFILE];
+var profile = require(process.env.SOAJS_PROFILE);
+
 profile.name = "core_provision";
 var mongo = new soajs.mongo(profile);
 
@@ -153,6 +156,5 @@ var lib = {
         mongo.ensureIndex("tokens", {token: 1, service: 1, status: 1}, null, lib.errorLogger);
         return cb();
 
-    },
-
-}
+    }
+};
