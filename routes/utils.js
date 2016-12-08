@@ -323,7 +323,7 @@ module.exports = {
 				runner.write(os.EOL + "#Start Nginx ..." + os.EOL);
 				
 				if (process.platform === 'darwin') {
-					runner.write("sudo nginx" + os.EOL);
+					runner.write("brew services start nginx" + os.EOL);
 				}
 				else {
 					runner.write("sudo service nginx start" + os.EOL);

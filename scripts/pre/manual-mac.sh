@@ -12,7 +12,7 @@ brew services
 # Install NodeJS, MongoDB, Nginx
 brew install node mongodb nginx
 brew services start mongodb
-sudo nginx -s stop
+brew services stop nginx
 
 ps aux | grep mongo
 ps aux | grep nginx
