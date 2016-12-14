@@ -88,7 +88,21 @@ var routes = {
                 };
             }
 
-            return res.json(req.soajs.buildResponse(null, data));
+            utils.loadProfile(function (profile) {
+                if(profile){
+                    utils.getDeploymentInfo(profile, function(error, response){
+                        if(error){
+                            data.previousDeployment = false;
+                        }
+                        else{
+                            data.previousDeployment = true;
+                            data.previousDeploymentInfo = response;
+                            data.previousDeploymentInfo.servers = profile.servers;
+                        }
+                        return res.json(req.soajs.buildResponse(null, data));
+                    });
+                }
+            });
         });
     },
     "postOverview": function(req, res){

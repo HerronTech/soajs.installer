@@ -66,7 +66,72 @@ module.exports = {
 			}
 		});
 	},
-	
+
+    "loadProfile": function (cb) {
+        fs.exists(dataDir + "/startup/profile.js", function (exists) {
+            if (!exists) {
+                return cb(null, false);
+            }
+            else {
+                delete require.cache[require.resolve(dataDir + "/startup/profile.js")];
+                var customData = require(dataDir + "/startup/profile.js");
+                return cb(customData);
+            }
+        });
+    },
+
+	"getDeploymentInfo": function (profile, cb) {
+        //if mongo is a single server
+	    if(profile.extraParam.server){
+            profile.extraParam.server.socketOptions={};
+            profile.extraParam.server.socketOptions.connectTimeoutMS = 2000;
+            profile.extraParam.server.socketOptions.socketTimeoutMS = 2000;
+
+            profile.extraParam.server.autoReconnect = false;
+            profile.extraParam.server.reconnectTries = 1;
+            profile.extraParam.server.reconnectInterval = 100;
+        }
+        //if mongo is a replica set
+        else if(profile.extraParam.replSet){
+            profile.extraParam.replSet.socketOptions={};
+            profile.extraParam.replSet.socketOptions.connectTimeoutMS = 2000;
+            profile.extraParam.replSet.socketOptions.socketTimeoutMS = 2000;
+
+            profile.extraParam.replSet.autoReconnect = false;
+            profile.extraParam.replSet.reconnectTries = 1;
+            profile.extraParam.replSet.reconnectInterval = 100;
+        }
+        //if mongos
+        else if(profile.extraParam.mongos){
+            profile.extraParam.mongos.socketOptions={};
+            profile.extraParam.mongos.socketOptions.connectTimeoutMS = 2000;
+            profile.extraParam.mongos.socketOptions.socketTimeoutMS = 2000;
+
+            profile.extraParam.mongos.autoReconnect = false;
+            profile.extraParam.mongos.reconnectTries = 1;
+            profile.extraParam.mongos.reconnectInterval = 100;
+        }
+
+        profile.URLParam.wtimeoutMS = 2000;
+        profile.URLParam.connectTimeoutMS = 2000;
+        profile.URLParam.socketTimeoutMS = 2000;
+
+		var mongo = new soajs.mongo(profile);
+
+        var condition = {"code": "DASHBOARD"};
+        mongo.findOne("environment", condition, function(error, response){
+        	if(error){
+        		return cb(error);
+			}
+			else{
+        		var data = {
+        			"deployType": response.deployer.selected
+				}
+				return cb(null, data);
+			}
+		});
+	},
+
 	"generateExtKeys": function (opts, cb) {
 		//soajs encryption engine
 		var module = require("soajs/modules/soajs.core").key;

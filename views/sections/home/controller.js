@@ -1,12 +1,42 @@
 "use strict";
 var overApp = app.components;
+
 overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function($scope, ngDataApi, $timeout) {
 	$scope.alerts = [];
 	
 	$scope.closeAlert = function(i){
 		$scope.alerts.splice(i, 1);
 	};
-	
+
+    $scope.deploymentExists = null;
+	$scope.findCustomFile = function(previousDeploymentInfo, deploymentExists){
+	    $scope.deploymentExists = deploymentExists;
+	    var output = "<b>WARNING: Previous deployment detected. </b><br />";
+
+	    if(deploymentExists) {
+	        if(previousDeploymentInfo.deployType === "manual"){
+	            output += "Deployment type: Manual. <br />";
+                output += "Database location: <br />";
+            }
+            else if(previousDeploymentInfo.deployType.split(".")[0] === "container"){
+                output += "Deployment type: Container based - " + previousDeploymentInfo.deployType.split(".")[2] + ".<br />";
+                output += "Deployment driver: " + previousDeploymentInfo.deployType.split(".")[1] + ".<br />";
+            }
+
+            previousDeploymentInfo.servers.forEach(function(server){
+                    output += "&nbsp;&nbsp;&nbsp;&nbsp; - Host: " + server.host + ", Port: " + server.port + "<br />";
+            });
+
+            if(previousDeploymentInfo.servers[0].host === "dashboard-soajsdata"){
+                output += "The database is located in the same container cluster as the SOAJS services."
+            }
+
+            $scope.previousDeployment = output;
+        }else{
+	        console.log(previousDeploymentInfo)
+        }
+    };
+
 	$scope.fillOverView = function(){
 		var output = {};
 		//check if no deplyment type is clicked
@@ -173,7 +203,11 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function(
 			if (!$scope.$$phase) {
 				$scope.$apply();
 			}
+            //check for existing deployments.
+            $scope.findCustomFile(response.previousDeploymentInfo, response.previousDeployment);
 		});
+
+
 	};
 	
 	$timeout(function(){
