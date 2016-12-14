@@ -8,7 +8,6 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function(
 		$scope.alerts.splice(i, 1);
 	};
 
-    $scope.deploymentExists = null;
 	$scope.findCustomFile = function(previousDeploymentInfo, deploymentExists){
 	    $scope.deploymentExists = deploymentExists;
 	    var output = "<b>WARNING: Previous deployment detected. </b><br />";
@@ -22,7 +21,7 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function(
                 output += "Deployment type: Container based - " + previousDeploymentInfo.deployType.split(".")[2] + ".<br />";
                 output += "Deployment driver: " + previousDeploymentInfo.deployType.split(".")[1] + ".<br />";
             }
-
+            output += "Database location: <br />"
             previousDeploymentInfo.servers.forEach(function(server){
                     output += "&nbsp;&nbsp;&nbsp;&nbsp; - Host: " + server.host + ", Port: " + server.port + "<br />";
             });
@@ -32,10 +31,8 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function(
             }
 
             $scope.previousDeployment = output;
-        }else{
-	        console.log(previousDeploymentInfo)
         }
-    };
+    }
 
 	$scope.fillOverView = function(){
 		var output = {};
