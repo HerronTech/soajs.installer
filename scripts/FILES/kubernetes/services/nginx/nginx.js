@@ -92,7 +92,27 @@ var components = {
 								{
 									"name": "SOAJS_NX_CONTROLLER_PORT_1",
 									"value": "4000"
-								}
+								},
+								{
+                                    "name": "SOAJS_DEPLOY_HA",
+                                    "value": "kubernetes"
+                                },
+                                {
+                                    "name": "SOAJS_HA_IP",
+                                    "valueFrom": {
+                                        "fieldRef": {
+                                            "fieldPath": "status.podIP"
+                                        }
+                                    }
+                                },
+                                {
+                                    "name": "SOAJS_HA_NAME",
+                                    "valueFrom": {
+                                        "fieldRef": {
+                                            "fieldPath": "metadata.name"
+                                        }
+                                    }
+                                }
 							]
 						}
 					]

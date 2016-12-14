@@ -94,14 +94,10 @@ var components = {
                                 },
                                 {
                                     "name": "SOAJS_DEPLOY_HA",
-                                    "value": "true"
+                                    "value": "kubernetes"
                                 },
                                 {
-                                    "name": "SOAJS_DEPLOY_KUBE",
-                                    "value": "true"
-                                },
-                                {
-                                    "name": "SOAJS_KUBE_POD_IP",
+                                    "name": "SOAJS_HA_IP",
                                     "valueFrom": {
                                         "fieldRef": {
                                             "fieldPath": "status.podIP"
@@ -109,7 +105,7 @@ var components = {
                                     }
                                 },
                                 {
-                                    "name": "SOAJS_KUBE_POD_NAME",
+                                    "name": "SOAJS_HA_NAME",
                                     "valueFrom": {
                                         "fieldRef": {
                                             "fieldPath": "metadata.name"
