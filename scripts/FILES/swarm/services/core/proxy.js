@@ -15,7 +15,7 @@ var config = {
 			Target: gConfig.docker.network
 		}
 	],
-	
+
 	image: {
 		prefix: gConfig.imagePrefix,
 		name: 'soajs'
@@ -23,9 +23,9 @@ var config = {
 	env: [
 		'NODE_ENV=production',
 		'SOAJS_ENV=dashboard',
-		
-		'SOAJS_DEPLOY_HA=true',
-		
+
+		'SOAJS_DEPLOY_HA=swarm',
+
 		'SOAJS_PROFILE=/opt/soajs/FILES/profiles/profile.js',
 		'SOAJS_SRV_AUTOREGISTERHOST=true',
 		'SOAJS_MONGO_PREFIX=' + gConfig.mongo.prefix,

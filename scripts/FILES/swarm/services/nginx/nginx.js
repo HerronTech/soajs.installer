@@ -28,22 +28,32 @@ var config = {
 			Target: gConfig.docker.network
 		}
 	],
-	
+
 	image: {
 		prefix: gConfig.imagePrefix,
 		name: 'nginx'
 	},
 	env: [
 		'SOAJS_ENV=dashboard',
-		
+
+		'SOAJS_DEPLOY_HA=swarm',
+
 		'SOAJS_GIT_DASHBOARD_BRANCH=' + dashUISrc.branch,
 		'SOAJS_NX_API_DOMAIN=' + gConfig.apiPrefix + '.' + masterDomain,
 		'SOAJS_NX_SITE_DOMAIN=' + gConfig.sitePrefix + '.' + masterDomain,
-		
+
 		'SOAJS_NX_CONTROLLER_NB=1',
 		'SOAJS_NX_CONTROLLER_IP_1=' + controllerServiceName,
 		'SOAJS_NX_CONTROLLER_PORT_1=' + controllerServicePort
 	],
+	mounts: [
+        {
+            "Type": "bind",
+            "ReadOnly": true,
+            "Source": gConfig.docker.socketPath,
+            "Target": gConfig.docker.socketPath
+        }
+    ],
 	labels: {
 		"soajs.env": "dashboard",
 		"soajs.service": "nginx",
@@ -73,7 +83,7 @@ var config = {
 if (customUISrc.repo && customUISrc.owner) {
 	config.env.push('SOAJS_GIT_REPO=' + customUISrc.repo);
 	config.env.push('SOAJS_GIT_OWNER=' + customUISrc.owner);
-	
+
 	if (customUISrc.branch) {
 		config.env.push('SOAJS_GIT_DASHBOARD_BRANCH=' + gConfig.git.branch || "develop");
 	}
@@ -90,7 +100,8 @@ module.exports = {
 			"Env": config.env,
 			"Dir": config.workingDir,
 			"Command": [config.command[0]],
-			"Args": config.command.splice(1)
+			"Args": config.command.splice(1),
+			"Mounts": config.mounts
 		},
 		"Placement": {},
 		"Resources": {
