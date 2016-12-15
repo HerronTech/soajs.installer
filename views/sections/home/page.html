@@ -3,14 +3,14 @@
 		<div class="header">
 			<h3>Welcome to SOAJS Installer</h3>
 		</div>
-		<alert type="warning" ng-show="deploymentExists">
-			<div style="color:red" ng-bind-html="previousDeployment|toTrustedHtml"></div>
-		</alert>
 		<p>
 			Hello Beaver and welcome to the SOAJS installer.<br/>
 			This Wizard will guide you through the steps needed to customize and install a fresh copy of SOAJS on your
 			local or remote machine.
 		</p>
+		<alert type="danger" ng-show="deploymentExists">
+			<div ng-bind-html="previousDeployment|toTrustedHtml"></div>
+		</alert>
 		<hr>
 		<h3>Deployment</h3>
 		<p>

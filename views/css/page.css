@@ -265,3 +265,27 @@ fieldset {
 fieldset legend {
     float: left;
 }
+
+.caps {
+    text-transform: capitalize;
+}
+
+table.bulletin{
+
+}
+
+table.bulletin th,
+table.bulletin td{
+    padding:5px;
+    border: solid 1px #666666;
+}
+
+table.bulletin td {
+    background-color: white;
+    color: #333;
+}
+
+table.bulletin th {
+    background-color:#f6f6f6;
+    color: #333;
+}
