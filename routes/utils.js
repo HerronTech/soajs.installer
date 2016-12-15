@@ -343,7 +343,6 @@ module.exports = {
 				def.clusters[j] = over.clusters[j];
 			}
 		}
-		
 		return def;
 	},
 	
