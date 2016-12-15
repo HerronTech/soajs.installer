@@ -126,7 +126,7 @@ module.exports = {
 			else{
         		var data = {
         			"deployType": response.deployer.selected
-				}
+				};
 				return cb(null, data);
 			}
 		});

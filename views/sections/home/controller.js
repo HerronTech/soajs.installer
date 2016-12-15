@@ -8,10 +8,11 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 		$scope.alerts.splice(i, 1);
 	};
 	
+	$scope.previousCheckComplete = false;
 	$scope.deploymentExists = null;
-	$scope.findCustomFile = function (previousDeploymentInfo, deploymentExists) {
-		$scope.deploymentExists = deploymentExists;
+	$scope.findCustomFile = function (previousDeploymentInfo, deploymentExists, cb) {
 		if (deploymentExists) {
+			$scope.deploymentExists = (previousDeploymentInfo !== null && previousDeploymentInfo !== undefined);
 			var output = "<h4>Previous deployment detected</h4><hr />";
 			output += "<table class='bulletin' width='100%' border='0' >";
 			output += "<thead><tr><th>Deployment Type</th><th>Deployment Driver</th><th>Cluster</th></tr></thead><tbody>";
@@ -40,6 +41,7 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 			output += "</tbody></table>";
 			output += "<br /><p>If you decide to proceed with the installation and once you run the generated deployment script in the last step, you will override this deployment with a new one.</p>";
 			$scope.previousDeployment = output;
+			return cb();
 		}
 	};
 	
@@ -209,8 +211,14 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 			if (!$scope.$$phase) {
 				$scope.$apply();
 			}
+			$scope.previousCheckComplete = true;
 			//check for existing deployments.
-			$scope.findCustomFile(response.previousDeploymentInfo, response.previousDeployment);
+			$scope.findCustomFile(response.previousDeploymentInfo, response.previousDeployment, function(){
+				
+				$timeout(function(){
+					resizeContent();
+				}, 500);
+			});
 		});
 	};
 	

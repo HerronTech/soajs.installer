@@ -92,15 +92,20 @@ var routes = {
                 if(profile){
                     utils.getDeploymentInfo(profile, function(error, response){
                         if(error){
-                            data.previousDeployment = false;
+                        	req.soajs.log.error(error);
+	                        return res.json(req.soajs.buildResponse({code: 600, msg: error.message}));
                         }
-                        else{
-                            data.previousDeployment = true;
-                            data.previousDeploymentInfo = response;
-                            data.previousDeploymentInfo.servers = profile.servers;
-                        }
+                        
+                        data.previousDeployment = true;
+                        data.previousDeploymentInfo = response;
+                        data.previousDeploymentInfo.servers = profile.servers;
+                        
                         return res.json(req.soajs.buildResponse(null, data));
                     });
+                }
+                else{
+	                data.previousDeployment = true;
+	                return res.json(req.soajs.buildResponse(null, data));
                 }
             });
         });
