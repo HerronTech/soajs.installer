@@ -92,6 +92,7 @@ var routes = {
                 if(profile){
                     utils.getDeploymentInfo(profile, function(error, response){
                         if(error){
+	                        data.previousDeployment = false;
                         	req.soajs.log.error(error);
 	                        return res.json(req.soajs.buildResponse({code: 600, msg: error.message}));
                         }
@@ -104,7 +105,7 @@ var routes = {
                     });
                 }
                 else{
-	                data.previousDeployment = true;
+	                data.previousDeployment = false;
 	                return res.json(req.soajs.buildResponse(null, data));
                 }
             });
