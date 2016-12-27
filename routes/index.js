@@ -88,7 +88,27 @@ var routes = {
                 };
             }
 
-            return res.json(req.soajs.buildResponse(null, data));
+            utils.loadProfile(function (profile) {
+                if(profile){
+                    utils.getDeploymentInfo(profile, function(error, response){
+                        if(error){
+	                        data.previousDeployment = false;
+                        	req.soajs.log.error(error);
+	                        return res.json(req.soajs.buildResponse({code: 600, msg: error.message}));
+                        }
+                        
+                        data.previousDeployment = true;
+                        data.previousDeploymentInfo = response;
+                        data.previousDeploymentInfo.servers = profile.servers;
+                        
+                        return res.json(req.soajs.buildResponse(null, data));
+                    });
+                }
+                else{
+	                data.previousDeployment = false;
+	                return res.json(req.soajs.buildResponse(null, data));
+                }
+            });
         });
     },
     "postOverview": function(req, res){
@@ -241,58 +261,59 @@ var routes = {
             utils.loadCustomData(null, function (body) {
 
                 body = utils.unifyData(defaultData, body);
-
-                //fill the files with the user values
-                utils.fillFiles(folder, body);
-
-                //launch deployer script
-                switch(body.deployment.deployDriver){
-                    case 'manual':
-                        utils.deployManual(body, function (error, data) {
-                            if (error) {
-                                return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message}));
-                            }
-                            return res.json(req.soajs.buildResponse(null, data));
-                        });
-                        break;
-                    case 'container.docker.local':
-                        utils.deployContainer(body, 'docker', 'local', function (error, data) {
-                            if (error) {
-                                return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message}));
-                            }
-                            return res.json(req.soajs.buildResponse(null, data));
-                        });
-                        break;
-
-                    case 'container.docker.remote':
-                        utils.deployContainer(body, 'docker', 'remote', function (error, data) {
-                            if (error) {
-                                return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message}));
-                            }
-                            return res.json(req.soajs.buildResponse(null, data));
-                        });
-                        break;
-
-                    case 'container.kubernetes.local':
-                        utils.deployContainer(body, 'kubernetes', 'local', function (error, data) {
-                            if (error) {
-                                return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message}));
-                            }
-                            return res.json(req.soajs.buildResponse(null, data));
-                        });
-                        break;
-
-                    case 'container.kubernetes.remote':
-                        utils.deployContainer(body, 'kubernetes', 'remote', function (error, data) {
-                            if (error) {
-                                return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message}));
-                            }
-                            return res.json(req.soajs.buildResponse(null, data));
-                        });
-                        break;
-                }
-                //});
-
+	            
+                utils.updateCustomData(req, res, body.gi, "gi", function(){
+	
+	                //fill the files with the user values
+	                utils.fillFiles(folder, body);
+	
+	                //launch deployer script
+	                switch(body.deployment.deployDriver){
+		                case 'manual':
+			                utils.deployManual(body, function (error, data) {
+				                if (error) {
+					                return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message}));
+				                }
+				                return res.json(req.soajs.buildResponse(null, data));
+			                });
+			                break;
+		                case 'container.docker.local':
+			                utils.deployContainer(body, 'docker', 'local', function (error, data) {
+				                if (error) {
+					                return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message}));
+				                }
+				                return res.json(req.soajs.buildResponse(null, data));
+			                });
+			                break;
+		
+		                case 'container.docker.remote':
+			                utils.deployContainer(body, 'docker', 'remote', function (error, data) {
+				                if (error) {
+					                return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message}));
+				                }
+				                return res.json(req.soajs.buildResponse(null, data));
+			                });
+			                break;
+		
+		                case 'container.kubernetes.local':
+			                utils.deployContainer(body, 'kubernetes', 'local', function (error, data) {
+				                if (error) {
+					                return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message}));
+				                }
+				                return res.json(req.soajs.buildResponse(null, data));
+			                });
+			                break;
+		
+		                case 'container.kubernetes.remote':
+			                utils.deployContainer(body, 'kubernetes', 'remote', function (error, data) {
+				                if (error) {
+					                return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message}));
+				                }
+				                return res.json(req.soajs.buildResponse(null, data));
+			                });
+			                break;
+	                }
+                });
             });
         });
     },

@@ -1,6 +1,6 @@
 "use strict";
 var clustersApp = app.components;
-clustersApp.controller('clustersCtrl', ['$scope', 'ngDataApi', function ($scope, ngDataApi) {
+clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', function ($scope, $timeout, ngDataApi) {
 	$scope.alerts = [];
 
 	$scope.closeAlert = function (i) {
@@ -17,10 +17,18 @@ clustersApp.controller('clustersCtrl', ['$scope', 'ngDataApi', function ($scope,
 
 	$scope.AddNewServer = function () {
 		$scope.clusters.servers.push({"host": "", "port": ""})
+		
+		$timeout(function(){
+			resizeContent();
+		}, 100);
 	};
 
 	$scope.removeServer = function (index) {
 		$scope.clusters.servers.splice(index, 1);
+		
+		$timeout(function(){
+			resizeContent();
+		}, 100);
 	};
 
 	$scope.uncheckReplica = function() {
@@ -28,6 +36,9 @@ clustersApp.controller('clustersCtrl', ['$scope', 'ngDataApi', function ($scope,
             $scope.clusters.isReplica = false;
             $scope.resetMongoInput();
         }
+        $timeout(function(){
+			resizeContent();
+        }, 100);
 	};
 
 	$scope.resetMongoInput = function() {
@@ -35,6 +46,9 @@ clustersApp.controller('clustersCtrl', ['$scope', 'ngDataApi', function ($scope,
 			$scope.clusters.replicaSet = "";
         	$scope.clusters.servers = [$scope.clusters.servers[0]];
     	}
+		$timeout(function(){
+			resizeContent();
+		}, 100);
 	};
 
 	$scope.fillClusters = function () {

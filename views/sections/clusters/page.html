@@ -8,11 +8,13 @@
         <div class="header">
             <h3>Clusters Information</h3>
         </div>
+        <div ng-show="(!clusters.mongoExt && containerDeployment)">
+	        <alert type="warning"><b><u>Note:</u></b><br />
+		        You have chosen to deploy SOAJS using <b>Docker</b> or <b>Kubernetes</b>.<br />By default Mongo is created as a container using this deployment strategy.<br />If you want Mongo to be outside the container cloud, tick the below input <b>External Mongo</b> and provide the configuration needed to connect to Mongo.
+	        </alert>
+        </div>
         <table width="100%" cellspacing="0" cellpadding="0" border="0">
             <tbody>
-            <alert type="warning"><b><u>Note:</u></b><br />
-                If you are planning to deploy SOAJS using <b>Docker</b> or <b>Kubernetes</b> locally, but you don't want <b>Mongo</b> to be instantiated in a container, then the Mongo hostname under <b>Servers List</b> should contain the designated machine's network IP address instead of (<i><b>127.0.0.1</b></i> or <i><b>localhost</b></i>)
-            </alert>
             <tr class="form-group credentials-wrapper">
                 <td>
                     <div id="clusterPrefix-wrapper">
@@ -32,7 +34,7 @@
                     </div>
                 </td>
             </tr>
-            <tr class="form-group tr-code-wrapper" ng-show="clusters.mongoExt">
+            <tr class="form-group tr-code-wrapper" ng-show="(clusters.mongoExt || !containerDeployment)">
                 <td class="form-select">
                     <div id="isReplica-wrapper">
                         <input class="f-left form-control" id="isReplica" name="isReplica" ng-model="clusters.isReplica"
@@ -42,7 +44,7 @@
                     </div>
                 </td>
             </tr>
-            <tr class="form-group replicaSet-wrapper" ng-show="clusters.isReplica&&clusters.mongoExt">
+            <tr class="form-group replicaSet-wrapper" ng-show="clusters.isReplica">
                 <td>
                     <div id="replicaSet-wrapper">
                         <label class="f-left  ">Replica Set Name</label>
@@ -51,7 +53,7 @@
                     </div>
                 </td>
             </tr>
-            <tr class="form-group servers-wrapper">
+            <tr class="form-group servers-wrapper" ng-show="((clusters.mongoExt && containerDeployment) || !containerDeployment)">
                 <td>
                     <fieldset class="serversList">
                         <legend>Servers List</legend>
@@ -86,13 +88,13 @@
                     </fieldset>
                 </td>
             </tr>
-            <tr class="form-group addServer-wrapper" ng-show="clusters.isReplica&&clusters.mongoExt">
+            <tr class="form-group addServer-wrapper" ng-show="clusters.isReplica">
                 <td class="typeHtml">
                     <br />
                     <input class="btn btn-sm btn-success f-right" value="Add New Server" type="button" ng-click="AddNewServer()" />
                 </td>
             </tr>
-            <tr class="form-group credentials-wrapper">
+            <tr class="form-group credentials-wrapper" ng-show="((clusters.mongoExt && containerDeployment) || !containerDeployment)">
                 <td>
                     <div id="credentials-wrapper"><br>
                         <fieldset class="floatGroup">
@@ -123,7 +125,7 @@
                     </div>
                 </td>
             </tr>
-            <tr class="form-group urlParam-wrapper">
+            <tr class="form-group urlParam-wrapper" ng-show="((clusters.mongoExt && containerDeployment) || !containerDeployment)">
                 <td>
                     <div id="urlParam-wrapper">
                         <label class="f-left  ">URL Parameters</label>
@@ -131,7 +133,7 @@
                     </div>
                 </td>
             </tr>
-            <tr class="form-group extraParam-wrapper">
+            <tr class="form-group extraParam-wrapper" ng-show="((clusters.mongoExt && containerDeployment) || !containerDeployment)">
                 <td>
                     <div id="extraParam-wrapper">
                         <label class="f-left  ">Extra Parameters</label>
@@ -139,7 +141,7 @@
                     </div>
                 </td>
             </tr>
-            <tr class="form-group streaming-wrapper">
+            <tr class="form-group streaming-wrapper" ng-show="((clusters.mongoExt && containerDeployment) || !containerDeployment)">
                 <td>
                     <div id="streaming-wrapper">
                         <label class="f-left  ">Streaming Options</label>

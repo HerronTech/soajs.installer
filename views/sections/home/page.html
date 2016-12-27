@@ -8,109 +8,119 @@
 			This Wizard will guide you through the steps needed to customize and install a fresh copy of SOAJS on your
 			local or remote machine.
 		</p>
+		<alert type="danger" ng-show="deploymentExists">
+			<div ng-bind-html="previousDeployment|toTrustedHtml"></div>
+		</alert>
+		<alert type="info" ng-show="!previousCheckComplete">Checking for Previous Deployments ... please wait.</alert>
+		
+		<div ng-show="previousCheckComplete && alerts.length > 0">
+			<alert ng-repeat="oneAlert in alerts" type="oneAlert.type">{{msg}}</alert>
+		</div>
 		<hr>
-		<h3>Deployment</h3>
-		<p>
-			Before you proceed, pick a deployment type.
-		
-		</p>
-		<br/>
-		<accordion close-others="true">
-			<accordion-group heading="Manual Deployment" ng-click="selectLocation('manual')" is-open="manual">
-				<p>
-					<b>Overview:</b><br/>
-					This deployment will perform an NPM install of all SOAJS ready made services on your local
-					machine.<br/>
-					Once installed, the services will be started and you can interact with them via a User Interface.
-				</p>
-				<pre ng-if="style.manual.t==='sh'" class="bash"><code># Install needed technologies for manual deployment
+		<div ng-show="previousCheckComplete">
+			<h3>Deployment</h3>
+			<p>
+				Before you proceed, pick a deployment type.
+			
+			</p>
+			<br/>
+			<accordion close-others="true">
+				<accordion-group heading="Manual Deployment" ng-click="selectLocation('manual')" is-open="manual">
+					<p>
+						<b>Overview:</b><br/>
+						This deployment will perform an NPM install of all SOAJS ready made services on your local
+						machine.<br/>
+						Once installed, the services will be started and you can interact with them via a User Interface.
+					</p>
+					<pre ng-if="style.manual.t==='sh'" class="bash"><code># Install needed technologies for manual deployment
 {{style.manual.v}}</code></pre>
-				<p>
-					Copy the command line above and run it in your terminal to install both MongoDB and Nginx; both are
-					needed if you wish to proceed.<br/>
-					Once installed, click proceed at the bottom of this page to move on to the next sections.
-				</p>
-			</accordion-group>
-			
-			<accordion-group heading="Local Cloud Deployment" is-open="local" ng-click="selectLocation('local')">
-				<p>
-					<b>Overview:</b><br/>
-					Deploy SOAJS cloud on your local machine.<br/>
-					Once deployed, you can interact with SOAJS ready made services via a User Interface.<br/>
-					This type of deployment is only supported on machines running Ubuntu or Mac.
-				</p>
-				<b><u>Deployment Type:</u></b><br/>
-				<input type="radio" name="localButtons" ng-model="data.deployDriver" value="container.docker.local" ng-change="selectDeployment('docker')"/>&nbsp;Docker
-				Deployment (Ubuntu or Mac only)<br/>
-				<input type="radio" name="localButtons" ng-model="data.deployDriver" value="container.kubernetes.local" ng-change="selectDeployment('kubernetes')"/>&nbsp;Kubernetes
-				Deployment (Ubuntu or Mac only)<br/><br/>
+					<p>
+						Copy the command line above and run it in your terminal to install both MongoDB and Nginx; both are
+						needed if you wish to proceed.<br/>
+						Once installed, click proceed at the bottom of this page to move on to the next sections.
+					</p>
+				</accordion-group>
 				
-				<pre ng-show="docker && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
+				<accordion-group heading="Local Cloud Deployment" is-open="local" ng-click="selectLocation('local')">
+					<p>
+						<b>Overview:</b><br/>
+						Deploy SOAJS cloud on your local machine.<br/>
+						Once deployed, you can interact with SOAJS ready made services via a User Interface.<br/>
+						This type of deployment is only supported on machines running Ubuntu or Mac.
+					</p>
+					<b><u>Deployment Type:</u></b><br/>
+					<input type="radio" name="localButtons" ng-model="data.deployDriver" value="container.docker.local" ng-change="selectDeployment('docker')"/>&nbsp;Docker
+					Deployment (Ubuntu or Mac only)<br/>
+					<input type="radio" name="localButtons" ng-model="data.deployDriver" value="container.kubernetes.local" ng-change="selectDeployment('kubernetes')"/>&nbsp;Kubernetes
+					Deployment (Ubuntu or Mac only)<br/><br/>
+					
+					<pre ng-show="docker && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
 {{style.kubernetes.local.v}}</code></pre>
-				
-				
-				<div ng-show="docker && local && osName==='mac'"><b>Click on this link to download Docker for Mac:</b>
-					<a href="{{style.docker.local.v}}" target="_blank">{{style.docker.local.v}}</a>
-				</div>
-				
-				<pre ng-show="kubernetes && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
-{{style.kubernetes.local.v}}</code></pre>
-				
-				<pre ng-show="kubernetes && local && osName==='mac'" class="bash"><code># Execute the command below in your terminal on your local machine
-{{style.kubernetes.local.v}}</code></pre>
-			</accordion-group>
-			
-			<accordion-group heading="Remote Cloud Deployment" is-open="remote" ng-click="selectLocation('remote')">
-				<p>
-					<b>Overview:</b><br />
-					Deploy SOAJS cloud on a remote machine.<br/>
-					Once deployed, you can interact with SOAJS ready made services via a User Interface.<br/>
-					This type of deployment is only supported on machines running Ubuntu.
-				</p>
-				<b><u>Deployment Type:</u></b><br/>
-				<input type="radio" name="remoteButtons" ng-model="data.deployDriver" value="container.docker.remote" ng-change="selectDeployment('docker')"/>&nbsp;Docker
-				Deployment (Ubuntu Only)<br/>
-				<input type="radio" name="remoteButtons" ng-model="data.deployDriver" value="container.kubernetes.remote" ng-change="selectDeployment('kubernetes')"/>&nbsp;Kubernetes
-				Deployment (Ubuntu Only)<br/><br/>
-				
-				<pre ng-show="data.deployDriver ==='container.docker.remote'" class="bash"><code># Execute the command below on the remote machine terminal
-{{style.docker.remote.v}}</code></pre>
-				
-				<pre ng-show="data.deployDriver ==='container.kubernetes.remote'" class="bash"><code># Execute the command below on the remote machine terminal
-{{style.kubernetes.remote.v}}</code></pre>
-				
-				<alert type="warning">
-					<b><u>Note:</u></b><br/>
-					This deployment is only supported on machines running Ubuntu<br />
-					Follow the instructions below before proceeding to the next page:<br/><br/>
-					<div>
-						<ol>
-							<li>Create a remote machine with Ubuntu on it.</li>
-							<li>The script above will install the chosen driver, and generate self-signed certificates for you.</li>
-							<li>Copy these certificates to a folder on this machine.</li>
-							<li>Provide the IP address of the remote machine and the certificates location in the last step of this wizard when asked.</li>
-						</ol>
-						<b>Or:</b>
-						<ol>
-							<li>Create a remote machine with Ubuntu on it.</li>
-							<li>Purchase certificates for a third party provider.</li>
-							<li>Copy these certificates to a folder on the remote machine.<br/>
-								<u>ex:</u><br/>
-								- <b>Docker:</b>&nbsp;'~/.docker/'<br>
-								- <b>Kubernetes:</b>&nbsp;'/etc/kubernetes/pki/'
-							</li>
-							<li>The instructions above will guide you to install the chosen driver, and use your certificates.</li>
-							<li>Copy the same certificates to a folder on this machine.</li>
-							<li>Provide the IP address of the remote machine and the certificates location in the last step of this wizard when asked.</li>
-						</ol>
+					
+					
+					<div ng-show="docker && local && osName==='mac'"><b>Click on this link to download Docker for Mac:</b>
+						<a href="{{style.docker.local.v}}" target="_blank">{{style.docker.local.v}}</a>
 					</div>
-				</alert>
-			</accordion-group>
-		
-		</accordion>
-		<br/>
-		<div class="w-100 table">
-			<input type="button" class="f-right btn btn-sm btn-primary" value="Proceed" ng-click="fillOverView()"/>
+					
+					<pre ng-show="kubernetes && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
+{{style.kubernetes.local.v}}</code></pre>
+					
+					<pre ng-show="kubernetes && local && osName==='mac'" class="bash"><code># Execute the command below in your terminal on your local machine
+{{style.kubernetes.local.v}}</code></pre>
+				</accordion-group>
+				
+				<accordion-group heading="Remote Cloud Deployment" is-open="remote" ng-click="selectLocation('remote')">
+					<p>
+						<b>Overview:</b><br />
+						Deploy SOAJS cloud on a remote machine.<br/>
+						Once deployed, you can interact with SOAJS ready made services via a User Interface.<br/>
+						This type of deployment is only supported on machines running Ubuntu.
+					</p>
+					<b><u>Deployment Type:</u></b><br/>
+					<input type="radio" name="remoteButtons" ng-model="data.deployDriver" value="container.docker.remote" ng-change="selectDeployment('docker')"/>&nbsp;Docker
+					Deployment (Ubuntu Only)<br/>
+					<input type="radio" name="remoteButtons" ng-model="data.deployDriver" value="container.kubernetes.remote" ng-change="selectDeployment('kubernetes')"/>&nbsp;Kubernetes
+					Deployment (Ubuntu Only)<br/><br/>
+					
+					<pre ng-show="data.deployDriver ==='container.docker.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+{{style.docker.remote.v}}</code></pre>
+					
+					<pre ng-show="data.deployDriver ==='container.kubernetes.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+{{style.kubernetes.remote.v}}</code></pre>
+					
+					<alert type="warning">
+						<b><u>Note:</u></b><br/>
+						This deployment is only supported on machines running Ubuntu<br />
+						Follow the instructions below before proceeding to the next page:<br/><br/>
+						<div>
+							<ol>
+								<li>Create a remote machine with Ubuntu on it.</li>
+								<li>The script above will install the chosen driver, and generate self-signed certificates for you.</li>
+								<li>Copy these certificates to a folder on this machine.</li>
+								<li>Provide the IP address of the remote machine and the certificates location in the last step of this wizard when asked.</li>
+							</ol>
+							<b>Or:</b>
+							<ol>
+								<li>Create a remote machine with Ubuntu on it.</li>
+								<li>Purchase certificates for a third party provider.</li>
+								<li>Copy these certificates to a folder on the remote machine.<br/>
+									<u>ex:</u><br/>
+									- <b>Docker:</b>&nbsp;'~/.docker/'<br>
+									- <b>Kubernetes:</b>&nbsp;'/etc/kubernetes/pki/'
+								</li>
+								<li>The instructions above will guide you to install the chosen driver, and use your certificates.</li>
+								<li>Copy the same certificates to a folder on this machine.</li>
+								<li>Provide the IP address of the remote machine and the certificates location in the last step of this wizard when asked.</li>
+							</ol>
+						</div>
+					</alert>
+				</accordion-group>
+			
+			</accordion>
+			<br/>
+			<div class="w-100 table">
+				<input type="button" class="f-right btn btn-sm btn-primary" value="Proceed" ng-click="fillOverView()"/>
+			</div>
 		</div>
 	</form>
 </div>
