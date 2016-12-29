@@ -94,7 +94,7 @@ var routes = {
                         if(error){
 	                        data.previousDeployment = false;
                         	req.soajs.log.error(error);
-	                        return res.json(req.soajs.buildResponse({code: 600, msg: error.message}));
+	                        return res.json(req.soajs.buildResponse(null, data));
                         }
                         
                         data.previousDeployment = true;
