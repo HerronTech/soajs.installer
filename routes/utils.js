@@ -123,6 +123,9 @@ module.exports = {
         	if(error){
         		return cb(error);
 			}
+			else if(!response){
+        		return cb(null, {"deployType": null });
+	        }
 			else{
         		var data = {
         			"deployType": response.deployer.selected
