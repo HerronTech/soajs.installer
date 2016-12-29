@@ -123,6 +123,9 @@ module.exports = {
         	if(error){
         		return cb(error);
 			}
+			else if(!response){
+        		return cb(null, {"deployType": null });
+	        }
 			else{
         		var data = {
         			"deployType": response.deployer.selected
@@ -215,7 +218,7 @@ module.exports = {
 		}
 		
 		//generate profile
-		var profileData = '"use strict;"' + os.EOL;
+		var profileData = '"use strict";' + os.EOL;
 		clusters.name = "core_provision";
 		clusters.prefix = body.clusters.prefix || "";
 		var mongoExt = clusters.mongoExt;
