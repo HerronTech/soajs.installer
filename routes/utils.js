@@ -123,6 +123,9 @@ module.exports = {
         	if(error){
         		return cb(error);
 			}
+			else if(!response){
+        		return cb(null, {"deployType": null });
+	        }
 			else{
         		var data = {
         			"deployType": response.deployer.selected
@@ -215,7 +218,7 @@ module.exports = {
 		}
 		
 		//generate profile
-		var profileData = '"use strict;"' + os.EOL;
+		var profileData = '"use strict";' + os.EOL;
 		clusters.name = "core_provision";
 		clusters.prefix = body.clusters.prefix || "";
 		var mongoExt = clusters.mongoExt;
@@ -410,7 +413,26 @@ module.exports = {
 			});
 		});
 	},
-	
+
+	"verifyMongoIP": function(req, res, cb){
+		var tempData = req.soajs.inputmaskData.clusters;
+		if(tempData.mongoExt){
+			for(var i = 0; i < tempData.servers.length; i++){
+				if(!tempData.servers[i].host)
+					return cb("noIP");
+				if(tempData.servers[i].host === "127.0.0.1")
+					return cb(tempData.servers[i].host)
+			}
+		}
+		else{
+			req.soajs.inputmaskData.clusters.servers = [{"host": "127.0.0.1", "port":27017}];
+            delete req.soajs.inputmaskData.clusters.isReplica;
+            delete req.soajs.inputmaskData.clusters.replicaSet;
+            req.soajs.inputmaskData.clusters.credentials = null;
+		}
+		return cb(null, true);
+	},
+
 	"deployContainer": function (body, driver, loc, cb) {
 		whereis('node', function (err, nodePath) {
 			if (err) {
