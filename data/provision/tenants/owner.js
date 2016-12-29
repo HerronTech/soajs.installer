@@ -60,7 +60,7 @@ var dsbrd = {
 	                                "changeUserStatus": {
 		                                "subject": "Account Status changed at SOAJS",
 		                                //use custom HTML
-		                                "content": "<p>Dear <b>{{ username }}</b>, <br />The administrator update your account status to <b>{{ status }}</b> on {{ ts|date('F jS, Y') }}.<br /><br />Regards,<br/>SOAJS Team.</p>"
+                                        "content": "%wrkDir%/soajs/node_modules/soajs.urac/mail/urac/changeUserStatus.tmpl"
 	                                },
 	                                "changeEmail": {
 		                                "subject": "Change Account Email at SOAJS",
@@ -124,7 +124,7 @@ var dsbrd = {
                                     },
                                     "changeUserStatus": {
                                         "subject": "Account Status changed at SOAJS",
-                                        "content": "<p>Dear <b>{{ username }}</b>, <br />The administrator update your account status to <b>{{ status }}</b> on {{ ts|date('F jS, Y') }}.<br /><br />Regards,<br/>SOAJS Team.</p>"
+                                        "content": "%wrkDir%/soajs/node_modules/soajs.urac/mail/urac/changeUserStatus.tmpl"
                                     },
                                     "changeEmail": {
                                         "subject": "Change Account Email at SOAJS",

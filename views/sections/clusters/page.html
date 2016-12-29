@@ -44,7 +44,7 @@
                     </div>
                 </td>
             </tr>
-            <tr class="form-group replicaSet-wrapper" ng-show="clusters.isReplica">
+            <tr class="form-group replicaSet-wrapper" ng-show="clusters.isReplica && clusters.mongoExt">
                 <td>
                     <div id="replicaSet-wrapper">
                         <label class="f-left  ">Replica Set Name</label>
@@ -64,7 +64,8 @@
                                     <td width="80%" valign="top">
                                         <div>
                                             <label>Hostname</label>
-                                            <input class="form-control " id="host{{$index}}" name="host{{$index}}" ng-model="clusters.servers[$index].host" value="{{oneServer.host}}" placeholder="127.0.0.1" ng-required="true" type="text">
+                                            <input class="form-control " id="host{{$index}}" name="host{{$index}}" ng-model="clusters.servers[$index].host" value="{{oneServer.host}}" placeholder="<External Machine IP>" ng-required="true" type="text">
+                                            <div class="fieldMsg hint">The hostname must not hold the default localhost IP address(127.0.0.1).</div>
                                         </div>
                                     </td>
                                     <td width="1%"></td>
@@ -88,7 +89,7 @@
                     </fieldset>
                 </td>
             </tr>
-            <tr class="form-group addServer-wrapper" ng-show="clusters.isReplica">
+            <tr class="form-group addServer-wrapper" ng-show="clusters.isReplica && clusters.mongoExt">
                 <td class="typeHtml">
                     <br />
                     <input class="btn btn-sm btn-success f-right" value="Add New Server" type="button" ng-click="AddNewServer()" />
@@ -155,7 +156,7 @@
             <br />
             <input value="Go Back" class="btn btn-sm btn-danger f-left" type="button" ng-click="goBack()"/>
             <input value="Skip" class="f-right btn btn-sm btn-warning" type="button" ng-click="skip()" ng-confirm-click="Are you sure you want to skip? Your changes in this section will not be saved."/>
-            <input value="Proceed" class="btn btn-sm btn-primary f-right" type="submit" />
+            <input value="Proceed" class="btn btn-sm btn-primary f-right" type="submit" ng-click="fillClusters()"/>
         </div>
     </form>
 </div>
