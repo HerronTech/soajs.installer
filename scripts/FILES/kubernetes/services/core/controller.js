@@ -41,7 +41,7 @@ var components = {
 
                 "soajs.service.name": "controller",
                 "soajs.service.group": "core",
-                "soajs.service.version": 1,
+                "soajs.service.version": "1",
                 "soajs.service.label": "dashboard-controller"
             }
         },

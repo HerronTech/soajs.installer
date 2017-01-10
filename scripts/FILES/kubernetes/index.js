@@ -161,7 +161,7 @@ var lib = {
     },
 
     deleteKubeServices: function (deployer, options, cb) {
-        var filter = { labelSelector: 'soajs.content=true, type=soajs-service' }; //type=soajs-service is kept for backward compatibility
+        var filter = { labelSelector: 'soajs.content=true' };
         deployer.core.namespaces.services.get({qs: filter}, function (error, serviceList) {
             if (error) return cb(error);
 
