@@ -382,7 +382,7 @@ var lib = {
                     record.taskName = oneServiceInfo.name;
                     record.serviceName = kubeServiceName;
                     delete pod.metadata.annotations;
-                    record.info = pod;
+                    // record.info = pod;
                     return callback(null, record);
                 });
             }, function (error, records) {
