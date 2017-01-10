@@ -35,11 +35,14 @@ var components = {
         "apiVersion": "extensions/v1beta1",
         "kind": "Deployment",
         "metadata": {
-            "soajs.env.code": "dashboard",
+            "name": "dashboard-soajsdata",
+            "labels": {
+                "soajs.env.code": "dashboard",
 
-            "soajs.service.name": "soajsdata",
-            "soajs.service.group": "db",
-            "soajs.service.label": "dashboard-soajsdata"
+                "soajs.service.name": "soajsdata",
+                "soajs.service.group": "db",
+                "soajs.service.label": "dashboard-soajsdata"
+            }
         },
         "spec": {
             "replicas": 1,
