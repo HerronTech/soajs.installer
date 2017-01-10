@@ -8,12 +8,18 @@ var components = {
         "metadata": {
             "name": "dashboard-controller-service",
             "labels": {
-                "type": "soajs-service"
+                "soajs.content": "true",
+                "soajs.env.code": "dashboard",
+
+                "soajs.service.name": "controller",
+                "soajs.service.group": "core",
+                "soajs.service.version": "1",
+                "soajs.service.label": "dashboard-controller"
             }
         },
         "spec": {
             "selector": {
-                "soajs-app": "dashboard-controller"
+                "soajs.service.label": "dashboard-controller"
             },
             "ports": [
                 {
@@ -28,25 +34,35 @@ var components = {
         "apiVersion": "extensions/v1beta1",
         "kind": "Deployment",
         "metadata": {
+            "soajs.content": "true",
             "name": "dashboard-controller",
             "labels": {
+                "soajs.env.code": "dashboard",
+
+                "soajs.service.name": "controller",
                 "soajs.service.group": "core",
-                "soajs.service": "controller",
-                "soajs.env": "dashboard"
+                "soajs.service.version": 1,
+                "soajs.service.label": "dashboard-controller"
             }
         },
         "spec": {
             "replicas": gConfig.kubernetes.replicas,
             "selector": {
                 "matchLabels": {
-                    "soajs-app": "dashboard-controller"
+                    "soajs.service.label": "dashboard-controller"
                 }
             },
             "template": {
                 "metadata": {
                     "name": "controllercon",
                     "labels": {
-                        "soajs-app": "dashboard-controller"
+                        "soajs.content": "true",
+                        "soajs.env.code": "dashboard",
+
+                        "soajs.service.name": "controller",
+                        "soajs.service.group": "core",
+                        "soajs.service.version": "1",
+                        "soajs.service.label": "dashboard-controller"
                     }
                 },
                 "spec": {

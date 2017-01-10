@@ -161,7 +161,7 @@ var lib = {
     },
 
     deleteKubeServices: function (deployer, options, cb) {
-        var filter = { labelSelector: 'type=soajs-service' };
+        var filter = { labelSelector: 'soajs.content=true' };
         deployer.core.namespaces.services.get({qs: filter}, function (error, serviceList) {
             if (error) return cb(error);
 
@@ -199,7 +199,7 @@ var lib = {
             if (error) return cb(error);
             var onePod, ips = [];
             podList.items.forEach(function (onePod) {
-                if (onePod.metadata.labels['soajs-app'] === serviceName && onePod.status.phase === 'Running') {
+                if (onePod.metadata.labels['soajs.service.label'] === serviceName && onePod.status.phase === 'Running') {
                     ips.push({
                         name: onePod.metadata.name,
                         ip: onePod.status.podIP

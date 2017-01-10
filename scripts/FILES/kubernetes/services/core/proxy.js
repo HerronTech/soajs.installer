@@ -2,29 +2,67 @@
 var gConfig = require("../../config.js");
 
 var components = {
+    service: {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "metadata": {
+            "name": "dashboard-proxy-service",
+            "labels": {
+                "soajs.content": "true",
+                "soajs.env.code": "dashboard",
+
+                "soajs.service.name": "proxy",
+                "soajs.service.group": "core",
+                "soajs.service.version": "1",
+                "soajs.service.label": "dashboard-proxy"
+            }
+        },
+        "spec": {
+            "selector": {
+                "soajs.service.label": "dashboard-proxy"
+            },
+            "ports": [
+                {
+                    "protocol": "TCP",
+                    "port": 4009,
+                    "targetPort": 4009
+                }
+            ]
+        }
+    },
     deployment: {
         "apiVersion": "extensions/v1beta1",
         "kind": "Deployment",
         "metadata": {
             "name": "dashboard-proxy",
             "labels": {
+                "soajs.content": "true",
+                "soajs.env.code": "dashboard",
+
+                "soajs.service.name": "proxy",
                 "soajs.service.group": "core",
-                "soajs.service": "proxy",
-                "soajs.env": "dashboard"
+                "soajs.service.version": 1,
+                "soajs.service.label": "dashboard-proxy"
             }
         },
         "spec": {
             "replicas": gConfig.kubernetes.replicas,
             "selector": {
                 "matchLabels": {
-                    "soajs-app": "dashboard-proxy"
+                    "soajs.service.label": "dashboard-proxy"
                 }
             },
             "template": {
                 "metadata": {
                     "name": "dashboard-proxy",
                     "labels": {
-                        "soajs-app": "dashboard-proxy"
+                        "soajs.content": "true",
+                        "soajs.env.code": "dashboard",
+
+                        "soajs.service.name": "proxy",
+                        "soajs.service.group": "core",
+                        "soajs.service.version": 1,
+                        "soajs.service.label": "dashboard-proxy"
                     }
                 },
                 "spec": {

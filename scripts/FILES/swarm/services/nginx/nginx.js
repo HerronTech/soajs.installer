@@ -52,6 +52,11 @@ var config = {
             "ReadOnly": true,
             "Source": gConfig.docker.socketPath,
             "Target": gConfig.docker.socketPath
+        },
+		{
+            "Type": "volume",
+            "Source": gConfig.docker.volumes.log.label,
+            "Target": gConfig.docker.volumes.log.path,
         }
     ],
 	labels: {
@@ -63,7 +68,6 @@ var config = {
 	command: [
 		'bash',
 		'-c',
-		// '/etc/init.d/filebeat start; /etc/init.d/topbeat start; ./soajsDeployer.sh -T nginx -X deploy' + deployerExtra
 		'./soajsDeployer.sh -T nginx -X deploy' + deployerExtra
 	],
 	exposedPorts: [

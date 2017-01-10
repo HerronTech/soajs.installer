@@ -8,13 +8,18 @@ var components = {
 		"metadata": {
 			"name": "dashboard-nginx-service",
 			"labels": {
-				"type": "soajs-service"
+				"soajs.content": "true",
+				"soajs.env.code": "dashboard",
+
+                "soajs.service.name": "nginx",
+                "soajs.service.group": "nginx",
+				"soajs.service.label": "dashboard-nginx"
 			}
 		},
 		"spec": {
 			"type": "NodePort",
 			"selector": {
-				"soajs-app": "dashboard-nginx"
+				"soajs.service.label": "dashboard-nginx"
 			},
 			"ports": [
 				{
@@ -32,23 +37,31 @@ var components = {
 		"metadata": {
 			"name": "dashboard-nginx",
 			"labels": {
-				"soajs.service.group": "nginx",
-				"soajs.service": "nginx",
-				"soajs.env": "dashboard"
+				"soajs.content": "true",
+				"soajs.env.code": "dashboard",
+
+                "soajs.service.name": "nginx",
+                "soajs.service.group": "nginx",
+				"soajs.service.label": "dashboard-nginx"
 			}
 		},
 		"spec": {
 			"replicas": gConfig.kubernetes.replicas,
 			"selector": {
 				"matchLabels": {
-					"soajs-app": "dashboard-nginx"
+					"soajs.service.label": "dashboard-nginx"
 				}
 			},
 			"template": {
 				"metadata": {
 					"name": "dashboard-nginx",
 					"labels": {
-						"soajs-app": "dashboard-nginx"
+						"soajs.content": "true",
+						"soajs.env.code": "dashboard",
+
+		                "soajs.service.name": "nginx",
+		                "soajs.service.group": "nginx",
+						"soajs.service.label": "dashboard-nginx"
 					}
 				},
 				"spec": {

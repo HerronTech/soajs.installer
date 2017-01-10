@@ -2,29 +2,67 @@
 var gConfig = require("../../config.js");
 
 var components = {
+    service: {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "metadata": {
+            "name": "dashboard-dashboard-service",
+            "labels": {
+                "soajs.content": "true",
+                "soajs.env.code": "dashboard",
+
+                "soajs.service.name": "dashboard",
+                "soajs.service.group": "core",
+                "soajs.service.version": "1",
+                "soajs.service.label": "dashboard-dashboard"
+            }
+        },
+        "spec": {
+            "selector": {
+                "soajs.service.label": "dashboard-dashboard"
+            },
+            "ports": [
+                {
+                    "protocol": "TCP",
+                    "port": 4003,
+                    "targetPort": 4003
+                }
+            ]
+        }
+    },
     deployment: {
         "apiVersion": "extensions/v1beta1",
         "kind": "Deployment",
         "metadata": {
             "name": "dashboard-dashboard",
             "labels": {
+                "soajs.content": "true",
+                "soajs.env.code": "dashboard",
+
+                "soajs.service.name": "dashboard",
                 "soajs.service.group": "core",
-                "soajs.service": "dashboard",
-                "soajs.env": "dashboard"
+                "soajs.service.version": 1,
+                "soajs.service.label": "dashboard-dashboard"
             }
         },
         "spec": {
             "replicas": gConfig.kubernetes.replicas,
             "selector": {
                 "matchLabels": {
-                    "soajs-app": "dashboard-dashboard"
+                    "soajs.service.label": "dashboard-dashboard"
                 }
             },
             "template": {
                 "metadata": {
                     "name": "dashboard-dashboard",
                     "labels": {
-                        "soajs-app": "dashboard-dashboard"
+                        "soajs.content": "true",
+                        "soajs.env.code": "dashboard",
+
+                        "soajs.service.name": "dashboard",
+                        "soajs.service.group": "core",
+                        "soajs.service.version": 1,
+                        "soajs.service.label": "dashboard-dashboard"
                     }
                 },
                 "spec": {

@@ -61,9 +61,15 @@ module.exports = {
 		},
 		"swarmConfig": {
 			"tokens": {}
+		},
+		"volumes": {
+			"log": {
+				"label": "soajs_log_volume",
+				"path": "/var/log/soajs/"
+			}
 		}
 	},
-	
+
 	"deployGroups": ['db', 'core', 'nginx'],
 	"services":{
 		"path": {
@@ -71,5 +77,5 @@ module.exports = {
 			"fileType": 'js'
 		}
 	}
-	
+
 };

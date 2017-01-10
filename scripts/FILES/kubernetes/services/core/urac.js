@@ -2,29 +2,67 @@
 var gConfig = require("../../config.js");
 
 var components = {
+    service: {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "metadata": {
+            "name": "dashboard-urac-service",
+            "labels": {
+                "soajs.content": "true",
+                "soajs.env.code": "dashboard",
+
+                "soajs.service.name": "urac",
+                "soajs.service.group": "core",
+                "soajs.service.version": "2",
+                "soajs.service.label": "dashboard-urac"
+            }
+        },
+        "spec": {
+            "selector": {
+                "soajs.service.label": "dashboard-urac"
+            },
+            "ports": [
+                {
+                    "protocol": "TCP",
+                    "port": 4001,
+                    "targetPort": 4001
+                }
+            ]
+        }
+    },
     deployment: {
         "apiVersion": "extensions/v1beta1",
         "kind": "Deployment",
         "metadata": {
             "name": "dashboard-urac",
             "labels": {
+                "soajs.content": "true",
+                "soajs.env.code": "dashboard",
+
+                "soajs.service.name": "urac",
                 "soajs.service.group": "core",
-                "soajs.service": "urac",
-                "soajs.env": "dashboard"
+                "soajs.service.version": "2",
+                "soajs.service.label": "dashboard-urac"
             }
         },
         "spec": {
             "replicas": gConfig.kubernetes.replicas,
             "selector": {
                 "matchLabels": {
-                    "soajs-app": "dashboard-urac"
+                    "soajs.service.label": "dashboard-urac"
                 }
             },
             "template": {
                 "metadata": {
                     "name": "dashboard-urac",
                     "labels": {
-                        "soajs-app": "dashboard-urac"
+                        "soajs.content": "true",
+                        "soajs.env.code": "dashboard",
+
+                        "soajs.service.name": "urac",
+                        "soajs.service.group": "core",
+                        "soajs.service.version": "2",
+                        "soajs.service.label": "dashboard-urac"
                     }
                 },
                 "spec": {
