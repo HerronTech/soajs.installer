@@ -53,9 +53,15 @@ module.exports = {
 		"network": process.env.DOCKER_NETWORK ||  'soajsnet',
 		"swarmConfig": {
 			"tokens": {}
+		},
+		"volumes": {
+			"log": {
+				"label": "soajs-log-volume",
+				"path": "/var/log/soajs/"
+			}
 		}
 	},
-	
+
 	"deployGroups": ['db', 'core', 'nginx'],
 	"services":{
 		"path": {

@@ -123,8 +123,21 @@ var components = {
                                         }
                                     }
                                 }
-
+                            ],
+                            "volumeMounts": [
+                                {
+                                    "mountPath": gConfig.kubernetes.volumes.log.path,
+                                    "name": gConfig.kubernetes.volumes.log.label
+                                }
                             ]
+                        }
+                    ],
+                    "volumes": [
+                        {
+                            "name": gConfig.kubernetes.volumes.log.label,
+                            "hostPath": {
+                                "path": gConfig.kubernetes.volumes.log.path
+                            }
                         }
                     ]
                 }

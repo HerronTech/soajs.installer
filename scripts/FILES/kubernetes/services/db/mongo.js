@@ -74,7 +74,21 @@ var components = {
 
                                     "containerPort": 27017
                                 }
+                            ],
+                            "volumeMounts": [
+                                {
+                                    "mountPath": "/data/db/",
+                                    "name": "dashboard-soajsdata"
+                                }
                             ]
+                        }
+                    ],
+                    "volumes": [
+                        {
+                            "name": "dashboard-soajsdata",
+                            "hostPath": {
+                                "path": "/data/db/"
+                            }
                         }
                     ]
                 }
