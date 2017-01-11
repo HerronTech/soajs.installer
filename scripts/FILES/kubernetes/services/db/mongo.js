@@ -67,6 +67,7 @@ var components = {
                         {
                             "name": "dashboard-soajsdata",
                             "image": "mongo",
+                            "imagePullPolicy": "IfNotPresent",
                             "command": ["mongod", "--smallfiles"],
                             "ports": [
                                 {

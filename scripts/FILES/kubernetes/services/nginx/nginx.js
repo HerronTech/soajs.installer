@@ -69,6 +69,7 @@ var components = {
 						{
 							"name": "dashboard-nginx",
 							"image": gConfig.imagePrefix + "/nginx",
+							"imagePullPolicy": "IfNotPresent",
 							"workingDir": "/opt/soajs/FILES/deployer/",
 							"command": ["./soajsDeployer.sh"],
 							"args": ["-T", "nginx", "-X", "deploy"],

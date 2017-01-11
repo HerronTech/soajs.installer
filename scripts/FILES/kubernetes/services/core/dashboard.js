@@ -70,6 +70,7 @@ var components = {
                         {
                             "name": "dashboard-dashboard",
 	                        "image": gConfig.imagePrefix + "/soajs",
+                            "imagePullPolicy": "IfNotPresent",
                             "workingDir": "/opt/soajs/FILES/deployer/",
                             "command": ["./soajsDeployer.sh"],
                             "args": ["-T", "service", "-X", "deploy", "-L"],
