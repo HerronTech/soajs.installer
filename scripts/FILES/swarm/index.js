@@ -123,11 +123,7 @@ var lib = {
     },
 
     deployService: function (deployer, options, cb) {
-        deployer.createService(options, function (error, result) {
-            if (error) return cb(error);
-
-            lib.registerContainers(deployer, options, cb);
-        });
+        deployer.createService(options, cb);
     },
 
     deleteService: function (deployer, options, cb) {
@@ -253,46 +249,6 @@ var lib = {
         });
     },
 
-    registerNode: function (deployer, swarmConfig, cb) {
-        deployer.listNodes(function (error, nodes) {
-            if (error) return cb(error);
-
-            async.map(nodes, function (oneNode, callback) {
-                if (oneNode.Spec.Role !== 'manager') {
-                    return callback(null, null);
-                }
-
-                var record = {
-                    recordType: 'node',
-                    id: oneNode.ID,
-                    name: oneNode.Description.Hostname,
-                    ip: oneNode.ManagerStatus.Addr.split(':')[0],
-                    dockerPort: config.docker.machinePort,
-                    swarmPort: Number(oneNode.ManagerStatus.Addr.split(':')[1]),
-                    availability: oneNode.Spec.Availability,
-                    role: oneNode.Spec.Role,
-                    resources: {
-                        cpuCount: oneNode.Description.Resources.NanoCPUs / 1000000000,
-                        memory: oneNode.Description.Resources.MemoryBytes
-                    },
-                    tokens: swarmConfig.tokens
-                };
-
-                return callback(null, record);
-            }, function (error, nodeRecords) {
-                if (error) return cb(error);
-
-                for (var i = nodeRecords.length; i >= 0; i--) {
-                    if (!nodeRecords[i]) {
-                        nodeRecords.splice(i, 1);
-                    }
-                }
-
-                mongo.insert(config.docker.mongoCollection, nodeRecords, cb);
-            });
-        });
-    },
-
     prepareSwarmNetwork: function (deployer, cb) {
         var netName = config.docker.network;
         var params = {}, found;
@@ -334,85 +290,6 @@ var lib = {
         });
     },
 
-    configureEnvDeployer: function (cb) {
-        if (config.docker.machineIP === '127.0.0.1' || config.docker.machineIP === 'localhost') {
-            //local deployment, unix socket is used, no need to add node information
-            return cb(null, true);
-        }
-
-        var criteria = {role: 'manager'};
-        mongo.find(config.docker.mongoCollection, criteria, function (error, managerNodes) {
-            if (error) return cb(error);
-
-            async.map(managerNodes, function (oneNode, callback) {
-                return callback(null, oneNode.name);
-            }, function (error, nodeHostnames) {
-                //get environments records
-                mongo.find('environment', {}, function (error, envs) {
-                    if (error) return cb(error);
-
-                    async.each(envs, function (oneEnv, callback) {
-                        oneEnv.deployer.container.docker.remote.nodes = nodeHostnames;
-                        mongo.save('environment', oneEnv, callback);
-                    }, cb);
-                });
-            });
-        });
-    },
-
-    registerContainers: function (deployer, serviceOptions, cb) {
-        var info = {};
-        var dockerServiceName = serviceOptions.Name;
-        var serviceGroup, serviceName, serviceEnv;
-
-        if (serviceOptions.Labels) {
-            serviceGroup = serviceOptions.Labels['soajs.service.group'];
-            serviceName = serviceOptions.Labels['soajs.service'];
-            serviceEnv = serviceOptions.Labels['soajs.env'];
-        }
-
-        if (serviceGroup === 'core') {
-            info.type = (serviceName === 'controller') ? 'controller' : 'service';
-        }
-        else if (serviceGroup === 'nginx') {
-            info.type = 'nginx';
-        }
-        else {
-            return cb(null, true);
-        }
-
-        var replicaCount = serviceOptions.Mode.Replicated.Replicas;
-
-        utilLog.log('Registering ' + serviceName + ' containers in docker collection ...');
-
-        info.env = serviceEnv;
-        info.running = true;
-        info.recordType = 'container';
-
-        lib.getServiceIPs(dockerServiceName, deployer, replicaCount, function (error, serviceIPs) {
-            if (error) return cb(error);
-            async.map(serviceIPs, function (oneServiceInfo, callback) {
-                var container = deployer.getContainer(oneServiceInfo.name);
-                container.inspect(function (error, containerInfo) {
-                    if (error) return callback(error);
-                    var record = JSON.parse(JSON.stringify(info));
-                    record.taskName = containerInfo.Config.Labels['com.docker.swarm.task.name'];
-                    record.serviceName = containerInfo.Config.Labels['com.docker.swarm.service.name'];
-
-                    var labels = Object.keys(containerInfo.Config.Labels);
-                    for (var i = 0; i < labels.length; i++) {
-                        containerInfo.Config.Labels[labels[i].replace(/\./g, '-')] = containerInfo.Config.Labels[labels[i]];
-                        delete containerInfo.Config.Labels[labels[i]];
-                    }
-                    record.info = containerInfo;
-                    return callback(null, record);
-                });
-            }, function (error, records) {
-                if (error) return cb(error);
-                mongo.insert(config.docker.mongoCollection, records, cb);
-            });
-        });
-    },
 
     closeDbCon: function (cb) {
         mongo.closeDb();

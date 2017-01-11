@@ -149,10 +149,7 @@ var lib = {
         }
 
         function createDeployment() {
-            deployer.extensions.namespaces.deployments.post({body: options.deployment}, function (error, result) {
-                if (error) return cb(error);
-                lib.registerContainers(deployer, options, cb);
-            });
+            deployer.extensions.namespaces.deployments.post({body: options.deployment}, cb);
         }
     },
 
@@ -264,133 +261,6 @@ var lib = {
         return cb(null, services);
     },
 
-    registerNode: function (deployer, swarmConfig, cb) {
-        deployer.core.nodes.get({}, function (error, nodeList) {
-            if (error) return cb(error);
-
-            async.map(nodeList.items, function (oneNode, callback) {
-                var record = {
-                    recordType: 'node',
-                    id: oneNode.metadata.uid,
-                    name: oneNode.metadata.name,
-                    ip: getIP(oneNode.status.addresses),
-                    kubePort: config.kubernetes.machinePort,
-                    availability: ((!oneNode.spec.unschedulable) ? 'active' : 'drained'),
-                    role: 'manager',
-                    resources: {
-                        cpuCount: oneNode.status.capacity.cpu,
-                        memory: calcMemory(oneNode.status.capacity.memory)
-                    },
-                    tokens: {}
-                };
-
-                return callback(null, record);
-            }, function (error, nodeRecords) {
-                if (error) return cb(error);
-
-                for (var i = nodeRecords.length; i >= 0; i--) {
-                    if (!nodeRecords[i]) {
-                        nodeRecords.splice(i, 1);
-                    }
-                }
-
-                mongo.insert(config.kubernetes.mongoCollection, nodeRecords, cb);
-            });
-        });
-
-        function calcMemory (memory) {
-			var value = memory.substring(0, memory.length - 2);
-			var unit = memory.substring(memory.length - 2);
-
-			if (unit === 'Ki') value += '000';
-			else if (unit === 'Mi') value += '000000';
-
-			return parseInt(value);
-		}
-
-        function getIP (addresses) {
-			var ip = '';
-			for (var i = 0; i < addresses.length; i++) {
-				if (addresses[i].type === 'LegacyHostIP') {
-					ip = addresses[i].address;
-				}
-			}
-
-			return ip;
-		}
-    },
-
-    configureEnvDeployer: function (cb) {
-        var criteria = {role: 'manager'};
-        mongo.find('docker', criteria, function (error, managerNodes) {
-            if (error) return cb(error);
-
-            async.map(managerNodes, function (oneNode, callback) {
-                return callback(null, oneNode.name);
-            }, function (error, nodeHostnames) {
-                //get environments records
-                mongo.find('environment', {}, function (error, envs) {
-                    if (error) return cb(error);
-
-                    async.each(envs, function (oneEnv, callback) {
-                        var target = oneEnv.deployer.selected.split('.')[2];
-
-                        oneEnv.deployer.container.kubernetes[target].nodes = nodeHostnames;
-                        mongo.save('environment', oneEnv, callback);
-                    }, cb);
-                });
-            });
-        });
-    },
-
-    registerContainers: function (deployer, serviceOptions, cb) {
-        var info = {};
-        var kubeServiceName = serviceOptions.deployment.metadata.name;
-        var serviceGroup, serviceName, serviceEnv;
-
-        if (serviceOptions.deployment.metadata.labels) {
-            serviceGroup = serviceOptions.deployment.metadata.labels['soajs.service.group'];
-            serviceName = serviceOptions.deployment.metadata.labels['soajs.service'];
-            serviceEnv = serviceOptions.deployment.metadata.labels['soajs.env'];
-        }
-
-        if (serviceGroup === 'core') {
-            info.type = (serviceName === 'controller') ? 'controller' : 'service';
-        }
-        else if (serviceGroup === 'nginx') {
-            info.type = 'nginx';
-        }
-        else {
-            return cb(null, true);
-        }
-
-        var replicaCount = serviceOptions.deployment.spec.replicas;
-
-        utilLog.log ('Registering ' + serviceName + ' containers in docker collection ...');
-
-        info.env = serviceEnv;
-        info.running = true;
-        info.recordType = 'container';
-
-        lib.getServiceIPs(kubeServiceName, deployer, replicaCount, function (error, serviceIPs) {
-            if (error) return cb(error);
-
-            async.map(serviceIPs, function (oneServiceInfo, callback) {
-                deployer.core.namespaces.pods.get({name: oneServiceInfo.name}, function (error, pod) {
-                    if (error) return callback(error);
-                    var record = JSON.parse(JSON.stringify(info));
-                    record.taskName = oneServiceInfo.name;
-                    record.serviceName = kubeServiceName;
-                    delete pod.metadata.annotations;
-                    // record.info = pod;
-                    return callback(null, record);
-                });
-            }, function (error, records) {
-                if (error) return cb(error);
-                mongo.insert(config.kubernetes.mongoCollection, records, cb);
-            });
-        });
-    },
 
     closeDbCon: function (cb) {
         mongo.closeDb();

@@ -73,16 +73,6 @@ function deploySOAJS(deployer) {
 			});
 		}, function (error, result) {
 			if (error) throw new Error (error);
-			
-			lib.registerNode(deployer, config.docker.swarmConfig, function (error, result) {
-				if (error) throw new Error(error);
-				
-				utilLog.log('Swarm node has been registered ...');
-				lib.configureEnvDeployer(function (error, result) {
-					if (error) throw new Error(error);
-					lib.closeDbCon(function(){});
-				});
-			});
 		});
 	});
 }

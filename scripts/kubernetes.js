@@ -30,18 +30,6 @@ lib.getDeployer(config.kubernetes.config, function (error, deployer) {
                 });
             }, function (error, result) {
                 if (error) throw new Error (error);
-
-                lib.registerNode(deployer, config.kubernetes.swarmConfig, function (error) {
-                    if (error) throw new Error(error);
-	
-	                utilLog.log('Cluster node has been registered ...');
-                    lib.configureEnvDeployer(function (error) {
-                        if (error) throw new Error(error);
-	
-	                    utilLog.log('Environment deployer configuration has been updated ...');
-                        lib.closeDbCon(function () {});
-                    });
-                });
             });
         }, 5000);
     });
