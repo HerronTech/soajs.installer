@@ -137,6 +137,8 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				"deployDriver": (response && response.deployDriver) ? response.deployDriver : "manual",
 				"deployDockerNodes": (response && response.deployDockerNodes) ? response.deployDockerNodes : [],
 				"containerHost": (response && response.containerHost) ? response.containerHost : "127.0.0.1",
+				"gitSource": (response && response.gitSource) ? response.gitSource : null,
+				"gitProvider": (response && response.gitProvider) ? response.gitProvider : null,
 				"gitOwner": (response && response.gitOwner) ? response.gitOwner : null,
                 "gitRepo": (response && response.gitRepo) ? response.gitRepo : null,
                 "gitToken": (response && response.gitToken) ? response.gitToken : null,

@@ -475,6 +475,11 @@ module.exports = {
 					"SOAJS_DOCKER_REPLICA": body.deployment.dockerReplica
 				};
 				
+				if(body.deployment.gitSource && body.deployment.gitSource !== 'github'){
+					envs["SOAJS_GIT_SOURCE"] = body.deployment.gitSource;
+					envs["SOAJS_GIT_PROVIDER"] = body.deployment.gitProvider;
+				}
+				
 				if (body.clusters.replicaSet) {
 					envs['SOAJS_MONGO_RSNAME'] = body.clusters.replicaSet;
 				}
@@ -530,6 +535,11 @@ module.exports = {
 					"CONTAINER_PORT": body.deployment.kubernetes.containerPort,
 					"SOAJS_DOCKER_REPLICA": body.deployment.dockerReplica
 				};
+				
+				if(body.deployment.gitSource && body.deployment.gitSource !== 'github'){
+					envs["SOAJS_GIT_SOURCE"] = body.deployment.gitSource;
+					envs["SOAJS_GIT_PROVIDER"] = body.deployment.gitProvider;
+				}
 				
 				if (body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder) {
 					envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder;

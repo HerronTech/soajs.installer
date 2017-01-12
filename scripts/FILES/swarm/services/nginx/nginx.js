@@ -20,6 +20,9 @@ var masterDomain = gConfig.masterDomain;
 var controllerServiceName = 'dashboard_soajs_controller';
 var controllerServicePort = '4000';
 
+var gitProvider = (process.env.SOAJS_GIT_PROVIDER) ? " -G " + process.env.SOAJS_GIT_PROVIDER : "";
+var gitSource = (process.env.SOAJS_GIT_SOURCE) ? " -g " + process.env.SOAJS_GIT_SOURCE : "";
+	
 var config = {
 	servName: 'dashboard_nginx',
 	servReplica: parseInt(gConfig.docker.replicas),
@@ -54,7 +57,7 @@ var config = {
 		'bash',
 		'-c',
 		// '/etc/init.d/filebeat start; /etc/init.d/topbeat start; ./soajsDeployer.sh -T nginx -X deploy' + deployerExtra
-		'./soajsDeployer.sh -T nginx -X deploy' + deployerExtra
+		'./soajsDeployer.sh -T nginx -X deploy' + deployerExtra + gitSource + gitProvider
 	],
 	exposedPorts: [
 		{

@@ -102,4 +102,14 @@ var components = {
 	}
 };
 
+if(process.env.SOAJS_GIT_PROVIDER){
+	components.deployment.spec.template.spec.containers[0].args.push("-G");
+	components.deployment.spec.template.spec.containers[0].args.push(process.env.SOAJS_GIT_PROVIDER);
+}
+
+if(process.env.SOAJS_GIT_SOURCE){
+	components.deployment.spec.template.spec.containers[0].args.push("-g");
+	components.deployment.spec.template.spec.containers[0].args.push(process.env.SOAJS_GIT_SOURCE);
+}
+
 module.exports = components;

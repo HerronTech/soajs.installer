@@ -178,6 +178,8 @@ module.exports = {
 							"containerHost": {"type": "string", "required": false},
 							"deployDockerNodes": {"type": "array", "required": false, "items": {"type": "string"}},
 
+                            "gitSource": {"type": "string", "required": true, "enum": ['github','bitbucket']},
+                            "gitProvider": {"type": "string", "required": false},
                             "gitOwner": {"type": "string", "required": false},
                             "gitRepo": {"type": "string", "required": false},
                             "gitToken": {"type": "string", "required": false},
