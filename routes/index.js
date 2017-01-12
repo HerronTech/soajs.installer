@@ -96,7 +96,12 @@ var routes = {
                         	req.soajs.log.error(error);
 	                        return res.json(req.soajs.buildResponse(null, data));
                         }
-                        
+
+                        if(!response.deployType){
+                            data.previousDeployment = false;
+                            return res.json(req.soajs.buildResponse(null, data));
+                        }
+
                         data.previousDeployment = true;
                         data.previousDeploymentInfo = response;
                         data.previousDeploymentInfo.servers = profile.servers;

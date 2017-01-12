@@ -11,6 +11,7 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 	$scope.previousCheckComplete = false;
 	$scope.deploymentExists = null;
 	$scope.findCustomFile = function (previousDeploymentInfo, deploymentExists, cb) {
+		console.log($scope.alerts)
 		if (deploymentExists) {
 			$scope.deploymentExists = (previousDeploymentInfo !== null && previousDeploymentInfo !== undefined);
 			var output = "<h4>Previous deployment detected</h4><hr />";
