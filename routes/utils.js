@@ -444,8 +444,8 @@ module.exports = {
 				runner.write("#!/bin/bash" + os.EOL + os.EOL);
 				
 				var envs = {
-					"SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "develop",
-					"SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "develop",
+					"SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "master",
+					"SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "master",
 					"SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
 					"NODE_PATH": nodePath,
 					
@@ -509,8 +509,8 @@ module.exports = {
 				runner.write("#!/bin/bash" + os.EOL + os.EOL);
 				
 				var envs = {
-					"SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "develop",
-					"SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "develop",
+					"SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "master",
+					"SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "master",
 					"SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
 					"NODE_PATH": nodePath,
 					
