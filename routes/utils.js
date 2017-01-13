@@ -530,7 +530,8 @@ module.exports = {
                     "SOAJS_GIT_OWNER": body.deployment.gitOwner,
                     "SOAJS_GIT_REPO": body.deployment.gitRepo,
                     "SOAJS_GIT_TOKEN": body.deployment.gitToken,
-
+	                "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
+	                
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
                     "SOAJS_IMAGE_PREFIX": body.deployment.imagePrefix,
 
