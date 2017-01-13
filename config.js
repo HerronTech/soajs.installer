@@ -182,6 +182,7 @@ module.exports = {
                             "gitProvider": {"type": "string", "required": false},
                             "gitOwner": {"type": "string", "required": false},
                             "gitRepo": {"type": "string", "required": false},
+                            "gitBranch": {"type": "string", "required": false},
                             "gitToken": {"type": "string", "required": false},
 
                             "imagePrefix": {"type": "string", "required": false},

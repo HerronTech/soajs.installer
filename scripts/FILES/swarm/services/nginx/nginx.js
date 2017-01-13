@@ -78,8 +78,9 @@ if (customUISrc.repo && customUISrc.owner) {
 	config.env.push('SOAJS_GIT_OWNER=' + customUISrc.owner);
 	
 	if (customUISrc.branch) {
-		config.env.push('SOAJS_GIT_DASHBOARD_BRANCH=' + gConfig.git.branch || "develop");
+		config.env.push('SOAJS_GIT_BRANCH=' + customUISrc.branch || "develop");
 	}
+	
 	if (customUISrc.token) {
 		config.env.push('SOAJS_GIT_TOKEN=' + customUISrc.token);
 	}

@@ -141,6 +141,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				"gitProvider": (response && response.gitProvider) ? response.gitProvider : null,
 				"gitOwner": (response && response.gitOwner) ? response.gitOwner : null,
                 "gitRepo": (response && response.gitRepo) ? response.gitRepo : null,
+                "gitBranch": (response && response.gitBranch) ? response.gitBranch : "master",
                 "gitToken": (response && response.gitToken) ? response.gitToken : null,
 				"imagePrefix": (response && response.imagePrefix) ? response.imagePrefix : "soajsorg",
                 

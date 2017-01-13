@@ -102,6 +102,10 @@ var components = {
 	}
 };
 
+if(process.env.SOAJS_GIT_CUSTOM_UI_BRANCH){
+	components.deployment.spec.template.spec.containers.env.push({"name": "SOAJS_GIT_BRANCH", "value": gConfig.customUISrc.branch});
+}
+
 if(process.env.SOAJS_GIT_PROVIDER){
 	components.deployment.spec.template.spec.containers[0].args.push("-G");
 	components.deployment.spec.template.spec.containers[0].args.push(process.env.SOAJS_GIT_PROVIDER);

@@ -127,6 +127,16 @@
                     </td>
                 </tr>
                 <tr class="form-group tr-code-wrapper">
+	                <td class="form-select">
+		                <div id="gitBranch-wrapper">
+			                <label>Git Branch</label>
+			                <input type="text" ng-required="false" class="form-control" name="gitBranch" id="gitBranch"
+			                       ng-model="deployment.gitBranch" placeholder="master"/>
+			                <div class="fieldMsg hint">Specify the branch to use.</div>
+		                </div>
+	                </td>
+                </tr>
+                <tr class="form-group tr-code-wrapper">
                     <td class="form-select">
                         <div id="gitToken-wrapper">
                             <label>Git Token</label>
