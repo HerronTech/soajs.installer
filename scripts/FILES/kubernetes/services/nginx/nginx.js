@@ -102,8 +102,13 @@ var components = {
 	}
 };
 
-if(process.env.SOAJS_GIT_CUSTOM_UI_BRANCH){
-	components.deployment.spec.template.spec.containers.env.push({"name": "SOAJS_GIT_BRANCH", "value": gConfig.customUISrc.branch});
+if (gConfig.customUISrc.repo && gConfig.customUISrc.owner) {
+	components.deployment.spec.template.spec.containers.env.push({"name": "SOAJS_GIT_REPO", "value": gConfig.customUISrc.repo});
+	components.deployment.spec.template.spec.containers.env.push({"name": "SOAJS_GIT_OWNER", "value": gConfig.customUISrc.owner});
+	
+	if(gConfig.customUISrc.branch){
+		components.deployment.spec.template.spec.containers.env.push({"name": "SOAJS_GIT_BRANCH", "value": gConfig.customUISrc.branch});
+	}
 }
 
 if(process.env.SOAJS_GIT_PROVIDER){
@@ -114,6 +119,10 @@ if(process.env.SOAJS_GIT_PROVIDER){
 if(process.env.SOAJS_GIT_SOURCE){
 	components.deployment.spec.template.spec.containers[0].args.push("-g");
 	components.deployment.spec.template.spec.containers[0].args.push(process.env.SOAJS_GIT_SOURCE);
+}
+
+if (gConfig.customUISrc.token) {
+	components.deployment.spec.template.spec.containers.env.push({"name": "SOAJS_GIT_TOKEN", "value": gConfig.customUISrc.token});
 }
 
 module.exports = components;
