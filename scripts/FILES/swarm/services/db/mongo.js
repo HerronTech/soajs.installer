@@ -15,7 +15,12 @@ var config = {
         name: 'mongo'
     },
     labels: {
-        "soajs.env": "dashboard"
+        "soajs.content": "true",
+		"soajs.env.code": "dashboard",
+
+        "soajs.service.name": "soajsdata",
+        "soajs.service.group": "db",
+        "soajs.service.label": "dashboard-soajsdata"
     },
     command: [
         'mongod',

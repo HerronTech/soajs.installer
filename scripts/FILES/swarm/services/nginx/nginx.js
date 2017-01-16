@@ -60,9 +60,12 @@ var config = {
         }
     ],
 	labels: {
-		"soajs.env": "dashboard",
-		"soajs.service": "nginx",
-		"soajs.service.group": "nginx"
+		"soajs.content": "true",
+		"soajs.env.code": "dashboard",
+
+		"soajs.service.name": "nginx",
+		"soajs.service.group": "nginx",
+		"soajs.service.label": "dashboard_nginx"
 	},
 	workingDir: '/opt/soajs/FILES/deployer/',
 	command: [

@@ -49,9 +49,13 @@ var config = {
         }
 	],
 	labels: {
-		"soajs.env": "dashboard",
-		"soajs.service": "dashboard",
-		"soajs.service.group": "core"
+		"soajs.content": "true",
+		"soajs.env.code": "dashboard",
+
+		"soajs.service.name": "dashboard",
+		"soajs.service.group": "core",
+		"soajs.service.version": "1",
+		"soajs.service.label": "dashboard_soajs_dashboard"
 	},
 	workingDir: '/opt/soajs/FILES/deployer/',
 	command: [

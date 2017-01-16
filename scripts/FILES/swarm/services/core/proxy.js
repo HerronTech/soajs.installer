@@ -47,9 +47,13 @@ var config = {
         }
 	],
 	labels: {
-		"soajs.env": "dashboard",
-		"soajs.service": "proxy",
-		"soajs.service.group": "core"
+		"soajs.content": "true",
+		"soajs.env.code": "dashboard",
+
+		"soajs.service.name": "proxy",
+		"soajs.service.group": "core",
+		"soajs.service.version": "1",
+		"soajs.service.label": "dashboard_soajs_prx"
 	},
 	workingDir: '/opt/soajs/FILES/deployer/',
 	command: [

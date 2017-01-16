@@ -47,9 +47,13 @@ var config = {
         }
     ],
     labels: {
-        "soajs.env": "dashboard",
-        "soajs.service": "urac",
-        "soajs.service.group": "core"
+        "soajs.content": "true",
+		"soajs.env.code": "dashboard",
+
+		"soajs.service.name": "urac",
+		"soajs.service.group": "core",
+		"soajs.service.version": "2",
+		"soajs.service.label": "dashboard_soajs_urac"
     },
     workingDir: '/opt/soajs/FILES/deployer/',
     command: [
