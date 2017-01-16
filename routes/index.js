@@ -87,8 +87,8 @@ var routes = {
                     os : osName
                 };
             }
-
-            utils.loadProfile(function (profile) {
+            return res.json(req.soajs.buildResponse(null, data));
+            /*utils.loadProfile(function (profile) {
                 if(profile){
                     utils.getDeploymentInfo(profile, function(error, response){
                         if(error){
@@ -96,7 +96,6 @@ var routes = {
                         	req.soajs.log.error(error);
 	                        return res.json(req.soajs.buildResponse(null, data));
                         }
-
                         if(!response.deployType){
                             data.previousDeployment = false;
                             return res.json(req.soajs.buildResponse(null, data));
@@ -105,7 +104,7 @@ var routes = {
                         data.previousDeployment = true;
                         data.previousDeploymentInfo = response;
                         data.previousDeploymentInfo.servers = profile.servers;
-                        
+
                         return res.json(req.soajs.buildResponse(null, data));
                     });
                 }
@@ -113,7 +112,7 @@ var routes = {
 	                data.previousDeployment = false;
 	                return res.json(req.soajs.buildResponse(null, data));
                 }
-            });
+            });*/
         });
     },
     "postOverview": function(req, res){

@@ -66,14 +66,13 @@ module.exports = {
                     }
                 }
                 catch (e){
-                    req.soajs.log.error(error);
                     return cb(null);
                 }
             }
         });
     },
 
-    "loadProfile": function (cb) {
+    /*"loadProfile": function (cb) {
         fs.exists(dataDir + "/startup/profile.js", function (exists) {
             if (!exists) {
                 return cb(null, false);
@@ -139,7 +138,7 @@ module.exports = {
                 return cb(null, data);
             }
         });
-    },
+    },*/
 
     "generateExtKeys": function (opts, cb) {
         //soajs encryption engine
