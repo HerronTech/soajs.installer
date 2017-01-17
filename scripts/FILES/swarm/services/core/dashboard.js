@@ -62,7 +62,10 @@ var config = {
 		'bash',
 		'-c',
 		'./soajsDeployer.sh -T service -X deploy -L'
-	]
+	],
+	placement: [
+        'node.role == manager'
+    ]
 };
 
 module.exports = {
@@ -76,7 +79,9 @@ module.exports = {
 			"Args": config.command.splice(1),
 			"Mounts": config.mounts
 		},
-		"Placement": {},
+		"Placement": {
+			"Constraints": config.placement
+		},
 		"Resources": {
 			"Limits": {
 				"MemoryBytes": 209715200.0
