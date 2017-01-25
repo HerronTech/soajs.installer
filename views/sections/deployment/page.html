@@ -47,16 +47,6 @@
             </tr>
             <tr class="form-group tr-code-wrapper">
                 <td class="form-select">
-                    <div id="containerDir-wrapper">
-                        <label>Certificates Directory</label>
-                        <input type="text" ng-required="false" class="form-control" name="containerDir"
-                               id="containerDir" ng-model="deployment.containerDir" placeholder="Directory of the docker certificates"/>
-                        <div class="fieldMsg hint">Specify the Certificates Director for HA Deployment.</div>
-                    </div>
-                </td>
-            </tr>
-            <tr class="form-group tr-code-wrapper">
-                <td class="form-select">
                     <div id="imagePrefix-wrapper">
                         <label>Image Prefix</label>
                         <input type="text" ng-required="false" class="form-control" name="imagePrefix" id="imagePrefix"
@@ -78,6 +68,44 @@
             </tr>
             </tbody>
         </table>
+        </fieldset>
+        <br />
+        <fieldset ng-show="deployment.certsRequired">
+            <legend>Certificates</legend>
+            <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tbody>
+                <tr class="form-group tr-code-wrapper">
+                    <td class="form-select">
+                        <div id="CA-wrapper">
+                            <label>CA</label>
+                            <input type="text" ng-required="deployment.certsRequired" class="form-control" name="caCertificate" id="caCertificate"
+                                   ng-model="deployment.certificates.caCertificate" placeholder="~/certificate.ca"/>
+                            <div class="fieldMsg hint">Specify the location of the certificate of type CA.</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="form-group tr-code-wrapper">
+                    <td class="form-select">
+                        <div id="Cert-wrapper">
+                            <label>Cert</label>
+                            <input type="text" ng-required="deployment.certsRequired" class="form-control" name="certCertificate" id="certCertificate"
+                                   ng-model="deployment.certificates.certCertificate" placeholder="~/certificate.cert"/>
+                            <div class="fieldMsg hint">Specify the location of the certificate of type Cert.</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="form-group tr-code-wrapper">
+                    <td class="form-select">
+                        <div id="Key-wrapper">
+                            <label>Key</label>
+                            <input type="text" ng-required="deployment.certsRequired" class="form-control" name="keyCertificate" id="keyCertificate"
+                                   ng-model="deployment.certificates.keyCertificate" placeholder="~/certificate.key"/>
+                            <div class="fieldMsg hint">Specify the location of the certificate of type Key.</div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </fieldset>
         <br />
         <fieldset ng-show="docker||kubernetes">

@@ -26,6 +26,7 @@
   "dependencies": {
     "async": "*",
     "dockerode": "*",
+    "gridfs-stream": "*",
     "kubernetes-client": "*",
     "mkdirp": "*",
     "ncp": "*",
