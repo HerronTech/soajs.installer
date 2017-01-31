@@ -49,7 +49,7 @@ var config = {
 	labels: {
 		"soajs.content": "true",
 		"soajs.env.code": "dashboard",
-
+		"soajs.service.type": "service",
 		"soajs.service.name": "proxy",
 		"soajs.service.group": "core",
 		"soajs.service.version": "1",
