@@ -4,7 +4,7 @@ var gConfig = require("../../config.js");
 var src = {
 	owner: 'soajs',
 	repo: 'soajs.dashboard',
-	branch: "feature/DASHBOARD-39"
+	branch: gConfig.git.branch
 };
 
 var config = {

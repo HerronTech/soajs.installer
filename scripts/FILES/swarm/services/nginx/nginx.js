@@ -2,7 +2,7 @@
 var gConfig = require("../../config.js");
 
 var dashUISrc = {
-	branch: "feature/DASHBOARD-39"
+	branch: gConfig.customUISrc.branch
 };
 
 var customUISrc = {
