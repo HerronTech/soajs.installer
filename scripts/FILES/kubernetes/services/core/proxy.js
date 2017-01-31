@@ -13,6 +13,7 @@ var components = {
 
                 "soajs.service.name": "proxy",
                 "soajs.service.group": "core",
+                "soajs.service.type": "service",
                 "soajs.service.version": "1",
                 "soajs.service.label": "dashboard-proxy"
             }
@@ -41,6 +42,7 @@ var components = {
 
                 "soajs.service.name": "proxy",
                 "soajs.service.group": "core",
+                "soajs.service.type": "service",
                 "soajs.service.version": "1",
                 "soajs.service.label": "dashboard-proxy"
             }
@@ -61,6 +63,7 @@ var components = {
 
                         "soajs.service.name": "proxy",
                         "soajs.service.group": "core",
+                        "soajs.service.type": "service",
                         "soajs.service.version": "1",
                         "soajs.service.label": "dashboard-proxy"
                     }
