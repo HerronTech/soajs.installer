@@ -17,7 +17,7 @@ var config = {
     labels: {
         "soajs.content": "true",
 		"soajs.env.code": "dashboard",
-
+	    "soajs.service.type": "database",
         "soajs.service.name": "soajsdata",
         "soajs.service.group": "db",
         "soajs.service.label": "dashboard-soajsdata"

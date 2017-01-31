@@ -193,7 +193,14 @@ module.exports = {
                             "dockerInternalPort": {"type": "number", "required": false},
                             "dockerReplica": {"type": "number", "required": false},
                             "certificatesFolder": {"type": "string", "required": false},
-                            "kubeContainerPort": {"type": "number", "required": false}
+                            "kubeContainerPort": {"type": "number", "required": false},
+
+                            "certsRequired": {"type": "boolean", "required": false},
+							"certificates": {"type": "object", "required": false},
+                            "caCertificate": {"type": "string", "required": false},
+                            "certCertificate": {"type": "string", "required": false},
+                            "keyCertificate": {"type": "string", "required": false},
+
 						},
 						"additionalProperties": false
 					}

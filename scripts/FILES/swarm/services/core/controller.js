@@ -49,7 +49,7 @@ var config = {
 	labels: {
 		"soajs.content": "true",
 		"soajs.env.code": "dashboard",
-
+		"soajs.service.type": "service",
 		"soajs.service.name": "controller",
 		"soajs.service.group": "core",
 		"soajs.service.version": "1",
@@ -62,6 +62,7 @@ var config = {
 		'./soajsDeployer.sh -T service -X deploy -L'
 	]
 };
+
 
 module.exports = {
 	"Name": config.servName,

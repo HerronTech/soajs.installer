@@ -2,7 +2,7 @@
 var gConfig = require("../../config.js");
 
 var dashUISrc = {
-	branch: gConfig.dashUISrc.branch
+	branch: gConfig.customUISrc.branch
 };
 
 var customUISrc = {
@@ -62,7 +62,7 @@ var config = {
 	labels: {
 		"soajs.content": "true",
 		"soajs.env.code": "dashboard",
-
+		"soajs.service.type": "nginx",
 		"soajs.service.name": "nginx",
 		"soajs.service.group": "nginx",
 		"soajs.service.label": "dashboard_nginx"

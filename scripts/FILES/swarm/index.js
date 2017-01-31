@@ -1,7 +1,10 @@
 'use strict';
 var Docker = require('dockerode');
 var async = require('async');
+
+var path = require('path');
 var fs = require('fs');
+var Grid = require('gridfs-stream');
 var exec = require('child_process').exec;
 var soajs = require('soajs');
 var request = require('request');
@@ -14,6 +17,21 @@ var mongo = new soajs.mongo(profile);
 
 var utilLog = require('util');
 var lib = {
+
+    "loadCustomData": function (cb) {
+        var dataDir = process.env.SOAJS_DATA_FOLDER;
+
+        fs.exists(path.normalize(dataDir + "/../custom.js"), function (exists) {
+            if (!exists) {
+                return cb(null);
+            }
+            else {
+                delete require.cache[require.resolve(path.normalize(dataDir + "/../custom.js"))];
+                var customData = require(path.normalize(dataDir + "/../custom.js"));
+                return cb(customData);
+            }
+        });
+    },
 
     ifSwarmExists: function (deployer, cb) {
         deployer.info(function (error, info) {
@@ -120,6 +138,133 @@ var lib = {
         var dataImportFile = __dirname + "/../dataImport/index.js";
         var execString = process.env.NODE_PATH + " " + dataImportFile;
         exec(execString, cb);
+    },
+
+    importCertificates: function (cb) {
+        lib.loadCustomData(function(customFile) {
+            if(!customFile.deployment.certsRequired)
+                return cb(null, true);
+
+            else{
+                utilLog.log('Importing certifictes to:', profile.servers[0].host + ":" + profile.servers[0].port);
+                copyCACertificate(function(caErr){
+                    if(caErr){
+                        utilLog.log("Error while copying the certificate of type CA");
+                        throw new Error(caErr);
+                    }
+                    copyCertCertificate(function(certErr){
+                        if(certErr){
+                            utilLog.log("Error while copying the certificate of type Cert");
+                            throw new Error(certErr);
+                        }
+                        copyKeyCertificate(function(keyErr){
+                            if(keyErr){
+                                utilLog.log("Error while copying the certificate of type Key");
+                                throw new Error(keyErr);
+                            }
+                        });
+                    });
+                });
+            }
+
+            function getDb(soajs) {
+                profile.name = "core_provision";
+                mongo = new soajs.mongo(profile);
+                return mongo;
+            }
+
+            function copyCACertificate(cb) {
+
+                var fileData = {
+                    filename: "CA Certificate",
+                    metadata: {
+                        platform: 'docker',
+                        certType: 'ca',
+                        env: {
+                            'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
+                        }
+                    }
+                };
+
+                getDb(soajs).getMongoDB(function (error, db) {
+                    if(error) {
+                        throw new Error(error);
+                    }
+                    var gfs = Grid(db, getDb(soajs).mongodb);
+                    var writeStream = gfs.createWriteStream(fileData);
+                    var readStream = fs.createReadStream(customFile.deployment.certificates.caCertificate);
+                    readStream.pipe(writeStream);
+
+                    writeStream.on('error', function (error) {
+                        return cb(error);
+                    });
+                    writeStream.on('close', function (file) {
+                        return cb(null, true);
+                    });
+                });
+            }
+
+            function copyCertCertificate(cb) {
+
+                var fileData = {
+                    filename: "Cert Certificate",
+                    metadata: {
+                        platform: 'docker',
+                        certType: 'cert',
+                        env: {
+                            'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
+                        }
+                    }
+                };
+
+                getDb(soajs).getMongoDB(function (error, db) {
+                    if(error) {
+                        throw new Error(error);
+                    }
+                    var gfs = Grid(db, getDb(soajs).mongodb);
+                    var writeStream = gfs.createWriteStream(fileData);
+                    var readStream = fs.createReadStream(customFile.deployment.certificates.certCertificate);
+                    readStream.pipe(writeStream);
+                    writeStream.on('error', function (error) {
+                        return cb(error);
+                    });
+                    writeStream.on('close', function (file) {
+                        return cb(null, true);
+                    });
+                });
+            }
+
+            function copyKeyCertificate(cb) {
+
+                var fileData = {
+                    filename: "Key Certificate",
+                    metadata: {
+                        platform: 'docker',
+                        certType: 'key',
+                        env: {
+                            'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
+                        }
+                    }
+                };
+
+                getDb(soajs).getMongoDB(function (error, db) {
+                    if(error) {
+                        throw new Error(error);
+                    }
+                    var gfs = Grid(db, getDb(soajs).mongodb);
+                    var writeStream = gfs.createWriteStream(fileData);
+                    var readStream = fs.createReadStream(customFile.deployment.certificates.keyCertificate);
+                    readStream.pipe(writeStream);
+                    writeStream.on('error', function (error) {
+                        return cb(error);
+                    });
+                    writeStream.on('close', function (file) {
+                        return cb(null, true);
+                    });
+                });
+            }
+
+        });
     },
 
     deployService: function (deployer, options, cb) {

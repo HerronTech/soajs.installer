@@ -4,6 +4,7 @@ var async = require('async');
 
 var path = require('path');
 var fs = require('fs');
+var Grid = require('gridfs-stream');
 var exec = require('child_process').exec;
 var soajs = require('soajs');
 var request = require('request');
@@ -15,6 +16,7 @@ var profile = require(config.profile);
 var mongo = new soajs.mongo(profile);
 
 var utilLog = require('util');
+
 var lib = {
 
     "loadCustomData": function (cb) {
@@ -54,7 +56,7 @@ var lib = {
 
     getDeployer: function (deployerConfig, cb) {
         if(!config.kubernetes.certsPath){
-	        return cb(new Error('No certificates found for remote machine.'));
+            return cb(new Error('No certificates found for remote machine.'));
         }
         var deployer = {};
 
@@ -137,6 +139,135 @@ var lib = {
         exec(execString, cb);
     },
 
+
+
+    importCertificates: function (cb) {
+        lib.loadCustomData(function(customFile) {
+            if(!customFile.deployment.certsRequired)
+                return cb(null, true);
+
+            else{
+                utilLog.log('Importing certifictes to:', profile.servers[0].host + ":" + profile.servers[0].port);
+                copyCACertificate(function(caErr){
+                    if(caErr){
+                        utilLog.log("Error while copying the certificate of type CA");
+                        throw new Error(caErr);
+                    }
+                    copyCertCertificate(function(certErr){
+                        if(certErr){
+                            utilLog.log("Error while copying the certificate of type Cert");
+                            throw new Error(certErr);
+                        }
+                        copyKeyCertificate(function(keyErr){
+                            if(keyErr){
+                                utilLog.log("Error while copying the certificate of type Key");
+                                throw new Error(keyErr);
+                            }
+                        });
+                    });
+                });
+            }
+
+            function getDb(soajs) {
+                profile.name = "core_provision";
+                mongo = new soajs.mongo(profile);
+                return mongo;
+            }
+
+            function copyCACertificate(cb) {
+
+                var fileData = {
+                    filename: "CA Certificate",
+                    metadata: {
+                        platform: 'kubernetes',
+                        certType: 'ca',
+                        env: {
+                            'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
+                        }
+                    }
+                };
+
+                getDb(soajs).getMongoDB(function (error, db) {
+                    if(error) {
+                        throw new Error(error);
+                    }
+                    var gfs = Grid(db, getDb(soajs).mongodb);
+                    var writeStream = gfs.createWriteStream(fileData);
+                    var readStream = fs.createReadStream(customFile.deployment.certificates.caCertificate);
+                    readStream.pipe(writeStream);
+
+                    writeStream.on('error', function (error) {
+                        return cb(error);
+                    });
+                    writeStream.on('close', function (file) {
+                        return cb(null, true);
+                    });
+                });
+            }
+
+            function copyCertCertificate(cb) {
+
+                var fileData = {
+                    filename: "Cert Certificate",
+                    metadata: {
+                        platform: 'kubernetes',
+                        certType: 'cert',
+                        env: {
+                            'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
+                        }
+                    }
+                };
+
+                getDb(soajs).getMongoDB(function (error, db) {
+                    if(error) {
+                        throw new Error(error);
+                    }
+                    var gfs = Grid(db, getDb(soajs).mongodb);
+                    var writeStream = gfs.createWriteStream(fileData);
+                    var readStream = fs.createReadStream(customFile.deployment.certificates.certCertificate);
+                    readStream.pipe(writeStream);
+                    writeStream.on('error', function (error) {
+                        return cb(error);
+                    });
+                    writeStream.on('close', function (file) {
+                        return cb(null, true);
+                    });
+                });
+            }
+
+            function copyKeyCertificate(cb) {
+
+                var fileData = {
+                    filename: "Key Certificate",
+                    metadata: {
+                        platform: 'kubernetes',
+                        certType: 'key',
+                        env: {
+                            'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
+                        }
+                    }
+                };
+
+                getDb(soajs).getMongoDB(function (error, db) {
+                    if(error) {
+                        throw new Error(error);
+                    }
+                    var gfs = Grid(db, getDb(soajs).mongodb);
+                    var writeStream = gfs.createWriteStream(fileData);
+                    var readStream = fs.createReadStream(customFile.deployment.certificates.keyCertificate);
+                    readStream.pipe(writeStream);
+                    writeStream.on('error', function (error) {
+                        return cb(error);
+                    });
+                    writeStream.on('close', function (file) {
+                        return cb(null, true);
+                    });
+                });
+            }
+
+        });
+    },
+
     deployService: function (deployer, options, cb) {
         if (options.service) {
             deployer.core.namespaces.services.post({body: options.service}, function (error) {
@@ -174,7 +305,7 @@ var lib = {
     },
 
     deletePreviousServices: function (deployer, cb) {
-    	//todo: need to provide --grace-period=0 using the javascript syntax
+        //todo: need to provide --grace-period=0 using the javascript syntax
         lib.deleteDeployments(deployer, {}, function (error) {
             if (error) return cb(error);
 
@@ -221,9 +352,9 @@ var lib = {
     addMongoInfo: function (services, mongoInfo, cb) {
         var mongoEnv = [];
 
-	    if(config.mongo.prefix && config.mongo.prefix !== ""){
-		    mongoEnv.push({name: 'SOAJS_MONGO_PREFIX', value: config.mongo.prefix});
-	    }
+        if(config.mongo.prefix && config.mongo.prefix !== ""){
+            mongoEnv.push({name: 'SOAJS_MONGO_PREFIX', value: config.mongo.prefix});
+        }
 
         if (config.mongo.external) {
             // if (!config.dataLayer.mongo.url || !config.dataLayer.mongo.port) {
@@ -233,25 +364,25 @@ var lib = {
             }
 
             mongoEnv.push({ name: 'SOAJS_MONGO_NB', value: '' + profile.servers.length });
-	        for(var i = 0; i < profile.servers.length; i++){
-		        mongoEnv.push({name: 'SOAJS_MONGO_IP_' + (i + 1), value: profile.servers[i].host});
-		        mongoEnv.push({name: 'SOAJS_MONGO_PORT_' + (i + 1), value: '' + profile.servers[i].port});
-	        }
+            for(var i = 0; i < profile.servers.length; i++){
+                mongoEnv.push({name: 'SOAJS_MONGO_IP_' + (i + 1), value: profile.servers[i].host});
+                mongoEnv.push({name: 'SOAJS_MONGO_PORT_' + (i + 1), value: '' + profile.servers[i].port});
+            }
 
             if (profile.credentials && profile.credentials.username && profile.credentials.password) {
                 mongoEnv.push({ name: 'SOAJS_MONGO_USERNAME', value: profile.credentials.username });
                 mongoEnv.push({ name: 'SOAJS_MONGO_PASSWORD', value: profile.credentials.password });
-	            mongoEnv.push({ name: 'SOAJS_MONGO_AUTH_DB', value: profile.URLParam.authSource });
+                mongoEnv.push({ name: 'SOAJS_MONGO_AUTH_DB', value: profile.URLParam.authSource });
             }
 
             if(profile.URLParam.ssl){
-	            mongoEnv.push({ name: 'SOAJS_MONGO_SSL', value: profile.URLParam.ssl });
+                mongoEnv.push({ name: 'SOAJS_MONGO_SSL', value: profile.URLParam.ssl });
             }
         }
         else {
             mongoEnv.push({ name: 'SOAJS_MONGO_NB', value: '1' });
-	        mongoEnv.push({ name: 'SOAJS_MONGO_IP_1', value: profile.servers[0].host});
-	        mongoEnv.push({ name: 'SOAJS_MONGO_PORT_1', value: '27017'});
+            mongoEnv.push({ name: 'SOAJS_MONGO_IP_1', value: profile.servers[0].host});
+            mongoEnv.push({ name: 'SOAJS_MONGO_PORT_1', value: '27017'});
         }
 
         services.forEach(function (oneService) {

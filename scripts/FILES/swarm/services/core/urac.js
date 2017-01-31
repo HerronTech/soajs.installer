@@ -49,7 +49,7 @@ var config = {
     labels: {
         "soajs.content": "true",
 		"soajs.env.code": "dashboard",
-
+	    "soajs.service.type": "service",
 		"soajs.service.name": "urac",
 		"soajs.service.group": "core",
 		"soajs.service.version": "2",
@@ -62,6 +62,8 @@ var config = {
         '/etc/init.d/postfix start; ./soajsDeployer.sh -T service -X deploy -L'
     ]
 };
+
+
 
 module.exports = {
     "Name": config.servName,
