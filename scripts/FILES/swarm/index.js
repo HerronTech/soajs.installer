@@ -1,6 +1,8 @@
 'use strict';
 var Docker = require('dockerode');
 var async = require('async');
+
+var path = require('path');
 var fs = require('fs');
 var Grid = require('gridfs-stream');
 var exec = require('child_process').exec;
@@ -15,6 +17,21 @@ var mongo = new soajs.mongo(profile);
 
 var utilLog = require('util');
 var lib = {
+
+    "loadCustomData": function (cb) {
+        var dataDir = process.env.SOAJS_DATA_FOLDER;
+
+        fs.exists(path.normalize(dataDir + "/../custom.js"), function (exists) {
+            if (!exists) {
+                return cb(null);
+            }
+            else {
+                delete require.cache[require.resolve(path.normalize(dataDir + "/../custom.js"))];
+                var customData = require(path.normalize(dataDir + "/../custom.js"));
+                return cb(customData);
+            }
+        });
+    },
 
     ifSwarmExists: function (deployer, cb) {
         deployer.info(function (error, info) {
