@@ -6,7 +6,7 @@ var components = {
         "apiVersion": "v1",
         "kind": "Service",
         "metadata": {
-            "name": "dashboard-controller-service",
+            "name": "dashboard-controller",
             "labels": {
                 "soajs.content": "true",
                 "soajs.env.code": "dashboard",
@@ -139,6 +139,19 @@ var components = {
                                     "name": gConfig.kubernetes.volumes.log.label
                                 }
                             ]
+                        },
+                        {
+                            "name": "kubectl-proxy",
+                            "image": "lachlanevenson/k8s-kubectl",
+                            "imagePullPolicy": "IfNotPresent",
+                            "args": ["proxy", "-p", "8001"],
+                            "ports": [
+                                {
+
+                                    "containerPort": 8001
+                                }
+                            ],
+                            "env": []
                         }
                     ],
                     "volumes": [
