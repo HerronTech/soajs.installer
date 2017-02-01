@@ -8,7 +8,7 @@ var src = {
 };
 
 var config = {
-	servName: 'dashboard_soajs_controller',
+	servName: 'dashboard-controller',
 	servReplica: parseInt(gConfig.docker.replicas),
 	servNetwork: [
 		{
