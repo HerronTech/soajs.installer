@@ -113,6 +113,28 @@
             <table width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tbody>
                 <tr class="form-group tr-code-wrapper">
+	                <td class="form-select">
+		                <div id="gitSource-wrapper">
+			                <label>Provider</label>
+			                <select name="gitSource" id="gitSource" ng-model="deployment.gitSource">
+				                <option value="github">Github</option>
+				                <option value="bitbucket">Bitbucket</option>
+			                </select>
+			                <div class="fieldMsg hint">Select the custom UI Source.</div>
+		                </div>
+	                </td>
+                </tr>
+                <tr class="form-group tr-code-wrapper">
+	                <td class="form-select">
+		                <div id="gitProvider-wrapper">
+			                <label>Git Domain</label>
+			                <input type="text" ng-required="false" class="form-control" name="gitprovider" id="gitprovider"
+			                       ng-model="deployment.gitProvider" placeholder="soajs"/>
+			                <div class="fieldMsg hint">Specify the domain of the custom UI repo.</div>
+		                </div>
+	                </td>
+                </tr>
+	            <tr class="form-group tr-code-wrapper">
                     <td class="form-select">
                         <div id="gitOwner-wrapper">
                             <label>Git Owner</label>
@@ -131,6 +153,16 @@
                             <div class="fieldMsg hint">Specify the name of the git repository.</div>
                         </div>
                     </td>
+                </tr>
+                <tr class="form-group tr-code-wrapper">
+	                <td class="form-select">
+		                <div id="gitBranch-wrapper">
+			                <label>Git Branch</label>
+			                <input type="text" ng-required="false" class="form-control" name="gitBranch" id="gitBranch"
+			                       ng-model="deployment.gitBranch" placeholder="master"/>
+			                <div class="fieldMsg hint">Specify the branch to use.</div>
+		                </div>
+	                </td>
                 </tr>
                 <tr class="form-group tr-code-wrapper">
                     <td class="form-select">

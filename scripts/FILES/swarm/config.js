@@ -17,7 +17,7 @@ module.exports = {
 	"customUISrc":{
 		"owner": process.env.SOAJS_GIT_OWNER || null,
 		"repo": process.env.SOAJS_GIT_REPO || null,
-		"branch": process.env.SOAJS_GIT_BRANCH || null,
+		"branch": process.env.SOAJS_GIT_CUSTOM_UI_BRANCH || null,
 		"token": process.env.SOAJS_GIT_TOKEN || null
 	},
 	"mongo":{

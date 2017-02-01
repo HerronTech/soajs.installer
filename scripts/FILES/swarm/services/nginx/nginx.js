@@ -2,7 +2,7 @@
 var gConfig = require("../../config.js");
 
 var dashUISrc = {
-	branch: gConfig.customUISrc.branch
+	branch: gConfig.dashUISrc.branch
 };
 
 var customUISrc = {
@@ -20,6 +20,9 @@ var masterDomain = gConfig.masterDomain;
 var controllerServiceName = 'dashboard-controller';
 var controllerServicePort = '4000';
 
+var gitProvider = (process.env.SOAJS_GIT_PROVIDER) ? " -G " + process.env.SOAJS_GIT_PROVIDER : "";
+var gitSource = (process.env.SOAJS_GIT_SOURCE) ? " -g " + process.env.SOAJS_GIT_SOURCE : "";
+	
 var config = {
 	servName: 'dashboard_nginx',
 	servReplica: parseInt(gConfig.docker.replicas),
@@ -66,7 +69,8 @@ var config = {
 	command: [
 		'bash',
 		'-c',
-		'./soajsDeployer.sh -T nginx -X deploy' + deployerExtra
+		// '/etc/init.d/filebeat start; /etc/init.d/topbeat start; ./soajsDeployer.sh -T nginx -X deploy' + deployerExtra
+		'./soajsDeployer.sh -T nginx -X deploy' + deployerExtra + gitSource + gitProvider
 	],
 	exposedPorts: [
 		{
@@ -87,8 +91,9 @@ if (customUISrc.repo && customUISrc.owner) {
 	config.env.push('SOAJS_GIT_OWNER=' + customUISrc.owner);
 
 	if (customUISrc.branch) {
-		config.env.push('SOAJS_GIT_DASHBOARD_BRANCH=' + gConfig.git.branch || "develop");
+		config.env.push('SOAJS_GIT_BRANCH=' + customUISrc.branch || "develop");
 	}
+	
 	if (customUISrc.token) {
 		config.env.push('SOAJS_GIT_TOKEN=' + customUISrc.token);
 	}

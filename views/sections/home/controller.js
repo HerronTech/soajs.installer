@@ -9,8 +9,9 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 	};
 	
 	$scope.previousCheckComplete = false;
-	$scope.deploymentExists = null;
+	/*$scope.deploymentExists = null;
 	$scope.findCustomFile = function (previousDeploymentInfo, deploymentExists, cb) {
+		console.log($scope.alerts)
 		if (deploymentExists) {
 			$scope.deploymentExists = (previousDeploymentInfo !== null && previousDeploymentInfo !== undefined);
 			var output = "<h4>Previous deployment detected</h4><hr />";
@@ -43,7 +44,7 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 			$scope.previousDeployment = output;
 			return cb();
 		}
-	};
+	};*/
 	
 	$scope.fillOverView = function () {
 		var output = {};
@@ -212,13 +213,16 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 				$scope.$apply();
 			}
 			$scope.previousCheckComplete = true;
+            $timeout(function(){
+                resizeContent();
+            }, 500);
 			//check for existing deployments.
-			$scope.findCustomFile(response.previousDeploymentInfo, response.previousDeployment, function(){
+			/*$scope.findCustomFile(response.previousDeploymentInfo, response.previousDeployment, function(){
 				
 				$timeout(function(){
 					resizeContent();
 				}, 500);
-			});
+			});*/
 		});
 	};
 	

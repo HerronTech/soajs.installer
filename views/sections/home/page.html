@@ -8,10 +8,10 @@
 			This Wizard will guide you through the steps needed to customize and install a fresh copy of SOAJS on your
 			local or remote machine.
 		</p>
-		<alert type="danger" ng-show="deploymentExists">
+		<!--<alert type="danger" ng-show="deploymentExists">
 			<div ng-bind-html="previousDeployment|toTrustedHtml"></div>
 		</alert>
-		<alert type="info" ng-show="!previousCheckComplete">Checking for Previous Deployments ... please wait.</alert>
+		<alert type="info" ng-show="!previousCheckComplete">Checking for Previous Deployments ... please wait.</alert>-->
 		
 		<div ng-show="previousCheckComplete && alerts.length > 0">
 			<alert ng-repeat="oneAlert in alerts" type="oneAlert.type">{{msg}}</alert>
@@ -21,7 +21,6 @@
 			<h3>Deployment</h3>
 			<p>
 				Before you proceed, pick a deployment type.
-			
 			</p>
 			<br/>
 			<accordion close-others="true">
