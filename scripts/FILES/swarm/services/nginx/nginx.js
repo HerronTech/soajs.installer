@@ -17,7 +17,7 @@ var deployerExtra = (ssl) ? ' -s' : '';
 
 var masterDomain = gConfig.masterDomain;
 
-var controllerServiceName = 'dashboard_soajs_controller';
+var controllerServiceName = 'dashboard-controller';
 var controllerServicePort = '4000';
 
 var config = {
