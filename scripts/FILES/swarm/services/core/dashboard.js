@@ -47,7 +47,7 @@ var config = {
 		"soajs.env.code": "dashboard",
 		"soajs.service.type": "service",
 		"soajs.service.name": "dashboard",
-		"soajs.service.group": "core",
+		"soajs.service.group": "SOAJS Core Services",
 		"soajs.service.version": "1",
 		"soajs.service.label": "dashboard_soajs_dashboard"
 	},
@@ -69,7 +69,7 @@ module.exports = {
 			"Command": [config.command[0]],
 			"Args": config.command.splice(1),
 			"Mounts": config.mounts
-		}
+		},
 		"Resources": {
 			"Limits": {
 				"MemoryBytes": 209715200.0

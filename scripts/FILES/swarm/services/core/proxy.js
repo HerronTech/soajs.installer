@@ -45,7 +45,7 @@ var config = {
 		"soajs.env.code": "dashboard",
 		"soajs.service.type": "service",
 		"soajs.service.name": "proxy",
-		"soajs.service.group": "core",
+		"soajs.service.group": "SOAJS Core Services",
 		"soajs.service.version": "1",
 		"soajs.service.label": "dashboard_soajs_prx"
 	},
