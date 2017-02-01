@@ -47,12 +47,6 @@ var config = {
 		'SOAJS_NX_CONTROLLER_PORT_1=' + controllerServicePort
 	],
 	mounts: [
-        {
-            "Type": "bind",
-            "ReadOnly": true,
-            "Source": gConfig.docker.socketPath,
-            "Target": gConfig.docker.socketPath
-        },
 		{
             "Type": "volume",
             "Source": gConfig.docker.volumes.log.label,

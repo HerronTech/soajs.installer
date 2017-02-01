@@ -35,12 +35,6 @@ var config = {
 	],
 	mounts: [
 		{
-			"Type": "bind",
-			"ReadOnly": true,
-			"Source": gConfig.docker.socketPath,
-			"Target": gConfig.docker.socketPath
-		},
-		{
             "Type": "volume",
             "Source": gConfig.docker.volumes.log.label,
             "Target": gConfig.docker.volumes.log.path,

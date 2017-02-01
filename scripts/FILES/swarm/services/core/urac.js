@@ -34,12 +34,6 @@ var config = {
         'SOAJS_GIT_BRANCH=' + src.branch
     ],
     mounts: [
-        {
-            "Type": "bind",
-            "ReadOnly": true,
-            "Source": gConfig.docker.socketPath,
-            "Target": gConfig.docker.socketPath
-        },
 		{
             "Type": "volume",
             "Source": gConfig.docker.volumes.log.label,

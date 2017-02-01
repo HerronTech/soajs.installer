@@ -60,7 +60,10 @@ var config = {
 		'bash',
 		'-c',
 		'./soajsDeployer.sh -T service -X deploy -L'
-	]
+	],
+	placement: [
+        'node.role == manager'
+    ]
 };
 
 
@@ -74,6 +77,9 @@ module.exports = {
 			"Command": [config.command[0]],
 			"Args": config.command.splice(1),
 			"Mounts": config.mounts
+		},
+		"Placement": {
+			"Constraints": config.placement
 		},
 		"Placement": {},
 		"Resources": {

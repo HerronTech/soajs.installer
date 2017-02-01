@@ -37,12 +37,6 @@ var config = {
 	],
 	mounts: [
 		{
-			"Type": "bind",
-			"ReadOnly": true,
-			"Source": gConfig.docker.socketPath,
-			"Target": gConfig.docker.socketPath
-		},
-		{
             "Type": "volume",
             "Source": gConfig.docker.volumes.log.label,
             "Target": gConfig.docker.volumes.log.path,
@@ -62,10 +56,7 @@ var config = {
 		'bash',
 		'-c',
 		'./soajsDeployer.sh -T service -X deploy -L'
-	],
-	placement: [
-        'node.role == manager'
-    ]
+	]
 };
 
 module.exports = {
@@ -78,10 +69,7 @@ module.exports = {
 			"Command": [config.command[0]],
 			"Args": config.command.splice(1),
 			"Mounts": config.mounts
-		},
-		"Placement": {
-			"Constraints": config.placement
-		},
+		}
 		"Resources": {
 			"Limits": {
 				"MemoryBytes": 209715200.0
