@@ -25,6 +25,7 @@ var config = {
         'SOAJS_ENV=dashboard',
 
         'SOAJS_DEPLOY_HA=swarm',
+        'SOAJS_HA_NAME={{.Task.Name}}',
 
         'SOAJS_PROFILE=/opt/soajs/FILES/profiles/profile.js',
         'SOAJS_SRV_AUTOREGISTERHOST=true',
