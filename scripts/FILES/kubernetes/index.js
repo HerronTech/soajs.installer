@@ -163,6 +163,7 @@ var lib = {
                                 utilLog.log("Error while copying the certificate of type Key");
                                 throw new Error(keyErr);
                             }
+                            return cb();
                         });
                     });
                 });
