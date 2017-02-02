@@ -12,7 +12,7 @@ var components = {
                 "soajs.env.code": "dashboard",
 
                 "soajs.service.name": "dashboard",
-                "soajs.service.group": "SOAJS Core Services",
+                "soajs.service.group": "SOAJS-Core-Services",
                 "soajs.service.type": "service",
                 "soajs.service.version": "1",
                 "soajs.service.label": "dashboard-dashboard"
@@ -41,7 +41,7 @@ var components = {
                 "soajs.env.code": "dashboard",
 
                 "soajs.service.name": "dashboard",
-                "soajs.service.group": "SOAJS Core Services",
+                "soajs.service.group": "SOAJS-Core-Services",
                 "soajs.service.type": "service",
                 "soajs.service.version": "1",
                 "soajs.service.label": "dashboard-dashboard"
@@ -62,7 +62,7 @@ var components = {
                         "soajs.env.code": "dashboard",
 
                         "soajs.service.name": "dashboard",
-                        "soajs.service.group": "SOAJS Core Services",
+                        "soajs.service.group": "SOAJS-Core-Services",
                         "soajs.service.type": "service",
                         "soajs.service.version": "1",
                         "soajs.service.label": "dashboard-dashboard"

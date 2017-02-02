@@ -46,7 +46,7 @@ var config = {
 		"soajs.env.code": "dashboard",
 	    "soajs.service.type": "service",
 		"soajs.service.name": "urac",
-		"soajs.service.group": "SOAJS Core Services",
+		"soajs.service.group": "SOAJS-Core-Services",
 		"soajs.service.version": "2",
 		"soajs.service.label": "dashboard_soajs_urac"
     },
