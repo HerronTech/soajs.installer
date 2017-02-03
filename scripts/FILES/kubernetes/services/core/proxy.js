@@ -24,9 +24,16 @@ var components = {
             },
             "ports": [
                 {
+                    "name": "service-port",
                     "protocol": "TCP",
                     "port": 4009,
                     "targetPort": 4009
+                },
+                {
+                    "name": "maintenance-port",
+                    "protocol": "TCP",
+                    "port": 5009,
+                    "targetPort": 5009
                 }
             ]
         }

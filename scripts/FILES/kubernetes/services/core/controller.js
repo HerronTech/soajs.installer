@@ -24,9 +24,16 @@ var components = {
             },
             "ports": [
                 {
+                    "name": "service-port",
                     "protocol": "TCP",
                     "port": 4000,
                     "targetPort": 4000
+                },
+                {
+                    "name": "maintenance-port",
+                    "protocol": "TCP",
+                    "port": 5000,
+                    "targetPort": 5000
                 }
             ]
         }
@@ -38,6 +45,7 @@ var components = {
             "soajs.content": "true",
             "name": "dashboard-controller",
             "labels": {
+                "soajs.content": "true",
                 "soajs.env.code": "dashboard",
 
                 "soajs.service.name": "controller",
