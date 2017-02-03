@@ -104,7 +104,7 @@ var components = {
 								},
 								{
 									"name": "SOAJS_NX_CONTROLLER_IP_1",
-									"value": "dashboard-controller-service"
+									"value": "dashboard-controller"
 								},
 								{
 									"name": "SOAJS_NX_CONTROLLER_PORT_1",
@@ -156,7 +156,7 @@ var components = {
 if (gConfig.customUISrc.repo && gConfig.customUISrc.owner) {
 	components.deployment.spec.template.spec.containers.env.push({"name": "SOAJS_GIT_REPO", "value": gConfig.customUISrc.repo});
 	components.deployment.spec.template.spec.containers.env.push({"name": "SOAJS_GIT_OWNER", "value": gConfig.customUISrc.owner});
-	
+
 	if(gConfig.customUISrc.branch){
 		components.deployment.spec.template.spec.containers.env.push({"name": "SOAJS_GIT_BRANCH", "value": gConfig.customUISrc.branch});
 	}
