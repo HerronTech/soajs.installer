@@ -163,7 +163,7 @@ var lib = {
                                 utilLog.log("Error while copying the certificate of type Key");
                                 throw new Error(keyErr);
                             }
-                            return cb();
+
                         });
                     });
                 });
@@ -273,15 +273,15 @@ var lib = {
         if (options.service) {
             deployer.core.namespaces.services.post({body: options.service}, function (error) {
                 if (error) return cb(error);
-                return createDeployment(cb);
+                createDeployment(cb);
             });
         }
         else {
-            return createDeployment(cb);
+            createDeployment(cb);
         }
 
-        function createDeployment(cb) {
-            deployer.extensions.namespaces.deployments.post({body: options.deployment}, cb);
+        function createDeployment(cb1) {
+            deployer.extensions.namespaces.deployments.post({body: options.deployment}, cb1);
         }
     },
 
