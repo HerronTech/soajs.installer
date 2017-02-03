@@ -273,14 +273,14 @@ var lib = {
         if (options.service) {
             deployer.core.namespaces.services.post({body: options.service}, function (error) {
                 if (error) return cb(error);
-                return createDeployment();
+                return createDeployment(cb);
             });
         }
         else {
-            return createDeployment();
+            return createDeployment(cb);
         }
 
-        function createDeployment() {
+        function createDeployment(cb) {
             deployer.extensions.namespaces.deployments.post({body: options.deployment}, cb);
         }
     },
