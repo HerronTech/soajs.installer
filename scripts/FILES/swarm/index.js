@@ -282,8 +282,8 @@ var lib = {
     },
 
     deletePreviousServices: function (deployer, cb) {
-        //TODO: only remove SOAJS services
-        deployer.listServices({}, function (error, services) {
+        var filters = { label: { 'soajs.content': true }};
+        deployer.listServices({ filters: filters }, function (error, services) {
             if (error) return cb(error);
 
             async.each(services, function (oneService, callback) {
@@ -293,8 +293,7 @@ var lib = {
                 if (error) return cb(error);
 
                 //force remove containers instead of waiting for them to be automatically removed
-                //TODO: only remove SOAJS containers
-                deployer.listContainers({}, function (error, containers) {
+                deployer.listContainers({ filters: filters }, function (error, containers) {
                     if (error) return cb(error);
 
                     async.each(containers, function (oneContainer, callback) {
