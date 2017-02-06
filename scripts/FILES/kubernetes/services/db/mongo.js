@@ -38,6 +38,7 @@ var components = {
         "metadata": {
             "name": "dashboard-soajsdata",
             "labels": {
+                "soajs.content": "true",
                 "soajs.env.code": "dashboard",
 
                 "soajs.service.name": "soajsdata",
@@ -57,6 +58,7 @@ var components = {
                 "metadata": {
                     "name": "dashboard-soajsdata",
                     "labels": {
+                        "soajs.content": "true",
                         "soajs.env.code": "dashboard",
 
                         "soajs.service.name": "soajsdata",

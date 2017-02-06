@@ -164,6 +164,7 @@ var lib = {
                                 throw new Error(keyErr);
                             }
 
+                            return cb();
                         });
                     });
                 });
@@ -286,11 +287,12 @@ var lib = {
     },
 
     deleteDeployments: function (deployer, options, cb) {
-        deployer.extensions.namespaces.deployments.delete({}, cb);
+        var filter = { labelSelector: 'soajs.content=true', gracePeriodSeconds: 0 };
+        deployer.extensions.namespaces.deployments.delete({qs: filter}, cb);
     },
 
     deleteKubeServices: function (deployer, options, cb) {
-        var filter = { labelSelector: 'soajs.content=true' };
+        var filter = { labelSelector: 'soajs.content=true', gracePeriodSeconds: 0  };
         deployer.core.namespaces.services.get({qs: filter}, function (error, serviceList) {
             if (error) return cb(error);
 
@@ -302,11 +304,11 @@ var lib = {
 
     deletePods: function (deployer, options, cb) {
         //force delete all pods for a better cleanup
-        deployer.core.namespaces.pods.delete({}, cb);
+        var filter = { labelSelector: 'soajs.content=true', gracePeriodSeconds: 0 };
+        deployer.core.namespaces.pods.delete({qs: filter}, cb);
     },
 
     deletePreviousServices: function (deployer, cb) {
-        //todo: need to provide --grace-period=0 using the javascript syntax
         lib.deleteDeployments(deployer, {}, function (error) {
             if (error) return cb(error);
 
