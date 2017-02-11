@@ -2,7 +2,7 @@
 var progressApp = app.components;
 progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', function($scope, ngDataApi, $timeout) {
 	$scope.alerts = [];
-	
+	$scope.deployType;
 	$scope.closeAlert = function(i){
 		$scope.alerts.splice(i, 1);
 	};
@@ -37,6 +37,7 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 			}
 			
 			$scope.info = response;
+			$scope.deployType = $scope.info.deployType;
 			if($scope.info.download){
 				$scope.info.download.progress = ($scope.info.download.count / $scope.info.download.total) * 100;
 				$scope.info.download.progress = $scope.info.download.progress.toFixed(2);
@@ -61,10 +62,19 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 				}
 			}
 			
-			if((!$scope.install || $scope.install === false) || (!$scope.download || $scope.download === false)){
-				$timeout(function(){
-					$scope.getProgress();
-				}, 3000);
+			if($scope.deployType === 'manual'){
+				if((!$scope.install || $scope.install === false) || (!$scope.download || $scope.download === false)){
+					$timeout(function(){
+						$scope.getProgress();
+					}, 3000);
+				}
+			}
+			else{
+				if((!$scope.download || $scope.download === false)){
+					$timeout(function(){
+						$scope.getProgress();
+					}, 3000);
+				}
 			}
 		});
 	};

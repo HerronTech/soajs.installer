@@ -665,6 +665,7 @@ module.exports = {
 
                     if(!files || files.length === 0){
                         return cb(null, {
+	                        deployType: 'manual',
                             download: {
                                 count: 0,
                                 total: repos.length
@@ -724,6 +725,7 @@ module.exports = {
                         //the only thing remaining now in the array are 1s and 0s which represent the repos installed
                         if (bar < repos.length) {
                             return cb(null, {
+	                            deployType: 'manual',
                                 download: {
                                     count: bar,
                                     total: repos.length
@@ -732,6 +734,7 @@ module.exports = {
                         }
 
                         checkHosts(false, {
+	                        deployType: 'manual',
                             download: {
                                 count: bar,
                                 total: repos.length
@@ -747,7 +750,7 @@ module.exports = {
 			 */
             if (body.deployment.deployDriver.indexOf("docker") !== -1) {
                 // docker
-                var services = ["dashboard_soajs_prx", "dashboard_soajs_urac", "dashboard_soajs_dashboard", "dashboard_soajs_controller", "dashboard_nginx"];
+                var services = ["dashboard_soajs_prx", "dashboard_soajs_urac", "dashboard_soajs_dashboard", "dashboard-controller", "dashboard_nginx"];
                 var Docker = require('dockerode');
                 var deployerConfig = {
                     "host": body.deployment.containerHost,
@@ -795,19 +798,12 @@ module.exports = {
                                 }
                             }
 
-                            if (bar < services.length) {
-                                return cb(null, {
-                                    download: {
-                                        count: bar,
-                                        total: services.length
-                                    }
-                                });
-                            }
-                            checkHosts(true, {
-                                download: {
-                                    count: bar,
-                                    total: services.length
-                                }
+                            return cb(null, {
+	                            deployType: 'docker',
+	                            download: {
+		                            count: bar,
+		                            total: services.length
+	                            }
                             });
                         });
                     });
@@ -849,6 +845,7 @@ module.exports = {
                 }
                 catch(e){
                     return cb(null, {
+	                    deployType: 'kubernetes',
                         download: {
                             count: 0,
                             total: services.length
@@ -874,16 +871,8 @@ module.exports = {
                         }
 
                         //the only thing remaining now in the array are 1s and 0s which represent the repos installed
-                        if (bar < services.length) {
-                            return cb(null, {
-                                download: {
-                                    count: bar,
-                                    total: services.length
-                                }
-                            });
-                        }
-
-                        checkHosts(true, {
+                        return cb(null, {
+                            deployType: 'kubernetes',
                             download: {
                                 count: bar,
                                 total: services.length

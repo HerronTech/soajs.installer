@@ -12,7 +12,7 @@ var components = {
                 "soajs.env.code": "dashboard",
 
                 "soajs.service.name": "urac",
-                "soajs.service.group": "SOAJS-Core-Services",
+                "soajs.service.group": "soajs-core-services",
                 "soajs.service.type": "service",
                 "soajs.service.version": "2",
                 "soajs.service.label": "dashboard-urac"
@@ -48,7 +48,7 @@ var components = {
                 "soajs.env.code": "dashboard",
 
                 "soajs.service.name": "urac",
-                "soajs.service.group": "SOAJS-Core-Services",
+                "soajs.service.group": "soajs-core-services",
                 "soajs.service.type": "service",
                 "soajs.service.version": "2",
                 "soajs.service.label": "dashboard-urac"
@@ -69,7 +69,7 @@ var components = {
                         "soajs.env.code": "dashboard",
 
                         "soajs.service.name": "urac",
-                        "soajs.service.group": "SOAJS-Core-Services",
+                        "soajs.service.group": "soajs-core-services",
                         "soajs.service.type": "service",
                         "soajs.service.version": "2",
                         "soajs.service.label": "dashboard-urac"
