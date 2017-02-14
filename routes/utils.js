@@ -366,8 +366,8 @@ module.exports = {
                     return cb(err);
                 }
 
-                var runner = fs.createWriteStream(path.normalize(__dirname + "/../scripts/manual-deploy.sh"));
-                runner.write("#!/bin/bash" + os.EOL + os.EOL);
+                var filename = path.normalize(__dirname + "/../scripts/manual-deploy.sh");
+                var output = "#!/bin/bash" + os.EOL + os.EOL;
                 var envs = {
                     "NODE_PATH": nodePath,
                     "NPM_PATH": npmPath,
@@ -387,33 +387,40 @@ module.exports = {
                 }
 
                 for (var e in envs) {
-                    runner.write("export " + e + "=" + envs[e] + os.EOL);
+                    output += "export " + e + "=" + envs[e] + os.EOL;
                 }
 
-                runner.write(os.EOL + "#Run Deployment Script ..." + os.EOL);
-                runner.write(nodePath + " " + path.normalize(__dirname + "/../scripts/manual.js") + os.EOL);
-                runner.write(os.EOL + "#Start Nginx ..." + os.EOL);
+                output += os.EOL + "#Run Deployment Script ..." + os.EOL;
+                output += nodePath + " " + path.normalize(__dirname + "/../scripts/manual.js") + os.EOL;
+                output += os.EOL + "#Start Nginx ..." + os.EOL;
 
                 if (process.platform === 'darwin') {
-                    runner.write("brew services start nginx" + os.EOL);
+                    output += "brew services start nginx" + os.EOL;
                 }
                 else {
-                    runner.write("sudo service nginx start" + os.EOL);
+                    output += "sudo service nginx start" + os.EOL;
                 }
 
-                runner.write(os.EOL + "ps aux | grep node" + os.EOL);
-                runner.write("ps aux | grep nginx" + os.EOL);
-                runner.end();
+                output += os.EOL + "ps aux | grep node" + os.EOL;
+                output += "ps aux | grep nginx" + os.EOL;
 
-                fs.chmodSync(path.normalize(__dirname + "/../scripts/manual-deploy.sh"), "0755");
-
-                return cb(null, {
-                    "hosts": {
-                        "api": "127.0.0.1 " + body.gi.api + "." + body.gi.domain,
-                        "site": "127.0.0.1 " + body.gi.site + "." + body.gi.domain
-                    },
-                    "ui": "http://" + body.gi.site + "." + body.gi.domain,
-                    "cmd": "sudo " + path.normalize(__dirname + "/../scripts/manual-deploy.sh")
+                fs.writeFile(filename, output, function(err){
+                    if(err) {
+                        return cb(err);
+                    }
+                    fs.chmod(path.normalize(__dirname + "/../scripts/manual-deploy.sh"), "0755", function(errChmod){
+                        if(errChmod) {
+                            return cb(errChmod);
+                        }
+                        return cb(null, {
+                            "hosts": {
+                                "api": "127.0.0.1 " + body.gi.api + "." + body.gi.domain,
+                                "site": "127.0.0.1 " + body.gi.site + "." + body.gi.domain
+                            },
+                            "ui": "http://" + body.gi.site + "." + body.gi.domain,
+                            "cmd": "sudo " + path.normalize(__dirname + "/../scripts/manual-deploy.sh")
+                        });
+                    });
                 });
             });
         });
@@ -445,8 +452,8 @@ module.exports = {
             }
 
             if (driver === 'docker') {
-                var runner = fs.createWriteStream(path.normalize(__dirname + "/../scripts/swarm-deploy.sh"));
-                runner.write("#!/bin/bash" + os.EOL + os.EOL);
+                var filename = path.normalize(__dirname + "/../scripts/swarm-deploy.sh");
+                var output = "#!/bin/bash" + os.EOL + os.EOL;
 
                 var envs = {
                     "SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "master",
@@ -496,23 +503,31 @@ module.exports = {
 
                 for (var e in envs) {
                     if (envs[e] !== null) {
-                        runner.write("export " + e + "=" + envs[e] + os.EOL);
+                        output += "export " + e + "=" + envs[e] + os.EOL;
                     }
                 }
 
                 if (!body.clusters.mongoExt) {
-                    runner.write("sudo " + "killall mongo" + os.EOL);
+                    output += "sudo " + "killall mongo" + os.EOL;
                 }
 
-                runner.write(os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/docker.js") + os.EOL);
-                runner.end();
-
-                generateResponse("swarm");
+                output += os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/docker.js") + os.EOL;
+                fs.writeFile(filename, output, function(err){
+                   if(err){
+                       return cb(err);
+                   }
+                    fs.chmod(path.normalize(__dirname + "/../scripts/swarm-deploy.sh"), "0755", function(chmodErr){
+                        if(chmodErr){
+                            return cb(chmodErr);
+                        }
+                        generateResponse("swarm");
+                    });
+                });
             }
             else if (driver === 'kubernetes') {
 
-                var runner = fs.createWriteStream(path.normalize(__dirname + "/../scripts/kubernetes-deploy.sh"));
-                runner.write("#!/bin/bash" + os.EOL + os.EOL);
+                var filename = path.normalize(__dirname + "/../scripts/kubernetes-deploy.sh");
+                var output = "#!/bin/bash" + os.EOL + os.EOL;
 
                 var envs = {
                     "SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "master",
@@ -554,18 +569,27 @@ module.exports = {
 
                 for (var e in envs) {
                     if (envs[e] !== null) {
-                        runner.write("export " + e + "=" + envs[e] + os.EOL);
+                        output += "export " + e + "=" + envs[e] + os.EOL;
                     }
                 }
 
                 if (!body.clusters.mongoExt) {
-                    runner.write("sudo " + "killall mongo" + os.EOL);
+                    output += "sudo " + "killall mongo" + os.EOL;
                 }
 
-                runner.write(os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/kubernetes.js") + os.EOL);
-                runner.end();
+                output += os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/kubernetes.js") + os.EOL;
 
-                generateResponse("kubernetes");
+                fs.writeFile(filename, output, function(err){
+                    if(err){
+                        return cb(err);
+                    }
+                    fs.chmod(path.normalize(__dirname + "/../scripts/kubernetes-deploy.sh"), "0755", function(chmodErr){
+                        if(chmodErr){
+                            return cb(chmodErr);
+                        }
+                        generateResponse("kubernetes");
+                    });
+                });
             }
             else {
                 return cb(new Error("Invalid Deployment Strategy Requested: " + driver));
@@ -573,8 +597,6 @@ module.exports = {
         });
 
         function generateResponse(type) {
-            fs.chmodSync(path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh"), "0755");
-
             var obj = {
                 "hosts": {
                     "api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
