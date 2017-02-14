@@ -80,8 +80,8 @@ var components = {
                     "containers": [
                         {
                             "name": "dashboard-controller",
-                            "image": gConfig.image.prefix + "/soajs",
-                            "imagePullPolicy": gConfig.image.pullPolicy,
+                            "image": gConfig.imagePrefix + "/soajs",
+                            "imagePullPolicy": gConfig.imagePullPolicy,
                             "workingDir": "/opt/soajs/FILES/deployer/",
                             "command": ["./soajsDeployer.sh"],
                             "args": ["-T", "service", "-X", "deploy", "-L"],
@@ -151,7 +151,7 @@ var components = {
                         {
                             "name": "kubectl-proxy",
                             "image": "lachlanevenson/k8s-kubectl",
-                            "imagePullPolicy": "IfNotPresent",
+                            "imagePullPolicy": gConfig.imagePullPolicy,
                             "args": ["proxy", "-p", "8001"],
                             "ports": [
                                 {

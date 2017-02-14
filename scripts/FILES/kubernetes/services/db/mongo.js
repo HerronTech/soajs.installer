@@ -72,7 +72,7 @@ var components = {
                         {
                             "name": "dashboard-soajsdata",
                             "image": "mongo",
-                            "imagePullPolicy": gConfig.image.pullPolicy,
+                            "imagePullPolicy": gConfig.imagePullPolicy,
                             "command": ["mongod", "--smallfiles"],
                             "ports": [
                                 {

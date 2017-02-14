@@ -79,8 +79,8 @@ var components = {
                     "containers": [
                         {
                             "name": "dashboard-dashboard",
-	                        "image": gConfig.image.prefix + "/soajs",
-                            "imagePullPolicy": gConfig.image.pullPolicy,
+	                        "image": gConfig.imagePrefix + "/soajs",
+                            "imagePullPolicy": gConfig.imagePullPolicy,
                             "workingDir": "/opt/soajs/FILES/deployer/",
                             "command": ["./soajsDeployer.sh"],
                             "args": ["-T", "service", "-X", "deploy", "-L"],

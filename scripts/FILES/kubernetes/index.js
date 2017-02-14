@@ -329,14 +329,16 @@ var lib = {
         deployer.core.namespaces.pods.get({}, function (error, podList) {
             if (error) return cb(error);
             var onePod, ips = [];
-            podList.items.forEach(function (onePod) {
-                if (onePod.metadata.labels['soajs.service.label'] === serviceName && onePod.status.phase === 'Running') {
-                    ips.push({
-                        name: onePod.metadata.name,
-                        ip: onePod.status.podIP
-                    });
-                }
-            });
+            if (podList && podList.items && Array.isArray(podList.items)) {
+                podList.items.forEach(function (onePod) {
+                    if (onePod.metadata.labels['soajs.service.label'] === serviceName && onePod.status.phase === 'Running') {
+                        ips.push({
+                            name: onePod.metadata.name,
+                            ip: onePod.status.podIP
+                        });
+                    }
+                });
+            }
 
             if (ips.length !== replicaCount) {
                 //pod containers may not be ready yet
