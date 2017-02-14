@@ -39,7 +39,11 @@ module.exports = {
 		},
 		"ssl": (process.env.SOAJS_NX_SSL === "true") || false
 	},
-	"imagePrefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
+	"imagePrefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg', //TODO: remove
+	"image": {
+		"prefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
+		"pullPolicy": process.env.SOAJS_IMAGE_PULL_POLICY || 'Always'
+	},
 	"kubernetes": {
 		"config":{
 			"url": 'https://' + (process.env.CONTAINER_HOST || "127.0.0.1") + ':' + (parseInt(process.env.CONTAINER_PORT) || 8443),
