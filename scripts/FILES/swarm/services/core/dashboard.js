@@ -48,7 +48,7 @@ var config = {
 		"soajs.env.code": "dashboard",
 		"soajs.service.type": "service",
 		"soajs.service.name": "dashboard",
-		"soajs.service.group": "SOAJS-Core-Services",
+		"soajs.service.group": "soajs-core-services",
 		"soajs.service.version": "1",
 		"soajs.service.label": "dashboard_soajs_dashboard"
 	},

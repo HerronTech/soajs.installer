@@ -25,7 +25,7 @@
 		</p>
 		<progressbar class="progress-striped active" value="info.download.progress" type="{{info.download.barType}}"></progressbar>
 	</div>
-	<div ng-show="download">
+	<div ng-show="download && deployType==='manual'">
 		<h4><u>Progress Details:</u></h4>
 		<p>
 			All Components Downloaded, Installing ...
@@ -47,5 +47,13 @@
 				Click the following link and you will be taken to the login page of the dashboard: <a href="{{ui}}" target="_blank">{{ui}}</a>
 			</p>
 		</div>
+	</div>
+	<div ng-show="getDeployType!=='manual' && download">
+		<p>
+			SOAJS installed and running.
+		</p>
+		<p>
+			Click the following link and you will be taken to the login page of the dashboard: <a href="{{ui}}" target="_blank">{{ui}}</a>
+		</p>
 	</div>
 </div>

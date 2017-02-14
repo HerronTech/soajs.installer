@@ -30,6 +30,8 @@ lib.getDeployer(config.kubernetes.config, function (error, deployer) {
                 });
             }, function (error, result) {
                 if (error) throw new Error (error);
+                utilLog.log('SOAJS Has been deployed.');
+                process.exit();
             });
         }, 5000);
     });
