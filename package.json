@@ -30,6 +30,7 @@
     "kubernetes-client": "*",
     "mkdirp": "*",
     "ncp": "*",
+    "npm": "*",
     "rimraf": "*",
     "soajs": "0.4.*",
     "util": "*",
