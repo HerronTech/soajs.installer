@@ -60,6 +60,13 @@ module.exports = {
 				"label": "soajs-log-volume",
 				"path": "/var/log/soajs/"
 			}
+		},
+		"readinessProbe": {
+			"initialDelaySeconds": parseInt(process.env.KUBE_INITIAL_DELAY) || 15,
+			"timeoutSeconds": parseInt(process.env.KUBE_PROBE_TIMEOUT) || 1,
+			"periodSeconds": parseInt(process.env.KUBE_PROBE_PERIOD) || 10,
+            "successThreshold": parseInt(process.env.KUBE_PROBE_SUCCESS) || 1,
+            "failureThreshold": parseInt(process.env.KUBE_PROBE_FAILURE) || 3,
 		}
 	},
 

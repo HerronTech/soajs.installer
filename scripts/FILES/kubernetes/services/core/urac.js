@@ -84,6 +84,16 @@ var components = {
                             "workingDir": "/opt/soajs/FILES/deployer/",
                             "command": ["./soajsDeployer.sh"],
                             "args": ["-T", "service", "-X", "deploy", "-L"],
+                            "ports": [
+                                {
+                                    "name": "service",
+                                    "containerPort": 4001
+                                },
+                                {
+                                    "name": "maintenance",
+                                    "containerPort": 5001
+                                }
+                            ],
                             "env": [
                                 {
                                     "name": "NODE_ENV",
@@ -150,6 +160,17 @@ var components = {
                             }
                         }
                     ]
+                },
+                "readinessProbe": {
+                    "httpGet": {
+                        "path": "/heartbeat",
+                        "port": "maintenance"
+                    },
+                    "initialDelaySeconds": gConfig.kubernetes.readinessProbe.initialDelaySeconds,
+                    "timeoutSeconds": gConfig.kubernetes.readinessProbe.timeoutSeconds,
+                    "periodSeconds": gConfig.kubernetes.readinessProbe.periodSeconds,
+                    "successThreshold": gConfig.kubernetes.readinessProbe.successThreshold,
+                    "failureThreshold": gConfig.kubernetes.readinessProbe.failureThreshold
                 }
             }
         }

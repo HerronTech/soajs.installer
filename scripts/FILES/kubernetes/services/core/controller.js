@@ -87,8 +87,12 @@ var components = {
                             "args": ["-T", "service", "-X", "deploy", "-L"],
                             "ports": [
                                 {
-
+                                    "name": "service",
                                     "containerPort": 4000
+                                },
+                                {
+                                    "name": "maintenance",
+                                    "containerPort": 5000
                                 }
                             ],
                             "env": [
@@ -170,6 +174,17 @@ var components = {
                             }
                         }
                     ]
+                },
+                "readinessProbe": {
+                    "httpGet": {
+                        "path": "/heartbeat",
+                        "port": "maintenance"
+                    },
+                    "initialDelaySeconds": gConfig.kubernetes.readinessProbe.initialDelaySeconds,
+                    "timeoutSeconds": gConfig.kubernetes.readinessProbe.timeoutSeconds,
+                    "periodSeconds": gConfig.kubernetes.readinessProbe.periodSeconds,
+                    "successThreshold": gConfig.kubernetes.readinessProbe.successThreshold,
+                    "failureThreshold": gConfig.kubernetes.readinessProbe.failureThreshold
                 }
             }
         }

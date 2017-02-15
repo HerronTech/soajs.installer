@@ -76,7 +76,7 @@ var components = {
                             "command": ["mongod", "--smallfiles"],
                             "ports": [
                                 {
-
+                                    "name": "mongoport",
                                     "containerPort": 27017
                                 }
                             ],
@@ -97,6 +97,17 @@ var components = {
                         }
                     ]
                 }
+            },
+            "readinessProbe": {
+                "httpGet": {
+                    "path": "/",
+                    "port": "mongoport"
+                },
+                "initialDelaySeconds": gConfig.kubernetes.readinessProbe.initialDelaySeconds,
+                "timeoutSeconds": gConfig.kubernetes.readinessProbe.timeoutSeconds,
+                "periodSeconds": gConfig.kubernetes.readinessProbe.periodSeconds,
+                "successThreshold": gConfig.kubernetes.readinessProbe.successThreshold,
+                "failureThreshold": gConfig.kubernetes.readinessProbe.failureThreshold
             }
         }
     }

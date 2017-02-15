@@ -175,6 +175,24 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				$scope.deployment.containerDir = (response && response.kubernetes && response.kubernetes.containerDir) ? response.kubernetes.containerDir : "";
 				$scope.deployment.kubeContainerPort = (response && response.kubernetes && response.kubernetes.containerPort) ? response.kubernetes.containerPort : 8443;
                 $scope.deployment.certificates = {};
+
+                //get readiness Probes informations
+                $scope.deployment.readinessProbe = {};
+				//Initial Deploy Seconds
+                $scope.deployment.readinessProbe.initialDelaySeconds = (response && response.kubernetes && response.kubernetes.readinessProbe
+					&& response.kubernetes.readinessProbe.initialDelaySeconds) ? response.kubernetes.readinessProbe.initialDelaySeconds : 15;
+                //Time Out Seconds
+                $scope.deployment.readinessProbe.timeoutSeconds = (response && response.kubernetes && response.kubernetes.readinessProbe
+                && response.kubernetes.readinessProbe.timeoutSeconds) ? response.kubernetes.readinessProbe.timeoutSeconds : 1;
+                //Period Seconds
+                $scope.deployment.readinessProbe.periodSeconds = (response && response.kubernetes && response.kubernetes.readinessProbe
+                && response.kubernetes.readinessProbe.periodSeconds) ? response.kubernetes.readinessProbe.periodSeconds : 10;
+                //Success Threshol
+                $scope.deployment.readinessProbe.successThreshold = (response && response.kubernetes && response.kubernetes.readinessProbe
+                && response.kubernetes.readinessProbe.successThreshold) ? response.kubernetes.readinessProbe.successThreshold : 1;
+                //Failure Threshold
+                $scope.deployment.readinessProbe.failureThreshold = (response && response.kubernetes && response.kubernetes.readinessProbe
+                && response.kubernetes.readinessProbe.failureThreshold) ? response.kubernetes.readinessProbe.failureThreshold : 3;
 			}
 
 			$scope.evaluateDeploymentChoice();
