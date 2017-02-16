@@ -86,6 +86,17 @@ var components = {
                                     "containerPort": 443
                                 }
                             ],
+                            "readinessProbe": {
+                                "httpGet": {
+                                    "path": "/",
+                                    "port": "http"
+                                },
+                                "initialDelaySeconds": gConfig.kubernetes.readinessProbe.initialDelaySeconds,
+                                "timeoutSeconds": gConfig.kubernetes.readinessProbe.timeoutSeconds,
+                                "periodSeconds": gConfig.kubernetes.readinessProbe.periodSeconds,
+                                "successThreshold": gConfig.kubernetes.readinessProbe.successThreshold,
+                                "failureThreshold": gConfig.kubernetes.readinessProbe.failureThreshold
+                            },
 							"env": [
 								{
 									"name": "SOAJS_ENV",
@@ -151,18 +162,7 @@ var components = {
                                 "path": gConfig.kubernetes.volumes.log.path
                             }
                         }
-                    ],
-                    "readinessProbe": {
-                        "httpGet": {
-                            "path": "/",
-                            "port": "http"
-                        },
-                        "initialDelaySeconds": gConfig.kubernetes.readinessProbe.initialDelaySeconds,
-                        "timeoutSeconds": gConfig.kubernetes.readinessProbe.timeoutSeconds,
-                        "periodSeconds": gConfig.kubernetes.readinessProbe.periodSeconds,
-                        "successThreshold": gConfig.kubernetes.readinessProbe.successThreshold,
-                        "failureThreshold": gConfig.kubernetes.readinessProbe.failureThreshold
-                    }
+                    ]
 				}
 			}
 		}

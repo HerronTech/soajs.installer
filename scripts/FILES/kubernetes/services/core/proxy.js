@@ -94,6 +94,17 @@ var components = {
                                     "containerPort": 5009
                                 }
                             ],
+                            "readinessProbe": {
+                                "httpGet": {
+                                    "path": "/heartbeat",
+                                    "port": "maintenance"
+                                },
+                                "initialDelaySeconds": gConfig.kubernetes.readinessProbe.initialDelaySeconds,
+                                "timeoutSeconds": gConfig.kubernetes.readinessProbe.timeoutSeconds,
+                                "periodSeconds": gConfig.kubernetes.readinessProbe.periodSeconds,
+                                "successThreshold": gConfig.kubernetes.readinessProbe.successThreshold,
+                                "failureThreshold": gConfig.kubernetes.readinessProbe.failureThreshold
+                            },
                             "env": [
                                 {
                                     "name": "NODE_ENV",
@@ -161,17 +172,6 @@ var components = {
                         }
                     ]
                 }
-            },
-            "readinessProbe": {
-                "httpGet": {
-                    "path": "/heartbeat",
-                    "port": "maintenance"
-                },
-                "initialDelaySeconds": gConfig.kubernetes.readinessProbe.initialDelaySeconds,
-                "timeoutSeconds": gConfig.kubernetes.readinessProbe.timeoutSeconds,
-                "periodSeconds": gConfig.kubernetes.readinessProbe.periodSeconds,
-                "successThreshold": gConfig.kubernetes.readinessProbe.successThreshold,
-                "failureThreshold": gConfig.kubernetes.readinessProbe.failureThreshold
             }
         }
     }
