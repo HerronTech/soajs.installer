@@ -197,6 +197,7 @@ module.exports = {
 
     "fillFiles": function (folder, body) {
         var clusters = JSON.parse(JSON.stringify(body.clusters));
+        var deployment = JSON.parse(JSON.stringify (body.deployment));
         delete clusters.prefix;
 
         //fix clusters credentials
@@ -237,9 +238,14 @@ module.exports = {
                 ];
             }
             if (body.deployment.deployDriver.indexOf("container.kubernetes") !== -1) {
+                //build mongo service with based on namespace
+                var namespace = (deployment && deployment.namespaces && deployment.namespaces.default) ? deployment.namespaces.default : 'default';
+                if (deployment && deployment.namespaces && deployment.namespaces.perService) {
+                    namespace += '-dashboard-soajsdata';
+                }
                 clusters.servers = [
                     {
-                        host: "dashboard-soajsdata",
+                        host: "dashboard-soajsdata." + namespace,
                         port: 5000 + 27017
                     }
                 ];
@@ -579,6 +585,12 @@ module.exports = {
                     envs["KUBE_PROBE_PERIOD"] = body.deployment.readinessProbe.periodSeconds;
                     envs["KUBE_PROBE_SUCCESS"] = body.deployment.readinessProbe.successThreshold;
                     envs["KUBE_PROBE_FAILURE"] = body.deployment.readinessProbe.failureThreshold;
+                }
+
+                //add namespace configuration
+                if (body.deployment.namespaces) {
+                    envs["SOAJS_NAMESPACES_DEFAULT"] = body.deployment.namespaces.default;
+                    envs["SOAJS_NAMESPACES_PER_SERVICE"] = body.deployment.namespaces.perService;
                 }
 
                 for (var e in envs) {

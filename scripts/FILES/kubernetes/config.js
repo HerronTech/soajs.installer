@@ -44,7 +44,10 @@ module.exports = {
 	"kubernetes": {
 		"config":{
 			"url": 'https://' + (process.env.CONTAINER_HOST || "127.0.0.1") + ':' + (parseInt(process.env.CONTAINER_PORT) || 8443),
-			"namespace": 'default'
+			"namespaces": {
+				"default": process.env.SOAJS_NAMESPACES_DEFAULT || 'default',
+				"perService": (process.env.SOAJS_NAMESPACES_PER_SERVICE === "true") || false
+			}
 		},
 		"mongoCollection": 'docker',
 		"replicas": parseInt(process.env.SOAJS_DOCKER_REPLICA) || 1,
