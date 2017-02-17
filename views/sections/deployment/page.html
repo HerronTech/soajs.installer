@@ -166,6 +166,38 @@
             </table>
         </fieldset>
         <br ng-if="kubernetes" />
+        <fieldset ng-show="kubernetes">
+            <legend>Namespace Configuration</legend>
+            <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tbody>
+                    <tr class="form-group tr-code-wrapper">
+                        <td class="form-select">
+                            <div id="namespaceMode-wrapper">
+                                <label>Default Namespace</label>
+                                <input type="text" ng-required="true" class="form-control" name="defaultNamespace" id="defaultNamespace"
+                                       ng-model="deployment.namespaces.default" placeholder="soajs"/>
+                                <div class="fieldMsg hint">Specify the name of the default namespace for the project.</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="form-group tr-code-wrapper">
+                        <td class="form-select">
+                            <div id="namespaceMode-wrapper">
+                                <label>Namespace Mode</label>
+                                <label class="radioLabel">
+                                    <input type="radio" ng-model="deployment.namespaces.perService" name="global" ng-value="false" />&nbsp;Global Namespace Per Project
+                                </label>
+                                <label class="radioLabel">
+                                    <input type="radio" ng-model="deployment.namespaces.perService" name="service" ng-value="true" />&nbsp;Specific Namespace Per Service
+                                </label>
+
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+        <br ng-if="kubernetes" />
         <fieldset ng-show="docker||kubernetes">
             <legend>Git Account</legend>
             <table width="100%" cellspacing="0" cellpadding="0" border="0">

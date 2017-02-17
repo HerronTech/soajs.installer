@@ -3,15 +3,15 @@
 var deploymentApp = app.components;
 deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$timeout', function ($scope, ngDataApi, $modal, $timeout) {
 	$scope.alerts = [];
-	
+
 	$scope.goBack = function () {
 		$scope.$parent.go("#/clusters");
 	};
-	
+
 	$scope.closeAlert = function (i) {
 		$scope.alerts.splice(i, 1);
 	};
-	
+
 	$scope.evaluateDeploymentChoice = function () {
 		$scope.ha = false;
 		$scope.docker = false;
@@ -73,13 +73,14 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 	};
 
 	$scope.fillDeployment = function () {
+		console.log ($scope.deployment);
 		var data = angular.copy($scope.deployment);
 		for(var i in data){
 			if(data[i] === null){
 				delete data[i];
 			}
 		}
-		
+
 		var options = {
 			url: appConfig.url + "/installer/deployment",
 			method: "post",
@@ -87,13 +88,13 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				"deployment": data
 			}
 		};
-		
+
 		ngDataApi.post($scope, options, function (error, response) {
 			if (error) {
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
 				return false;
 			}
-			
+
 			$scope.confirmation = true;
 			$scope.data = {
 				"gi": (response.gi) ? syntaxHighlight(JSON.stringify(response.gi, null, 4)) : JSON.stringify({}),
@@ -122,13 +123,13 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			$scope.$parent.go("#/progress");
 		});
 	};
-	
+
 	$scope.loadDeployment = function () {
 		var options = {
 			url: appConfig.url + "/installer/deployment",
 			method: "get"
 		};
-		
+
 		ngDataApi.get($scope, options, function (error, response) {
 			if (error) {
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
@@ -151,7 +152,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				"nginxPort": (response && response.nginxPort) ? response.nginxPort : 80,
                 "nginxSecurePort": (response && response.nginxSecurePort) ? response.nginxSecurePort : 443,
                 "nginxSsl": (response && response.nginxSsl) ? response.nginxSsl : false,
-				
+
                 "dockerReplica": (response && response.dockerReplica) ? response.dockerReplica : 1
 			};
 
@@ -201,6 +202,11 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
                 //Failure Threshold
                 $scope.deployment.readinessProbe.failureThreshold = (response && response.readinessProbe
                 && response.readinessProbe.failureThreshold) ? response.readinessProbe.failureThreshold : 3;
+
+				$scope.deployment.namespaces = {
+					default: (response && response.namespaces && response.namespaces.default) ? response.namespaces.default : '',
+					perService: (response && response.namespaces && response.namespaces.perService) ? response.namespaces.perService : false
+				};
 			}
 
 			$scope.evaluateDeploymentChoice();
