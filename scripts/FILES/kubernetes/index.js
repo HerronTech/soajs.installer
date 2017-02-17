@@ -136,13 +136,7 @@ var lib = {
         utilLog.log('Importing provision data to:', profile.servers[0].host + ":" + profile.servers[0].port);
         var dataImportFile = __dirname + "/../dataImport/index.js";
         var execString = process.env.NODE_PATH + " " + dataImportFile;
-        // exec(execString, cb);
-        exec(execString, function (error, stdout, stderr) {
-            console.log (error);
-            console.log (stdout);
-            console.log (stderr);
-            return cb();
-        });
+        exec(execString, cb);
     },
 
     initNamespace: function (deployer, options, cb) {
