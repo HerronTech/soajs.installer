@@ -682,7 +682,11 @@ module.exports = {
             }
 
             if (!body.clusters || !body.clusters.mongoExt) {
-                obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata";
+                var namespace = body.deployment.namespaces.default;
+                if (body.deployment.namespaces.perService) {
+                    namespace += '-dashboard-soajsdata';
+                }
+                obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata." + namespace;
             }
             else {
                 obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard-soajsdata";
