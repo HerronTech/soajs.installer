@@ -29,6 +29,7 @@ module.exports = {
 				"ips": []
 			}
 		},
+		"rsName": process.env.SOAJS_MONGO_RSNAME || null,
 		"external": (process.env.MONGO_EXT === "true") || false,
 		"port": parseInt(profile.servers[0].port) || 27017
 	},

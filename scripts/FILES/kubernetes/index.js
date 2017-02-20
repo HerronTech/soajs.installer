@@ -360,8 +360,12 @@ var lib = {
         if(config.mongo.prefix && config.mongo.prefix !== ""){
             mongoEnv.push({name: 'SOAJS_MONGO_PREFIX', value: config.mongo.prefix});
         }
-
-        if (config.mongo.external) {
+	
+	    if (config.mongo.external) {
+		    if(config.mongo.rsName && config.mongo.rsName !== null){
+			    mongoEnv.push({name: 'SOAJS_MONGO_RSNAME', value: config.mongo.rsName});
+		    }
+		    
             // if (!config.dataLayer.mongo.url || !config.dataLayer.mongo.port) {
             if (!profile.servers[0].host || !profile.servers[0].port) {
                 utilLog.log('ERROR: External Mongo information is missing URL or port, make sure SOAJS_MONGO_EXTERNAL_URL and SOAJS_MONGO_EXTERNAL_PORT are set ...');
