@@ -574,6 +574,10 @@ module.exports = {
                     envs["SOAJS_GIT_SOURCE"] = body.deployment.gitSource;
                     envs["SOAJS_GIT_PROVIDER"] = body.deployment.gitProvider;
                 }
+	
+	            if (body.clusters.replicaSet) {
+		            envs['SOAJS_MONGO_RSNAME'] = body.clusters.replicaSet;
+	            }
 
                 if (body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder) {
                     envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder;
