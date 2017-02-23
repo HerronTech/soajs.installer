@@ -209,22 +209,21 @@ module.exports = {
                                 "validation": {
                                     "type": "object",
                                     "properties": {
-                                        "initialDelaySeconds": {"type": "number", "required": true},
-                                        "timeoutSeconds": {"type": "number", "required": true},
-                                        "periodSeconds": {"type": "number", "required": true},
-                                        "failureThreshold": {"type": "number", "required": true},
+                                        "initialDelaySeconds": {"type": "number", "required": false},
+                                        "timeoutSeconds": {"type": "number", "required": false},
+                                        "periodSeconds": {"type": "number", "required": false},
+                                        "failureThreshold": {"type": "number", "required": false},
                                     }
                                 }
 
                             },
-
 							"namespaces": {
 								"required": false,
 								"validation": {
 									"type": "object",
 									"properties": {
-										"default": { "type": "string", "required": true },
-										"perService": { "type": "boolean", "required": true }
+										"default": { "type": "string", "required": false },
+										"perService": { "type": "boolean", "required": false }
 									}
 								}
 							}

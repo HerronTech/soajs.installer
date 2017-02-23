@@ -108,6 +108,14 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 		});
 	};
 
+    $scope.submit = function(form) {
+        if (form.$valid) { //submit form if it is valid
+            $scope.fillDeployment();
+        } else {
+            $scope.alerts.push({'type': 'danger', 'msg': 'Missing required fields [certificates, namespaces]'});
+        }
+    }
+
 	$scope.installSOAJS = function(){
 
 		var options = {

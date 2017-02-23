@@ -19,7 +19,7 @@
 		</div>
 	</div>
     <form ng-hide="confirmation" name="deploymentForm" class="css-form" novalidate
-          ng-submit="deploymentForm.$valid && fillDeployment();" ng-show="ha">
+          ng-submit="submit(deploymentForm)" ng-show="ha">
         <div class="header">
             <h3>Deployment Information</h3>
         </div>
@@ -174,8 +174,8 @@
                         <td class="form-select">
                             <div id="namespaceMode-wrapper">
                                 <label>Default Namespace</label>
-                                <input type="text" ng-required="true" class="form-control" name="defaultNamespace" id="defaultNamespace"
-                                       ng-model="deployment.namespaces.default" placeholder="soajs"/>
+                                <input type="text" class="form-control" name="defaultNamespace" id="defaultNamespace"
+                                       ng-required="kubernetes" ng-model="deployment.namespaces.default" placeholder="soajs"/>
                                 <div class="fieldMsg hint">Specify the name of the default namespace for the project.</div>
                             </div>
                         </td>
@@ -185,10 +185,10 @@
                             <div id="namespaceMode-wrapper">
                                 <label>Namespace Mode</label>
                                 <label class="radioLabel">
-                                    <input type="radio" ng-model="deployment.namespaces.perService" name="global" ng-value="false" />&nbsp;Global Namespace Per Project
+                                    <input type="radio" ng-required="kubernetes" ng-model="deployment.namespaces.perService" name="global" ng-value="false" />&nbsp;Global Namespace Per Project
                                 </label>
                                 <label class="radioLabel">
-                                    <input type="radio" ng-model="deployment.namespaces.perService" name="service" ng-value="true" />&nbsp;Specific Namespace Per Service
+                                    <input type="radio" ng-required="kubernetes" ng-model="deployment.namespaces.perService" name="service" ng-value="true" />&nbsp;Specific Namespace Per Service
                                 </label>
 
                             </div>
