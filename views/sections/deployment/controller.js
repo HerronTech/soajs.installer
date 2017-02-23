@@ -108,17 +108,6 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 		});
 	};
 
-	$scope.validateCerts = function() {
-        if ($scope.deployment.deployDriver.indexOf("kubernetes") !== -1){
-        	if(!$scope.deployment.certificates || !$scope.deployment.certificates.caCertificate ||
-                !$scope.deployment.certificates.certCertificate || !$scope.deployment.certificates.keyCertificate){
-        		$scope.alerts.push({'type': 'danger', 'msg': 'One or more certificates missing'});
-				return false;
-        	}
-
-        }
-	};
-
 	$scope.installSOAJS = function(){
 
 		var options = {
