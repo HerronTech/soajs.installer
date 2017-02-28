@@ -570,6 +570,14 @@ module.exports = {
                 if (body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder) {
                     envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder;
                 }
+                //add readiness probes environment variables
+                if(body.deployment.readinessProbe){
+                    envs["KUBE_INITIAL_DELAY"] = body.deployment.readinessProbe.initialDelaySeconds;
+                    envs["KUBE_PROBE_TIMEOUT"] = body.deployment.readinessProbe.timeoutSeconds;
+                    envs["KUBE_PROBE_PERIOD"] = body.deployment.readinessProbe.periodSeconds;
+                    envs["KUBE_PROBE_SUCCESS"] = body.deployment.readinessProbe.successThreshold;
+                    envs["KUBE_PROBE_FAILURE"] = body.deployment.readinessProbe.failureThreshold;
+                }
 
                 for (var e in envs) {
                     if (envs[e] !== null) {

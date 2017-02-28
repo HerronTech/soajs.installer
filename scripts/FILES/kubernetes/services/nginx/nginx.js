@@ -76,11 +76,27 @@ var components = {
 							"workingDir": "/opt/soajs/FILES/deployer/",
 							"command": ["./soajsDeployer.sh"],
 							"args": ["-T", "nginx", "-X", "deploy"],
-							"ports": [
-								{
-									"containerPort": gConfig.nginx.port.http
-								}
-							],
+                            "ports": [
+                                {
+                                    "name": "http",
+                                    "containerPort": 80
+                                },
+                                {
+                                    "name": "https",
+                                    "containerPort": 443
+                                }
+                            ],
+                            "readinessProbe": {
+                                "httpGet": {
+                                    "path": "/",
+                                    "port": "http"
+                                },
+                                "initialDelaySeconds": gConfig.kubernetes.readinessProbe.initialDelaySeconds,
+                                "timeoutSeconds": gConfig.kubernetes.readinessProbe.timeoutSeconds,
+                                "periodSeconds": gConfig.kubernetes.readinessProbe.periodSeconds,
+                                "successThreshold": gConfig.kubernetes.readinessProbe.successThreshold,
+                                "failureThreshold": gConfig.kubernetes.readinessProbe.failureThreshold
+                            },
 							"env": [
 								{
 									"name": "SOAJS_ENV",

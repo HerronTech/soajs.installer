@@ -107,7 +107,65 @@
                 </tbody>
             </table>
         </fieldset>
-        <br />
+        <br ng-if="kubernetes" />
+        <fieldset ng-show="kubernetes">
+            <legend>Readiness Probe Parametes</legend>
+            <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tbody>
+                <tr class="form-group tr-code-wrapper">
+                    <td class="form-select">
+                        <div id="initialDelaySeconds-wrapper">
+                            <label>Initial Delay Seconds</label>
+                            <input type="number" ng-required="false" class="form-control" name="initialDelaySeconds" id="initialDelaySeconds"
+                                   ng-model="deployment.readinessProbe.initialDelaySeconds" placeholder="15"/>
+                            <div class="fieldMsg hint">Specify the time (in seconds) before readiness probes are initiated..</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="form-group tr-code-wrapper">
+                    <td class="form-select">
+                        <div id="timeoutSeconds-wrapper">
+                            <label>Timeout Seconds</label>
+                            <input type="number" ng-required="false" class="form-control" name="timeoutSeconds" id="timeoutSeconds"
+                                   ng-model="deployment.readinessProbe.timeoutSeconds" placeholder="1"/>
+                            <div class="fieldMsg hint">Specify the time (in seconds) after which the probe times out.</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="form-group tr-code-wrapper">
+                    <td class="form-select">
+                        <div id="periodSeconds-wrapper">
+                            <label>Period Seconds</label>
+                            <input type="number" ng-required="false" class="form-control" name="periodSeconds" id="periodSeconds"
+                                   ng-model="deployment.readinessProbe.periodSeconds" placeholder="10"/>
+                            <div class="fieldMsg hint">Specify the interval (in seconds) between readiness checks.</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="form-group tr-code-wrapper">
+                    <td class="form-select">
+                        <div id="successThreshold-wrapper">
+                            <label>Success Threshold</label>
+                            <input type="number" ng-required="false" class="form-control" name="successThreshold" id="successThreshold"
+                                   ng-model="deployment.readinessProbe.successThreshold" placeholder="10"/>
+                            <div class="fieldMsg hint">Specify the minimum consecutive successes for the probe to be considered successful.</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="form-group tr-code-wrapper">
+                    <td class="form-select">
+                        <div id="failureThreshold-wrapper">
+                            <label>Failure Threshold</label>
+                            <input type="number" ng-required="false" class="form-control" name="failureThreshold" id="failureThreshold"
+                                   ng-model="deployment.readinessProbe.failureThreshold" placeholder="10"/>
+                            <div class="fieldMsg hint">Specify the minimum consecutive successes for the probe to be considered failed.</div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </fieldset>
+        <br ng-if="kubernetes" />
         <fieldset ng-show="docker||kubernetes">
             <legend>Git Account</legend>
             <table width="100%" cellspacing="0" cellpadding="0" border="0">

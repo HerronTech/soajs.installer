@@ -174,7 +174,33 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
                 $scope.deployment.certsRequired = true;
 				$scope.deployment.containerDir = (response && response.kubernetes && response.kubernetes.containerDir) ? response.kubernetes.containerDir : "";
 				$scope.deployment.kubeContainerPort = (response && response.kubernetes && response.kubernetes.containerPort) ? response.kubernetes.containerPort : 8443;
-                $scope.deployment.certificates = {};
+
+				//get certificate information
+				$scope.deployment.certificates = {};
+				//CA certificate
+                $scope.deployment.certificates.caCertificate = (response && response.certificates && response.certificates.caCertificate) ? response.certificates.caCertificate : "";
+                //Cert certificate
+                $scope.deployment.certificates.certCertificate = (response && response.certificates && response.certificates.certCertificate) ? response.certificates.certCertificate : "";
+                //CA certificate
+                $scope.deployment.certificates.keyCertificate = (response && response.certificates && response.certificates.keyCertificate) ? response.certificates.keyCertificate : "";
+
+                //get readiness Probes information
+                $scope.deployment.readinessProbe = {};
+				//Initial Deploy Seconds
+                $scope.deployment.readinessProbe.initialDelaySeconds = (response && response.readinessProbe
+					&& response.readinessProbe.initialDelaySeconds) ? response.readinessProbe.initialDelaySeconds : 15;
+                //Time Out Seconds
+                $scope.deployment.readinessProbe.timeoutSeconds = (response && response.readinessProbe
+                && response.readinessProbe.timeoutSeconds) ? response.readinessProbe.timeoutSeconds : 1;
+                //Period Seconds
+                $scope.deployment.readinessProbe.periodSeconds = (response && response.readinessProbe
+                && response.readinessProbe.periodSeconds) ? response.readinessProbe.periodSeconds : 10;
+                //Success Threshol
+                $scope.deployment.readinessProbe.successThreshold = (response && response.readinessProbe
+                && response.readinessProbe.successThreshold) ? response.readinessProbe.successThreshold : 1;
+                //Failure Threshold
+                $scope.deployment.readinessProbe.failureThreshold = (response && response.readinessProbe
+                && response.readinessProbe.failureThreshold) ? response.readinessProbe.failureThreshold : 3;
 			}
 
 			$scope.evaluateDeploymentChoice();

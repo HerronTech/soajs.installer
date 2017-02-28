@@ -204,6 +204,19 @@ module.exports = {
                             "certCertificate": {"type": "string", "required": false},
                             "keyCertificate": {"type": "string", "required": false},
 
+                            "readinessProbe": {
+                                "required": false,
+                                "validation": {
+                                    "type": "object",
+                                    "properties": {
+                                        "initialDelaySeconds": {"type": "number", "required": false},
+                                        "timeoutSeconds": {"type": "number", "required": false},
+                                        "periodSeconds": {"type": "number", "required": false},
+                                        "failureThreshold": {"type": "number", "required": false},
+                                    }
+                                }
+
+                            }
 						},
 						"additionalProperties": false
 					}
