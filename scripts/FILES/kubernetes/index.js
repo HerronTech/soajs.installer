@@ -7,13 +7,14 @@ var fs = require('fs');
 var Grid = require('gridfs-stream');
 var exec = require('child_process').exec;
 var soajs = require('soajs');
+var soajsModules = require('soajs.core.modules');
 var request = require('request');
 
 var config = require('./config.js');
 var folder = config.folder;
 delete require.cache[config.profile];
 var profile = require(config.profile);
-var mongo = new soajs.mongo(profile);
+var mongo = new soajsModules.mongo(profile);
 
 var utilLog = require('util');
 
@@ -172,132 +173,132 @@ var lib = {
 
     importCertificates: function (cb) {
         return cb();
-        lib.loadCustomData(function(customFile) {
-            if(!customFile.deployment.certsRequired)
-                return cb(null, true);
-
-            else{
-                utilLog.log('Importing certifictes to:', profile.servers[0].host + ":" + profile.servers[0].port);
-                copyCACertificate(function(caErr){
-                    if(caErr){
-                        utilLog.log("Error while copying the certificate of type CA");
-                        throw new Error(caErr);
-                    }
-                    copyCertCertificate(function(certErr){
-                        if(certErr){
-                            utilLog.log("Error while copying the certificate of type Cert");
-                            throw new Error(certErr);
-                        }
-                        copyKeyCertificate(function(keyErr){
-                            if(keyErr){
-                                utilLog.log("Error while copying the certificate of type Key");
-                                throw new Error(keyErr);
-                            }
-
-                            return cb();
-                        });
-                    });
-                });
-            }
-
-            function getDb(soajs) {
-                profile.name = "core_provision";
-                mongo = new soajs.mongo(profile);
-                return mongo;
-            }
-
-            function copyCACertificate(cb) {
-
-                var fileData = {
-                    filename: "CA Certificate",
-                    metadata: {
-                        platform: 'kubernetes',
-                        certType: 'ca',
-                        env: {
-                            'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
-                        }
-                    }
-                };
-
-                getDb(soajs).getMongoDB(function (error, db) {
-                    if(error) {
-                        throw new Error(error);
-                    }
-                    var gfs = Grid(db, getDb(soajs).mongodb);
-                    var writeStream = gfs.createWriteStream(fileData);
-                    var readStream = fs.createReadStream(customFile.deployment.certificates.caCertificate);
-                    readStream.pipe(writeStream);
-
-                    writeStream.on('error', function (error) {
-                        return cb(error);
-                    });
-                    writeStream.on('close', function (file) {
-                        return cb(null, true);
-                    });
-                });
-            }
-
-            function copyCertCertificate(cb) {
-
-                var fileData = {
-                    filename: "Cert Certificate",
-                    metadata: {
-                        platform: 'kubernetes',
-                        certType: 'cert',
-                        env: {
-                            'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
-                        }
-                    }
-                };
-
-                getDb(soajs).getMongoDB(function (error, db) {
-                    if(error) {
-                        throw new Error(error);
-                    }
-                    var gfs = Grid(db, getDb(soajs).mongodb);
-                    var writeStream = gfs.createWriteStream(fileData);
-                    var readStream = fs.createReadStream(customFile.deployment.certificates.certCertificate);
-                    readStream.pipe(writeStream);
-                    writeStream.on('error', function (error) {
-                        return cb(error);
-                    });
-                    writeStream.on('close', function (file) {
-                        return cb(null, true);
-                    });
-                });
-            }
-
-            function copyKeyCertificate(cb) {
-
-                var fileData = {
-                    filename: "Key Certificate",
-                    metadata: {
-                        platform: 'kubernetes',
-                        certType: 'key',
-                        env: {
-                            'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
-                        }
-                    }
-                };
-
-                getDb(soajs).getMongoDB(function (error, db) {
-                    if(error) {
-                        throw new Error(error);
-                    }
-                    var gfs = Grid(db, getDb(soajs).mongodb);
-                    var writeStream = gfs.createWriteStream(fileData);
-                    var readStream = fs.createReadStream(customFile.deployment.certificates.keyCertificate);
-                    readStream.pipe(writeStream);
-                    writeStream.on('error', function (error) {
-                        return cb(error);
-                    });
-                    writeStream.on('close', function (file) {
-                        return cb(null, true);
-                    });
-                });
-            }
-
-        });
+        // lib.loadCustomData(function(customFile) {
+        //     if(!customFile.deployment.certsRequired)
+        //         return cb(null, true);
+        //
+        //     else{
+        //         utilLog.log('Importing certifictes to:', profile.servers[0].host + ":" + profile.servers[0].port);
+        //         copyCACertificate(function(caErr){
+        //             if(caErr){
+        //                 utilLog.log("Error while copying the certificate of type CA");
+        //                 throw new Error(caErr);
+        //             }
+        //             copyCertCertificate(function(certErr){
+        //                 if(certErr){
+        //                     utilLog.log("Error while copying the certificate of type Cert");
+        //                     throw new Error(certErr);
+        //                 }
+        //                 copyKeyCertificate(function(keyErr){
+        //                     if(keyErr){
+        //                         utilLog.log("Error while copying the certificate of type Key");
+        //                         throw new Error(keyErr);
+        //                     }
+        //
+        //                     return cb();
+        //                 });
+        //             });
+        //         });
+        //     }
+        //
+        //     function getDb() {
+        //         profile.name = "core_provision";
+        //         mongo = new soajsModules.mongo(profile);
+        //         return mongo;
+        //     }
+        //
+        //     function copyCACertificate(cb) {
+        //
+        //         var fileData = {
+        //             filename: "CA Certificate",
+        //             metadata: {
+        //                 platform: 'kubernetes',
+        //                 certType: 'ca',
+        //                 env: {
+        //                     'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
+        //                 }
+        //             }
+        //         };
+        //
+        //         getDb().getMongoDB(function (error, db) {
+        //             if(error) {
+        //                 throw new Error(error);
+        //             }
+        //             var gfs = Grid(db, getDb().mongodb);
+        //             var writeStream = gfs.createWriteStream(fileData);
+        //             var readStream = fs.createReadStream(customFile.deployment.certificates.caCertificate);
+        //             readStream.pipe(writeStream);
+        //
+        //             writeStream.on('error', function (error) {
+        //                 return cb(error);
+        //             });
+        //             writeStream.on('close', function (file) {
+        //                 return cb(null, true);
+        //             });
+        //         });
+        //     }
+        //
+        //     function copyCertCertificate(cb) {
+        //
+        //         var fileData = {
+        //             filename: "Cert Certificate",
+        //             metadata: {
+        //                 platform: 'kubernetes',
+        //                 certType: 'cert',
+        //                 env: {
+        //                     'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
+        //                 }
+        //             }
+        //         };
+        //
+        //         getDb().getMongoDB(function (error, db) {
+        //             if(error) {
+        //                 throw new Error(error);
+        //             }
+        //             var gfs = Grid(db, getDb().mongodb);
+        //             var writeStream = gfs.createWriteStream(fileData);
+        //             var readStream = fs.createReadStream(customFile.deployment.certificates.certCertificate);
+        //             readStream.pipe(writeStream);
+        //             writeStream.on('error', function (error) {
+        //                 return cb(error);
+        //             });
+        //             writeStream.on('close', function (file) {
+        //                 return cb(null, true);
+        //             });
+        //         });
+        //     }
+        //
+        //     function copyKeyCertificate(cb) {
+        //
+        //         var fileData = {
+        //             filename: "Key Certificate",
+        //             metadata: {
+        //                 platform: 'kubernetes',
+        //                 certType: 'key',
+        //                 env: {
+        //                     'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
+        //                 }
+        //             }
+        //         };
+        //
+        //         getDb().getMongoDB(function (error, db) {
+        //             if(error) {
+        //                 throw new Error(error);
+        //             }
+        //             var gfs = Grid(db, getDb().mongodb);
+        //             var writeStream = gfs.createWriteStream(fileData);
+        //             var readStream = fs.createReadStream(customFile.deployment.certificates.keyCertificate);
+        //             readStream.pipe(writeStream);
+        //             writeStream.on('error', function (error) {
+        //                 return cb(error);
+        //             });
+        //             writeStream.on('close', function (file) {
+        //                 return cb(null, true);
+        //             });
+        //         });
+        //     }
+        //
+        // });
     },
 
     deployService: function (deployer, options, cb) {

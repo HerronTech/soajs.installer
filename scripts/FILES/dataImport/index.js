@@ -6,14 +6,14 @@
  * DASHBOARD CORE_PROVISION
  *
  ***************************************************************/
-var soajs = require("soajs");
+var soajsModules = require("soajs.core.modules");
 
 var dataFolder = process.env.SOAJS_DATA_FOLDER;
 delete require.cache[process.env.SOAJS_PROFILE];
 var profile = require(process.env.SOAJS_PROFILE);
 
 profile.name = "core_provision";
-var mongo = new soajs.mongo(profile);
+var mongo = new soajsModules.mongo(profile);
 
 
 mongo.dropDatabase(function(){
@@ -26,7 +26,7 @@ mongo.dropDatabase(function(){
                             lib.provisionIndex(function () {
                                 mongo.closeDb();
                                 profile.name = "DBTN_urac";
-                                mongo = new soajs.mongo(profile);
+                                mongo = new soajsModules.mongo(profile);
                                 mongo.dropDatabase(function () {
                                     lib.addUsers(function () {
                                         lib.addGroups(function () {

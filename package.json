@@ -32,7 +32,7 @@
     "ncp": "*",
     "npm": "*",
     "rimraf": "*",
-    "soajs": "0.4.*",
+    "soajs": "git+https://github.com/soajs/soajs.git#feature/sessionLess",
     "util": "*",
     "whereis": "*"
   }

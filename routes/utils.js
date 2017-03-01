@@ -5,6 +5,8 @@ var path = require("path");
 var exec = require("child_process").exec;
 
 var soajs = require("soajs");
+var soajsModules = require("soajs.core.modules");
+
 var whereis = require('whereis');
 
 //external libs
@@ -142,7 +144,7 @@ module.exports = {
 
     "generateExtKeys": function (opts, cb) {
         //soajs encryption engine
-        var module = require("soajs/modules/soajs.core").key;
+        var module = require("soajs.core.modules/soajs.core").key;
         var key = opts.key;
 
         var tenant = {
@@ -270,7 +272,7 @@ module.exports = {
         userData = userData.replace(/%username%/g, body.gi.username);
         userData = userData.replace(/%email%/g, body.gi.email);
 
-        var Hasher = soajs.hasher;
+        var Hasher = soajsModules.hasher;
         Hasher.init({
             "hashIterations": 1024,
             "seedLength": 32
@@ -702,7 +704,7 @@ module.exports = {
 
     "returnInstallProgress": function (body, cb) {
         if (body.deployment.deployType === 'manual') {
-            var repos = ["soajs.controller", "soajs.urac", "soajs.dashboard", "soajs.gcs", "soajs"];
+            var repos = ["soajs.controller", "soajs.urac", "soajs.dashboard", "soajs.gcs", "soajs.oauth", "soajs.prx", "soajs"];
 
 			/*
 			 1- check if all files in wrkDir exists
@@ -806,7 +808,7 @@ module.exports = {
 			 */
             if (body.deployment.deployDriver.indexOf("docker") !== -1) {
                 // docker
-                var services = ["dashboard_soajs_prx", "dashboard_soajs_urac", "dashboard_soajs_dashboard", "dashboard-controller", "dashboard_nginx"];
+                var services = ["dashboard_soajs_oauth","dashboard_soajs_prx", "dashboard_soajs_urac", "dashboard_soajs_dashboard", "dashboard-controller", "dashboard_nginx"];
                 var Docker = require('dockerode');
                 var deployerConfig = {
                     "host": body.deployment.containerHost,
@@ -867,7 +869,7 @@ module.exports = {
             }
             else {
                 // kubernetes
-                var services = ["dashboard-proxy", "dashboard-urac", "dashboard-dashboard", "dashboard-controller", "dashboard-nginx"];
+                var services = ["dashboard-oauth","dashboard-proxy", "dashboard-urac", "dashboard-dashboard", "dashboard-controller", "dashboard-nginx"];
                 var K8Api = require('kubernetes-client');
 
                 if (!body.deployment.kubernetes.containerDir && !body.deployment.kubernetes.certificatesFolder) {
@@ -946,7 +948,7 @@ module.exports = {
 			 3- query hosts collection
 			 */
             var profile = require(path.normalize(dataDir + "startup/profile.js"));
-            var myMongo = new soajs.mongo(profile);
+            var myMongo = new soajsModules.mongo(profile);
 
             myMongo.find("hosts", {"env": "dashboard"}, function (error, hosts) {
                 if (error) {

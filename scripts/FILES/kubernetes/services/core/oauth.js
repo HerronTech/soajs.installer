@@ -6,34 +6,34 @@ var components = {
         "apiVersion": "v1",
         "kind": "Service",
         "metadata": {
-            "name": "dashboard-urac-service",
+            "name": "dashboard-oauth-service",
             "labels": {
                 "soajs.content": "true",
                 "soajs.env.code": "dashboard",
 
-                "soajs.service.name": "urac",
+                "soajs.service.name": "oauth",
                 "soajs.service.group": "soajs-core-services",
                 "soajs.service.type": "service",
-                "soajs.service.version": "2",
-                "soajs.service.label": "dashboard-urac"
+                "soajs.service.version": "1",
+                "soajs.service.label": "dashboard-oauth"
             }
         },
         "spec": {
             "selector": {
-                "soajs.service.label": "dashboard-urac"
+                "soajs.service.label": "dashboard-oauth"
             },
             "ports": [
                 {
                     "name": "service-port",
                     "protocol": "TCP",
-                    "port": 4001,
-                    "targetPort": 4001
+                    "port": 4009,
+                    "targetPort": 4009
                 },
                 {
                     "name": "maintenance-port",
                     "protocol": "TCP",
-                    "port": 5001,
-                    "targetPort": 5001
+                    "port": 5009,
+                    "targetPort": 5009
                 }
             ]
         }
@@ -42,43 +42,43 @@ var components = {
         "apiVersion": "extensions/v1beta1",
         "kind": "Deployment",
         "metadata": {
-            "name": "dashboard-urac",
+            "name": "dashboard-oauth",
             "labels": {
                 "soajs.content": "true",
                 "soajs.env.code": "dashboard",
 
-                "soajs.service.name": "urac",
+                "soajs.service.name": "oauth",
                 "soajs.service.group": "soajs-core-services",
                 "soajs.service.type": "service",
-                "soajs.service.version": "2",
-                "soajs.service.label": "dashboard-urac"
+                "soajs.service.version": "1",
+                "soajs.service.label": "dashboard-oauth"
             }
         },
         "spec": {
             "replicas": gConfig.kubernetes.replicas,
             "selector": {
                 "matchLabels": {
-                    "soajs.service.label": "dashboard-urac"
+                    "soajs.service.label": "dashboard-oauth"
                 }
             },
             "template": {
                 "metadata": {
-                    "name": "dashboard-urac",
+                    "name": "dashboard-oauth",
                     "labels": {
                         "soajs.content": "true",
                         "soajs.env.code": "dashboard",
 
-                        "soajs.service.name": "urac",
+                        "soajs.service.name": "oauth",
                         "soajs.service.group": "soajs-core-services",
                         "soajs.service.type": "service",
-                        "soajs.service.version": "2",
-                        "soajs.service.label": "dashboard-urac"
+                        "soajs.service.version": "1",
+                        "soajs.service.label": "dashboard-oauth"
                     }
                 },
                 "spec": {
                     "containers": [
                         {
-                            "name": "dashboard-urac",
+                            "name": "dashboard-oauth",
                             "image": gConfig.imagePrefix + "/soajs",
                             "imagePullPolicy": gConfig.imagePullPolicy,
                             "workingDir": "/opt/soajs/FILES/deployer/",
@@ -87,11 +87,11 @@ var components = {
                             "ports": [
                                 {
                                     "name": "service",
-                                    "containerPort": 4001
+                                    "containerPort": 4009
                                 },
                                 {
                                     "name": "maintenance",
-                                    "containerPort": 5001
+                                    "containerPort": 5009
                                 }
                             ],
                             "readinessProbe": {
@@ -132,7 +132,7 @@ var components = {
                                 },
                                 {
                                     "name": "SOAJS_GIT_REPO",
-                                    "value": "soajs.urac"
+                                    "value": "soajs.prx"
                                 },
                                 {
                                     "name": "SOAJS_DEPLOY_HA",

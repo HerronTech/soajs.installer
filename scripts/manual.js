@@ -211,6 +211,12 @@ function install(cb) {
 			function (mcb) {
 				cloneInstallRepo("soajs.gcs", true, mcb);
 			},
+			function (mcb) {
+				cloneInstallRepo("soajs.oauth", true, mcb);
+			},
+			function (mcb) {
+				cloneInstallRepo("soajs.prx", true, mcb);
+			},
 			startDashboard
 		], cb);
 	}
@@ -221,7 +227,7 @@ function install(cb) {
 				utilLog.log("\ninstalling soajs.controller soajs.urac soajs.dashboard soajs.gcs ...");
 				npm.load({prefix: WRK_DIR + "/../"}, function (err) {
 					if (err) return mcb(err);
-					npm.commands.install(["soajs.urac", "soajs.dashboard", "soajs.gcs"], function (error) {
+					npm.commands.install(["soajs.urac", "soajs.dashboard", "soajs.gcs", "soajs.oauth", "soajs.prx"], function (error) {
 						if (error) {
 							utilLog.log('error', error);
 						}
