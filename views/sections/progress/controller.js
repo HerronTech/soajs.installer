@@ -7,7 +7,7 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 		$scope.alerts.splice(i, 1);
 	};
 	
-	$scope.getInfo = function(){
+	$scope.getInfo = function(cb){
 		var options = {
 			url: appConfig.url + "/progress/info",
 			method: "get"
@@ -21,6 +21,7 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 			$scope.ui = response.ui;
 			$scope.cmd = response.cmd;
 			$scope.hosts = response.hosts;
+			return cb();
 		});
 	};
 	
@@ -80,8 +81,9 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 	};
 	
 	$timeout(function(){
-		$scope.getInfo();
-		$scope.getProgress();
-	}, 2000);
+		$scope.getInfo(function(){
+			$scope.getProgress();
+		});
+	}, 3000);
 	
 }]);

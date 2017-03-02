@@ -68,6 +68,7 @@ module.exports = {
                     }
                 }
                 catch (e){
+                	console.log(e);
                     return cb(null);
                 }
             }
@@ -199,7 +200,6 @@ module.exports = {
 
     "fillFiles": function (folder, body) {
         var clusters = JSON.parse(JSON.stringify(body.clusters));
-        var deployment = JSON.parse(JSON.stringify (body.deployment));
         delete clusters.prefix;
 
         //fix clusters credentials
@@ -240,14 +240,9 @@ module.exports = {
                 ];
             }
             if (body.deployment.deployDriver.indexOf("container.kubernetes") !== -1) {
-                //build mongo service with based on namespace
-                var namespace = (deployment && deployment.namespaces && deployment.namespaces.default) ? deployment.namespaces.default : 'default';
-                if (deployment && deployment.namespaces && deployment.namespaces.perService) {
-                    namespace += '-dashboard-soajsdata';
-                }
                 clusters.servers = [
                     {
-                        host: "dashboard-soajsdata." + namespace,
+                        host: "dashboard-soajsdata",
                         port: 5000 + 27017
                     }
                 ];
@@ -304,12 +299,6 @@ module.exports = {
         envData = envData.replace(/%keySecret%/g, body.security.key);
         envData = envData.replace(/%sessionSecret%/g, body.security.session);
         envData = envData.replace(/%cookieSecret%/g, body.security.cookie);
-        if (body.deployment.deployDriver.split('.')[1] === 'kubernetes') {
-            envData = envData.replace(/"%namespace%"/g, JSON.stringify (body.deployment.namespaces, null, 2));
-        }
-        else {
-            envData = envData.replace(/%namespace%/g, {});
-        }
         fs.writeFile(folder + "environments/dashboard.js", envData, "utf8");
 
         //modify tenants file
@@ -584,20 +573,6 @@ module.exports = {
                 if (body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder) {
                     envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder;
                 }
-                //add readiness probes environment variables
-                if(body.deployment.readinessProbe){
-                    envs["KUBE_INITIAL_DELAY"] = body.deployment.readinessProbe.initialDelaySeconds;
-                    envs["KUBE_PROBE_TIMEOUT"] = body.deployment.readinessProbe.timeoutSeconds;
-                    envs["KUBE_PROBE_PERIOD"] = body.deployment.readinessProbe.periodSeconds;
-                    envs["KUBE_PROBE_SUCCESS"] = body.deployment.readinessProbe.successThreshold;
-                    envs["KUBE_PROBE_FAILURE"] = body.deployment.readinessProbe.failureThreshold;
-                }
-
-                //add namespace configuration
-                if (body.deployment.namespaces) {
-                    envs["SOAJS_NAMESPACES_DEFAULT"] = body.deployment.namespaces.default;
-                    envs["SOAJS_NAMESPACES_PER_SERVICE"] = body.deployment.namespaces.perService;
-                }
 
                 for (var e in envs) {
                     if (envs[e] !== null) {
@@ -688,11 +663,7 @@ module.exports = {
             }
 
             if (!body.clusters || !body.clusters.mongoExt) {
-                var namespace = body.deployment.namespaces.default;
-                if (body.deployment.namespaces.perService) {
-                    namespace += '-dashboard-soajsdata';
-                }
-                obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata." + namespace;
+                obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata";
             }
             else {
                 obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard-soajsdata";
