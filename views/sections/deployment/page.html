@@ -69,7 +69,7 @@
             </tbody>
         </table>
         </fieldset>
-        <br />
+        <br ng-if="deployment.certsRequired"/>
         <fieldset ng-show="deployment.certsRequired">
             <legend>Certificates</legend>
             <table width="100%" cellspacing="0" cellpadding="0" border="0">

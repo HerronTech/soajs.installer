@@ -138,6 +138,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			method: "get"
 		};
 
+
 		ngDataApi.get($scope, options, function (error, response) {
 			if (error) {
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
@@ -180,7 +181,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				}
 			}
 			else if ($scope.deployment.deployDriver.indexOf("kubernetes") !== -1){
-                $scope.deployment.certsRequired = true;
+                $scope.deployment.certsRequired = false;
 				$scope.deployment.containerDir = (response && response.kubernetes && response.kubernetes.containerDir) ? response.kubernetes.containerDir : "";
 				$scope.deployment.kubeContainerPort = (response && response.kubernetes && response.kubernetes.containerPort) ? response.kubernetes.containerPort : 8443;
 
