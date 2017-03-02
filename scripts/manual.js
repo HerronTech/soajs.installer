@@ -13,7 +13,7 @@ var utilLog = require('util');
 
 process.env.NODE_ENV = "production";
 var LOC = (process.env.SOAJS_DEPLOY_DIR || "/opt") + "/";
-var DEPLOY_FROM = process.env.DEPLOY_FROM || "GIT";
+var DEPLOY_FROM = "GIT"; //process.env.DEPLOY_FROM || "GIT";
 var GIT_BRANCH = "feature/sessionLess"; //process.env.SOAJS_GIT_BRANCH || "master";
 var NODE = process.env.NODE_PATH || "node";
 var NPM = process.env.NPM_PATH || "npm";
@@ -105,6 +105,12 @@ function startDashboard(cb) {
 		async.series([
 			function (mcb) {
 				launchService('urac', mcb);
+			},
+			function (mcb) {
+				launchService('oauth', mcb);
+			},
+			function (mcb) {
+				launchService('prx', mcb);
 			},
 			function (mcb) {
 				launchService('dashboard', mcb);

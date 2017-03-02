@@ -323,9 +323,9 @@ module.exports = {
         fs.writeFile(folder + "tenants/owner.js", tntData, "utf8");
 
         //modify dashboard extKey file
-        var tntData = fs.readFileSync(folder + "extKeys/keys.js", "utf8");
-        tntData = tntData.replace(/%extKey2%/g, body.security.extKey2);
-        fs.writeFile(folder + "extKeys/keys.js", tntData, "utf8");
+        //var tntData = fs.readFileSync(folder + "extKeys/keys.js", "utf8");
+        //tntData = tntData.replace(/%extKey2%/g, body.security.extKey2);
+        //fs.writeFile(folder + "extKeys/keys.js", tntData, "utf8");
 
         //remove unneeded file
         fs.unlinkSync(folder + "tenants/info.js");
