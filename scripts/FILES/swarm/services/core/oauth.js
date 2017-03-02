@@ -3,12 +3,12 @@ var gConfig = require("../../config.js");
 
 var src = {
     owner: 'soajs',
-    repo: 'soajs.urac',
+    repo: 'soajs.oauth',
     branch: 'feature/sessionLess' //gConfig.git.branch
 };
 
 var config = {
-    servName: 'dashboard_soajs_urac',
+    servName: 'dashboard_soajs_oauth',
     servReplica: parseInt(gConfig.docker.replicas),
     servNetwork: [
     	{
@@ -45,10 +45,10 @@ var config = {
         "soajs.content": "true",
 		"soajs.env.code": "dashboard",
 	    "soajs.service.type": "service",
-		"soajs.service.name": "urac",
+		"soajs.service.name": "oauth",
 		"soajs.service.group": "soajs-core-services",
 		"soajs.service.version": "2",
-		"soajs.service.label": "dashboard_soajs_urac"
+		"soajs.service.label": "dashboard_soajs_oauth"
     },
     workingDir: '/opt/soajs/FILES/deployer/',
     command: [
