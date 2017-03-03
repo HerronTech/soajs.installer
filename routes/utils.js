@@ -66,6 +66,7 @@ module.exports = {
                     }
                 }
                 catch (e){
+
                     return cb(null);
                 }
             }
@@ -686,11 +687,16 @@ module.exports = {
             }
 
             if (!body.clusters || !body.clusters.mongoExt) {
-                var namespace = body.deployment.namespaces.default;
-                if (body.deployment.namespaces.perService) {
-                    namespace += '-dashboard-soajsdata';
+                if(type === 'kubernetes'){
+                    var namespace = body.deployment.namespaces.default;
+                    if (body.deployment.namespaces.perService) {
+                        namespace += '-dashboard-soajsdata';
+                    }
+                    obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata." + namespace;
                 }
-                obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata." + namespace;
+                else{
+                    obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata";
+                }
             }
             else {
                 obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard-soajsdata";
