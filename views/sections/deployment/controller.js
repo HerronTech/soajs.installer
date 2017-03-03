@@ -73,7 +73,6 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 	};
 
 	$scope.fillDeployment = function () {
-		console.log ($scope.deployment);
 		var data = angular.copy($scope.deployment);
 		for(var i in data){
 			if(data[i] === null){
