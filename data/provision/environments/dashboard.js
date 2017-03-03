@@ -22,10 +22,10 @@ var dashboard = {
 		    },
 		    "kubernetes":{
 			    "local":{
-				    
+				    "namespace": "%namespace%"
 			    },
 			    "remote":{
-				    
+				    "namespace": "%namespace%"
 			    }
 		    }
 	    }

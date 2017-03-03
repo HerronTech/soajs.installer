@@ -289,3 +289,7 @@ table.bulletin th {
     background-color:#f6f6f6;
     color: #333;
 }
+
+.radioLabel {
+    margin-left: 30px;
+}

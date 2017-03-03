@@ -139,9 +139,39 @@ var lib = {
         exec(execString, cb);
     },
 
+    initNamespace: function (deployer, options, cb) {
+        //options.namespace
+        //1. check if namespace already exists. if it does, return true
+        //2. if namespace does not exist create it and return true
+        deployer.core.namespaces.get({}, function (error, namespacesList) {
+            if (error) return cb(error);
 
+            async.detect(namespacesList.items, function (oneNamespace, callback) {
+                return callback(null, oneNamespace.metadata.name === options.namespace);
+            }, function (error, foundNamespace) {
+                if (foundNamespace) {
+                    utilLog.log('Reusing existing namespace: ' + foundNamespace.metadata.name + ' ...');
+                    return cb(null, true);
+                }
+
+                utilLog.log('Creating a new namespace: ' + options.namespace + ' ...');
+                var namespace = {
+                    kind: 'Namespace',
+                    apiVersion: 'v1',
+                    metadata: {
+                        name: options.namespace,
+                        labels: {
+                            'soajs.content': 'true'
+                        }
+                    }
+                };
+                deployer.core.namespace.post({body: namespace}, cb);
+            });
+        });
+    },
 
     importCertificates: function (cb) {
+        return cb();
         lib.loadCustomData(function(customFile) {
             if(!customFile.deployment.certsRequired)
                 return cb(null, true);
@@ -271,41 +301,73 @@ var lib = {
     },
 
     deployService: function (deployer, options, cb) {
-        if (options.service) {
-            deployer.core.namespaces.services.post({body: options.service}, function (error) {
-                if (error) return cb(error);
-                createDeployment(cb);
-            });
-        }
-        else {
-            createDeployment(cb);
+        var namespace = config.kubernetes.config.namespaces.default, serviceName;
+        if (config.kubernetes.config.namespaces.perService) {
+            serviceName = options.service.metadata.labels['soajs.service.label'];
+            namespace += '-' + serviceName;
         }
 
+        lib.initNamespace(deployer, {namespace: namespace}, function (error) {
+            if (error) return cb(error);
+
+            if (options.service) {
+                deployer.core.namespaces(namespace).services.post({body: options.service}, function (error) {
+                    if (error) return cb(error);
+                    createDeployment(cb);
+                });
+            }
+            else {
+                createDeployment(cb);
+            }
+        });
+
         function createDeployment(cb1) {
-            deployer.extensions.namespaces.deployments.post({body: options.deployment}, cb1);
+            deployer.extensions.namespaces(namespace).deployments.post({body: options.deployment}, cb1);
         }
     },
 
     deleteDeployments: function (deployer, options, cb) {
-        var filter = { labelSelector: 'soajs.content=true', gracePeriodSeconds: 0 };
-        deployer.extensions.namespaces.deployments.delete({qs: filter}, cb);
+        var filter = { labelSelector: 'soajs.content=true' };
+        deployer.extensions.deployments.get({qs: filter}, function (error, deploymentList) {
+            if (error) return cb(error);
+
+            if (!deploymentList || !deploymentList.items || deploymentList.items.length === 0) return cb();
+            filter.gracePeriodSeconds = 0;
+            async.each(deploymentList.items, function (oneDeployment, callback) {
+                deployer.extensions.namespaces(oneDeployment.metadata.namespace).deployments.delete({qs: filter}, callback);
+            }, cb);
+        });
     },
 
     deleteKubeServices: function (deployer, options, cb) {
         var filter = { labelSelector: 'soajs.content=true', gracePeriodSeconds: 0  };
-        deployer.core.namespaces.services.get({qs: filter}, function (error, serviceList) {
+        deployer.core.services.get({qs: filter}, function (error, serviceList) {
             if (error) return cb(error);
 
+            if (!serviceList || !serviceList.items || serviceList.items.length === 0) return cb();
             async.each(serviceList.items, function (oneService, callback) {
-                deployer.core.namespaces.services.delete({ name: oneService.metadata.name }, callback);
+                deployer.core.namespaces(oneService.metadata.namespace).services.delete({ name: oneService.metadata.name }, callback);
             }, cb);
         });
     },
 
     deletePods: function (deployer, options, cb) {
         //force delete all pods for a better cleanup
-        var filter = { labelSelector: 'soajs.content=true', gracePeriodSeconds: 0 };
-        deployer.core.namespaces.pods.delete({qs: filter}, cb);
+        var filter = { labelSelector: 'soajs.content=true' };
+        deployer.core.pods.get({ qs: filter }, function (error, podList) {
+            if (error) return cb(error);
+
+            if (!podList || !podList.items || podList.items.length === 0) return cb();
+            filter.gracePeriodSeconds = 0;
+            async.each(podList.items, function (onePod, callback) {
+                deployer.core.namespaces(onePod.metadata.namespace).delete({ qs: filter }, callback);
+            }, cb);
+        });
+    },
+
+    deleteNamespaces: function (deployer, options, cb) {
+        var filter = { labelSelector: 'soajs.content=true' };
+        deployer.core.namespaces.delete({ qs: filter }, cb);
     },
 
     deletePreviousServices: function (deployer, cb) {
@@ -315,7 +377,11 @@ var lib = {
             lib.deleteKubeServices(deployer, {}, function (error) {
                 if (error) return cb(error);
 
-                lib.deletePods(deployer, {}, cb);
+                lib.deletePods(deployer, {}, function (error) {
+                    if (error) return cb(error);
+
+                    lib.deleteNamespaces(deployer, {}, cb);
+                });
             });
         });
     },
@@ -326,12 +392,24 @@ var lib = {
             counter = 0;
         }
 
-        deployer.core.namespaces.pods.get({}, function (error, podList) {
+        var namespace = config.kubernetes.config.namespaces.default;
+        if (config.kubernetes.config.namespaces.perService) {
+            namespace += '-' + serviceName;
+        }
+
+        //if serviceName is provided with namespace, remove namespace and filter only by service name
+        //splitting based on dots is ok since it's a reseverd char in kubernetes, no service name can include a dot
+        if (serviceName.indexOf('.') !== -1) {
+            serviceName = serviceName.split('.')[0];
+        }
+
+        var filter = { labelSelector: 'soajs.service.label=' + serviceName };
+        deployer.core.pods.get({ qs: filter }, function (error, podList) {
             if (error) return cb(error);
             var onePod, ips = [];
             if (podList && podList.items && Array.isArray(podList.items)) {
                 podList.items.forEach(function (onePod) {
-                    if (onePod.metadata.labels['soajs.service.label'] === serviceName && onePod.status.phase === 'Running') {
+                    if (onePod.status.phase === 'Running' && onePod.metadata.namespace === namespace) {
                         ips.push({
                             name: onePod.metadata.name,
                             ip: onePod.status.podIP

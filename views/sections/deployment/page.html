@@ -19,7 +19,7 @@
 		</div>
 	</div>
     <form ng-hide="confirmation" name="deploymentForm" class="css-form" novalidate
-          ng-submit="deploymentForm.$valid && fillDeployment();" ng-show="ha">
+          ng-submit="submit(deploymentForm)" ng-show="ha">
         <div class="header">
             <h3>Deployment Information</h3>
         </div>
@@ -69,7 +69,7 @@
             </tbody>
         </table>
         </fieldset>
-        <br />
+        <br ng-if="deployment.certsRequired"/>
         <fieldset ng-show="deployment.certsRequired">
             <legend>Certificates</legend>
             <table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -162,6 +162,38 @@
                         </div>
                     </td>
                 </tr>
+                </tbody>
+            </table>
+        </fieldset>
+        <br ng-if="kubernetes" />
+        <fieldset ng-show="kubernetes">
+            <legend>Namespace Configuration</legend>
+            <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tbody>
+                    <tr class="form-group tr-code-wrapper">
+                        <td class="form-select">
+                            <div id="namespaceMode-wrapper">
+                                <label>Default Namespace</label>
+                                <input type="text" class="form-control" name="defaultNamespace" id="defaultNamespace"
+                                       ng-required="kubernetes" ng-model="deployment.namespaces.default" placeholder="soajs"/>
+                                <div class="fieldMsg hint">Specify the name of the default namespace for the project.</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="form-group tr-code-wrapper">
+                        <td class="form-select">
+                            <div id="namespaceMode-wrapper">
+                                <label>Namespace Mode</label>
+                                <label class="radioLabel">
+                                    <input type="radio" ng-required="kubernetes" ng-model="deployment.namespaces.perService" name="global" ng-value="false" />&nbsp;Global Namespace Per Project
+                                </label>
+                                <label class="radioLabel">
+                                    <input type="radio" ng-required="kubernetes" ng-model="deployment.namespaces.perService" name="service" ng-value="true" />&nbsp;Specific Namespace Per Service
+                                </label>
+
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </fieldset>

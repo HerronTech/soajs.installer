@@ -216,7 +216,17 @@ module.exports = {
                                     }
                                 }
 
-                            }
+                            },
+							"namespaces": {
+								"required": false,
+								"validation": {
+									"type": "object",
+									"properties": {
+										"default": { "type": "string", "required": false },
+										"perService": { "type": "boolean", "required": false }
+									}
+								}
+							}
 						},
 						"additionalProperties": false
 					}

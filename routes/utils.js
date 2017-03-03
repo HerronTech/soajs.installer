@@ -66,6 +66,7 @@ module.exports = {
                     }
                 }
                 catch (e){
+
                     return cb(null);
                 }
             }
@@ -197,6 +198,7 @@ module.exports = {
 
     "fillFiles": function (folder, body) {
         var clusters = JSON.parse(JSON.stringify(body.clusters));
+        var deployment = JSON.parse(JSON.stringify (body.deployment));
         delete clusters.prefix;
 
         //fix clusters credentials
@@ -237,9 +239,14 @@ module.exports = {
                 ];
             }
             if (body.deployment.deployDriver.indexOf("container.kubernetes") !== -1) {
+                //build mongo service with based on namespace
+                var namespace = (deployment && deployment.namespaces && deployment.namespaces.default) ? deployment.namespaces.default : 'default';
+                if (deployment && deployment.namespaces && deployment.namespaces.perService) {
+                    namespace += '-dashboard-soajsdata';
+                }
                 clusters.servers = [
                     {
-                        host: "dashboard-soajsdata",
+                        host: "dashboard-soajsdata." + namespace,
                         port: 5000 + 27017
                     }
                 ];
@@ -296,6 +303,12 @@ module.exports = {
         envData = envData.replace(/%keySecret%/g, body.security.key);
         envData = envData.replace(/%sessionSecret%/g, body.security.session);
         envData = envData.replace(/%cookieSecret%/g, body.security.cookie);
+        if (body.deployment.deployDriver.split('.')[1] === 'kubernetes') {
+            envData = envData.replace(/"%namespace%"/g, JSON.stringify (body.deployment.namespaces, null, 2));
+        }
+        else {
+            envData = envData.replace(/%namespace%/g, {});
+        }
         fs.writeFile(folder + "environments/dashboard.js", envData, "utf8");
 
         //modify tenants file
@@ -471,7 +484,7 @@ module.exports = {
                     "SOAJS_GIT_REPO": body.deployment.gitRepo,
                     "SOAJS_GIT_TOKEN": body.deployment.gitToken,
 	                "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
-	                
+
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
                     "SOAJS_IMAGE_PREFIX": body.deployment.imagePrefix,
 
@@ -545,7 +558,7 @@ module.exports = {
                     "SOAJS_GIT_REPO": body.deployment.gitRepo,
                     "SOAJS_GIT_TOKEN": body.deployment.gitToken,
 	                "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
-	                
+
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
                     "SOAJS_IMAGE_PREFIX": body.deployment.imagePrefix,
 
@@ -577,6 +590,12 @@ module.exports = {
                     envs["KUBE_PROBE_PERIOD"] = body.deployment.readinessProbe.periodSeconds;
                     envs["KUBE_PROBE_SUCCESS"] = body.deployment.readinessProbe.successThreshold;
                     envs["KUBE_PROBE_FAILURE"] = body.deployment.readinessProbe.failureThreshold;
+                }
+
+                //add namespace configuration
+                if (body.deployment.namespaces) {
+                    envs["SOAJS_NAMESPACES_DEFAULT"] = body.deployment.namespaces.default;
+                    envs["SOAJS_NAMESPACES_PER_SERVICE"] = body.deployment.namespaces.perService;
                 }
 
                 for (var e in envs) {
@@ -668,7 +687,16 @@ module.exports = {
             }
 
             if (!body.clusters || !body.clusters.mongoExt) {
-                obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata";
+                if(type === 'kubernetes'){
+                    var namespace = body.deployment.namespaces.default;
+                    if (body.deployment.namespaces.perService) {
+                        namespace += '-dashboard-soajsdata';
+                    }
+                    obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata." + namespace;
+                }
+                else{
+                    obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata";
+                }
             }
             else {
                 obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard-soajsdata";
