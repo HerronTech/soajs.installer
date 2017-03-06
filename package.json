@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "async": "*",
+    "clone": "*",
     "dockerode": "*",
     "gridfs-stream": "*",
     "kubernetes-client": "*",
