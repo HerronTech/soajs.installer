@@ -61,21 +61,29 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 					$scope.info.install.barType = "info";
 				}
 			}
-			
+
+			var autoProgressTimeout;
+
+			$scope.autoProgress = function(){
+                autoProgressTimeout = $timeout(function(){
+                    $scope.getProgress();
+                }, 3000);
+			};
+
 			if($scope.deployType === 'manual'){
 				if((!$scope.install || $scope.install === false) || (!$scope.download || $scope.download === false)){
-					$timeout(function(){
-						$scope.getProgress();
-					}, 3000);
+					$scope.autoProgress();
 				}
 			}
 			else{
 				if((!$scope.download || $scope.download === false)){
-					$timeout(function(){
-						$scope.getProgress();
-					}, 3000);
+                    $scope.autoProgress();
 				}
 			}
+
+            $scope.$on("$destroy", function(event){
+                $timeout.cancel(autoProgressTimeout);
+            });
 		});
 	};
 
@@ -90,7 +98,7 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 
 	$scope.autoRefresh();
 
-    $scope.$on("$destroy", function(){
+    $scope.$on("$destroy", function(event){
         $timeout.cancel(autoRefreshTimeout);
     });
 

@@ -71,7 +71,6 @@ var lib = {
 
         deployerConfig.version = 'v1';
         deployer.core = new K8Api.Core(deployerConfig);
-
         return cb(null, deployer);
     },
 
