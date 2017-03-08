@@ -23,14 +23,14 @@ var dashboard = {
 		    "kubernetes":{
 			    "local":{
 				    "namespace": "%namespace%",
-                    "authentication": {
-				        "accessToken": "%token%"
+                    "auth": {
+				        "token": "%token%"
                     }
 			    },
 			    "remote":{
 				    "namespace": "%namespace%",
-                    "authentication": {
-                        "accessToken": "%token%"
+                    "auth": {
+                        "token": "%token%"
                     }
 			    }
 		    }

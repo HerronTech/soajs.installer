@@ -61,7 +61,9 @@ var lib = {
         }
         var deployer = {};
 
-        deployerConfig.auth = "bearer: " + config.kubernetes.config.authentication.accessToken;
+        deployerConfig.auth = {
+            token: "bearer: " + config.kubernetes.config.authentication.accessToken
+        };
 
 
         deployerConfig.version = 'v1beta1';
