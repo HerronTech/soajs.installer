@@ -293,3 +293,9 @@ table.bulletin th {
 .radioLabel {
     margin-left: 30px;
 }
+
+#deploymentInfoBox {
+    display: inline-block;
+    max-width: 975px;
+    overflow-x: scroll;
+}

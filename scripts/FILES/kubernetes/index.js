@@ -56,21 +56,21 @@ var lib = {
     },
 
     getDeployer: function (deployerConfig, cb) {
-        if(!config.kubernetes.config.authentication.accessToken){
+        if(!config.kubernetes.config.auth.bearer){
             return cb(new Error('No valid access token found for the kubernetes cluster'));
         }
         var deployer = {};
 
-        deployerConfig.auth = {
-            token: "bearer: " + config.kubernetes.config.authentication.accessToken
-        };
-
+        deployerConfig.request = {
+            strictSSL: false
+        }
 
         deployerConfig.version = 'v1beta1';
         deployer.extensions = new K8Api.Extensions(deployerConfig);
 
         deployerConfig.version = 'v1';
         deployer.core = new K8Api.Core(deployerConfig);
+
         return cb(null, deployer);
     },
 
@@ -264,15 +264,14 @@ var lib = {
             method: 'GET',
             uri: deployer.extensions.url + deployer.extensions.path + '/replicasets',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + deployer.extensions.requestOptions.auth.bearer
             },
             qs: {
                 labelSelector: 'soajs.content=true'
             },
             json: true,
-            ca: deployer.extensions.requestOptions.ca,
-            cert: deployer.extensions.requestOptions.cert,
-            key: deployer.extensions.requestOptions.key
+            "strictSSL": false
         };
 
         request(options, function (error, response, rsList) {
