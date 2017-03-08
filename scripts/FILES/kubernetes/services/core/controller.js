@@ -162,19 +162,6 @@ var components = {
                                     "name": gConfig.kubernetes.volumes.log.label
                                 }
                             ]
-                        },
-                        {
-                            "name": "kubectl-proxy",
-                            "image": "lachlanevenson/k8s-kubectl",
-                            "imagePullPolicy": gConfig.imagePullPolicy,
-                            "args": ["proxy", "-p", "8001"],
-                            "ports": [
-                                {
-
-                                    "containerPort": 8001
-                                }
-                            ],
-                            "env": []
                         }
                     ],
                     "volumes": [
