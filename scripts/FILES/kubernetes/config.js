@@ -48,7 +48,10 @@ module.exports = {
 			"namespaces": {
 				"default": process.env.SOAJS_NAMESPACES_DEFAULT || 'default',
 				"perService": (process.env.SOAJS_NAMESPACES_PER_SERVICE === "true") || false
-			}
+			},
+            "authentication": {
+                "accessToken": process.env.KUBE_AUTH_TOKEN || ""
+            }
 		},
 		"mongoCollection": 'docker',
 		"replicas": parseInt(process.env.SOAJS_DOCKER_REPLICA) || 1,

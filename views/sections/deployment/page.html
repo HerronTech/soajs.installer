@@ -107,6 +107,23 @@
                 </tbody>
             </table>
         </fieldset>
+        <fieldset ng-show="kubernetes">
+            <legend>Kubernetes Authentication Token</legend>
+            <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tbody>
+                <tr class="form-group tr-code-wrapper">
+                    <td class="form-select">
+                        <div id="authToken-wrapper">
+                            <label>Kubernetes authentication token</label>
+                            <input type="text" ng-required="kubernetes" class="form-control" name="kubeAuthToken" id="kubeAuthToken"
+                                   ng-model="deployment.authentication.accessToken" placeholder="<Authentication token>"/>
+                            <div class="fieldMsg hint">Insert the kubernetes authentication token</div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </fieldset>
         <br ng-if="kubernetes" />
         <fieldset ng-show="kubernetes">
             <legend>Readiness Probe Parametes</legend>

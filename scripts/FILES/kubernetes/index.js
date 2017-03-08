@@ -56,36 +56,21 @@ var lib = {
     },
 
     getDeployer: function (deployerConfig, cb) {
-        if(!config.kubernetes.certsPath){
-            return cb(new Error('No certificates found for remote machine.'));
+        if(!config.kubernetes.config.authentication.accessToken){
+            return cb(new Error('No valid access token found for the kubernetes cluster'));
         }
         var deployer = {};
 
-        var certsName = {
-            "ca": '/ca.pem',
-            "cert": '/apiserver.pem',
-            "key": '/apiserver-key.pem'
-        };
-        lib.loadCustomData(function(body){
-            if(body.deployment.deployDriver === 'container.kubernetes.local' && process.platform === 'darwin'){
-                certsName = {
-                    "ca": '/ca.crt',
-                    "cert": '/apiserver.crt',
-                    "key": '/apiserver.key'
-                };
-            }
+        deployerConfig.auth = "bearer: " + config.kubernetes.config.authentication.accessToken;
 
-            deployerConfig.ca = fs.readFileSync(config.kubernetes.certsPath + certsName.ca);
-            deployerConfig.cert = fs.readFileSync(config.kubernetes.certsPath + certsName.cert);
-            deployerConfig.key = fs.readFileSync(config.kubernetes.certsPath + certsName.key);
 
-            deployerConfig.version = 'v1beta1';
-            deployer.extensions = new K8Api.Extensions(deployerConfig);
+        deployerConfig.version = 'v1beta1';
+        deployer.extensions = new K8Api.Extensions(deployerConfig);
 
-            deployerConfig.version = 'v1';
-            deployer.core = new K8Api.Core(deployerConfig);
-            return cb(null, deployer);
-        });
+        deployerConfig.version = 'v1';
+        deployer.core = new K8Api.Core(deployerConfig);
+
+        return cb(null, deployer);
     },
 
     getContent: function (type, group, cb) {
@@ -174,136 +159,6 @@ var lib = {
                 };
                 deployer.core.namespace.post({body: namespace}, cb);
             });
-        });
-    },
-
-    importCertificates: function (cb) {
-        return cb();
-        lib.loadCustomData(function(customFile) {
-            if(!customFile.deployment.certsRequired)
-                return cb(null, true);
-
-            else{
-                utilLog.log('Importing certifictes to:', profile.servers[0].host + ":" + profile.servers[0].port);
-                copyCACertificate(function(caErr){
-                    if(caErr){
-                        utilLog.log("Error while copying the certificate of type CA");
-                        throw new Error(caErr);
-                    }
-                    copyCertCertificate(function(certErr){
-                        if(certErr){
-                            utilLog.log("Error while copying the certificate of type Cert");
-                            throw new Error(certErr);
-                        }
-                        copyKeyCertificate(function(keyErr){
-                            if(keyErr){
-                                utilLog.log("Error while copying the certificate of type Key");
-                                throw new Error(keyErr);
-                            }
-
-                            return cb();
-                        });
-                    });
-                });
-            }
-
-            function getDb(soajs) {
-                profile.name = "core_provision";
-                mongo = new soajs.mongo(profile);
-                return mongo;
-            }
-
-            function copyCACertificate(cb) {
-
-                var fileData = {
-                    filename: "CA Certificate",
-                    metadata: {
-                        platform: 'kubernetes',
-                        certType: 'ca',
-                        env: {
-                            'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
-                        }
-                    }
-                };
-
-                getDb(soajs).getMongoDB(function (error, db) {
-                    if(error) {
-                        throw new Error(error);
-                    }
-                    var gfs = Grid(db, getDb(soajs).mongodb);
-                    var writeStream = gfs.createWriteStream(fileData);
-                    var readStream = fs.createReadStream(customFile.deployment.certificates.caCertificate);
-                    readStream.pipe(writeStream);
-
-                    writeStream.on('error', function (error) {
-                        return cb(error);
-                    });
-                    writeStream.on('close', function (file) {
-                        return cb(null, true);
-                    });
-                });
-            }
-
-            function copyCertCertificate(cb) {
-
-                var fileData = {
-                    filename: "Cert Certificate",
-                    metadata: {
-                        platform: 'kubernetes',
-                        certType: 'cert',
-                        env: {
-                            'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
-                        }
-                    }
-                };
-
-                getDb(soajs).getMongoDB(function (error, db) {
-                    if(error) {
-                        throw new Error(error);
-                    }
-                    var gfs = Grid(db, getDb(soajs).mongodb);
-                    var writeStream = gfs.createWriteStream(fileData);
-                    var readStream = fs.createReadStream(customFile.deployment.certificates.certCertificate);
-                    readStream.pipe(writeStream);
-                    writeStream.on('error', function (error) {
-                        return cb(error);
-                    });
-                    writeStream.on('close', function (file) {
-                        return cb(null, true);
-                    });
-                });
-            }
-
-            function copyKeyCertificate(cb) {
-
-                var fileData = {
-                    filename: "Key Certificate",
-                    metadata: {
-                        platform: 'kubernetes',
-                        certType: 'key',
-                        env: {
-                            'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
-                        }
-                    }
-                };
-
-                getDb(soajs).getMongoDB(function (error, db) {
-                    if(error) {
-                        throw new Error(error);
-                    }
-                    var gfs = Grid(db, getDb(soajs).mongodb);
-                    var writeStream = gfs.createWriteStream(fileData);
-                    var readStream = fs.createReadStream(customFile.deployment.certificates.keyCertificate);
-                    readStream.pipe(writeStream);
-                    writeStream.on('error', function (error) {
-                        return cb(error);
-                    });
-                    writeStream.on('close', function (file) {
-                        return cb(null, true);
-                    });
-                });
-            }
-
         });
     },
 
@@ -406,18 +261,18 @@ var lib = {
     deleteReplicaSets: function (deployer, params, cb) {
         var options = {
             method: 'GET',
-			uri: deployer.extensions.url + deployer.extensions.path + '/replicasets',
-			headers: {
-				'Content-Type': 'application/json'
-			},
+            uri: deployer.extensions.url + deployer.extensions.path + '/replicasets',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             qs: {
                 labelSelector: 'soajs.content=true'
             },
-			json: true,
+            json: true,
             ca: deployer.extensions.requestOptions.ca,
             cert: deployer.extensions.requestOptions.cert,
             key: deployer.extensions.requestOptions.key
-		};
+        };
 
         request(options, function (error, response, rsList) {
             if (error) return cb(error);
@@ -525,10 +380,10 @@ var lib = {
             mongoEnv.push({name: 'SOAJS_MONGO_PREFIX', value: config.mongo.prefix});
         }
 
-	    if (config.mongo.external) {
-		    if(config.mongo.rsName && config.mongo.rsName !== null){
-			    mongoEnv.push({name: 'SOAJS_MONGO_RSNAME', value: config.mongo.rsName});
-		    }
+        if (config.mongo.external) {
+            if(config.mongo.rsName && config.mongo.rsName !== null){
+                mongoEnv.push({name: 'SOAJS_MONGO_RSNAME', value: config.mongo.rsName});
+            }
 
             // if (!config.dataLayer.mongo.url || !config.dataLayer.mongo.port) {
             if (!profile.servers[0].host || !profile.servers[0].port) {

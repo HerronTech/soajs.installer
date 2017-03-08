@@ -78,10 +78,20 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 			}
 		});
 	};
-	
-	$timeout(function(){
-		$scope.getInfo();
-		$scope.getProgress();
-	}, 2000);
-	
+
+	var autoRefreshTimeout;
+
+	$scope.autoRefresh = function() {
+        autoRefreshTimeout = $timeout(function () {
+            $scope.getInfo();
+            $scope.getProgress();
+        }, 2000);
+    };
+
+	$scope.autoRefresh();
+
+    $scope.$on("$destroy", function(){
+        $timeout.cancel(autoRefreshTimeout);
+    });
+
 }]);

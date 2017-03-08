@@ -226,7 +226,16 @@ module.exports = {
 										"perService": { "type": "boolean", "required": false }
 									}
 								}
-							}
+							},
+                            "authentication": {
+                                "required": false,
+                                "validation": {
+                                    "type": "object",
+                                    "properties": {
+                                        "accessToken": { "type": "string", "required": false },
+                                    }
+                                }
+                            }
 						},
 						"additionalProperties": false
 					}

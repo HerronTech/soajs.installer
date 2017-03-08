@@ -77,9 +77,7 @@ function importProvisionData (dbServices, deployer, cb) {
         if (error) return cb(error);
 	    
 		setTimeout(function () {
-			lib.importData(config.mongo.services, function(){
-                lib.importCertificates(cb);
-			});
+			lib.importData(config.mongo.services, cb);
 		}, 5000);
 	});
 }

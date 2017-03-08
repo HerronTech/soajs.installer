@@ -305,9 +305,11 @@ module.exports = {
         envData = envData.replace(/%cookieSecret%/g, body.security.cookie);
         if (body.deployment.deployDriver.split('.')[1] === 'kubernetes') {
             envData = envData.replace(/"%namespace%"/g, JSON.stringify (body.deployment.namespaces, null, 2));
+            envData = envData.replace(/"%token%"/g, JSON.stringify (body.deployment.authentication.accessToken, null, 2));
         }
         else {
             envData = envData.replace(/%namespace%/g, {});
+            envData = envData.replace(/%token%/g, {});
         }
         fs.writeFile(folder + "environments/dashboard.js", envData, "utf8");
 
@@ -568,7 +570,9 @@ module.exports = {
 
                     "CONTAINER_HOST": body.deployment.containerHost,
                     "CONTAINER_PORT": body.deployment.kubernetes.containerPort,
-                    "SOAJS_DOCKER_REPLICA": body.deployment.dockerReplica
+                    "SOAJS_DOCKER_REPLICA": body.deployment.dockerReplica,
+
+                    "KUBE_AUTH_TOKEN": body.deployment.authentication.accessToken
                 };
 
                 if(body.deployment.gitSource && body.deployment.gitSource !== 'github'){

@@ -110,9 +110,11 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
     $scope.submit = function(form) {
         if (form.$valid) { //submit form if it is valid
             $scope.fillDeployment();
-        } else {
-            $scope.alerts.push({'type': 'danger', 'msg': 'Missing required fields [certificates, namespaces]'});
-        }
+        } else if($scope.kubernetes){
+            $scope.alerts.push({'type': 'danger', 'msg': 'Missing required fields [access token,  namespaces]'});
+        } else if($scope.deployment.deployDriver.indexOf("docker.remote") !== -1){
+            $scope.alerts.push({'type': 'danger', 'msg': 'Missing required fields [certificates]'});
+		}
     }
 
 	$scope.installSOAJS = function(){
@@ -215,6 +217,10 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 					default: (response && response.namespaces && response.namespaces.default) ? response.namespaces.default : '',
 					perService: (response && response.namespaces && response.namespaces.perService) ? response.namespaces.perService : false
 				};
+
+				//get kubernetes authentication token
+				$scope.deployment.authentication = {};
+				$scope.deployment.authentication.accessToken = (response && response.authentication && response.authentication.accessToken) ? response.authentication.accessToken : "";
 			}
 
 			$scope.evaluateDeploymentChoice();
