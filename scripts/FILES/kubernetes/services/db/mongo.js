@@ -14,7 +14,8 @@ var components = {
                 "soajs.service.name": "soajsdata",
                 "soajs.service.group": "db",
                 "soajs.service.type": "database",
-                "soajs.service.label": "dashboard-soajsdata"
+                "soajs.service.label": "dashboard-soajsdata",
+                "soajs.service.mode": "deployment"
             }
         },
         "spec": {
@@ -44,7 +45,8 @@ var components = {
                 "soajs.service.name": "soajsdata",
                 "soajs.service.group": "db",
                 "soajs.service.type": "database",
-                "soajs.service.label": "dashboard-soajsdata"
+                "soajs.service.label": "dashboard-soajsdata",
+                "soajs.service.mode": "deployment"
             }
         },
         "spec": {
@@ -64,7 +66,8 @@ var components = {
                         "soajs.service.name": "soajsdata",
                         "soajs.service.group": "db",
                         "soajs.service.type": "database",
-                        "soajs.service.label": "dashboard-soajsdata"
+                        "soajs.service.label": "dashboard-soajsdata",
+                        "soajs.service.mode": "deployment"
                     }
                 },
                 "spec": {

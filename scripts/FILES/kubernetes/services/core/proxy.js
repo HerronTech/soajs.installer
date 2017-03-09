@@ -15,7 +15,8 @@ var components = {
                 "soajs.service.group": "soajs-core-services",
                 "soajs.service.type": "service",
                 "soajs.service.version": "1",
-                "soajs.service.label": "dashboard-proxy"
+                "soajs.service.label": "dashboard-proxy",
+                "soajs.service.mode": "deployment"
             }
         },
         "spec": {
@@ -51,7 +52,8 @@ var components = {
                 "soajs.service.group": "soajs-core-services",
                 "soajs.service.type": "service",
                 "soajs.service.version": "1",
-                "soajs.service.label": "dashboard-proxy"
+                "soajs.service.label": "dashboard-proxy",
+                "soajs.service.mode": "deployment"
             }
         },
         "spec": {
@@ -72,7 +74,8 @@ var components = {
                         "soajs.service.group": "soajs-core-services",
                         "soajs.service.type": "service",
                         "soajs.service.version": "1",
-                        "soajs.service.label": "dashboard-proxy"
+                        "soajs.service.label": "dashboard-proxy",
+                        "soajs.service.mode": "deployment"
                     }
                 },
                 "spec": {

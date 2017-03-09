@@ -50,7 +50,8 @@ var config = {
 		"soajs.service.name": "dashboard",
 		"soajs.service.group": "soajs-core-services",
 		"soajs.service.version": "1",
-		"soajs.service.label": "dashboard_soajs_dashboard"
+		"soajs.service.label": "dashboard_soajs_dashboard",
+		"soajs.service.mode": "replicated"
 	},
 	workingDir: '/opt/soajs/FILES/deployer/',
 	command: [

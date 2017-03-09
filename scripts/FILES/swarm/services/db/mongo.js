@@ -20,7 +20,8 @@ var config = {
 	    "soajs.service.type": "database",
         "soajs.service.name": "soajsdata",
         "soajs.service.group": "db",
-        "soajs.service.label": "dashboard-soajsdata"
+        "soajs.service.label": "dashboard-soajsdata",
+        "soajs.service.mode": "replicated"
     },
     command: [
         'mongod',
