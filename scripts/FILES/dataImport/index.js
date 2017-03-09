@@ -7,6 +7,7 @@
  *
  ***************************************************************/
 var soajs = require("soajs");
+var async = require("async");
 
 var dataFolder = process.env.SOAJS_DATA_FOLDER;
 delete require.cache[process.env.SOAJS_PROFILE];
@@ -132,29 +133,106 @@ var lib = {
 
     //users
     "provisionIndex": function(cb){
-        mongo.ensureIndex("users", {username: 1}, {unique: true}, lib.errorLogger);
-        mongo.ensureIndex("users", {email: 1}, {unique: true}, lib.errorLogger);
-        mongo.ensureIndex("users", {username: 1, status: 1}, null, lib.errorLogger);
-        mongo.ensureIndex("users", {email: 1, status: 1}, null, lib.errorLogger);
-        mongo.ensureIndex("users", {groups: 1, 'tenant.id': 1}, null, lib.errorLogger);
-        mongo.ensureIndex("users", {username: 1, 'tenant.id': 1}, null, lib.errorLogger);
-        mongo.ensureIndex("users", {status: 1}, null, lib.errorLogger);
-        mongo.ensureIndex("users", {locked: 1}, null, lib.errorLogger);
-        mongo.ensureIndex("users", {'tenant.id': 1}, null, lib.errorLogger);
-        return cb();
+        var indexes = [
+            {
+                col: 'users',
+                index: {username: 1},
+                options: {unique: true}
+            },
+            {
+                col: 'users',
+                index: {email: 1},
+                options: {unique: true}
+            },
+            {
+                col: 'users',
+                index: {username: 1, status: 1},
+                options: null
+            },
+            {
+                col: 'users',
+                index: {email: 1, status: 1},
+                options: null
+            },
+            {
+                col: 'users',
+                index: {groups: 1, 'tenant.id': 1},
+                options: null
+            },
+            {
+                col: 'users',
+                index: {username: 1, 'tenant.id': 1},
+                options: null
+            },
+            {
+                col: 'users',
+                index: {status: 1},
+                options: null
+            },
+            {
+                col: 'users',
+                index: {locked: 1},
+                options: null
+            },
+            {
+                col: 'users',
+                index: {'tenant.id': 1},
+                options: null
+            }
+        ];
+
+        async.each(indexes, function (oneIndex, callback) {
+            mongo.ensureIndex(oneIndex.col, oneIndex.index, oneIndex.options, function (error) {
+                lib.errorLogger(error);
+                return callback();
+            });
+        }, cb);
     },
 
     "uracIndex": function(cb){
-        //groups
-        mongo.ensureIndex("groups", {code: 1, 'tenant.id': 1}, null, lib.errorLogger);
-        mongo.ensureIndex("groups", {code: 1}, null, lib.errorLogger);
-        mongo.ensureIndex("groups", {'tenant.id': 1}, null, lib.errorLogger);
-        mongo.ensureIndex("groups", {locked: 1}, null, lib.errorLogger);
-        //tokens
-        mongo.ensureIndex("tokens", {token: 1}, {unique: true}, lib.errorLogger);
-        mongo.ensureIndex("tokens", {userId: 1, service: 1, status: 1}, null, lib.errorLogger);
-        mongo.ensureIndex("tokens", {token: 1, service: 1, status: 1}, null, lib.errorLogger);
-        return cb();
+        var indexes = [
+            {
+                col: 'groups',
+                index: {code: 1, 'tenant.id': 1},
+                options: null
+            },
+            {
+                col: 'groups',
+                index: {code: 1},
+                options: null
+            },
+            {
+                col: 'groups',
+                index: {'tenant.id': 1},
+                options: null
+            },
+            {
+                col: 'groups',
+                index: {locked: 1},
+                options: null
+            },
+            {
+                col: 'tokens',
+                index: {token: 1},
+                options: {unique: true}
+            },
+            {
+                col: 'tokens',
+                index: {userId: 1, service: 1, status: 1},
+                options: null
+            },
+            {
+                col: 'tokens',
+                index: {token: 1, service: 1, status: 1},
+                options: null
+            }
+        ];
 
+        async.each(indexes, function (oneIndex, callback) {
+            mongo.ensureIndex(oneIndex.col, oneIndex.index, oneIndex.options, function (error) {
+                lib.errorLogger(error);
+                return callback();
+            });
+        }, cb);
     }
 };
