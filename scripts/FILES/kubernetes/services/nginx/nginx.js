@@ -4,7 +4,7 @@ var gConfig = require("../../config.js");
 //setting controller domain name per namespace
 var namespace = gConfig.kubernetes.config.namespaces.default;
 if (gConfig.kubernetes.config.namespaces.perService) {
-	namespace += '-dashboard-controller';
+	namespace += '-dashboard-controller-v1';
 }
 
 var components = {
@@ -113,7 +113,8 @@ var components = {
 								},
 								{
 									"name": "SOAJS_GIT_DASHBOARD_BRANCH",
-									"value": gConfig.git.branch
+									// "value": gConfig.git.branch
+									"value": 'develop'
 								},
 								{
 									"name": "SOAJS_NX_API_DOMAIN",
@@ -129,7 +130,7 @@ var components = {
 								},
 								{
 									"name": "SOAJS_NX_CONTROLLER_IP_1",
-									"value": "dashboard-controller." + namespace
+									"value": "dashboard-controller-v1-service." + namespace
 								},
 								{
 									"name": "SOAJS_NX_CONTROLLER_PORT_1",

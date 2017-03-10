@@ -6,7 +6,7 @@ var components = {
         "apiVersion": "v1",
         "kind": "Service",
         "metadata": {
-            "name": "dashboard-controller",
+            "name": "dashboard-controller-v1-service",
             "labels": {
                 "soajs.content": "true",
                 "soajs.env.code": "dashboard",
@@ -15,13 +15,13 @@ var components = {
                 "soajs.service.group": "soajs-core-services",
                 "soajs.service.type": "service",
                 "soajs.service.version": "1",
-                "soajs.service.label": "dashboard-controller",
+                "soajs.service.label": "dashboard-controller-v1",
                 "soajs.service.mode": "deployment"
             }
         },
         "spec": {
             "selector": {
-                "soajs.service.label": "dashboard-controller"
+                "soajs.service.label": "dashboard-controller-v1"
             },
             "ports": [
                 {
@@ -44,7 +44,7 @@ var components = {
         "kind": "Deployment",
         "metadata": {
             "soajs.content": "true",
-            "name": "dashboard-controller",
+            "name": "dashboard-controller-v1",
             "labels": {
                 "soajs.content": "true",
                 "soajs.env.code": "dashboard",
@@ -53,7 +53,7 @@ var components = {
                 "soajs.service.group": "soajs-core-services",
                 "soajs.service.type": "service",
                 "soajs.service.version": "1",
-                "soajs.service.label": "dashboard-controller",
+                "soajs.service.label": "dashboard-controller-v1",
                 "soajs.service.mode": "deployment"
             }
         },
@@ -61,7 +61,7 @@ var components = {
             "replicas": gConfig.kubernetes.replicas,
             "selector": {
                 "matchLabels": {
-                    "soajs.service.label": "dashboard-controller"
+                    "soajs.service.label": "dashboard-controller-v1"
                 }
             },
             "template": {
@@ -75,14 +75,14 @@ var components = {
                         "soajs.service.group": "soajs-core-services",
                         "soajs.service.type": "service",
                         "soajs.service.version": "1",
-                        "soajs.service.label": "dashboard-controller",
+                        "soajs.service.label": "dashboard-controller-v1",
                         "soajs.service.mode": "deployment"
                     }
                 },
                 "spec": {
                     "containers": [
                         {
-                            "name": "dashboard-controller",
+                            "name": "dashboard-controller-v1",
                             "image": gConfig.imagePrefix + "/soajs",
                             "imagePullPolicy": gConfig.imagePullPolicy,
                             "workingDir": "/opt/soajs/FILES/deployer/",

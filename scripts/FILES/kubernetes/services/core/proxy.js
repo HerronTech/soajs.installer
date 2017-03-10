@@ -6,7 +6,7 @@ var components = {
         "apiVersion": "v1",
         "kind": "Service",
         "metadata": {
-            "name": "dashboard-proxy-service",
+            "name": "dashboard-proxy-v1-service",
             "labels": {
                 "soajs.content": "true",
                 "soajs.env.code": "dashboard",
@@ -15,13 +15,13 @@ var components = {
                 "soajs.service.group": "soajs-core-services",
                 "soajs.service.type": "service",
                 "soajs.service.version": "1",
-                "soajs.service.label": "dashboard-proxy",
+                "soajs.service.label": "dashboard-proxy-v1",
                 "soajs.service.mode": "deployment"
             }
         },
         "spec": {
             "selector": {
-                "soajs.service.label": "dashboard-proxy"
+                "soajs.service.label": "dashboard-proxy-v1"
             },
             "ports": [
                 {
@@ -43,7 +43,7 @@ var components = {
         "apiVersion": "extensions/v1beta1",
         "kind": "Deployment",
         "metadata": {
-            "name": "dashboard-proxy",
+            "name": "dashboard-proxy-v1",
             "labels": {
                 "soajs.content": "true",
                 "soajs.env.code": "dashboard",
@@ -52,7 +52,7 @@ var components = {
                 "soajs.service.group": "soajs-core-services",
                 "soajs.service.type": "service",
                 "soajs.service.version": "1",
-                "soajs.service.label": "dashboard-proxy",
+                "soajs.service.label": "dashboard-proxy-v1",
                 "soajs.service.mode": "deployment"
             }
         },
@@ -60,12 +60,12 @@ var components = {
             "replicas": gConfig.kubernetes.replicas,
             "selector": {
                 "matchLabels": {
-                    "soajs.service.label": "dashboard-proxy"
+                    "soajs.service.label": "dashboard-proxy-v1"
                 }
             },
             "template": {
                 "metadata": {
-                    "name": "dashboard-proxy",
+                    "name": "dashboard-proxy-v1",
                     "labels": {
                         "soajs.content": "true",
                         "soajs.env.code": "dashboard",
@@ -74,14 +74,14 @@ var components = {
                         "soajs.service.group": "soajs-core-services",
                         "soajs.service.type": "service",
                         "soajs.service.version": "1",
-                        "soajs.service.label": "dashboard-proxy",
+                        "soajs.service.label": "dashboard-proxy-v1",
                         "soajs.service.mode": "deployment"
                     }
                 },
                 "spec": {
                     "containers": [
                         {
-                            "name": "dashboard-proxy",
+                            "name": "dashboard-proxy-v1",
                             "image": gConfig.imagePrefix + "/soajs",
                             "imagePullPolicy": gConfig.imagePullPolicy,
                             "workingDir": "/opt/soajs/FILES/deployer/",
