@@ -308,8 +308,8 @@ module.exports = {
             envData = envData.replace(/"%token%"/g, JSON.stringify (body.deployment.authentication.accessToken, null, 2));
         }
         else {
-            envData = envData.replace(/%namespace%/g, {});
-            envData = envData.replace(/%token%/g, {});
+            envData = envData.replace(/"%namespace%"/g, JSON.stringify ({}, null, 2));
+            envData = envData.replace(/%token%/g, '');
         }
         fs.writeFile(folder + "environments/dashboard.js", envData, "utf8");
 
@@ -579,7 +579,7 @@ module.exports = {
                     envs["SOAJS_GIT_SOURCE"] = body.deployment.gitSource;
                     envs["SOAJS_GIT_PROVIDER"] = body.deployment.gitProvider;
                 }
-	
+
 	            if (body.clusters.replicaSet) {
 		            envs['SOAJS_MONGO_RSNAME'] = body.clusters.replicaSet;
 	            }
