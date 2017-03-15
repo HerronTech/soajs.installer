@@ -295,16 +295,16 @@
                         <div id="nginxDeployType-wrapper">
                             <label>Service Deployment Type</label>
                             <select ng-required="kubernetes" name="nginxDeployType" id="nginxDeployType" ng-model="deployment.nginxDeployType">
-                                <option value="nodePort">NodePort</option>
-                                <option value="loadBalancer">Load Balancer</option>
+                                <option value="NodePort">NodePort</option>
+                                <option value="LoadBalancer">Load Balancer</option>
                             </select>
-                            <div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='loadBalancer'">Load Balancer option uses automatic public IP / ELB provisioning when running Kubernetes cluster in AWS or GCE.</div>
-                            <div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='nodePort'">NodePort exposes NGINX to the selected port number plus 30000.</div>
-                            <div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='nodePort'">Current NGINX exposed port: {{30000 + deployment.nginxPort}}</div>
+                            <div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='LoadBalancer'">Load Balancer option uses automatic public IP / ELB provisioning when running Kubernetes cluster in AWS or GCE.</div>
+                            <div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='NodePort'">NodePort exposes NGINX to the selected port number plus 30000.</div>
+                            <div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='NodePort'">Current NGINX exposed port: {{30000 + deployment.nginxPort}}</div>
                         </div>
                     </td>
                 </tr>
-                <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='nodePort'">
+                <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'">
                     <td class="form-select">
                         <div id="nginxPort-wrapper">
                             <label>NGINX Port</label>
@@ -314,7 +314,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='nodePort'">
+                <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'">
                     <td class="form-select">
                         <div id="nginxSecurePort-wrapper">
                             <label>NGINX Secure Port</label>
@@ -324,7 +324,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='nodePort'">
+                <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'">
                     <td class="form-select">
                         <div id="nginxSsl-wrapper">
                             <input class="f-left form-control" id="nginxSsl" name="nginxSsl" ng-model="deployment.nginxSsl"

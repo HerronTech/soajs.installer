@@ -163,7 +163,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				"nginxPort": (response && response.nginxPort) ? response.nginxPort : 80,
                 "nginxSecurePort": (response && response.nginxSecurePort) ? response.nginxSecurePort : 443,
                 "nginxSsl": (response && response.nginxSsl) ? response.nginxSsl : false,
-				"nginxDeployType": (response && response.nginxDeployType) ? response.nginxDeployType : "nodePort",
+				"nginxDeployType": (response && response.nginxDeployType) ? response.nginxDeployType : "NodePort",
 
                 "dockerReplica": (response && response.dockerReplica) ? response.dockerReplica : 1
 			};

@@ -189,7 +189,7 @@ module.exports = {
                             "nginxPort": {"type": "number", "required": false},
                             "nginxSecurePort": {"type": "number", "required": false},
                             "nginxSsl": {"type": "boolean", "required": false},
-							"nginxDeployType": {"type": "string", "required": false, "enum": ["nodePort", "loadBalancer"]},
+							"nginxDeployType": {"type": "string", "required": false, "enum": ["NodePort", "LoadBalancer"]},
 
                             "dockerSocket": {"type": "string", "required": false},
                             "networkName": {"type": "string", "required": false},
