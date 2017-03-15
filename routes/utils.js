@@ -73,74 +73,6 @@ module.exports = {
         });
     },
 
-    /*"loadProfile": function (cb) {
-     fs.exists(dataDir + "/startup/profile.js", function (exists) {
-     if (!exists) {
-     return cb(null, false);
-     }
-     else {
-     delete require.cache[require.resolve(dataDir + "/startup/profile.js")];
-     var customData = require(dataDir + "/startup/profile.js");
-     return cb(customData);
-     }
-     });
-     },
-
-     "getDeploymentInfo": function (profile, cb) {
-     //if mongo is a single server
-     if(profile.extraParam.server){
-     profile.extraParam.server.socketOptions={};
-     profile.extraParam.server.socketOptions.connectTimeoutMS = 2000;
-     profile.extraParam.server.socketOptions.socketTimeoutMS = 2000;
-
-     profile.extraParam.server.autoReconnect = false;
-     profile.extraParam.server.reconnectTries = 1;
-     profile.extraParam.server.reconnectInterval = 100;
-     }
-     //if mongo is a replica set
-     else if(profile.extraParam.replSet){
-     profile.extraParam.replSet.socketOptions={};
-     profile.extraParam.replSet.socketOptions.connectTimeoutMS = 2000;
-     profile.extraParam.replSet.socketOptions.socketTimeoutMS = 2000;
-
-     profile.extraParam.replSet.autoReconnect = false;
-     profile.extraParam.replSet.reconnectTries = 1;
-     profile.extraParam.replSet.reconnectInterval = 100;
-     }
-     //if mongos
-     else if(profile.extraParam.mongos){
-     profile.extraParam.mongos.socketOptions={};
-     profile.extraParam.mongos.socketOptions.connectTimeoutMS = 2000;
-     profile.extraParam.mongos.socketOptions.socketTimeoutMS = 2000;
-
-     profile.extraParam.mongos.autoReconnect = false;
-     profile.extraParam.mongos.reconnectTries = 1;
-     profile.extraParam.mongos.reconnectInterval = 100;
-     }
-
-     profile.URLParam.wtimeoutMS = 2000;
-     profile.URLParam.connectTimeoutMS = 2000;
-     profile.URLParam.socketTimeoutMS = 2000;
-
-     var mongo = new soajs.mongo(profile);
-
-     var condition = {"code": "DASHBOARD"};
-     mongo.findOne("environment", condition, function(error, response){
-     if(error){
-     return cb(error);
-     }
-     else if(!response){
-     return cb(null, {"deployType": null });
-     }
-     else{
-     var data = {
-     "deployType": response.deployer.selected
-     };
-     return cb(null, data);
-     }
-     });
-     },*/
-
     "generateExtKeys": function (opts, cb) {
         //soajs encryption engine
         var module = require("soajs/modules/soajs.core").key;
@@ -287,10 +219,6 @@ module.exports = {
         //modify environments file
         var envData = fs.readFileSync(folder + "environments/dashboard.js", "utf8");
 
-        if (body.deployment.deployDriver.indexOf("container.kubernetes") !== -1) {
-            //Add the NGINX deployment type to the registry
-            envData = envData.replace(/%nginxDeployType%/g,body.deployment.nginxDeployType);
-        };
         envData = envData.replace(/%domain%/g, body.gi.domain);
         envData = envData.replace(/%site%/g, body.gi.site);
         envData = envData.replace(/%api%/g, body.gi.api);
@@ -309,10 +237,12 @@ module.exports = {
         envData = envData.replace(/%sessionSecret%/g, body.security.session);
         envData = envData.replace(/%cookieSecret%/g, body.security.cookie);
         if (body.deployment.deployDriver.split('.')[1] === 'kubernetes') {
+            envData = envData.replace(/%nginxDeployType%/g, JSON.stringify (body.deployment.nginxDeployType.null,2));
             envData = envData.replace(/"%namespace%"/g, JSON.stringify (body.deployment.namespaces, null, 2));
             envData = envData.replace(/"%token%"/g, JSON.stringify (body.deployment.authentication.accessToken, null, 2));
         }
         else {
+            envData = envData.replace(/%nginxDeployType%/g, '');
             envData = envData.replace(/"%namespace%"/g, JSON.stringify ({}, null, 2));
             envData = envData.replace(/%token%/g, '');
         }
