@@ -174,6 +174,15 @@ var lib = {
             if (error) return cb(error);
 
             if (options.service) {
+
+                //if deploying NGINX, modify the spec object according to deployType
+                if(config.nginx.deployType === 'loadBalancer') {
+                    if (options.service.metadata.labels['soajs.service.type'] === 'nginx') {
+                        options.service.spec.type = 'loadBalancer';
+                        delete options.service.spec.ports[0].nodePort;
+                    }
+                }
+
                 deployer.core.namespaces(namespace).services.post({body: options.service}, function (error) {
                     if (error) return cb(error);
                     createDeployment(cb);

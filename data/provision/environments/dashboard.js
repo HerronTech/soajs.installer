@@ -22,12 +22,14 @@ var dashboard = {
 		    },
 		    "kubernetes":{
 			    "local":{
+			        "nginxDeployType": "%nginxDeployType%",
 				    "namespace": "%namespace%",
                     "auth": {
 				        "token": "%token%"
                     }
 			    },
 			    "remote":{
+                    "nginxDeployType": "%nginxDeployType%",
 				    "namespace": "%namespace%",
                     "auth": {
                         "token": "%token%"

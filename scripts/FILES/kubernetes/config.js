@@ -34,6 +34,7 @@ module.exports = {
 		"port": parseInt(profile.servers[0].port) || 31000
 	},
 	"nginx":{
+		"deployType": process.env.NGINX_DEPLOY_TYPE || null,
 		"port": {
 			"http": parseInt(process.env.NGINX_HTTP_PORT) || 80,
 			"https": parseInt(process.env.NGINX_HTTPS_PORT) || 443
