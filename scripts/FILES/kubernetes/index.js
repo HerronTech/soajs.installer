@@ -178,7 +178,7 @@ var lib = {
                 //if deploying NGINX, modify the spec object according to deployType
                 if(config.nginx.deployType === 'loadBalancer') {
                     if (options.service.metadata.labels['soajs.service.type'] === 'nginx') {
-                        options.service.spec.type = 'loadBalancer';
+                        options.service.spec.type = 'LoadBalancer';
                         delete options.service.spec.ports[0].nodePort;
                     }
                 }
