@@ -237,9 +237,9 @@ module.exports = {
         envData = envData.replace(/%sessionSecret%/g, body.security.session);
         envData = envData.replace(/%cookieSecret%/g, body.security.cookie);
         if (body.deployment.deployDriver.split('.')[1] === 'kubernetes') {
-            envData = envData.replace(/%nginxDeployType%/g, JSON.stringify (body.deployment.nginxDeployType.null,2));
+            envData = envData.replace(/%nginxDeployType%/g, body.deployment.nginxDeployType);
             envData = envData.replace(/"%namespace%"/g, JSON.stringify (body.deployment.namespaces, null, 2));
-            envData = envData.replace(/"%token%"/g, JSON.stringify (body.deployment.authentication.accessToken, null, 2));
+            envData = envData.replace(/"%token%"/g, body.deployment.authentication.accessToken);
         }
         else {
             envData = envData.replace(/%nginxDeployType%/g, '');
