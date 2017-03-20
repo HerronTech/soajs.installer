@@ -22,7 +22,7 @@ var controllerServicePort = '4000';
 
 var gitProvider = (process.env.SOAJS_GIT_PROVIDER) ? " -G " + process.env.SOAJS_GIT_PROVIDER : "";
 var gitSource = (process.env.SOAJS_GIT_SOURCE) ? " -g " + process.env.SOAJS_GIT_SOURCE : "";
-	
+
 var config = {
 	servName: 'dashboard_nginx',
 	servReplica: parseInt(gConfig.docker.replicas),
@@ -63,7 +63,8 @@ var config = {
 		"soajs.service.type": "nginx",
 		"soajs.service.name": "nginx",
 		"soajs.service.group": "nginx",
-		"soajs.service.label": "dashboard_nginx"
+		"soajs.service.label": "dashboard_nginx",
+		"soajs.service.mode": "replicated"
 	},
 	workingDir: '/opt/soajs/FILES/deployer/',
 	command: [
@@ -93,7 +94,7 @@ if (customUISrc.repo && customUISrc.owner) {
 	if (customUISrc.branch) {
 		config.env.push('SOAJS_GIT_BRANCH=' + customUISrc.branch || "develop");
 	}
-	
+
 	if (customUISrc.token) {
 		config.env.push('SOAJS_GIT_TOKEN=' + customUISrc.token);
 	}

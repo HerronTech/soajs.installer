@@ -51,7 +51,7 @@ var lib = {
 		record._id = mongo.ObjectId(record._id);
 		mongo.insert("environment", record, cb);
 	},
-	
+
 	/*
 	 Products
 	 */
@@ -60,7 +60,7 @@ var lib = {
 		record._id = mongo.ObjectId(record._id);
 		mongo.insert("products", record, cb);
 	},
-	
+
 	/*
 	 Services
 	 */
@@ -68,21 +68,21 @@ var lib = {
 		var record = require(dataFolder + "services/index.js");
 		mongo.insert("services", record, cb);
 	},
-	
+
 	/*
 	 Tenants
 	 */
 	"addTenants": function (cb) {
 		var record = require(dataFolder + "tenants/owner.js");
-		
+
 		record._id = mongo.ObjectId(record._id);
 		record.applications.forEach(function (oneApp) {
 			oneApp.appId = mongo.ObjectId(oneApp.appId);
 		});
-		
+
 		mongo.insert("tenants", record, cb);
 	},
-	
+
 	/*
 	 Git Accounts
 	 */
@@ -91,7 +91,7 @@ var lib = {
 		record._id = mongo.ObjectId(record._id);
 		mongo.insert("git_accounts", record, cb);
 	},
-	
+
 	/***************************************************************
 	 *
 	 * DASHBOARD URAC
@@ -104,7 +104,7 @@ var lib = {
 		var record = require(dataFolder + "urac/users/owner.js");
 		mongo.insert("users", record, cb);
 	},
-	
+
 	/*
 	 Groups
 	 */
@@ -112,13 +112,13 @@ var lib = {
 		var record = require(dataFolder + "urac/groups/owner.js");
 		mongo.insert("groups", record, cb);
 	},
-	
+
 	"errorLogger": function (error) {
 		if (error) {
 			return console.log(error);
 		}
 	},
-	
+
 	"uracIndex": function (cb) {
 		var indexes = [
 			{

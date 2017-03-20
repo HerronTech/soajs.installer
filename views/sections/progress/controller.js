@@ -6,13 +6,13 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 	$scope.closeAlert = function(i){
 		$scope.alerts.splice(i, 1);
 	};
-	
+
 	$scope.getInfo = function(cb){
 		var options = {
 			url: appConfig.url + "/progress/info",
 			method: "get"
 		};
-		
+
 		ngDataApi.get($scope, options, function (error, response) {
 			if (error) {
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
@@ -24,19 +24,19 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 			return cb();
 		});
 	};
-	
+
 	$scope.getProgress = function(){
 		var options = {
 			url: appConfig.url + "/progress",
 			method: "get"
 		};
-		
+
 		ngDataApi.get($scope, options, function(error, response) {
 			if (error) {
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
 				return false;
 			}
-			
+
 			$scope.info = response;
 			$scope.deployType = $scope.info.deployType;
 			if($scope.info.download){
@@ -50,7 +50,7 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 					$scope.info.download.barType = "info";
 				}
 			}
-			
+
 			if($scope.info.install){
 				$scope.info.install.progress = ($scope.info.install.count / $scope.info.install.total) * 100;
 				$scope.info.install.progress = $scope.info.install.progress.toFixed(2);
@@ -62,28 +62,45 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 					$scope.info.install.barType = "info";
 				}
 			}
-			
+
+			var autoProgressTimeout;
+
+			$scope.autoProgress = function(){
+                autoProgressTimeout = $timeout(function(){
+                    $scope.getProgress();
+                }, 3000);
+			};
+
 			if($scope.deployType === 'manual'){
 				if((!$scope.install || $scope.install === false) || (!$scope.download || $scope.download === false)){
-					$timeout(function(){
-						$scope.getProgress();
-					}, 3000);
+					$scope.autoProgress();
 				}
 			}
 			else{
 				if((!$scope.download || $scope.download === false)){
-					$timeout(function(){
-						$scope.getProgress();
-					}, 3000);
+                    $scope.autoProgress();
 				}
 			}
+
+            $scope.$on("$destroy", function(event){
+                $timeout.cancel(autoProgressTimeout);
+            });
 		});
 	};
-	
-	$timeout(function(){
-		$scope.getInfo(function(){
-			$scope.getProgress();
-		});
-	}, 3000);
-	
+
+	var autoRefreshTimeout;
+
+	$scope.autoRefresh = function() {
+        autoRefreshTimeout = $timeout(function () {
+            $scope.getInfo();
+            $scope.getProgress();
+        }, 2000);
+    };
+
+	$scope.autoRefresh();
+
+    $scope.$on("$destroy", function(event){
+        $timeout.cancel(autoRefreshTimeout);
+    });
+
 }]);

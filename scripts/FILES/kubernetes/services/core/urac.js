@@ -6,7 +6,7 @@ var components = {
         "apiVersion": "v1",
         "kind": "Service",
         "metadata": {
-            "name": "dashboard-urac-service",
+            "name": "dashboard-urac-v2-service",
             "labels": {
                 "soajs.content": "true",
                 "soajs.env.code": "dashboard",
@@ -15,12 +15,13 @@ var components = {
                 "soajs.service.group": "soajs-core-services",
                 "soajs.service.type": "service",
                 "soajs.service.version": "2",
-                "soajs.service.label": "dashboard-urac"
+                "soajs.service.label": "dashboard-urac-v2",
+                "soajs.service.mode": "deployment"
             }
         },
         "spec": {
             "selector": {
-                "soajs.service.label": "dashboard-urac"
+                "soajs.service.label": "dashboard-urac-v2"
             },
             "ports": [
                 {
@@ -42,7 +43,7 @@ var components = {
         "apiVersion": "extensions/v1beta1",
         "kind": "Deployment",
         "metadata": {
-            "name": "dashboard-urac",
+            "name": "dashboard-urac-v2",
             "labels": {
                 "soajs.content": "true",
                 "soajs.env.code": "dashboard",
@@ -51,19 +52,20 @@ var components = {
                 "soajs.service.group": "soajs-core-services",
                 "soajs.service.type": "service",
                 "soajs.service.version": "2",
-                "soajs.service.label": "dashboard-urac"
+                "soajs.service.label": "dashboard-urac-v2",
+                "soajs.service.mode": "deployment"
             }
         },
         "spec": {
             "replicas": gConfig.kubernetes.replicas,
             "selector": {
                 "matchLabels": {
-                    "soajs.service.label": "dashboard-urac"
+                    "soajs.service.label": "dashboard-urac-v2"
                 }
             },
             "template": {
                 "metadata": {
-                    "name": "dashboard-urac",
+                    "name": "dashboard-urac-v2",
                     "labels": {
                         "soajs.content": "true",
                         "soajs.env.code": "dashboard",
@@ -72,13 +74,14 @@ var components = {
                         "soajs.service.group": "soajs-core-services",
                         "soajs.service.type": "service",
                         "soajs.service.version": "2",
-                        "soajs.service.label": "dashboard-urac"
+                        "soajs.service.label": "dashboard-urac-v2",
+                        "soajs.service.mode": "deployment"
                     }
                 },
                 "spec": {
                     "containers": [
                         {
-                            "name": "dashboard-urac",
+                            "name": "dashboard-urac-v2",
                             "image": gConfig.imagePrefix + "/soajs",
                             "imagePullPolicy": gConfig.imagePullPolicy,
                             "workingDir": "/opt/soajs/FILES/deployer/",

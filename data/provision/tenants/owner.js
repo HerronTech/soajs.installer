@@ -20,6 +20,7 @@ var dsbrd = {
 			"package": "DSBRD_MAIN",
 			"appId": '5512926a7a1f0e2123f638de',
 			"description": "This application uses the Dashboard Public Package.",
+			"_TTL": 604800000,
 			"keys": [
 				{
 					"key": "38145c67717c73d3febd16df38abf311",
@@ -88,6 +89,7 @@ var dsbrd = {
             "package": "DSBRD_OWNER",
             "appId": '55cc56a3c3aca9179e5048e6',
             "description": "This application uses the Dashboard Owner Package.",
+			"_TTL": 604800000,
             "keys": [
                 {
                     "key": "9ccfb3cdaf5f61cf0cff5c78215b2292",

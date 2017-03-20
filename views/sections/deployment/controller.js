@@ -73,7 +73,6 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 	};
 
 	$scope.fillDeployment = function () {
-		console.log ($scope.deployment);
 		var data = angular.copy($scope.deployment);
 		for(var i in data){
 			if(data[i] === null){
@@ -111,9 +110,11 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
     $scope.submit = function(form) {
         if (form.$valid) { //submit form if it is valid
             $scope.fillDeployment();
-        } else {
-            $scope.alerts.push({'type': 'danger', 'msg': 'Missing required fields [certificates, namespaces]'});
-        }
+        } else if($scope.kubernetes){
+            $scope.alerts.push({'type': 'danger', 'msg': 'Missing required fields [access token,  namespaces]'});
+        } else if($scope.deployment.deployDriver.indexOf("docker.remote") !== -1){
+            $scope.alerts.push({'type': 'danger', 'msg': 'Missing required fields [certificates]'});
+		}
     }
 
 	$scope.installSOAJS = function(){
@@ -138,6 +139,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			method: "get"
 		};
 
+
 		ngDataApi.get($scope, options, function (error, response) {
 			if (error) {
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
@@ -157,9 +159,11 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
                 "gitToken": (response && response.gitToken) ? response.gitToken : null,
 				"imagePrefix": (response && response.imagePrefix) ? response.imagePrefix : "soajsorg",
 				"certsRequired": false,
+
 				"nginxPort": (response && response.nginxPort) ? response.nginxPort : 80,
                 "nginxSecurePort": (response && response.nginxSecurePort) ? response.nginxSecurePort : 443,
                 "nginxSsl": (response && response.nginxSsl) ? response.nginxSsl : false,
+				"nginxDeployType": (response && response.nginxDeployType) ? response.nginxDeployType : "NodePort",
 
                 "dockerReplica": (response && response.dockerReplica) ? response.dockerReplica : 1
 			};
@@ -180,7 +184,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				}
 			}
 			else if ($scope.deployment.deployDriver.indexOf("kubernetes") !== -1){
-                $scope.deployment.certsRequired = true;
+                $scope.deployment.certsRequired = false;
 				$scope.deployment.containerDir = (response && response.kubernetes && response.kubernetes.containerDir) ? response.kubernetes.containerDir : "";
 				$scope.deployment.kubeContainerPort = (response && response.kubernetes && response.kubernetes.containerPort) ? response.kubernetes.containerPort : 8443;
 
@@ -215,6 +219,10 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 					default: (response && response.namespaces && response.namespaces.default) ? response.namespaces.default : '',
 					perService: (response && response.namespaces && response.namespaces.perService) ? response.namespaces.perService : false
 				};
+
+				//get kubernetes authentication token
+				$scope.deployment.authentication = {};
+				$scope.deployment.authentication.accessToken = (response && response.authentication && response.authentication.accessToken) ? response.authentication.accessToken : "";
 			}
 
 			$scope.evaluateDeploymentChoice();

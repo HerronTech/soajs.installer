@@ -48,7 +48,8 @@ var config = {
 		"soajs.service.name": "urac",
 		"soajs.service.group": "soajs-core-services",
 		"soajs.service.version": "2",
-		"soajs.service.label": "dashboard_soajs_urac"
+		"soajs.service.label": "dashboard_soajs_urac",
+        "soajs.service.mode": "replicated"
     },
     workingDir: '/opt/soajs/FILES/deployer/',
     command: [

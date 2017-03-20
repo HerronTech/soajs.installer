@@ -22,10 +22,18 @@ var dashboard = {
 		    },
 		    "kubernetes":{
 			    "local":{
-				    "namespace": "%namespace%"
+			        "nginxDeployType": "%nginxDeployType%",
+				    "namespace": "%namespace%",
+                    "auth": {
+				        "token": "%token%"
+                    }
 			    },
 			    "remote":{
-				    "namespace": "%namespace%"
+                    "nginxDeployType": "%nginxDeployType%",
+				    "namespace": "%namespace%",
+                    "auth": {
+                        "token": "%token%"
+                    }
 			    }
 		    }
 	    }

@@ -9,6 +9,7 @@ var exec = require('child_process').exec;
 var soajs = require('soajs');
 var soajsModules = require('soajs.core.modules');
 var request = require('request');
+var clone = require('clone');
 
 var config = require('./config.js');
 var folder = config.folder;
@@ -56,36 +57,22 @@ var lib = {
     },
 
     getDeployer: function (deployerConfig, cb) {
-        if(!config.kubernetes.certsPath){
-            return cb(new Error('No certificates found for remote machine.'));
+        if(!config.kubernetes.config.auth.bearer){
+            return cb(new Error('No valid access token found for the kubernetes cluster'));
         }
         var deployer = {};
 
-        var certsName = {
-            "ca": '/ca.pem',
-            "cert": '/apiserver.pem',
-            "key": '/apiserver-key.pem'
-        };
-        lib.loadCustomData(function(body){
-            if(body.deployment.deployDriver === 'container.kubernetes.local' && process.platform === 'darwin'){
-                certsName = {
-                    "ca": '/ca.crt',
-                    "cert": '/apiserver.crt',
-                    "key": '/apiserver.key'
-                };
-            }
+        deployerConfig.request = {
+            strictSSL: false
+        }
 
-            deployerConfig.ca = fs.readFileSync(config.kubernetes.certsPath + certsName.ca);
-            deployerConfig.cert = fs.readFileSync(config.kubernetes.certsPath + certsName.cert);
-            deployerConfig.key = fs.readFileSync(config.kubernetes.certsPath + certsName.key);
+        deployerConfig.version = 'v1beta1';
+        deployer.extensions = new K8Api.Extensions(deployerConfig);
 
-            deployerConfig.version = 'v1beta1';
-            deployer.extensions = new K8Api.Extensions(deployerConfig);
+        deployerConfig.version = 'v1';
+        deployer.core = new K8Api.Core(deployerConfig);
 
-            deployerConfig.version = 'v1';
-            deployer.core = new K8Api.Core(deployerConfig);
-            return cb(null, deployer);
-        });
+        return cb(null, deployer);
     },
 
     getContent: function (type, group, cb) {
@@ -137,7 +124,13 @@ var lib = {
         utilLog.log('Importing provision data to:', profile.servers[0].host + ":" + profile.servers[0].port);
         var dataImportFile = __dirname + "/../dataImport/index.js";
         var execString = process.env.NODE_PATH + " " + dataImportFile;
-        exec(execString, cb);
+        exec(execString, function (error, stdout, stderr) {
+            if (error) {
+                utilLog.log(error);
+            }
+
+            return cb();
+        });
     },
 
     initNamespace: function (deployer, options, cb) {
@@ -171,136 +164,6 @@ var lib = {
         });
     },
 
-    importCertificates: function (cb) {
-        return cb();
-        // lib.loadCustomData(function(customFile) {
-        //     if(!customFile.deployment.certsRequired)
-        //         return cb(null, true);
-        //
-        //     else{
-        //         utilLog.log('Importing certifictes to:', profile.servers[0].host + ":" + profile.servers[0].port);
-        //         copyCACertificate(function(caErr){
-        //             if(caErr){
-        //                 utilLog.log("Error while copying the certificate of type CA");
-        //                 throw new Error(caErr);
-        //             }
-        //             copyCertCertificate(function(certErr){
-        //                 if(certErr){
-        //                     utilLog.log("Error while copying the certificate of type Cert");
-        //                     throw new Error(certErr);
-        //                 }
-        //                 copyKeyCertificate(function(keyErr){
-        //                     if(keyErr){
-        //                         utilLog.log("Error while copying the certificate of type Key");
-        //                         throw new Error(keyErr);
-        //                     }
-        //
-        //                     return cb();
-        //                 });
-        //             });
-        //         });
-        //     }
-        //
-        //     function getDb() {
-        //         profile.name = "core_provision";
-        //         mongo = new soajsModules.mongo(profile);
-        //         return mongo;
-        //     }
-        //
-        //     function copyCACertificate(cb) {
-        //
-        //         var fileData = {
-        //             filename: "CA Certificate",
-        //             metadata: {
-        //                 platform: 'kubernetes',
-        //                 certType: 'ca',
-        //                 env: {
-        //                     'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
-        //                 }
-        //             }
-        //         };
-        //
-        //         getDb().getMongoDB(function (error, db) {
-        //             if(error) {
-        //                 throw new Error(error);
-        //             }
-        //             var gfs = Grid(db, getDb().mongodb);
-        //             var writeStream = gfs.createWriteStream(fileData);
-        //             var readStream = fs.createReadStream(customFile.deployment.certificates.caCertificate);
-        //             readStream.pipe(writeStream);
-        //
-        //             writeStream.on('error', function (error) {
-        //                 return cb(error);
-        //             });
-        //             writeStream.on('close', function (file) {
-        //                 return cb(null, true);
-        //             });
-        //         });
-        //     }
-        //
-        //     function copyCertCertificate(cb) {
-        //
-        //         var fileData = {
-        //             filename: "Cert Certificate",
-        //             metadata: {
-        //                 platform: 'kubernetes',
-        //                 certType: 'cert',
-        //                 env: {
-        //                     'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
-        //                 }
-        //             }
-        //         };
-        //
-        //         getDb().getMongoDB(function (error, db) {
-        //             if(error) {
-        //                 throw new Error(error);
-        //             }
-        //             var gfs = Grid(db, getDb().mongodb);
-        //             var writeStream = gfs.createWriteStream(fileData);
-        //             var readStream = fs.createReadStream(customFile.deployment.certificates.certCertificate);
-        //             readStream.pipe(writeStream);
-        //             writeStream.on('error', function (error) {
-        //                 return cb(error);
-        //             });
-        //             writeStream.on('close', function (file) {
-        //                 return cb(null, true);
-        //             });
-        //         });
-        //     }
-        //
-        //     function copyKeyCertificate(cb) {
-        //
-        //         var fileData = {
-        //             filename: "Key Certificate",
-        //             metadata: {
-        //                 platform: 'kubernetes',
-        //                 certType: 'key',
-        //                 env: {
-        //                     'DASHBOARD':[customFile.deployment.deployDriver.split('.')[1] + "." + customFile.deployment.deployDriver.split('.')[2]]
-        //                 }
-        //             }
-        //         };
-        //
-        //         getDb().getMongoDB(function (error, db) {
-        //             if(error) {
-        //                 throw new Error(error);
-        //             }
-        //             var gfs = Grid(db, getDb().mongodb);
-        //             var writeStream = gfs.createWriteStream(fileData);
-        //             var readStream = fs.createReadStream(customFile.deployment.certificates.keyCertificate);
-        //             readStream.pipe(writeStream);
-        //             writeStream.on('error', function (error) {
-        //                 return cb(error);
-        //             });
-        //             writeStream.on('close', function (file) {
-        //                 return cb(null, true);
-        //             });
-        //         });
-        //     }
-        //
-        // });
-    },
-
     deployService: function (deployer, options, cb) {
         var namespace = config.kubernetes.config.namespaces.default, serviceName;
         if (config.kubernetes.config.namespaces.perService) {
@@ -312,6 +175,15 @@ var lib = {
             if (error) return cb(error);
 
             if (options.service) {
+
+                //if deploying NGINX, modify the spec object according to deployType
+                if(config.nginx.deployType === 'LoadBalancer') {
+                    if (options.service.metadata.labels['soajs.service.type'] === 'nginx') {
+                        options.service.spec.type = 'LoadBalancer';
+                        delete options.service.spec.ports[0].nodePort;
+                    }
+                }
+
                 deployer.core.namespaces(namespace).services.post({body: options.service}, function (error) {
                     if (error) return cb(error);
                     createDeployment(cb);
@@ -333,9 +205,16 @@ var lib = {
             if (error) return cb(error);
 
             if (!deploymentList || !deploymentList.items || deploymentList.items.length === 0) return cb();
-            filter.gracePeriodSeconds = 0;
+            var params = { gracePeriodSeconds: 0 };
             async.each(deploymentList.items, function (oneDeployment, callback) {
-                deployer.extensions.namespaces(oneDeployment.metadata.namespace).deployments.delete({qs: filter}, callback);
+                oneDeployment.spec.replicas = 0;
+                deployer.extensions.namespaces(oneDeployment.metadata.namespace).deployments.put({ name: oneDeployment.metadata.name, body: oneDeployment }, function (error) {
+                    if (error) return callback(error);
+
+                    setTimeout(function () {
+                        deployer.extensions.namespaces(oneDeployment.metadata.namespace).deployments.delete({ name: oneDeployment.metadata.name, qs: params }, callback);
+                    }, 5000);
+                });
             }, cb);
         });
     },
@@ -359,9 +238,70 @@ var lib = {
             if (error) return cb(error);
 
             if (!podList || !podList.items || podList.items.length === 0) return cb();
-            filter.gracePeriodSeconds = 0;
+            var params = { gracePeriodSeconds: 0 };
             async.each(podList.items, function (onePod, callback) {
-                deployer.core.namespaces(onePod.metadata.namespace).delete({ qs: filter }, callback);
+                deployer.core.namespaces(onePod.metadata.namespace).pods.delete({ name: onePod.metadata.name, qs: params }, callback);
+            }, cb);
+        });
+    },
+
+    ensurePods: function (deployer, options, counter, cb) {
+        if (typeof (counter) === 'function') {
+            cb = counter; //counter wasn't passed as param
+            counter = 0;
+        }
+
+        var filter = { labelSelector: 'soajs.content=true' };
+        deployer.core.pods.get({ qs: filter }, function (error, podList) {
+            if (error) return cb(error);
+
+            if (!podList || !podList.items || podList.items.length === 0) {
+                console.log (); // moving to new line
+                return cb();
+            }
+
+            if (podList.items.length > 0) {
+                lib.printProgress('Waiting for all previous pods to terminate', counter++);
+                setTimeout(function () {
+                    return lib.ensurePods(deployer, options, cb);
+                }, 1000);
+            }
+        });
+    },
+
+    deleteReplicaSets: function (deployer, params, cb) {
+        var options = {
+            method: 'GET',
+            uri: deployer.extensions.url + deployer.extensions.path + '/replicasets',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + deployer.extensions.requestOptions.auth.bearer
+            },
+            qs: {
+                labelSelector: 'soajs.content=true'
+            },
+            json: true,
+            "strictSSL": false
+        };
+
+        request(options, function (error, response, rsList) {
+            if (error) return cb(error);
+
+            if (!rsList || !rsList.items || rsList.items.length === 0) return cb();
+            async.each(rsList.items, function (oneRS, callback) {
+                var reqOpts = clone(options);
+
+                reqOpts.method = 'DELETE';
+                reqOpts.uri = deployer.extensions.url + oneRS.metadata.selfLink;
+
+                reqOpts.qs = { gracePeriodSeconds: 0 };
+                setTimeout(function () {
+                    request(options, function (error, response, body) {
+                        if (error) return callback(error);
+
+                        return callback(null, true);
+                    });
+                }, 5000);
             }, cb);
         });
     },
@@ -375,13 +315,23 @@ var lib = {
         lib.deleteDeployments(deployer, {}, function (error) {
             if (error) return cb(error);
 
-            lib.deleteKubeServices(deployer, {}, function (error) {
+            lib.deleteReplicaSets(deployer, {}, function (error) {
                 if (error) return cb(error);
 
-                lib.deletePods(deployer, {}, function (error) {
+                lib.deleteKubeServices(deployer, {}, function (error) {
                     if (error) return cb(error);
 
-                    lib.deleteNamespaces(deployer, {}, cb);
+                    lib.deletePods(deployer, {}, function (error) {
+                        if (error) return cb(error);
+
+                        lib.ensurePods(deployer, {}, function (error) {
+                            if (error) return cb(error);
+
+                            setTimeout(function () {
+                                lib.deleteNamespaces(deployer, {}, cb);
+                            }, 5000);
+                        });
+                    });
                 });
             });
         });
@@ -405,7 +355,7 @@ var lib = {
         }
 
         var filter = { labelSelector: 'soajs.service.label=' + serviceName };
-        deployer.core.pods.get({ qs: filter }, function (error, podList) {
+        deployer.core.namespaces(namespace).pods.get({ qs: filter }, function (error, podList) {
             if (error) return cb(error);
             var onePod, ips = [];
             if (podList && podList.items && Array.isArray(podList.items)) {
@@ -439,12 +389,12 @@ var lib = {
         if(config.mongo.prefix && config.mongo.prefix !== ""){
             mongoEnv.push({name: 'SOAJS_MONGO_PREFIX', value: config.mongo.prefix});
         }
-	
-	    if (config.mongo.external) {
-		    if(config.mongo.rsName && config.mongo.rsName !== null){
-			    mongoEnv.push({name: 'SOAJS_MONGO_RSNAME', value: config.mongo.rsName});
-		    }
-		    
+
+        if (config.mongo.external) {
+            if(config.mongo.rsName && config.mongo.rsName !== null){
+                mongoEnv.push({name: 'SOAJS_MONGO_RSNAME', value: config.mongo.rsName});
+            }
+
             // if (!config.dataLayer.mongo.url || !config.dataLayer.mongo.port) {
             if (!profile.servers[0].host || !profile.servers[0].port) {
                 utilLog.log('ERROR: External Mongo information is missing URL or port, make sure SOAJS_MONGO_EXTERNAL_URL and SOAJS_MONGO_EXTERNAL_PORT are set ...');
@@ -488,3 +438,4 @@ var lib = {
 };
 
 module.exports = lib;
+//

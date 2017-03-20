@@ -189,6 +189,7 @@ module.exports = {
                             "nginxPort": {"type": "number", "required": false},
                             "nginxSecurePort": {"type": "number", "required": false},
                             "nginxSsl": {"type": "boolean", "required": false},
+							"nginxDeployType": {"type": "string", "required": false, "enum": ["NodePort", "LoadBalancer"]},
 
                             "dockerSocket": {"type": "string", "required": false},
                             "networkName": {"type": "string", "required": false},
@@ -226,7 +227,16 @@ module.exports = {
 										"perService": { "type": "boolean", "required": false }
 									}
 								}
-							}
+							},
+                            "authentication": {
+                                "required": false,
+                                "validation": {
+                                    "type": "object",
+                                    "properties": {
+                                        "accessToken": { "type": "string", "required": false },
+                                    }
+                                }
+                            }
 						},
 						"additionalProperties": false
 					}

@@ -68,80 +68,12 @@ module.exports = {
                     }
                 }
                 catch (e){
-                	console.log(e);
+                    console.log (e);
                     return cb(null);
                 }
             }
         });
     },
-
-    /*"loadProfile": function (cb) {
-        fs.exists(dataDir + "/startup/profile.js", function (exists) {
-            if (!exists) {
-                return cb(null, false);
-            }
-            else {
-                delete require.cache[require.resolve(dataDir + "/startup/profile.js")];
-                var customData = require(dataDir + "/startup/profile.js");
-                return cb(customData);
-            }
-        });
-    },
-
-    "getDeploymentInfo": function (profile, cb) {
-        //if mongo is a single server
-        if(profile.extraParam.server){
-            profile.extraParam.server.socketOptions={};
-            profile.extraParam.server.socketOptions.connectTimeoutMS = 2000;
-            profile.extraParam.server.socketOptions.socketTimeoutMS = 2000;
-
-            profile.extraParam.server.autoReconnect = false;
-            profile.extraParam.server.reconnectTries = 1;
-            profile.extraParam.server.reconnectInterval = 100;
-        }
-        //if mongo is a replica set
-        else if(profile.extraParam.replSet){
-            profile.extraParam.replSet.socketOptions={};
-            profile.extraParam.replSet.socketOptions.connectTimeoutMS = 2000;
-            profile.extraParam.replSet.socketOptions.socketTimeoutMS = 2000;
-
-            profile.extraParam.replSet.autoReconnect = false;
-            profile.extraParam.replSet.reconnectTries = 1;
-            profile.extraParam.replSet.reconnectInterval = 100;
-        }
-        //if mongos
-        else if(profile.extraParam.mongos){
-            profile.extraParam.mongos.socketOptions={};
-            profile.extraParam.mongos.socketOptions.connectTimeoutMS = 2000;
-            profile.extraParam.mongos.socketOptions.socketTimeoutMS = 2000;
-
-            profile.extraParam.mongos.autoReconnect = false;
-            profile.extraParam.mongos.reconnectTries = 1;
-            profile.extraParam.mongos.reconnectInterval = 100;
-        }
-
-        profile.URLParam.wtimeoutMS = 2000;
-        profile.URLParam.connectTimeoutMS = 2000;
-        profile.URLParam.socketTimeoutMS = 2000;
-
-        var mongo = new soajs.mongo(profile);
-
-        var condition = {"code": "DASHBOARD"};
-        mongo.findOne("environment", condition, function(error, response){
-            if(error){
-                return cb(error);
-            }
-            else if(!response){
-                return cb(null, {"deployType": null });
-            }
-            else{
-                var data = {
-                    "deployType": response.deployer.selected
-                };
-                return cb(null, data);
-            }
-        });
-    },*/
 
     "generateExtKeys": function (opts, cb) {
         //soajs encryption engine
@@ -282,6 +214,7 @@ module.exports = {
 
         //modify environments file
         var envData = fs.readFileSync(folder + "environments/dashboard.js", "utf8");
+
         envData = envData.replace(/%domain%/g, body.gi.domain);
         envData = envData.replace(/%site%/g, body.gi.site);
         envData = envData.replace(/%api%/g, body.gi.api);
@@ -299,6 +232,16 @@ module.exports = {
         envData = envData.replace(/%keySecret%/g, body.security.key);
         envData = envData.replace(/%sessionSecret%/g, body.security.session);
         envData = envData.replace(/%cookieSecret%/g, body.security.cookie);
+        if (body.deployment.deployDriver.split('.')[1] === 'kubernetes') {
+            envData = envData.replace(/%nginxDeployType%/g, body.deployment.nginxDeployType);
+            envData = envData.replace(/"%namespace%"/g, JSON.stringify (body.deployment.namespaces, null, 2));
+            envData = envData.replace(/%token%/g, body.deployment.authentication.accessToken);
+        }
+        else {
+            envData = envData.replace(/%nginxDeployType%/g, '');
+            envData = envData.replace(/"%namespace%"/g, JSON.stringify ({}, null, 2));
+            envData = envData.replace(/%token%/g, '');
+        }
         fs.writeFile(folder + "environments/dashboard.js", envData, "utf8");
 
         //modify tenants file
@@ -473,7 +416,7 @@ module.exports = {
                     "SOAJS_GIT_OWNER": body.deployment.gitOwner,
                     "SOAJS_GIT_REPO": body.deployment.gitRepo,
                     "SOAJS_GIT_TOKEN": body.deployment.gitToken,
-	                "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
+                    "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
 
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
                     "SOAJS_IMAGE_PREFIX": body.deployment.imagePrefix,
@@ -516,9 +459,9 @@ module.exports = {
 
                 output += os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/docker.js") + os.EOL;
                 fs.writeFile(filename, output, function(err){
-                   if(err){
-                       return cb(err);
-                   }
+                    if(err){
+                        return cb(err);
+                    }
                     fs.chmod(path.normalize(__dirname + "/../scripts/swarm-deploy.sh"), "0755", function(chmodErr){
                         if(chmodErr){
                             return cb(chmodErr);
@@ -547,7 +490,7 @@ module.exports = {
                     "SOAJS_GIT_OWNER": body.deployment.gitOwner,
                     "SOAJS_GIT_REPO": body.deployment.gitRepo,
                     "SOAJS_GIT_TOKEN": body.deployment.gitToken,
-	                "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
+                    "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
 
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
                     "SOAJS_IMAGE_PREFIX": body.deployment.imagePrefix,
@@ -558,17 +501,21 @@ module.exports = {
 
                     "CONTAINER_HOST": body.deployment.containerHost,
                     "CONTAINER_PORT": body.deployment.kubernetes.containerPort,
-                    "SOAJS_DOCKER_REPLICA": body.deployment.dockerReplica
+                    "SOAJS_DOCKER_REPLICA": body.deployment.dockerReplica,
+
+                    "KUBE_AUTH_TOKEN": body.deployment.authentication.accessToken,
+
+                    "NGINX_DEPLOY_TYPE": body.deployment.nginxDeployType
                 };
 
                 if(body.deployment.gitSource && body.deployment.gitSource !== 'github'){
                     envs["SOAJS_GIT_SOURCE"] = body.deployment.gitSource;
                     envs["SOAJS_GIT_PROVIDER"] = body.deployment.gitProvider;
                 }
-	
-	            if (body.clusters.replicaSet) {
-		            envs['SOAJS_MONGO_RSNAME'] = body.clusters.replicaSet;
-	            }
+
+                if (body.clusters.replicaSet) {
+                    envs['SOAJS_MONGO_RSNAME'] = body.clusters.replicaSet;
+                }
 
                 if (body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder) {
                     envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder;
@@ -663,7 +610,16 @@ module.exports = {
             }
 
             if (!body.clusters || !body.clusters.mongoExt) {
-                obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata";
+                if(type === 'kubernetes'){
+                    var namespace = body.deployment.namespaces.default;
+                    if (body.deployment.namespaces.perService) {
+                        namespace += '-dashboard-soajsdata';
+                    }
+                    obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata." + namespace;
+                }
+                else{
+                    obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata";
+                }
             }
             else {
                 obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard-soajsdata";
@@ -677,10 +633,10 @@ module.exports = {
         if (body.deployment.deployType === 'manual') {
             var repos = ["soajs.controller", "soajs.urac", "soajs.dashboard", "soajs.gcs", "soajs.oauth", "soajs.prx", "soajs"];
 
-			/*
-			 1- check if all files in wrkDir exists
-			 2- check if all dependencies in repos are installed
-			 */
+            /*
+             1- check if all files in wrkDir exists
+             2- check if all dependencies in repos are installed
+             */
             var dest = path.normalize(body.gi.wrkDir + "/soajs/node_modules/");
             fs.exists(dest, function (exists) {
                 if (!exists) {
@@ -694,7 +650,7 @@ module.exports = {
 
                     if(!files || files.length === 0){
                         return cb(null, {
-	                        deployType: 'manual',
+                            deployType: 'manual',
                             download: {
                                 count: 0,
                                 total: repos.length
@@ -754,7 +710,7 @@ module.exports = {
                         //the only thing remaining now in the array are 1s and 0s which represent the repos installed
                         if (bar < repos.length) {
                             return cb(null, {
-	                            deployType: 'manual',
+                                deployType: 'manual',
                                 download: {
                                     count: bar,
                                     total: repos.length
@@ -763,7 +719,7 @@ module.exports = {
                         }
 
                         checkHosts(false, {
-	                        deployType: 'manual',
+                            deployType: 'manual',
                             download: {
                                 count: bar,
                                 total: repos.length
@@ -774,9 +730,9 @@ module.exports = {
             })
         }
         else {
-			/*
-			 1- call api and check if all services have containers
-			 */
+            /*
+             1- call api and check if all services have containers
+             */
             if (body.deployment.deployDriver.indexOf("docker") !== -1) {
                 // docker
                 var services = ["dashboard_soajs_oauth","dashboard_soajs_prx", "dashboard_soajs_urac", "dashboard_soajs_dashboard", "dashboard-controller", "dashboard_nginx"];
@@ -828,11 +784,11 @@ module.exports = {
                             }
 
                             return cb(null, {
-	                            deployType: 'docker',
-	                            download: {
-		                            count: bar,
-		                            total: services.length
-	                            }
+                                deployType: 'docker',
+                                download: {
+                                    count: bar,
+                                    total: services.length
+                                }
                             });
                         });
                     });
@@ -874,7 +830,7 @@ module.exports = {
                 }
                 catch(e){
                     return cb(null, {
-	                    deployType: 'kubernetes',
+                        deployType: 'kubernetes',
                         download: {
                             count: 0,
                             total: services.length
@@ -913,11 +869,11 @@ module.exports = {
         }
 
         function checkHosts(ha, download) {
-			/*
-			 1- load profile
-			 2- create new mongo connector
-			 3- query hosts collection
-			 */
+            /*
+             1- load profile
+             2- create new mongo connector
+             3- query hosts collection
+             */
             var profile = require(path.normalize(dataDir + "startup/profile.js"));
             var myMongo = new soajsModules.mongo(profile);
 
