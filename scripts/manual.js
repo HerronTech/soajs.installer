@@ -48,7 +48,7 @@ function setupNginx(cb) {
 				return cb(error);
 			}
 			
-			if(process.platform === 'linux'){
+			if (process.platform === 'linux') {
 				var files = [
 					{
 						's': path.normalize(WRK_DIR + "/../nginx/upstream.conf"),
@@ -65,7 +65,7 @@ function setupNginx(cb) {
 				];
 				async.each(files, copyConf, cb);
 			}
-			else if (process.platform === 'darwin'){
+			else if (process.platform === 'darwin') {
 				var files = [
 					{
 						's': path.normalize(WRK_DIR + "/../nginx/upstream.conf"),
@@ -82,13 +82,13 @@ function setupNginx(cb) {
 				];
 				async.each(files, copyConf, cb);
 			}
-			else{
+			else {
 				return cb(null, true);
 			}
 		});
 	});
 	
-	function copyConf(opts, cb){
+	function copyConf(opts, cb) {
 		utilLog.log(">>> copying", opts.s, "to", opts.d);
 		ncp(opts.s, opts.d, cb);
 	}
@@ -117,7 +117,7 @@ function startDashboard(cb) {
 			},
 			function (mcb) {
 				//wait 5 seconds, then start the controller
-				setTimeout(function(){
+				setTimeout(function () {
 					launchService('controller', mcb);
 				}, 5000);
 			},
@@ -147,8 +147,9 @@ function loadDependencies(location, skip) {
 	
 	var modules = [];
 	var pckgs = Object.keys(jsonPackage.dependencies);
+	var skippableList = ['soajs', 'soajs.core.libs', 'soajs.core.modules', 'soajs.core.drivers', 'soajs.urac.driver'];
 	for (var i = 0; i < pckgs.length; i++) {
-		if (pckgs[i] === 'soajs' && skip) {
+		if (skippableList.indexOf(pckgs[i]) !== -1 && skip) {
 			continue;
 		}
 		if (jsonPackage.dependencies[pckgs[i]] !== "*") {
@@ -161,9 +162,17 @@ function loadDependencies(location, skip) {
 	return modules;
 }
 
-function cloneInstallRepo(repoName, noCore, cb) {
-	utilLog.log("\ninstalling", repoName, "...");
-	exec("git clone  https://github.com/soajs/" + repoName + ".git --branch " + GIT_BRANCH, {
+function cloneInstallRepo() {
+	var repoName = arguments[0];
+	var noCore = arguments[arguments.length -2];
+	var cb = arguments[arguments.length -1];
+	var fixedBranch = GIT_BRANCH;
+	if(arguments.length === 4){
+		fixedBranch = arguments[1];
+	}
+	
+	utilLog.log("\ninstalling", repoName, "from branch", fixedBranch, "...");
+	exec("git clone  https://github.com/soajs/" + repoName + ".git --branch " + fixedBranch, {
 		"cwd": WRK_DIR,
 		"env": process.env
 	}, function (error, stdout, stderr) {
@@ -203,7 +212,19 @@ function install(cb) {
 		utilLog.log("working in:", WRK_DIR);
 		async.series([
 			function (mcb) {
-				cloneInstallRepo("soajs", false, mcb);
+				cloneInstallRepo("soajs.urac.driver", false, mcb);
+			},
+			function (mcb) {
+				cloneInstallRepo("soajs.core.drivers", 'master', false, mcb);
+			},
+			function (mcb) {
+				cloneInstallRepo("soajs.core.libs", 'develop', false, mcb);
+			},
+			function (mcb) {
+				cloneInstallRepo("soajs.core.modules", 'develop', false, mcb);
+			},
+			function (mcb) {
+				cloneInstallRepo("soajs", true, mcb);
 			},
 			function (mcb) {
 				cloneInstallRepo("soajs.controller", true, mcb);
@@ -237,7 +258,7 @@ function install(cb) {
 						if (error) {
 							utilLog.log('error', error);
 						}
-						npm.commands.install(["soajs.controller"], function(error){
+						npm.commands.install(["soajs.controller"], function (error) {
 							if (error) {
 								utilLog.log('error', error);
 							}
@@ -255,10 +276,10 @@ function install(cb) {
 	
 }
 
-function importData(cb){
+function importData(cb) {
 	
-	mkdirp(LOC + "soajs/FILES/profiles/", function(error){
-		if(error){
+	mkdirp(LOC + "soajs/FILES/profiles/", function (error) {
+		if (error) {
 			return cb(error);
 		}
 		
@@ -271,8 +292,8 @@ function importData(cb){
 	});
 }
 
-importData(function(error){
-	if(error){
+importData(function (error) {
+	if (error) {
 		throw error;
 	}
 	fs.exists(WRK_DIR, function (exists) {
