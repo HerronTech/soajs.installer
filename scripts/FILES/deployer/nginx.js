@@ -51,6 +51,7 @@ var lib = {
 		utilLog.log("writing site conf in " + param.loc + " " + param.confFileName);
 		var wstream = fs.createWriteStream(param.loc + param.confFileName);
 		wstream.write("server {\n");
+        wstream.write("  listen       " + param.port + ";\n");
 		wstream.write("  server_name  " + param.domain + ";\n");
 		wstream.write("  client_max_body_size 100m;\n");
 		wstream.write("  location / {\n");
