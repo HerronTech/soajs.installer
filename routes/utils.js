@@ -345,7 +345,8 @@ module.exports = {
                 output += os.EOL + "#Start Nginx ..." + os.EOL;
 
                 if (process.platform === 'darwin') {
-                    output += "nginx -s stop && nginx" + os.EOL;
+                    output += "nginx -s stop" + os.EOL;
+                    output += "nginx" + os.EOL;
                 }
                 else {
                     output += "sudo service nginx start" + os.EOL;
