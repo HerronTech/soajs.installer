@@ -116,6 +116,10 @@ var components = {
 									"value": gConfig.git.branch
 								},
 								{
+									"name": "SOAJS_NX_DOMAIN",
+									"value": gConfig.masterDomain
+								},
+								{
 									"name": "SOAJS_NX_API_DOMAIN",
 									"value": gConfig.apiPrefix + "." + gConfig.masterDomain
 								},

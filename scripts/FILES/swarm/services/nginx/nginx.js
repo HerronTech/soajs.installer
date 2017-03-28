@@ -43,6 +43,7 @@ var config = {
 		'SOAJS_HA_NAME={{.Task.Name}}',
 
 		'SOAJS_GIT_DASHBOARD_BRANCH=' + dashUISrc.branch,
+		'SOAJS_NX_DOMAIN=' + masterDomain,
 		'SOAJS_NX_API_DOMAIN=' + gConfig.apiPrefix + '.' + masterDomain,
 		'SOAJS_NX_SITE_DOMAIN=' + gConfig.sitePrefix + '.' + masterDomain,
 
