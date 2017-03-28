@@ -201,4 +201,29 @@ if (gConfig.customUISrc.token) {
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_TOKEN", "value": gConfig.customUISrc.token});
 }
 
+if () { //TODO: set condition if nginx SSL is activated
+	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_API_HTTPS", "value": "1"});
+	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_API_HTTP_REDIRECT", "value": "1"});
+	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_SITE_HTTPS", "value": "1"});
+	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_SITE_HTTP_REDIRECT", "value": "1"});
+
+	if () { //TODO: set condition if custom nginx SSL certificates is activated
+		components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_CUSTOM_SSL", "value": "1"});
+		components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_SSL_CERTS_LOCATION", "value": "/etc/ssl"});
+
+		components.deployment.spec.volumes.push({
+			name: 'ssl',
+			secret: {
+				secretName: '' //TODO: set secret name here
+			}
+		});
+
+		components.deployment.spec.template.spec.containers[0].volumeMounts.push({
+			name: 'ssl',
+			mountPath: '/etc/ssl',
+			readOnly: true
+		});
+	}
+}
+
 module.exports = components;
