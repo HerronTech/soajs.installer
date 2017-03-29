@@ -116,10 +116,6 @@ var components = {
 									"value": gConfig.git.branch
 								},
 								{
-									"name": "SOAJS_NX_DOMAIN",
-									"value": gConfig.masterDomain
-								},
-								{
 									"name": "SOAJS_NX_API_DOMAIN",
 									"value": gConfig.apiPrefix + "." + gConfig.masterDomain
 								},
@@ -205,20 +201,20 @@ if (gConfig.customUISrc.token) {
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_TOKEN", "value": gConfig.customUISrc.token});
 }
 
-if () { //TODO: set condition if nginx SSL is activated
+if (gConfig.nginx.ssl) {
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_API_HTTPS", "value": "1"});
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_API_HTTP_REDIRECT", "value": "1"});
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_SITE_HTTPS", "value": "1"});
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_SITE_HTTP_REDIRECT", "value": "1"});
 
-	if () { //TODO: set condition if custom nginx SSL certificates is activated
+	if (gConfig.nginx.sslSecret) {
 		components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_CUSTOM_SSL", "value": "1"});
 		components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_SSL_CERTS_LOCATION", "value": "/etc/ssl"});
 
 		components.deployment.spec.volumes.push({
 			name: 'ssl',
 			secret: {
-				secretName: '' //TODO: set secret name here
+				secretName: gConfig.nginx.sslSecret
 			}
 		});
 
