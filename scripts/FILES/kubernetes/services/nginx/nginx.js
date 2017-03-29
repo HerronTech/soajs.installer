@@ -31,10 +31,18 @@ var components = {
 			},
 			"ports": [
 				{
+					"name": "http",
 					"protocol": "TCP",
 					"port": 80,
 					"targetPort": 80,
 					"nodePort": (30000 + gConfig.nginx.port.http)
+				},
+				{
+					"name": "https",
+					"protocol": "TCP",
+					"port": 443,
+					"targetPort": 443,
+					"nodePort": (30000 + gConfig.nginx.port.https)
 				}
 			]
 		}
@@ -207,11 +215,13 @@ if (gConfig.nginx.ssl) {
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_SITE_HTTPS", "value": "1"});
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_SITE_HTTP_REDIRECT", "value": "1"});
 
+	components.deployment.spec.template.spec.containers[0].args.push("-s");
+
 	if (gConfig.nginx.sslSecret) {
 		components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_CUSTOM_SSL", "value": "1"});
-		components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_SSL_CERTS_LOCATION", "value": "/etc/ssl"});
+		components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_SSL_CERTS_LOCATION", "value": "/etc/soajs/ssl"});
 
-		components.deployment.spec.volumes.push({
+		components.deployment.spec.template.spec.volumes.push({
 			name: 'ssl',
 			secret: {
 				secretName: gConfig.nginx.sslSecret
@@ -220,7 +230,7 @@ if (gConfig.nginx.ssl) {
 
 		components.deployment.spec.template.spec.containers[0].volumeMounts.push({
 			name: 'ssl',
-			mountPath: '/etc/ssl',
+			mountPath: '/etc/soajs/ssl/',
 			readOnly: true
 		});
 	}
