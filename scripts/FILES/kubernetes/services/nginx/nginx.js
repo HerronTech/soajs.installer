@@ -220,6 +220,7 @@ if (gConfig.nginx.ssl) {
 	if (gConfig.nginx.sslSecret) {
 		components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_CUSTOM_SSL", "value": "1"});
 		components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_SSL_CERTS_LOCATION", "value": "/etc/soajs/ssl"});
+		components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_SSL_SECRET", "value": gConfig.nginx.sslSecret});
 
 		components.deployment.spec.template.spec.volumes.push({
 			name: 'ssl',
