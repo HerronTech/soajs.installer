@@ -22,6 +22,10 @@ var soajs_account = {
 			"type": "service"
 		},
 		{
+			"name": "soajs/soajs.oauth",
+			"type": "service"
+		},
+		{
 			"name": "soajs/soajs.prx",
 			"type": "service"
 		},
