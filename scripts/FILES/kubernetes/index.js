@@ -180,7 +180,12 @@ var lib = {
                 if(config.nginx.deployType === 'LoadBalancer') {
                     if (options.service.metadata.labels['soajs.service.type'] === 'nginx') {
                         options.service.spec.type = 'LoadBalancer';
-                        delete options.service.spec.ports[0].nodePort;
+                        if (options.service.spec.ports[0]) {
+                            delete options.service.spec.ports[0].nodePort;
+                        }
+                        if (options.service.spec.ports[1]) {
+                            delete options.service.spec.ports[1].nodePort;
+                        }
                     }
                 }
 
@@ -327,9 +332,7 @@ var lib = {
                         lib.ensurePods(deployer, {}, function (error) {
                             if (error) return cb(error);
 
-                            setTimeout(function () {
-                                lib.deleteNamespaces(deployer, {}, cb);
-                            }, 5000);
+                            return cb();
                         });
                     });
                 });

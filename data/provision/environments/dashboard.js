@@ -70,6 +70,7 @@ var dashboard = {
         },
         "config": {
             "awareness": {
+                "cacheTTL": 1000 * 60 * 60, // 1 hr
                 "healthCheckInterval": 1000 * 5, // 5 seconds
                 "autoRelaodRegistry": 1000 * 60 * 60, // 1 hr
                 "maxLogCount": 5,

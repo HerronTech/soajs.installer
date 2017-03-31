@@ -337,6 +337,26 @@
                         </div>
                     </td>
                 </tr>
+                <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'&&kubernetes&&deployment.nginxSsl">
+                    <td class="form-select">
+                        <div id="nginxSsl-ssc">
+                            <input class="f-left form-control" id="nginxSslCertGen" name="nginxSslCertGen" ng-model="deployment.generateSsc"
+                                   tooltip="Check the box if you want SOAJS to create self signed certificates."
+                                   ng-required="false" type="checkbox"/>&nbsp;<label>Self Signed Certificates Generation</label>
+                            <div class="fieldMsg hint">Check the box if you want SOAJS to create self signed certificates.</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'&&kubernetes&&deployment.nginxSsl&&!deployment.generateSsc">
+                    <td class="form-select">
+                        <div id="nginxSslSecret-wrapper">
+                            <label>NGINX Certificates Kubernetes Secret</label>
+                            <input type="string" ng-required="false" class="form-control" name="nginxKubeSecret"
+                                   id="nginxKubeSecret" ng-model="deployment.nginxKubeSecret" placeholder="Kubernetes Secret"/>
+                            <div class="fieldMsg hint">Specify the kubernetes secret containing the NGINX certificates.</div>
+                        </div>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </fieldset>

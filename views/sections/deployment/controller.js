@@ -40,6 +40,9 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 		}
 	};
 
+
+
+
 	$scope.goToFinal = function(){
 
 		var options = {
@@ -108,7 +111,12 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 	};
 
     $scope.submit = function(form) {
-        if (form.$valid) { //submit form if it is valid
+        if($scope.deployment.deployDriver.indexOf("kubernetes") !== -1){
+        	if(!$scope.deployment.nginxSsl || $scope.deployment.nginxSsl && $scope.deployment.generateSsc) {
+        		$scope.deployment.nginxKubeSecret = null;
+        	}
+		}
+    	if (form.$valid) { //submit form if it is valid
             $scope.fillDeployment();
         } else if($scope.kubernetes){
             $scope.alerts.push({'type': 'danger', 'msg': 'Missing required fields [access token,  namespaces]'});
@@ -223,6 +231,10 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				//get kubernetes authentication token
 				$scope.deployment.authentication = {};
 				$scope.deployment.authentication.accessToken = (response && response.authentication && response.authentication.accessToken) ? response.authentication.accessToken : "";
+
+				//NGINX Kubernetes SSL information
+				$scope.deployment.generateSsc = (response && response.generateSsc) ? response.generateSsc : true;
+				$scope.deployment.nginxKubeSecret = (response && response.nginxKubeSecret) ? response.nginxKubeSecret : null;
 			}
 
 			$scope.evaluateDeploymentChoice();
