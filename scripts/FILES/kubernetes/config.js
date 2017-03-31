@@ -39,7 +39,8 @@ module.exports = {
 			"http": parseInt(process.env.NGINX_HTTP_PORT) || 80,
 			"https": parseInt(process.env.NGINX_HTTPS_PORT) || 443
 		},
-		"ssl": (process.env.SOAJS_NX_SSL === "true") || false
+		"ssl": (process.env.SOAJS_NX_SSL === "true") || false,
+		"sslSecret": process.env.SOAJS_NX_SSL_SECRET || null
 	},
 	"imagePrefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
 	"imagePullPolicy": process.env.SOAJS_IMAGE_PULL_POLICY || 'Always',

@@ -513,6 +513,10 @@ module.exports = {
                     "NGINX_DEPLOY_TYPE": body.deployment.nginxDeployType
                 };
 
+                if(body.deployment.nginxSsl && !body.deployment.generateSsc && body.deployment.nginxKubeSecret){
+                    envs["SOAJS_NX_SSL_SECRET"] = body.deployment.nginxKubeSecret;
+                }
+
                 if(body.deployment.gitSource && body.deployment.gitSource !== 'github'){
                     envs["SOAJS_GIT_SOURCE"] = body.deployment.gitSource;
                     envs["SOAJS_GIT_PROVIDER"] = body.deployment.gitProvider;
