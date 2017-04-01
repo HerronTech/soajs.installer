@@ -7,13 +7,14 @@ var fs = require('fs');
 var Grid = require('gridfs-stream');
 var exec = require('child_process').exec;
 var soajs = require('soajs');
+var soajsModules = require('soajs.core.modules');
 var request = require('request');
 
 var config = require('./config.js');
 var folder = config.folder;
 delete require.cache[config.profile];
 var profile = require(config.profile);
-var mongo = new soajs.mongo(profile);
+var mongo = new soajsModules.mongo(profile);
 
 var utilLog = require('util');
 var lib = {
@@ -169,9 +170,9 @@ var lib = {
                 });
             }
 
-            function getDb(soajs) {
+            function getDb() {
                 profile.name = "core_provision";
-                mongo = new soajs.mongo(profile);
+                mongo = new soajsModules.mongo(profile);
                 return mongo;
             }
 
@@ -188,11 +189,11 @@ var lib = {
                     }
                 };
 
-                getDb(soajs).getMongoDB(function (error, db) {
+                getDb().getMongoDB(function (error, db) {
                     if(error) {
                         throw new Error(error);
                     }
-                    var gfs = Grid(db, getDb(soajs).mongodb);
+                    var gfs = Grid(db, getDb().mongodb);
                     var writeStream = gfs.createWriteStream(fileData);
                     var readStream = fs.createReadStream(customFile.deployment.certificates.caCertificate);
                     readStream.pipe(writeStream);
@@ -219,11 +220,11 @@ var lib = {
                     }
                 };
 
-                getDb(soajs).getMongoDB(function (error, db) {
+                getDb().getMongoDB(function (error, db) {
                     if(error) {
                         throw new Error(error);
                     }
-                    var gfs = Grid(db, getDb(soajs).mongodb);
+                    var gfs = Grid(db, getDb().mongodb);
                     var writeStream = gfs.createWriteStream(fileData);
                     var readStream = fs.createReadStream(customFile.deployment.certificates.certCertificate);
                     readStream.pipe(writeStream);
@@ -249,11 +250,11 @@ var lib = {
                     }
                 };
 
-                getDb(soajs).getMongoDB(function (error, db) {
+                getDb().getMongoDB(function (error, db) {
                     if(error) {
                         throw new Error(error);
                     }
-                    var gfs = Grid(db, getDb(soajs).mongodb);
+                    var gfs = Grid(db, getDb().mongodb);
                     var writeStream = gfs.createWriteStream(fileData);
                     var readStream = fs.createReadStream(customFile.deployment.certificates.keyCertificate);
                     readStream.pipe(writeStream);

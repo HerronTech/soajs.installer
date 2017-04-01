@@ -14,6 +14,9 @@ var dsbrdProduct = {
 			"description": "This package allows you to login to the dashboard.",
 			"acl": {
 				"dashboard": {
+					"oauth": {
+						"access": false
+					},
 					"dashboard": {
 						"apisPermission": "restricted",
 						"apis": {
@@ -68,7 +71,26 @@ var dsbrdProduct = {
 						"access": ["owner"]
 					},
 					"proxy": {
-						"access": ["owner"]
+						"access": false
+					},
+					"oauth": {
+						"access": false,
+						"get": {
+							"apis": {}
+						},
+						"post": {
+							"apis": {}
+						},
+						"delete": {
+							"apis": {
+								"/accessToken/:token": {
+									"access": true
+								},
+								"/refreshToken/:token": {
+									"access": true
+								}
+							}
+						}
 					}
 				},
 				"dev":{

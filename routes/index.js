@@ -348,7 +348,7 @@ var routes = {
                     type = 'kubernetes';
                     break;
             }
-
+	        
             utils.regenerateInfo(type, customData, function(error, response){
                 if(error){
                     return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message }));

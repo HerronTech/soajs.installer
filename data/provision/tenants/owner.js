@@ -6,7 +6,14 @@ var dsbrd = {
 	"code": "DBTN",
 	"name": "Dashboard Owner Tenant",
 	"description": "this is the main dashboard tenant",
-	"oauth": {},
+	"oauth": {
+		"secret": "soajs beaver",
+		"redirectURI": "http://domain.com",
+		"grants": [
+			"password",
+			"refresh_token"
+		]
+	},
 	"applications": [
 		{
 			"product": "DSBRD",
@@ -27,6 +34,9 @@ var dsbrd = {
 					],
 					"config": {
 						"dashboard": {
+							"oauth":{
+								"loginMode": "urac"
+							},
                             "mail": {
                                 "from": '%email%',
                                 "transport": {
@@ -88,11 +98,15 @@ var dsbrd = {
 	                        "env": "DASHBOARD",
                             "extKey": "%extKey2%",
                             "device": null,
-                            "geo": null
+                            "geo": null,
+	                        "dashboardAccess": true
                         }
                     ],
                     "config": {
                         "dashboard": {
+	                        "oauth":{
+		                        "loginMode": "urac"
+	                        },
                             "mail": {
                                 "from": '%email%',
                                 "transport": {

@@ -557,6 +557,57 @@ var services = [
 				]
 			}
 		}
+	},
+	{
+		"name": "oauth",
+		"group": "SOAJS Core Services",
+		"port": 4002,
+		"swagger": false,
+		"requestTimeout": 30,
+		"requestTimeoutRenewal": 5,
+		"src": {
+			"provider": "github",
+			"owner": "soajs",
+			"repo": "soajs.oauth"
+		},
+		"versions": {
+			"1": {
+				"extKeyRequired": true,
+				"apis": [
+					{
+						"l": "Get the authorization value",
+						"v": "/authorization",
+						"m": "get"
+					},
+					{
+						"l": "Create Token",
+						"v": "/token",
+						"m": "post"
+					},
+					{
+						"l": "Delete Access Token",
+						"v": "/accessToken/:token",
+						"m": "delete"
+					},
+					{
+						"l": "Delete Refresh Token",
+						"v": "/refreshToken/:token",
+						"m": "delete"
+					},
+					{
+						"l": "Delete all Tokens for this User",
+						"v": "/tokens/user/:userId",
+						"m": "delete"
+					},
+					{
+						"l": "Delete all Tokens for this Client",
+						"v": "/tokens/tenant/:clientId",
+						"m": "delete"
+					}
+				],
+				"awareness": true
+			}
+		}
 	}
 ];
 

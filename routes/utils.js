@@ -5,6 +5,8 @@ var path = require("path");
 var exec = require("child_process").exec;
 
 var soajs = require("soajs");
+var soajsModules = require("soajs.core.modules");
+
 var whereis = require('whereis');
 
 //external libs
@@ -66,7 +68,7 @@ module.exports = {
                     }
                 }
                 catch (e){
-
+                    console.log (e);
                     return cb(null);
                 }
             }
@@ -75,7 +77,7 @@ module.exports = {
 
     "generateExtKeys": function (opts, cb) {
         //soajs encryption engine
-        var module = require("soajs/modules/soajs.core").key;
+        var module = require("soajs.core.modules/soajs.core").key;
         var key = opts.key;
 
         var tenant = {
@@ -203,7 +205,7 @@ module.exports = {
         userData = userData.replace(/%username%/g, body.gi.username);
         userData = userData.replace(/%email%/g, body.gi.email);
 
-        var Hasher = soajs.hasher;
+        var Hasher = soajsModules.hasher;
         Hasher.init({
             "hashIterations": 1024,
             "seedLength": 32
@@ -257,11 +259,6 @@ module.exports = {
         tntData = tntData.replace(/%extKey1%/g, body.security.extKey1);
         tntData = tntData.replace(/%extKey2%/g, body.security.extKey2);
         fs.writeFile(folder + "tenants/owner.js", tntData, "utf8");
-
-        //modify dashboard extKey file
-        var tntData = fs.readFileSync(folder + "extKeys/keys.js", "utf8");
-        tntData = tntData.replace(/%extKey2%/g, body.security.extKey2);
-        fs.writeFile(folder + "extKeys/keys.js", tntData, "utf8");
 
         //remove unneeded file
         fs.unlinkSync(folder + "tenants/info.js");
@@ -452,6 +449,21 @@ module.exports = {
                     envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder;
                 }
 
+                //add readiness probes environment variables
+               if(body.deployment.readinessProbe){
+                   envs["KUBE_INITIAL_DELAY"] = body.deployment.readinessProbe.initialDelaySeconds;
+                   envs["KUBE_PROBE_TIMEOUT"] = body.deployment.readinessProbe.timeoutSeconds;
+                   envs["KUBE_PROBE_PERIOD"] = body.deployment.readinessProbe.periodSeconds;
+                   envs["KUBE_PROBE_SUCCESS"] = body.deployment.readinessProbe.successThreshold;
+                   envs["KUBE_PROBE_FAILURE"] = body.deployment.readinessProbe.failureThreshold;
+               }
+
+               //add namespace configuration
+               if (body.deployment.namespaces) {
+                   envs["SOAJS_NAMESPACES_DEFAULT"] = body.deployment.namespaces.default;
+                   envs["SOAJS_NAMESPACES_PER_SERVICE"] = body.deployment.namespaces.perService;
+               }
+
                 for (var e in envs) {
                     if (envs[e] !== null) {
                         output += "export " + e + "=" + envs[e] + os.EOL;
@@ -529,20 +541,21 @@ module.exports = {
                 if (body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder) {
                     envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder;
                 }
-                //add readiness probes environment variables
-                if(body.deployment.readinessProbe){
-                    envs["KUBE_INITIAL_DELAY"] = body.deployment.readinessProbe.initialDelaySeconds;
-                    envs["KUBE_PROBE_TIMEOUT"] = body.deployment.readinessProbe.timeoutSeconds;
-                    envs["KUBE_PROBE_PERIOD"] = body.deployment.readinessProbe.periodSeconds;
-                    envs["KUBE_PROBE_SUCCESS"] = body.deployment.readinessProbe.successThreshold;
-                    envs["KUBE_PROBE_FAILURE"] = body.deployment.readinessProbe.failureThreshold;
-                }
 
-                //add namespace configuration
-                if (body.deployment.namespaces) {
-                    envs["SOAJS_NAMESPACES_DEFAULT"] = body.deployment.namespaces.default;
-                    envs["SOAJS_NAMESPACES_PER_SERVICE"] = body.deployment.namespaces.perService;
-                }
+                //add readiness probes environment variables
+               if(body.deployment.readinessProbe){
+                   envs["KUBE_INITIAL_DELAY"] = body.deployment.readinessProbe.initialDelaySeconds;
+                   envs["KUBE_PROBE_TIMEOUT"] = body.deployment.readinessProbe.timeoutSeconds;
+                   envs["KUBE_PROBE_PERIOD"] = body.deployment.readinessProbe.periodSeconds;
+                   envs["KUBE_PROBE_SUCCESS"] = body.deployment.readinessProbe.successThreshold;
+                   envs["KUBE_PROBE_FAILURE"] = body.deployment.readinessProbe.failureThreshold;
+               }
+
+               //add namespace configuration
+               if (body.deployment.namespaces) {
+                   envs["SOAJS_NAMESPACES_DEFAULT"] = body.deployment.namespaces.default;
+                   envs["SOAJS_NAMESPACES_PER_SERVICE"] = body.deployment.namespaces.perService;
+               }
 
                 for (var e in envs) {
                     if (envs[e] !== null) {
@@ -654,7 +667,7 @@ module.exports = {
 
     "returnInstallProgress": function (body, cb) {
         if (body.deployment.deployType === 'manual') {
-            var repos = ["soajs.controller", "soajs.urac", "soajs.dashboard", "soajs.gcs", "soajs"];
+            var repos = ["soajs.controller", "soajs.urac", "soajs.dashboard", "soajs.gcs", "soajs.oauth", "soajs.prx", "soajs"];
 
             /*
              1- check if all files in wrkDir exists
@@ -758,7 +771,7 @@ module.exports = {
              */
             if (body.deployment.deployDriver.indexOf("docker") !== -1) {
                 // docker
-                var services = ["dashboard_soajs_prx", "dashboard_soajs_urac", "dashboard_soajs_dashboard", "dashboard-controller", "dashboard_nginx"];
+                var services = ["dashboard_soajs_oauth", "dashboard_soajs_prx", "dashboard_soajs_urac", "dashboard_soajs_dashboard", "dashboard-controller", "dashboard_nginx"];
                 var Docker = require('dockerode');
                 var deployerConfig = {
                     "host": body.deployment.containerHost,
@@ -819,7 +832,7 @@ module.exports = {
             }
             else {
                 // kubernetes
-                var services = ["dashboard-proxy", "dashboard-urac", "dashboard-dashboard", "dashboard-controller", "dashboard-nginx"];
+                var services = ["dashboard-oauth", "dashboard-proxy", "dashboard-urac", "dashboard-dashboard", "dashboard-controller", "dashboard-nginx"];
                 var K8Api = require('kubernetes-client');
 
                 if (!body.deployment.kubernetes.containerDir && !body.deployment.kubernetes.certificatesFolder) {
@@ -841,6 +854,7 @@ module.exports = {
                 }
 
                 try{
+                    //TODO: remove dependency on certificates, use auth token instead
                     var deployerConfig = {
                         "url": 'https://' + (body.deployment.containerHost || "127.0.0.1") + ':' + (parseInt(body.deployment.kubernetes.containerPort) || 8443),
                         "namespace": 'default',
@@ -898,7 +912,7 @@ module.exports = {
              3- query hosts collection
              */
             var profile = require(path.normalize(dataDir + "startup/profile.js"));
-            var myMongo = new soajs.mongo(profile);
+            var myMongo = new soajsModules.mongo(profile);
 
             myMongo.find("hosts", {"env": "dashboard"}, function (error, hosts) {
                 if (error) {

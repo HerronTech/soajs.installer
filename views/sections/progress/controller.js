@@ -6,13 +6,13 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 	$scope.closeAlert = function(i){
 		$scope.alerts.splice(i, 1);
 	};
-	
-	$scope.getInfo = function(){
+
+	$scope.getInfo = function(cb){
 		var options = {
 			url: appConfig.url + "/progress/info",
 			method: "get"
 		};
-		
+
 		ngDataApi.get($scope, options, function (error, response) {
 			if (error) {
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
@@ -21,21 +21,22 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 			$scope.ui = response.ui;
 			$scope.cmd = response.cmd;
 			$scope.hosts = response.hosts;
+			return cb();
 		});
 	};
-	
+
 	$scope.getProgress = function(){
 		var options = {
 			url: appConfig.url + "/progress",
 			method: "get"
 		};
-		
+
 		ngDataApi.get($scope, options, function(error, response) {
 			if (error) {
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
 				return false;
 			}
-			
+
 			$scope.info = response;
 			$scope.deployType = $scope.info.deployType;
 			if($scope.info.download){
@@ -49,7 +50,7 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 					$scope.info.download.barType = "info";
 				}
 			}
-			
+
 			if($scope.info.install){
 				$scope.info.install.progress = ($scope.info.install.count / $scope.info.install.total) * 100;
 				$scope.info.install.progress = $scope.info.install.progress.toFixed(2);

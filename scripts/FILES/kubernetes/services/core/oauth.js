@@ -6,35 +6,35 @@ var components = {
         "apiVersion": "v1",
         "kind": "Service",
         "metadata": {
-            "name": "dashboard-controller-v1-service",
+            "name": "dashboard-oauth-v1-service",
             "labels": {
                 "soajs.content": "true",
                 "soajs.env.code": "dashboard",
 
-                "soajs.service.name": "controller",
+                "soajs.service.name": "oauth",
                 "soajs.service.group": "soajs-core-services",
                 "soajs.service.type": "service",
                 "soajs.service.version": "1",
-                "soajs.service.label": "dashboard-controller-v1",
+                "soajs.service.label": "dashboard-oauth-v1",
                 "soajs.service.mode": "deployment"
             }
         },
         "spec": {
             "selector": {
-                "soajs.service.label": "dashboard-controller-v1"
+                "soajs.service.label": "dashboard-oauth-v1"
             },
             "ports": [
                 {
                     "name": "service-port",
                     "protocol": "TCP",
-                    "port": 4000,
-                    "targetPort": 4000
+                    "port": 4002,
+                    "targetPort": 4002
                 },
                 {
                     "name": "maintenance-port",
                     "protocol": "TCP",
-                    "port": 5000,
-                    "targetPort": 5000
+                    "port": 5002,
+                    "targetPort": 5002
                 }
             ]
         }
@@ -43,17 +43,16 @@ var components = {
         "apiVersion": "extensions/v1beta1",
         "kind": "Deployment",
         "metadata": {
-            "soajs.content": "true",
-            "name": "dashboard-controller-v1",
+            "name": "dashboard-oauth-v1",
             "labels": {
                 "soajs.content": "true",
                 "soajs.env.code": "dashboard",
 
-                "soajs.service.name": "controller",
+                "soajs.service.name": "oauth",
                 "soajs.service.group": "soajs-core-services",
                 "soajs.service.type": "service",
                 "soajs.service.version": "1",
-                "soajs.service.label": "dashboard-controller-v1",
+                "soajs.service.label": "dashboard-oauth-v1",
                 "soajs.service.mode": "deployment"
             }
         },
@@ -61,28 +60,28 @@ var components = {
             "replicas": gConfig.kubernetes.replicas,
             "selector": {
                 "matchLabels": {
-                    "soajs.service.label": "dashboard-controller-v1"
+                    "soajs.service.label": "dashboard-oauth-v1"
                 }
             },
             "template": {
                 "metadata": {
-                    "name": "controllercon",
+                    "name": "dashboard-oauth-v1",
                     "labels": {
                         "soajs.content": "true",
                         "soajs.env.code": "dashboard",
 
-                        "soajs.service.name": "controller",
+                        "soajs.service.name": "oauth",
                         "soajs.service.group": "soajs-core-services",
                         "soajs.service.type": "service",
                         "soajs.service.version": "1",
-                        "soajs.service.label": "dashboard-controller-v1",
+                        "soajs.service.label": "dashboard-oauth-v1",
                         "soajs.service.mode": "deployment"
                     }
                 },
                 "spec": {
                     "containers": [
                         {
-                            "name": "dashboard-controller-v1",
+                            "name": "dashboard-oauth-v1",
                             "image": gConfig.imagePrefix + "/soajs",
                             "imagePullPolicy": gConfig.imagePullPolicy,
                             "workingDir": "/opt/soajs/FILES/deployer/",
@@ -91,11 +90,11 @@ var components = {
                             "ports": [
                                 {
                                     "name": "service",
-                                    "containerPort": 4000
+                                    "containerPort": 4002
                                 },
                                 {
                                     "name": "maintenance",
-                                    "containerPort": 5000
+                                    "containerPort": 5002
                                 }
                             ],
                             "readinessProbe": {
@@ -132,11 +131,11 @@ var components = {
                                 },
                                 {
                                     "name": "SOAJS_GIT_BRANCH",
-                                    "value": "feature/sessionLess" //gConfig.git.branch
+                                    "value": gConfig.git.branch
                                 },
                                 {
                                     "name": "SOAJS_GIT_REPO",
-                                    "value": "soajs.controller"
+                                    "value": "soajs.oauth"
                                 },
                                 {
                                     "name": "SOAJS_DEPLOY_HA",

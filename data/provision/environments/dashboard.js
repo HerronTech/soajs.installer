@@ -95,12 +95,14 @@ var dashboard = {
                 "origin": '*',
                 "credentials": 'true',
                 "methods": 'GET,HEAD,PUT,PATCH,POST,DELETE',
-                "headers": 'key,soajsauth,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type',
+                "headers": 'key,soajsauth,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization',
                 "maxage": 1728000
             },
             "oauth": {
                 "grants": ['password', 'refresh_token'],
-                "debug": false
+                "debug": false,
+	            "accessTokenLifetime": 7200,
+	            "refreshTokenLifetime": 1209600
             },
             "ports": {
 	            "controller": 4000,

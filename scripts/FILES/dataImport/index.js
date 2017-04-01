@@ -6,7 +6,7 @@
  * DASHBOARD CORE_PROVISION
  *
  ***************************************************************/
-var soajs = require("soajs");
+var soajsModules = require("soajs.core.modules");
 var async = require("async");
 
 var dataFolder = process.env.SOAJS_DATA_FOLDER;
@@ -14,25 +14,23 @@ delete require.cache[process.env.SOAJS_PROFILE];
 var profile = require(process.env.SOAJS_PROFILE);
 
 profile.name = "core_provision";
-var mongo = new soajs.mongo(profile);
+var mongo = new soajsModules.mongo(profile);
 
 
 mongo.dropDatabase(function () {
-	lib.addExtKeys(function () {
-		lib.addEnvs(function () {
-			lib.addProducts(function () {
-				lib.addServices(function () {
-					lib.addTenants(function () {
-						lib.addGitAccounts(function () {
-							mongo.closeDb();
-							profile.name = "DBTN_urac";
-							mongo = new soajs.mongo(profile);
-							mongo.dropDatabase(function () {
-								lib.addUsers(function () {
-									lib.addGroups(function () {
-										lib.uracIndex(function () {
-											mongo.closeDb();
-										});
+	lib.addEnvs(function () {
+		lib.addProducts(function () {
+			lib.addServices(function () {
+				lib.addTenants(function () {
+					lib.addGitAccounts(function () {
+						mongo.closeDb();
+						profile.name = "DBTN_urac";
+						mongo = new soajsModules.mongo(profile);
+						mongo.dropDatabase(function () {
+							lib.addUsers(function () {
+								lib.addGroups(function () {
+									lib.uracIndex(function () {
+										mongo.closeDb();
 									});
 								});
 							});
@@ -45,14 +43,6 @@ mongo.dropDatabase(function () {
 });
 
 var lib = {
-	/*
-	 DASHBOARD EXT KEYS
-	 */
-	"addExtKeys": function (cb) {
-		var record = require(dataFolder + "extKeys/keys.js");
-		mongo.insert("dashboard_extKeys", record, cb);
-	},
-
 	/*
 	 Environments
 	 */
