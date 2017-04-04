@@ -33,7 +33,7 @@
     "ncp": "*",
     "npm": "*",
     "rimraf": "*",
-    "soajs": "soajs/soajs.git#develop",
+    "soajs": "1.*",
     "util": "*",
     "whereis": "*"
   }
