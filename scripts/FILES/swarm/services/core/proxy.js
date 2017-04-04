@@ -4,7 +4,7 @@ var gConfig = require("../../config.js");
 var src = {
 	owner: 'soajs',
 	repo: 'soajs.prx',
-	branch: 'feature/sessionLess' //gConfig.git.branch
+	branch: gConfig.git.branch
 };
 
 var config = {

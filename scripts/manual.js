@@ -13,8 +13,8 @@ var utilLog = require('util');
 
 process.env.NODE_ENV = "production";
 var LOC = (process.env.SOAJS_DEPLOY_DIR || "/opt") + "/";
-var DEPLOY_FROM = "GIT"; //process.env.DEPLOY_FROM || "GIT";
-var GIT_BRANCH = "feature/sessionLess"; //process.env.SOAJS_GIT_BRANCH || "master";
+var DEPLOY_FROM = process.env.DEPLOY_FROM || "GIT";
+var GIT_BRANCH = process.env.SOAJS_GIT_BRANCH || "master";
 var NODE = process.env.NODE_PATH || "node";
 var NPM = process.env.NPM_PATH || "npm";
 var WRK_DIR = LOC + 'soajs/node_modules';
@@ -39,15 +39,15 @@ function setupNginx(cb) {
 	utilLog.log("=====================================");
 	mkdirp(path.normalize(WRK_DIR + "/../nginx"), function (err) {
 		if (err) return cb(err);
-		
+
 		process.env.SOAJS_NX_LOC = path.normalize(WRK_DIR + "/../");
 		process.env.SOAJS_NX_OS = "local";
-		
+
 		exec(NODE + " " + path.normalize(process.env.INSTALLER_DIR + "/FILES/deployer/nginx.js"), function (error) {
 			if (error) {
 				return cb(error);
 			}
-			
+
 			if (process.platform === 'linux') {
 				var files = [
 					{
@@ -87,7 +87,7 @@ function setupNginx(cb) {
 			}
 		});
 	});
-	
+
 	function copyConf(opts, cb) {
 		utilLog.log(">>> copying", opts.s, "to", opts.d);
 		ncp(opts.s, opts.d, cb);
@@ -124,7 +124,7 @@ function startDashboard(cb) {
 			setupNginx
 		], cb);
 	});
-	
+
 	function launchService(serviceName, mcb) {
 		utilLog.log('\nstarting', serviceName, '....');
 		var out = fs.openSync(path.normalize(WRK_DIR + "/../logs/manual-" + serviceName + "-out.log"), "w");
@@ -144,7 +144,7 @@ function startDashboard(cb) {
 function loadDependencies(location, skip) {
 	var jsonPackage = fs.readFileSync(location);
 	jsonPackage = JSON.parse(jsonPackage);
-	
+
 	var modules = [];
 	var pckgs = Object.keys(jsonPackage.dependencies);
 	var skippableList = ['soajs', 'soajs.core.libs', 'soajs.core.modules', 'soajs.core.drivers', 'soajs.urac.driver'];
@@ -170,7 +170,7 @@ function cloneInstallRepo() {
 	if(arguments.length === 4){
 		fixedBranch = arguments[1];
 	}
-	
+
 	utilLog.log("\ninstalling", repoName, "from branch", fixedBranch, "...");
 	exec("git clone  https://github.com/soajs/" + repoName + ".git --branch " + fixedBranch, {
 		"cwd": WRK_DIR,
@@ -184,7 +184,7 @@ function cloneInstallRepo() {
 				utilLog.log(repoName, "already exists!");
 			}
 		}
-		
+
 		utilLog.log("installing dependencies ...");
 		var modules = loadDependencies(WRK_DIR + "/" + repoName + "/package.json", noCore);
 		if (modules.length === 0) {
@@ -207,7 +207,7 @@ function install(cb) {
 	utilLog.log("\n=====================================");
 	utilLog.log("STARTING SERVICES");
 	utilLog.log("=====================================");
-	
+
 	if (DEPLOY_FROM === "GIT") {
 		utilLog.log("working in:", WRK_DIR);
 		async.series([
@@ -273,16 +273,16 @@ function install(cb) {
 	else {
 		return cb(new Error("Invalid Deploy Source."));
 	}
-	
+
 }
 
 function importData(cb) {
-	
+
 	mkdirp(LOC + "soajs/FILES/profiles/", function (error) {
 		if (error) {
 			return cb(error);
 		}
-		
+
 		fs.createReadStream(process.env.SOAJS_PROFILE).pipe(fs.createWriteStream(LOC + "soajs/FILES/profiles/profile.js"));
 		process.env.SOAJS_PROFILE = LOC + "soajs/FILES/profiles/profile.js";
 		//execute import data.js
@@ -302,12 +302,12 @@ importData(function (error) {
 				if (error) {
 					throw error;
 				}
-				
+
 				install(function (error) {
 					if (error) {
 						throw error;
 					}
-					
+
 					utilLog.log("SOAJS has been deployed !");
 				});
 			});
@@ -317,7 +317,7 @@ importData(function (error) {
 				if (error) {
 					throw error;
 				}
-				
+
 				utilLog.log("SOAJS has been deployed !");
 			});
 		}

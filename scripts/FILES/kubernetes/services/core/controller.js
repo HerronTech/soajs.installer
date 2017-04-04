@@ -132,7 +132,7 @@ var components = {
                                 },
                                 {
                                     "name": "SOAJS_GIT_BRANCH",
-                                    "value": "feature/sessionLess" //gConfig.git.branch
+                                    "value": gConfig.git.branch
                                 },
                                 {
                                     "name": "SOAJS_GIT_REPO",
