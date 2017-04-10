@@ -92,6 +92,14 @@ var lib = {
 		mongo.insert("git_accounts", record, cb);
 	},
 
+	/*
+	 Catalogs
+	 */
+	"addCatalogs": function (cb) {
+		car records = require(dataFolder + "catalogs/index.js");
+		mongo.insert("catalogs", records, cb);
+	},
+
 	/***************************************************************
 	 *
 	 * DASHBOARD URAC
