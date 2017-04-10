@@ -96,7 +96,7 @@ var lib = {
 	 Catalogs
 	 */
 	"addCatalogs": function (cb) {
-		car records = require(dataFolder + "catalogs/index.js");
+		var records = require(dataFolder + "catalogs/index.js");
 		mongo.insert("catalogs", records, cb);
 	},
 
