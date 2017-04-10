@@ -28,18 +28,47 @@ var catalogs = [
                 "volumes": [] //array of objects
             },
             "buildOptions": {
-                "configRepo": {
-                    "source": "", //github|bitbucket|bitbucket_enterprise
-                    "repo": "",
-                    "owner": "",
-                    "branch": "",
-                    "token": ""
+                "env": {
+                    "NODE_ENV": "production",
+
+                    "SOAJS_ENV": "dashboard",
+                    "SOAJS_PROFILE": "/opt/soajs/FILES/profiles/profile.js",
+
+                    "SOAJS_SRV_AUTOREGISTERHOST": "true",
+                    "SOAJS_SRV_MEMORY": "",
+
+                    "SOAJS_GC_NAME": "", //only for gc services
+                    "SOAJS_GC_VERSION": "", //only for gc services
+
+                    "SOAJS_GIT_OWNER": "",
+                    "SOAJS_GIT_BRANCH": "",
+                    "SOAJS_GIT_COMMIT": "",
+                    "SOAJS_GIT_REPO": "",
+                    "SOAJS_GIT_TOKEN": "", //optional (only if private repo)
+
+                    "SOAJS_DEPLOY_HA": "", //swarm || kubernetes
+                    "SOAJS_HA_NAME": "", //computed field
+
+                    "SOAJS_MONGO_NB": "",
+                    "SOAJS_MONGO_PREFIX": "",
+                    "SOAJS_MONGO_RSNAME": "",
+                    "SOAJS_MONGO_AUTH_DB": "",
+                    "SOAJS_MONGO_SSL": "",
+                    "SOAJS_MONGO_IP_N": "", //replace N with number
+                    "SOAJS_MONGO_PORT_N": "", //replace N with number
+
+                    "SOAJS_CONFIG_REPO_PROVIDER": "", //github|bitbucket|bitbucket_enterprise
+                    "SOAJS_CONFIG_REPO_OWNER": "",
+                    "SOAJS_CONFIG_REPO_BRANCH": "",
+                    "SOAJS_CONFIG_REPO_NAME": "",
+                    "SOAJS_CONFIG_REPO_TOKEN": ""
                 },
-                "env": [], //array of strings
                 "cmd": {
                     "pre_install": "",
+                    "install": "",
                     "post_install": "",
                     "pre_deploy": "",
+                    "deploy": "",
                     "post_deploy": ""
                 }
             }
@@ -72,18 +101,46 @@ var catalogs = [
                 "volumes": [] //array of objects
             },
             "buildOptions": {
-                "configRepo": {
-                    "source": "", //github|bitbucket|bitbucket_enterprise
-                    "repo": "",
-                    "owner": "",
-                    "branch": "",
-                    "token": ""
+                "env": {
+                    "NODE_ENV": "production",
+
+                    "SOAJS_ENV": "dashboard",
+                    "SOAJS_PROFILE": "/opt/soajs/FILES/profiles/profile.js",
+
+                    "SOAJS_SRV_AUTOREGISTERHOST": "true",
+                    "SOAJS_SRV_MEMORY": "",
+
+                    "SOAJS_DAEMON_GRP_CONF": "",
+
+                    "SOAJS_GIT_OWNER": "",
+                    "SOAJS_GIT_BRANCH": "",
+                    "SOAJS_GIT_COMMIT": "",
+                    "SOAJS_GIT_REPO": "",
+                    "SOAJS_GIT_TOKEN": "", //optional (only if private repo)
+
+                    "SOAJS_DEPLOY_HA": "", //swarm || kubernetes
+                    "SOAJS_HA_NAME": "", //computed field
+
+                    "SOAJS_MONGO_NB": "",
+                    "SOAJS_MONGO_PREFIX": "",
+                    "SOAJS_MONGO_RSNAME": "",
+                    "SOAJS_MONGO_AUTH_DB": "",
+                    "SOAJS_MONGO_SSL": "",
+                    "SOAJS_MONGO_IP_N": "", //replace N with number
+                    "SOAJS_MONGO_PORT_N": "", //replace N with number
+
+                    "SOAJS_CONFIG_REPO_PROVIDER": "", //github|bitbucket|bitbucket_enterprise
+                    "SOAJS_CONFIG_REPO_OWNER": "",
+                    "SOAJS_CONFIG_REPO_BRANCH": "",
+                    "SOAJS_CONFIG_REPO_NAME": "",
+                    "SOAJS_CONFIG_REPO_TOKEN": ""
                 },
-                "env": [], //array of strings
                 "cmd": {
                     "pre_install": "",
+                    "install": "",
                     "post_install": "",
                     "pre_deploy": "",
+                    "deploy": "",
                     "post_deploy": ""
                 }
             }
@@ -114,11 +171,6 @@ var catalogs = [
                     "failureThreshold": ""
                 },
                 "volumes": [], //array of objects
-                "ssl": {
-                    "enabled": false, //boolean true | false
-                    "source": "", //self-signed || secret
-                    "secret": "" //only in case of kubernetes
-                },
                 "ports": {
                     "http": {
                         "exposed": "",
@@ -131,18 +183,57 @@ var catalogs = [
                 }
             },
             "buildOptions": {
-                "configRepo": {
-                    "source": "", //github|bitbucket|bitbucket_enterprise
-                    "repo": "",
-                    "owner": "",
-                    "branch": "",
-                    "token": ""
+                "env": {
+                    "SOAJS_ENV": "dashboard",
+
+                    "SOAJS_GIT_DASHBOARD_BRANCH": "", //only for dashboard nginx
+
+                    "SOAJS_NX_DOMAIN": "", //master domain, needed to generate self-signed certs
+                    "SOAJS_NX_API_DOMAIN": "",
+                    "SOAJS_NX_SITE_DOMAIN": "",
+
+                    "SOAJS_NX_CONTROLLER_NB": "",
+                    "SOAJS_NX_CONTROLLER_IP_N": "", //replace N with number
+                    "SOAJS_NX_CONTROLLER_PORT_N": "", //replace N with number
+
+                    "SOAJS_NX_API_HTTPS": "",
+                    "SOAJS_NX_API_HTTP_REDIRECT": "",
+                    "SOAJS_NX_SITE_HTTPS": "",
+                    "SOAJS_NX_SITE_HTTP_REDIRECT": "",
+
+                    "SOAJS_NX_CUSTOM_SSL": "", //only for user-provided certs
+                    "SOAJS_NX_SSL_CERTS_LOCATION": "/etc/soajs/ssl/", //only for user-provided certs
+                    "SOAJS_NX_SSL_SECRET": "", //only for user-provided certs
+
+                    "SOAJS_GIT_OWNER": "",
+                    "SOAJS_GIT_BRANCH": "",
+                    "SOAJS_GIT_COMMIT": "",
+                    "SOAJS_GIT_REPO": "",
+                    "SOAJS_GIT_TOKEN": "", //optional (only if private repo)
+
+                    "SOAJS_DEPLOY_HA": "", //swarm || kubernetes
+                    "SOAJS_HA_NAME": "", //computed field
+
+                    "SOAJS_MONGO_NB": "",
+                    "SOAJS_MONGO_PREFIX": "",
+                    "SOAJS_MONGO_RSNAME": "",
+                    "SOAJS_MONGO_AUTH_DB": "",
+                    "SOAJS_MONGO_SSL": "",
+                    "SOAJS_MONGO_IP_N": "", //replace N with number
+                    "SOAJS_MONGO_PORT_N": "", //replace N with number
+
+                    "SOAJS_CONFIG_REPO_PROVIDER": "", //github|bitbucket|bitbucket_enterprise
+                    "SOAJS_CONFIG_REPO_OWNER": "",
+                    "SOAJS_CONFIG_REPO_BRANCH": "",
+                    "SOAJS_CONFIG_REPO_NAME": "",
+                    "SOAJS_CONFIG_REPO_TOKEN": ""
                 },
-                "env": [], //array of strings
                 "cmd": {
                     "pre_install": "",
+                    "install": "",
                     "post_install": "",
                     "pre_deploy": "",
+                    "deploy": "",
                     "post_deploy": ""
                 }
             }
@@ -175,18 +266,19 @@ var catalogs = [
                 "volumes": [] //array of objects
             },
             "buildOptions": {
-                "configRepo": {
-                    "source": "", //github|bitbucket|bitbucket_enterprise
-                    "repo": "",
-                    "owner": "",
-                    "branch": "",
-                    "token": ""
+                "env": {
+                    "SOAJS_CONFIG_REPO_PROVIDER": "", //github|bitbucket|bitbucket_enterprise
+                    "SOAJS_CONFIG_REPO_OWNER": "",
+                    "SOAJS_CONFIG_REPO_BRANCH": "",
+                    "SOAJS_CONFIG_REPO_NAME": "",
+                    "SOAJS_CONFIG_REPO_TOKEN": ""
                 },
-                "env": [], //array of strings
                 "cmd": {
                     "pre_install": "",
+                    "install": "",
                     "post_install": "",
                     "pre_deploy": "",
+                    "deploy": "",
                     "post_deploy": ""
                 }
             }
@@ -219,18 +311,19 @@ var catalogs = [
                 "volumes": [] //array of objects
             },
             "buildOptions": {
-                "configRepo": {
-                    "source": "", //github|bitbucket|bitbucket_enterprise
-                    "repo": "",
-                    "owner": "",
-                    "branch": "",
-                    "token": ""
+                "env": {
+                    "SOAJS_CONFIG_REPO_PROVIDER": "", //github|bitbucket|bitbucket_enterprise
+                    "SOAJS_CONFIG_REPO_OWNER": "",
+                    "SOAJS_CONFIG_REPO_BRANCH": "",
+                    "SOAJS_CONFIG_REPO_NAME": "",
+                    "SOAJS_CONFIG_REPO_TOKEN": ""
                 },
-                "env": [], //array of strings
                 "cmd": {
                     "pre_install": "",
+                    "install": "",
                     "post_install": "",
                     "pre_deploy": "",
+                    "deploy": "",
                     "post_deploy": ""
                 }
             }
