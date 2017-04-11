@@ -64,12 +64,12 @@ var catalogs = [
                     "SOAJS_CONFIG_REPO_TOKEN": ""
                 },
                 "cmd": {
-                    "pre_install": "",
-                    "install": "",
-                    "post_install": "",
-                    "pre_deploy": "",
-                    "deploy": "",
-                    "post_deploy": ""
+                    "pre_install": [],
+                    "install": [],
+                    "post_install": [],
+                    "pre_deploy": [],
+                    "deploy": [],
+                    "post_deploy": []
                 }
             }
         }
@@ -136,12 +136,12 @@ var catalogs = [
                     "SOAJS_CONFIG_REPO_TOKEN": ""
                 },
                 "cmd": {
-                    "pre_install": "",
-                    "install": "",
-                    "post_install": "",
-                    "pre_deploy": "",
-                    "deploy": "",
-                    "post_deploy": ""
+                    "pre_install": [],
+                    "install": [],
+                    "post_install": [],
+                    "pre_deploy": [],
+                    "deploy": [],
+                    "post_deploy": []
                 }
             }
         }
@@ -229,12 +229,12 @@ var catalogs = [
                     "SOAJS_CONFIG_REPO_TOKEN": ""
                 },
                 "cmd": {
-                    "pre_install": "",
-                    "install": "",
-                    "post_install": "",
-                    "pre_deploy": "",
-                    "deploy": "",
-                    "post_deploy": ""
+                    "pre_install": [],
+                    "install": [],
+                    "post_install": [],
+                    "pre_deploy": [],
+                    "deploy": [],
+                    "post_deploy": []
                 }
             }
         }
@@ -274,12 +274,12 @@ var catalogs = [
                     "SOAJS_CONFIG_REPO_TOKEN": ""
                 },
                 "cmd": {
-                    "pre_install": "",
-                    "install": "",
-                    "post_install": "",
-                    "pre_deploy": "",
-                    "deploy": "",
-                    "post_deploy": ""
+                    "pre_install": [],
+                    "install": [],
+                    "post_install": [],
+                    "pre_deploy": [],
+                    "deploy": [],
+                    "post_deploy": []
                 }
             }
         }
@@ -319,12 +319,12 @@ var catalogs = [
                     "SOAJS_CONFIG_REPO_TOKEN": ""
                 },
                 "cmd": {
-                    "pre_install": "",
-                    "install": "",
-                    "post_install": "",
-                    "pre_deploy": "",
-                    "deploy": "",
-                    "post_deploy": ""
+                    "pre_install": [],
+                    "install": [],
+                    "post_install": [],
+                    "pre_deploy": [],
+                    "deploy": [],
+                    "post_deploy": []
                 }
             }
         }
