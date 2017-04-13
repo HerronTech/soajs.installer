@@ -205,22 +205,14 @@ var catalogs = [
                     "SOAJS_NX_SSL_CERTS_LOCATION": "/etc/soajs/ssl/", //only for user-provided certs
                     "SOAJS_NX_SSL_SECRET": "", //only for user-provided certs
 
-                    "SOAJS_GIT_OWNER": "",
-                    "SOAJS_GIT_BRANCH": "",
-                    "SOAJS_GIT_COMMIT": "",
-                    "SOAJS_GIT_REPO": "",
-                    "SOAJS_GIT_TOKEN": "", //optional (only if private repo)
+                    // "SOAJS_GIT_OWNER": "",
+                    // "SOAJS_GIT_BRANCH": "",
+                    // "SOAJS_GIT_COMMIT": "",
+                    // "SOAJS_GIT_REPO": "",
+                    // "SOAJS_GIT_TOKEN": "", //optional (only if private repo)
 
                     "SOAJS_DEPLOY_HA": "", //swarm || kubernetes
                     "SOAJS_HA_NAME": "", //computed field
-
-                    "SOAJS_MONGO_NB": "",
-                    "SOAJS_MONGO_PREFIX": "",
-                    "SOAJS_MONGO_RSNAME": "",
-                    "SOAJS_MONGO_AUTH_DB": "",
-                    "SOAJS_MONGO_SSL": "",
-                    "SOAJS_MONGO_IP_N": "", //replace N with number
-                    "SOAJS_MONGO_PORT_N": "", //replace N with number
 
                     "SOAJS_CONFIG_REPO_PROVIDER": "", //github|bitbucket|bitbucket_enterprise
                     "SOAJS_CONFIG_REPO_OWNER": "",
