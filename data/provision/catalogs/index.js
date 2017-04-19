@@ -25,9 +25,23 @@ var catalogs = [
                     "successThreshold": "",
                     "failureThreshold": ""
                 },
-                "volumes": [] //array of objects
+                "restartPolicy": {
+                    "condition": "", //Always || OnFailure || Never
+                    "maxAttempts": 0 //only valid for docker
+                },
+                "container": {
+                    "network": "", //container network for docker
+                    "workingDir": "" //container working directory
+                },
+                "voluming": {
+                    "volumes": [], //array of objects
+                    "volumeMounts": [] //array of objects
+                }
             },
             "buildOptions": {
+                "settings": {
+                    "accelerateDeployment": true || false,
+                },
                 "env": {
                     "NODE_ENV": "production",
 
@@ -64,11 +78,7 @@ var catalogs = [
                     "SOAJS_CONFIG_REPO_TOKEN": ""
                 },
                 "cmd": {
-                    "pre_install": [],
-                    "install": [],
-                    "post_install": [],
                     "pre_deploy": [],
-                    "deploy": [],
                     "post_deploy": []
                 }
             }
@@ -98,9 +108,23 @@ var catalogs = [
                     "successThreshold": "",
                     "failureThreshold": ""
                 },
-                "volumes": [] //array of objects
+                "restartPolicy": {
+                    "condition": "", //Always || OnFailure || Never
+                    "maxAttempts": 0 //only valid for docker
+                },
+                "container": {
+                    "network": "", //container network for docker
+                    "workingDir": "" //container working directory
+                },
+                "voluming": {
+                    "volumes": [], //array of objects
+                    "volumeMounts": [] //array of objects, only applicable in case of kubernetes
+                }
             },
             "buildOptions": {
+                "settings": {
+                    "accelerateDeployment": true || false,
+                },
                 "env": {
                     "NODE_ENV": "production",
 
@@ -136,11 +160,7 @@ var catalogs = [
                     "SOAJS_CONFIG_REPO_TOKEN": ""
                 },
                 "cmd": {
-                    "pre_install": [],
-                    "install": [],
-                    "post_install": [],
                     "pre_deploy": [],
-                    "deploy": [],
                     "post_deploy": []
                 }
             }
@@ -170,17 +190,19 @@ var catalogs = [
                     "successThreshold": "",
                     "failureThreshold": ""
                 },
-                "volumes": [], //array of objects
-                "ports": {
-                    "http": {
-                        "exposed": "",
-                        "target": "80"
-                    },
-                    "https": {
-                        "exposed": "",
-                        "target": "443"
-                    }
+                "restartPolicy": {
+                    "condition": "", //Always || OnFailure || Never
+                    "maxAttempts": 0 //only valid for docker
+                },
+                "container": {
+                    "network": "", //container network for docker
+                    "workingDir": "" //container working directory
+                },
+                "voluming": {
+                    "volumes": [], //array of objects
+                    "volumeMounts": [] //array of objects
                 }
+                "ports": []
             },
             "buildOptions": {
                 "env": {
@@ -221,11 +243,7 @@ var catalogs = [
                     "SOAJS_CONFIG_REPO_TOKEN": ""
                 },
                 "cmd": {
-                    "pre_install": [],
-                    "install": [],
-                    "post_install": [],
                     "pre_deploy": [],
-                    "deploy": [],
                     "post_deploy": []
                 }
             }
@@ -255,7 +273,18 @@ var catalogs = [
                     "successThreshold": "",
                     "failureThreshold": ""
                 },
-                "volumes": [] //array of objects
+                "restartPolicy": {
+                    "condition": "", //Always || OnFailure || Never
+                    "maxAttempts": 0 //only valid for docker
+                },
+                "container": {
+                    "network": "", //container network for docker
+                    "workingDir": "" //container working directory
+                },
+                "voluming": {
+                    "volumes": [], //array of objects
+                    "volumeMounts": [] //array of objects
+                }
             },
             "buildOptions": {
                 "env": {
@@ -266,11 +295,7 @@ var catalogs = [
                     "SOAJS_CONFIG_REPO_TOKEN": ""
                 },
                 "cmd": {
-                    "pre_install": [],
-                    "install": [],
-                    "post_install": [],
                     "pre_deploy": [],
-                    "deploy": [],
                     "post_deploy": []
                 }
             }
@@ -300,7 +325,18 @@ var catalogs = [
                     "successThreshold": "",
                     "failureThreshold": ""
                 },
-                "volumes": [] //array of objects
+                "restartPolicy": {
+                    "condition": "", //Always || OnFailure || Never
+                    "maxAttempts": 0 //only valid for docker
+                },
+                "container": {
+                    "network": "", //container network for docker
+                    "workingDir": "" //container working directory
+                },
+                "voluming": {
+                    "volumes": [], //array of objects
+                    "volumeMounts": [] //array of objects
+                }
             },
             "buildOptions": {
                 "env": {
@@ -311,11 +347,7 @@ var catalogs = [
                     "SOAJS_CONFIG_REPO_TOKEN": ""
                 },
                 "cmd": {
-                    "pre_install": [],
-                    "install": [],
-                    "post_install": [],
                     "pre_deploy": [],
-                    "deploy": [],
                     "post_deploy": []
                 }
             }
