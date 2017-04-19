@@ -23,14 +23,16 @@ mongo.dropDatabase(function () {
 			lib.addServices(function () {
 				lib.addTenants(function () {
 					lib.addGitAccounts(function () {
-						mongo.closeDb();
-						profile.name = "DBTN_urac";
-						mongo = new soajsModules.mongo(profile);
-						mongo.dropDatabase(function () {
-							lib.addUsers(function () {
-								lib.addGroups(function () {
-									lib.uracIndex(function () {
-										mongo.closeDb();
+						lib.addCatalogs(function () {
+							mongo.closeDb();
+							profile.name = "DBTN_urac";
+							mongo = new soajsModules.mongo(profile);
+							mongo.dropDatabase(function () {
+								lib.addUsers(function () {
+									lib.addGroups(function () {
+										lib.uracIndex(function () {
+											mongo.closeDb();
+										});
 									});
 								});
 							});
