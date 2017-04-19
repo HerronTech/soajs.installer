@@ -201,7 +201,7 @@ var catalogs = [
                 "voluming": {
                     "volumes": [], //array of objects
                     "volumeMounts": [] //array of objects
-                }
+                },
                 "ports": []
             },
             "buildOptions": {
