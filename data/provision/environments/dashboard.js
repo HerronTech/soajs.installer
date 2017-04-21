@@ -41,7 +41,8 @@ var dashboard = {
     "description": "this is the Dashboard environment",
     "dbs": {
         "clusters": {
-            "dash_cluster": "%clusters%"
+            "dash_cluster": "%clusters%",
+	        "%es_analytics_cluster_name%": "%es_analytics_cluster%",
         },
         "config": {
             "prefix": "%clusterPrefix%",
@@ -87,7 +88,9 @@ var dashboard = {
                 "src": true,
                 "level": "debug",
                 "formatter": {
-                    "outputMode": 'long'
+	                "outputMode": "bunyan",
+	                "levelInString": true
+	                //"outputMode": 'long'
                 }
             },
             "cors": {

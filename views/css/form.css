@@ -131,3 +131,6 @@ form input[type=checkbox].form-control{
     padding:0;
     margin-top:7px;
 }
+.analyticsButtons {
+    padding-left: 17px
+}

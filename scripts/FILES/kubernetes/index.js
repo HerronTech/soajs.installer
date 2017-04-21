@@ -16,7 +16,9 @@ var folder = config.folder;
 delete require.cache[config.profile];
 var profile = require(config.profile);
 var mongo = new soajsModules.mongo(profile);
-
+var analyticsCollection = 'analytics';
+var dbConfiguration = require('../../../data/startup/environments/dashboard');
+var esClient;
 var utilLog = require('util');
 
 var lib = {
@@ -114,7 +116,9 @@ var lib = {
             utilLog.log('External Mongo deployment detected, data containers will not be deployed ...');
             return cb(null, true);
         }
-
+	    if (type === 'elk' && !config.analytics) {
+		    return cb(null, true);
+	    }
         async.eachSeries(services, function (oneService, callback) {
             lib.deployService(deployer, oneService, callback);
         }, cb);
@@ -128,7 +132,6 @@ var lib = {
             if (error) {
                 utilLog.log(error);
             }
-
             return cb();
         });
     },
@@ -191,7 +194,19 @@ var lib = {
 
                 deployer.core.namespaces(namespace).services.post({body: options.service}, function (error) {
                     if (error) return cb(error);
-                    createDeployment(cb);
+	                createDeployment(function () {
+		                if (config.analytics) {
+			                if (options.deployment.metadata.name === "elasticsearch") {
+				                lib.configureElastic(deployer, options, cb);
+			                }
+			                else {
+				                lib.configureKibana(deployer, options, cb);
+			                }
+		                }
+		                else {
+			                return cb(null, true);
+		                }
+	                });
                 });
             }
             else {
@@ -432,12 +447,480 @@ var lib = {
 
         return cb(null, services);
     },
-
-
-    closeDbCon: function (cb) {
-        mongo.closeDb();
-        return cb();
-    }
+	
+	configureElastic: function (deployer, serviceOptions, cb) {
+		mongo.findOne('analytics', {_type: 'settings'}, function (error, settings) {
+			if (error) {
+				return cb(error);
+			}
+			if (settings && settings.elasticsearch && dbConfiguration.dbs.databases[settings.elasticsearch.db_name]) {
+				var cluster = dbConfiguration.dbs.databases[settings.elasticsearch.db_name].cluster;
+				esClient = new soajs.es(dbConfiguration.dbs.clusters[cluster]);
+			}
+			else {
+				throw new Error("No Elastic db name found!");
+			}
+			lib.getServiceNames(serviceOptions.Name, deployer, serviceOptions.Mode.Replicated.Replicas, function (error, elasticIPs) {
+				if (error) return cb(error);
+				pingElastic(function (err, esResponse) {
+					utilLog.log('Configuring elasticsearch ...');
+					async.series({
+						"mapping": function (callback) {
+							putMapping(callback);
+						},
+						"template": function (callback) {
+							putTemplate(callback);
+						},
+						"settings": function (callback) {
+							putSettings(esResponse, callback);
+						}
+					}, function (err) {
+						if (err) return cb(err);
+						
+						return cb(null, true);
+					});
+				});
+			});
+		});
+		
+		function pingElastic(cb) {
+			esClient.ping(function (error) {
+				if (error) {
+					lib.printProgress('Waiting for ' + serviceOptions.deployment.metadata.name + ' server to become connected');
+					setTimeout(function () {
+						pingElastic(cb);
+					}, 2000);
+				}
+				else {
+					infoElastic(function (err) {
+						return cb(err, true);
+					})
+				}
+			});
+		}
+		
+		function infoElastic(cb) {
+			esClient.db.info(function (error) {
+				if (error) {
+					lib.printProgress('Waiting for ' + serviceOptions.deployment.metadata.name+ ' server to become available');
+					setTimeout(function () {
+						infoElastic(cb);
+					}, 3000);
+				}
+				else {
+					return cb(null, true);
+				}
+			});
+		}
+		
+		function putTemplate(cb) {
+			mongo.find('analytics', {_type: 'template'}, function (error, templates) {
+				if (error) return cb(error);
+				async.each(templates, function (oneTemplate, callback) {
+					var options = {
+						'name': oneTemplate._name,
+						'body': oneTemplate._json
+					};
+					esClient.db.indices.putTemplate(options, function (error) {
+						return callback(error, true);
+					});
+				}, cb);
+			});
+		}
+		
+		function putMapping(cb) {
+			mongo.find('analytics', {_type: 'mapping'}, function (error, mapping) {
+				if (error) return cb(error);
+				
+				var mapping = {
+					index: '.kibana',
+					body: mapping._json
+				};
+				esClient.db.indices.existsType(mapping, function (error, result) {
+					if (error || !result) {
+						esClient.db.indices.create(mapping, function (error) {
+							return cb(error, true);
+						});
+					}
+					else {
+						return cb(null, true);
+					}
+				});
+				
+			});
+		}
+		
+		function putSettings(esResponse, cb) {
+			var condition = {
+				"$and": [
+					{
+						"_type": "settings"
+					}
+				]
+			};
+			var criteria = {"$set": {"env.dashboard": true}};
+			
+			criteria["$set"].elasticsearch = {
+				status: "deployed",
+				version: esResponse.version.number
+			};
+			
+			var options = {
+				"safe": true,
+				"multi": false,
+				"upsert": true
+			};
+			mongo.update('analytics', condition, criteria, options, function (error, body) {
+				if (error) {
+					return cb(error);
+				}
+				return cb(null, true)
+			});
+		}
+		
+	},
+	
+	configureKibana: function (deployer, serviceOptions, cb) {
+		var dockerServiceName = serviceOptions.deployment.metadata.name;
+		var serviceGroup, serviceName, serviceEnv, serviceType;
+		
+		if (serviceOptions.deployment.metadata.labels) {
+			serviceGroup = serviceOptions.deployment.metadata.labels['soajs.service.group'];
+			serviceName = serviceOptions.deployment.metadata.labels['soajs.service.repo.name'];
+			serviceEnv = serviceOptions.deployment.metadata.labels['soajs.env.code'];
+		}
+		if (serviceGroup === 'soajs-core-services') {
+			serviceType = (serviceName === 'soajs_controller') ? 'controller' : 'service';
+		}
+		else if (serviceGroup === 'nginx') {
+			serviceType = 'nginx';
+			serviceName = 'nginx';
+		}
+		else {
+			return cb(null, true);
+		}
+		var replicaCount = serviceOptions.deployment.spec.replicas;
+		utilLog.log('Fetching analytics for ' + serviceName);
+		lib.getServiceIPs(dockerServiceName, deployer, replicaCount, function (error, serviceIPs) {
+			if (error) return cb(error);
+			var options = {
+				"$or": [
+					{
+						"$and": [
+							{
+								"_type": {
+									"$in": ["dashboard", "visualization", "search"]
+								}
+							},
+							{
+								"_service": serviceType
+							}
+						]
+						
+					}
+				]
+			};
+			var analyticsArray = [];
+			serviceEnv.replace(/[\/*?"<>|,.-]/g, "_");
+			//insert index-patterns to kibana
+			serviceIPs.forEach(function (task_Name, key) {
+				task_Name.name = task_Name.name.replace(/[\/*?"<>|,.-]/g, "_");
+				
+				//filebeat-service-environment-taskname-*
+				
+				var filebeatIndex = require("../analytics/indexes/filebeat-index");
+				var allIndex = require("../analytics/indexes/all-index");
+				analyticsArray = analyticsArray.concat(
+					[
+						{
+							index: {
+								_index: '.kibana',
+								_type: 'index-pattern',
+								_id: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + task_Name.name + "-" + "*"
+							}
+						},
+						{
+							title: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + task_Name.name + "-" + "*",
+							timeFieldName: '@timestamp',
+							fields: filebeatIndex.fields,
+							fieldFormatMap: filebeatIndex.fieldFormatMap
+						}
+					]
+				);
+				
+				analyticsArray = analyticsArray.concat(
+					[
+						{
+							index: {
+								_index: '.kibana',
+								_type: 'index-pattern',
+								_id: '*-' + serviceName + "-" + serviceEnv + "-" + task_Name.name + "-" + "*"
+							}
+						},
+						{
+							title: '*-' + serviceName + "-" + serviceEnv + "-" + task_Name.name + "-" + "*",
+							timeFieldName: '@timestamp',
+							fields: allIndex.fields,
+							fieldFormatMap: allIndex.fieldFormatMap
+						}
+					]
+				);
+				
+				if (key == 0) {
+					//filebeat-service-environment-*
+					
+					analyticsArray = analyticsArray.concat(
+						[
+							{
+								index: {
+									_index: '.kibana',
+									_type: 'index-pattern',
+									_id: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + "*"
+								}
+							},
+							{
+								title: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + "*",
+								timeFieldName: '@timestamp',
+								fields: filebeatIndex.fields,
+								fieldFormatMap: filebeatIndex.fieldFormatMap
+							}
+						]
+					);
+					
+					analyticsArray = analyticsArray.concat(
+						[
+							{
+								index: {
+									_index: '.kibana',
+									_type: 'index-pattern',
+									_id: '*-' + serviceName + "-" + serviceEnv + "-" + "*"
+								}
+							},
+							{
+								title: '*-' + serviceName + "-" + serviceEnv + "-" + "*",
+								timeFieldName: '@timestamp',
+								fields: allIndex.fields,
+								fieldFormatMap: allIndex.fieldFormatMap
+							}
+						]
+					);
+					
+					//filebeat-service-environment-*
+					
+					
+					analyticsArray = analyticsArray.concat(
+						[
+							{
+								index: {
+									_index: '.kibana',
+									_type: 'index-pattern',
+									_id: 'filebeat-' + serviceName + '-' + "*"
+								}
+							},
+							{
+								title: 'filebeat-' + serviceName + '-' + "*",
+								timeFieldName: '@timestamp',
+								fields: filebeatIndex.fields,
+								fieldFormatMap: filebeatIndex.fieldFormatMap
+							}
+						]
+					);
+					
+					analyticsArray = analyticsArray.concat(
+						[
+							{
+								index: {
+									_index: '.kibana',
+									_type: 'index-pattern',
+									_id: '*-' + serviceName + "-" + "*"
+								}
+							},
+							{
+								title: '*-' + serviceName + "-" + "*",
+								timeFieldName: '@timestamp',
+								fields: allIndex.fields,
+								fieldFormatMap: allIndex.fieldFormatMap
+							}
+						]
+					);
+				}
+			});
+			
+			//insert visualization, search and deshbord rrecords per service  to kibana
+			mongo.find(analyticsCollection, options, function (error, records) {
+				if (error) {
+					return cb(error);
+				}
+				records.forEach(function (oneRecord) {
+					if (Array.isArray(serviceIPs) && serviceIPs.length > 0) {
+						serviceIPs.forEach(function (task_Name) {
+							task_Name.name = task_Name.name.replace(/[\/*?"<>|,.-]/g, "_");
+							var serviceIndex;
+							if (oneRecord._type === "visualization" || oneRecord._type === "search") {
+								serviceIndex = serviceName + "-";
+								if (oneRecord._injector === "service") {
+									serviceIndex = serviceIndex + serviceEnv + "-" + "*";
+								}
+								else if (oneRecord._injector === "env") {
+									serviceIndex = "*-" + serviceEnv + "-" + "*";
+								}
+								else if (oneRecord._injector === "taskname") {
+									serviceIndex = serviceIndex + serviceEnv + "-" + task_Name.name + "-" + "*";
+								}
+							}
+							
+							var injector;
+							if (oneRecord._injector === 'service') {
+								injector = serviceName + "-" + serviceEnv;
+							}
+							else if (oneRecord._injector === 'taskname') {
+								injector = task_Name.name;
+							}
+							else if (oneRecord._injector === 'env') {
+								injector = serviceEnv;
+							}
+							oneRecord = JSON.stringify(oneRecord);
+							if (serviceIndex) {
+								oneRecord = oneRecord.replace(/%serviceIndex%/g, serviceIndex);
+							}
+							if (injector) {
+								oneRecord = oneRecord.replace(/%injector%/g, injector);
+							}
+							oneRecord = oneRecord.replace(/%env%/g, serviceEnv);
+							oneRecord = JSON.parse(oneRecord);
+							var recordIndex = {
+								index: {
+									_index: '.kibana',
+									_type: oneRecord._type,
+									_id: oneRecord.id
+								}
+							};
+							
+							analyticsArray = analyticsArray.concat([recordIndex, oneRecord._source]);
+						});
+					}
+				});
+				
+				function esBulk(array, cb) {
+					esClient.bulk(array, function (error, response) {
+						if (error) {
+							return cb(error)
+						}
+						return cb(error, response);
+					});
+				}
+				
+				if (analyticsArray.length !== 0) {
+					esClient.checkIndex('.kibana', function (error, response) {
+						if (error) {
+							return cb(error);
+						}
+						if (response) {
+							esBulk(analyticsArray, cb);
+						}
+						else {
+							esClient.createIndex('.kibana', function (error) {
+								if (error) {
+									return cb(error);
+								}
+								esBulk(analyticsArray, cb);
+							})
+						}
+					});
+				}
+				else {
+					return cb(null, true);
+				}
+			});
+		});
+	},
+	
+	setDefaultIndex: function (cb) {
+		
+		var index = {
+			index: ".kibana",
+			type: 'config',
+			body: {
+				doc: {"defaultIndex": "filebeat-nginx-dashboard-*"}
+			}
+		};
+		var condition = {
+			index: ".kibana",
+			type: 'config'
+		};
+		esClient.db.search(condition, function (err, res) {
+			if (err) {
+				return cb(err);
+			}
+			if (res && res.hits && res.hits.hits && res.hits.hits.length > 0) {
+				mongo.findOne(analyticsCollection, {"_type": "settings"}, function (err, result) {
+					if (err) {
+						return cb(err);
+					}
+					if (result && result.env && result.env.dashboard) {
+						index.id = res.hits.hits[0]._id;
+						
+						async.parallel({
+							"updateES": function (call) {
+								esClient.db.update(index, call);
+							},
+							"updateSettings": function (call) {
+								var condition = {
+									"_type": "settings"
+								};
+								var criteria = {
+									"$set": {
+										"kibana": {
+											"version": index.id,
+											"status": "deployed",
+											"port": "32601"
+										},
+										"logstash": {
+											"dashboard": {
+												"status": "deployed"
+											}
+										},
+										"filebeat":{
+											"dashboard": {
+												"status": "deployed"
+											}
+										}
+									}
+								};
+								var options = {
+									"safe": true,
+									"multi": false,
+									"upsert": true
+								};
+								mongo.update('analytics', condition, criteria, options, function (error, body) {
+									if (error) {
+										return call(error);
+									}
+									return call(null, true)
+								});
+							}
+							
+						}, cb)
+					}
+					else {
+						return cb(null, true);
+					}
+				});
+			}
+			else {
+				return cb(null, true);
+			}
+		});
+		
+	},
+	
+	closeDbCon: function (cb) {
+		mongo.closeDb();
+		if (esClient) {
+			esClient.close();
+		}
+		return cb();
+	}
 };
 
 module.exports = lib;

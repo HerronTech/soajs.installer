@@ -49,7 +49,8 @@ var config = {
 		"soajs.service.group": "soajs-core-services",
 		"soajs.service.version": "1",
 		"soajs.service.label": "dashboard_soajs_prx",
-		"soajs.service.mode": "replicated"
+		"soajs.service.mode": "replicated",
+		"soajs.service.repo.name": "soajs_prx"
 	},
 	workingDir: '/opt/soajs/FILES/deployer/',
 	command: [

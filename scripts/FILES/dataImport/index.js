@@ -15,22 +15,28 @@ var profile = require(process.env.SOAJS_PROFILE);
 
 profile.name = "core_provision";
 var mongo = new soajsModules.mongo(profile);
-
+var fs= require("fs");
 
 mongo.dropDatabase(function () {
+	console.log("1")
 	lib.addEnvs(function () {
 		lib.addProducts(function () {
 			lib.addServices(function () {
 				lib.addTenants(function () {
-					lib.addGitAccounts(function () {
-						mongo.closeDb();
-						profile.name = "DBTN_urac";
-						mongo = new soajsModules.mongo(profile);
-						mongo.dropDatabase(function () {
-							lib.addUsers(function () {
-								lib.addGroups(function () {
-									lib.uracIndex(function () {
-										mongo.closeDb();
+					lib.addAnalytics(function (errAnalytics) {
+						if (errAnalytics) {
+							throw new Error("Error while importing analytics \n" + errAnalytics);
+						}
+						lib.addGitAccounts(function () {
+							mongo.closeDb();
+							profile.name = "DBTN_urac";
+							mongo = new soajsModules.mongo(profile);
+							mongo.dropDatabase(function () {
+								lib.addUsers(function () {
+									lib.addGroups(function () {
+										lib.uracIndex(function () {
+											mongo.closeDb();
+										});
 									});
 								});
 							});
@@ -91,7 +97,33 @@ var lib = {
 		record._id = mongo.ObjectId(record._id);
 		mongo.insert("git_accounts", record, cb);
 	},
-
+	
+	/*
+	 Analytics
+	 */
+	"addAnalytics": function (cb) {
+		
+		var records = [];
+		fs.readdir(dataFolder + "analytics", function(err, items) {
+			
+			async.forEachOf(items, function (item, key, callback) {
+				if (key === 0) {
+					records = require(dataFolder + "analytics/" + items[key]);
+				}
+				else {
+					var array = require(dataFolder + "analytics/" + item);
+					if (Array.isArray(array) && array.length > 0){
+						records = records.concat(array);
+					}
+				}
+				callback();
+			}, function () {
+				mongo.insert("analytics", records, cb);
+			});
+		});
+		
+		
+	},
 	/***************************************************************
 	 *
 	 * DASHBOARD URAC

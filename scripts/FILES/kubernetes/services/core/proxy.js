@@ -16,7 +16,8 @@ var components = {
                 "soajs.service.type": "service",
                 "soajs.service.version": "1",
                 "soajs.service.label": "dashboard-proxy-v1",
-                "soajs.service.mode": "deployment"
+                "soajs.service.mode": "deployment",
+	            "soajs.service.repo.name": "soajs_prx"
             }
         },
         "spec": {

@@ -28,6 +28,7 @@ installer.init(function () {
 	//Clusters APIs
 	installer.get('/installer/clusters', routes.getClusters);
 	installer.post('/installer/clusters', routes.postClusters);
+	installer.post('/installer/esClusters', routes.postEsClusters);
 
 	//Deployment APIs
 	installer.get('/installer/deployment', routes.getDeployment);

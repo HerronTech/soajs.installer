@@ -7,7 +7,7 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 	$scope.closeAlert = function (i) {
 		$scope.alerts.splice(i, 1);
 	};
-	
+	$scope.analytics = {};
 	$scope.previousCheckComplete = false;
 	/*$scope.deploymentExists = null;
 	$scope.findCustomFile = function (previousDeploymentInfo, deploymentExists, cb) {
@@ -69,28 +69,32 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 			output = {
 				"deployDriver": "container.docker.local",
 				"deployType": "container"
-			}
+			};
+			output.deployAnalytics = $scope.analytics.local;
 		}
 		//if kubernetes local is selected
 		else if (!$scope.manual && $scope.local && !$scope.remote && !$scope.docker && $scope.kubernetes) {
 			output = {
 				"deployDriver": "container.kubernetes.local",
 				"deployType": "container"
-			}
+			};
+			output.deployAnalytics = $scope.analytics.local;
 		}
 		//if docker remote is selected
 		else if (!$scope.manual && !$scope.local && $scope.remote && $scope.docker && !$scope.kubernetes) {
 			output = {
 				"deployDriver": "container.docker.remote",
 				"deployType": "container"
-			}
+			};
+			output.deployAnalytics = $scope.analytics.remote;
 		}
 		//if docker remote is selected
 		else if (!$scope.manual && !$scope.local && $scope.remote && !$scope.docker && $scope.kubernetes) {
 			output = {
 				"deployDriver": "container.kubernetes.remote",
 				"deployType": "container"
-			}
+			};
+			output.deployAnalytics = $scope.analytics.remote;
 		}
 		
 		var options = {
@@ -159,12 +163,12 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
 				return false;
 			}
-			
 			$scope.style = response;
 			$scope.data = {};
 			if ($scope.style.deployer) {
 				$scope.data.deployDriver = $scope.style.deployer.deployDriver;
 				$scope.data.deployType = $scope.style.deployer.deployType;
+				$scope.data.deployAnalytics = $scope.style.deployer.deployAnalytics;
 			}
 			$scope.osName = response.deployer.os;
 			if (!$scope.data.deployDriver) {
@@ -187,6 +191,7 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 				$scope.kubernetes = true;
 				$scope.local = true;
 				$scope.remote = false;
+				$scope.analytics.local = $scope.data.deployAnalytics;
 			}
 			else if ($scope.data.deployDriver.indexOf('kubernetes') !== -1 && $scope.data.deployDriver.indexOf('remote') !== -1) {
 				$scope.manual = false;
@@ -194,6 +199,7 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 				$scope.kubernetes = true;
 				$scope.local = false;
 				$scope.remote = true;
+				$scope.analytics.remote = $scope.data.deployAnalytics;
 			}
 			else if ($scope.data.deployDriver.indexOf('docker') !== -1 && $scope.data.deployDriver.indexOf('local') !== -1) {
 				$scope.manual = false;
@@ -201,6 +207,7 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 				$scope.kubernetes = false;
 				$scope.local = true;
 				$scope.remote = false;
+				$scope.analytics.local = $scope.data.deployAnalytics;
 			}
 			else if ($scope.data.deployDriver.indexOf('docker') !== -1 && $scope.data.deployDriver.indexOf('remote') !== -1) {
 				$scope.manual = false;
@@ -208,6 +215,7 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 				$scope.kubernetes = false;
 				$scope.local = false;
 				$scope.remote = true;
+				$scope.analytics.remote = $scope.data.deployAnalytics;
 			}
 			if (!$scope.$$phase) {
 				$scope.$apply();

@@ -73,7 +73,8 @@ module.exports = {
 								"type": "string",
 								"required": true,
 								"enum": ["manual", "container.docker.local", "container.docker.remote", "container.kubernetes.local", "container.kubernetes.remote"]
-							}
+							},
+							"deployAnalytics": {"type": "boolean", "required": false}
 						},
 						"additionalProperties": false
 					}
@@ -121,7 +122,7 @@ module.exports = {
 			},
 			'/installer/clusters' :{
 				"_apiInfo":{
-					"l": "Override Clusters Information"
+					"l": "Override Mongo Clusters Information"
 				},
 				"clusters": {
 					"source": ["body.clusters"],
@@ -158,6 +159,42 @@ module.exports = {
 					}
 				}
 			},
+			'/installer/esClusters' :{
+				"_apiInfo":{
+					"l": "Override ElasticSeaach Clusters Information"
+				},
+				"es_clusters": {
+					"source": ["body.es_clusters"],
+					"required": false,
+					"validation":{
+						"type": "object",
+						"properties": {
+							"es_Ext": {"type": "boolean", "required": false},
+							"servers": {
+								"type": "array",
+								"required": false,
+								"items": {
+									"host": {"type": "string", "required": true},
+									"port": {"type": "number", "required": true, "min": 0},
+								},
+								"minItems": 1,
+								"uniqueItems": true
+							},
+							"credentials": {
+								"type": "object",
+								"required": false,
+								"properties": {
+									"username": {"type": "string"},
+									"password": {"type": "string"}
+								}
+							},
+							"URLParam": {"type": "object", "properties": {}},
+							"extraParam": {"type": "object", "properties": {}}
+						},
+						"additionalProperties": false
+					}
+				}
+			},
 			'/installer/deployment' :{
 				"_apiInfo":{
 					"l": "Override Deployment Information"
@@ -180,6 +217,7 @@ module.exports = {
 
                             "gitSource": {"type": "string", "required": false, "enum": ['github','bitbucket']},
                             "gitProvider": {"type": "string", "required": false},
+							"deployAnalytics": {"type": "boolean", "required": false},
                             "gitOwner": {"type": "string", "required": false},
                             "gitRepo": {"type": "string", "required": false},
                             "gitBranch": {"type": "string", "required": false},

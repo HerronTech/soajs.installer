@@ -48,7 +48,9 @@ var config = {
 		"soajs.service.name": "oauth",
 		"soajs.service.group": "soajs-core-services",
 		"soajs.service.version": "2",
-		"soajs.service.label": "dashboard_soajs_oauth"
+		"soajs.service.label": "dashboard_soajs_oauth",
+	    "soajs.service.repo.name": "soajs_oauth" //check
+	    
     },
     workingDir: '/opt/soajs/FILES/deployer/',
     command: [

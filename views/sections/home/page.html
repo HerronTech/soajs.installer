@@ -50,8 +50,10 @@
 					<b><u>Deployment Type:</u></b><br/>
 					<input type="radio" name="localButtons" ng-model="data.deployDriver" value="container.docker.local" ng-change="selectDeployment('docker')"/>&nbsp;Docker
 					Deployment (Ubuntu or Mac only)<br/>
+					<div ng-if="docker && local" class="analyticsButtons" ><input type="checkbox" name="localButtons" ng-model="analytics.local" ng-value ="analytics.local" />Activate Analytics <br/></div>
 					<input type="radio" name="localButtons" ng-model="data.deployDriver" value="container.kubernetes.local" ng-change="selectDeployment('kubernetes')"/>&nbsp;Kubernetes
-					Deployment (Ubuntu or Mac only)<br/><br/>
+					Deployment (Ubuntu or Mac only)<br/>
+					<div ng-if="kubernetes && local" class="analyticsButtons"><input type="checkbox" name="localButtons" ng-model="analytics.local"  ng-value ="analytics.local" />Activate Analytics<br/></div><br/>
 					
 					<pre ng-show="docker && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
 {{style.kubernetes.local.v}}</code></pre>
@@ -78,9 +80,10 @@
 					<b><u>Deployment Type:</u></b><br/>
 					<input type="radio" name="remoteButtons" ng-model="data.deployDriver" value="container.docker.remote" ng-change="selectDeployment('docker')"/>&nbsp;Docker
 					Deployment (Ubuntu Only)<br/>
+					<div ng-if="docker" class="analyticsButtons" ><input type="checkbox" name="localButtons"  ng-model="analytics.remote"  ng-value ="analytics.remote"/>Activate Analytics<br/></div>
 					<input type="radio" name="remoteButtons" ng-model="data.deployDriver" value="container.kubernetes.remote" ng-change="selectDeployment('kubernetes')"/>&nbsp;Kubernetes
-					Deployment (Ubuntu Only)<br/><br/>
-					
+					Deployment (Ubuntu Only)<br/>
+					<div ng-if="kubernetes" class="analyticsButtons"><input type="checkbox" name="localButtons" ng-model="analytics.remote"  ng-value ="analytics.remote"/>Activate Analytics<br/></div><br/>
 					<pre ng-show="data.deployDriver ==='container.docker.remote'" class="bash"><code># Execute the command below on the remote machine terminal
 {{style.docker.remote.v}}</code></pre>
 					

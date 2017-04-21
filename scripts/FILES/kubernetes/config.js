@@ -2,7 +2,8 @@
 
 var profile = require(process.env.SOAJS_PROFILE);
 var mongoHostname = profile.servers[0].host;
-module.exports = {
+var lib  = {
+	"analytics": process.env.SOAJS_DEPLOY_ANALYTICS,
 	"masterDomain": process.env.MASTER_DOMAIN || 'soajs.org',
 	"apiPrefix": process.env.API_PREFIX || "dashboard-api",
 	"sitePrefix": process.env.SITE_PREFIX || "dashboard",
@@ -79,7 +80,7 @@ module.exports = {
 		}
 	},
 
-	"deployGroups": ['db', 'core', 'nginx'],
+	"deployGroups": ['db', 'elk', 'core', 'nginx'],
 	"services":{
 		"path": {
 			"dir": __dirname + '/services/',
@@ -87,3 +88,4 @@ module.exports = {
 		}
 	}
 };
+module.exports = lib;

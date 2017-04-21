@@ -102,6 +102,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				"gi": (response.gi) ? syntaxHighlight(JSON.stringify(response.gi, null, 4)) : JSON.stringify({}),
 				"security": (response.security) ? syntaxHighlight(JSON.stringify(response.security, null, 2)): JSON.stringify({}),
 				"clusters": (response.clusters) ? syntaxHighlight(response.clusters): JSON.stringify({}),
+				"es_clusters": (response.es_clusters && response.es_clusters !== {}) ? syntaxHighlight(response.es_clusters): false,
 				"deployment": (response.deployment) ? syntaxHighlight(response.deployment): JSON.stringify({})
 			};
 			$timeout(function(){
@@ -157,6 +158,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			$scope.deployment = {
 				"deployType": (response && response.deployType) ? response.deployType : "manual",
 				"deployDriver": (response && response.deployDriver) ? response.deployDriver : "manual",
+				"deployAnalytics": (response && response.deployAnalytics) ? response.deployAnalytics : false,
 				"deployDockerNodes": (response && response.deployDockerNodes) ? response.deployDockerNodes : [],
 				"containerHost": (response && response.containerHost) ? response.containerHost : "127.0.0.1",
 				"gitSource": (response && response.gitSource) ? response.gitSource : null,

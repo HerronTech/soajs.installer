@@ -207,9 +207,18 @@ var routes = {
             }
             utils.updateCustomData(req, res, req.soajs.inputmaskData.clusters, "clusters");
         });
-
     },
-
+	"postEsClusters": function (req, res) {
+		utils.verifyEsIP(req,res, function(error){
+			if(error){
+				if(error === "noIP")
+					return res.json(req.soajs.buildResponse({code: 601, msg: "You have added a host with no hostname. Please provide a valid hostname."}));
+				else
+					return res.json(req.soajs.buildResponse({code: 601, msg: "Invalid machine IP address: " + error + ". Provide the machine's external IP address."}));
+			}
+			utils.updateCustomData(req, res, req.soajs.inputmaskData.es_clusters, "es_clusters");
+		});
+	},
     "getDeployment": function (req, res) {
         utils.loadCustomData('deployment', function (customData) {
             return res.json(req.soajs.buildResponse(null, customData || null));

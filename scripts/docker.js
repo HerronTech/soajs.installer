@@ -67,14 +67,32 @@ function deploySOAJS(deployer) {
 		async.eachSeries(config.deployGroups, function (oneGroup, callback) {
 			deploy(oneGroup, deployer, function (error, result) {
 				if (error) return callback(error);
-				
-				utilLog.log(oneGroup + ' services deployed successfully ...');
+				if (!(config.analytics === "false" && oneGroup === 'elk')){
+					utilLog.log(oneGroup + ' services deployed successfully ...');
+				}
 				return callback(null, true);
+				
 			});
 		}, function (error, result) {
 			if (error) throw new Error (error);
-			utilLog.log('SOAJS Has been deployed.');
-			process.exit();
+			if (config.analytics === "true"){
+				lib.setDefaultIndex(function (err){
+					if (err){
+						throw new Error (error)
+					}
+					lib.closeDbCon(function(){
+						utilLog.log('SOAJS Has been deployed.');
+						process.exit();
+					});
+				});
+			}
+			else {
+				lib.closeDbCon(function(){
+					utilLog.log('SOAJS Has been deployed.');
+					process.exit();
+				});
+			}
+			
 		});
 	});
 }
@@ -115,9 +133,8 @@ function deploy (group, deployer, cb) {
 function importProvisionData (dbServices, deployer, cb) {
 	utilLog.log ("Fetching data containers' IP addresses ... ");
 	utilLog.log ('This step might take some time if docker is currently pulling the containers\' image ...');
-	lib.getServiceIPs(config.mongo.services.dashboard.name, deployer, 1, function (error) {
+	lib.getServiceNames(config.mongo.services.dashboard.name, deployer, 1, function (error) {
 		if (error) return cb(error);
-		
 		setTimeout(function () {
             lib.importData(config.mongo.services, function(){
                 lib.importCertificates(cb);
