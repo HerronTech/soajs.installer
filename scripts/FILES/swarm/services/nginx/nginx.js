@@ -69,10 +69,11 @@ var config = {
     },
     workingDir: '/opt/soajs/FILES/deployer/',
     command: [
-        'bash',
-        '-c',
+        //'bash',
+        //'-c',
         // '/etc/init.d/filebeat start; /etc/init.d/topbeat start; ./soajsDeployer.sh -T nginx -X deploy' + deployerExtra
-        './soajsDeployer.sh -T nginx -X deploy' + deployerExtra + gitSource + gitProvider
+        //'./soajsDeployer.sh -T nginx -X deploy' + deployerExtra + gitSource + gitProvider
+        "node index.js -T nginx"
     ],
     exposedPorts: [
         {

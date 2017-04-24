@@ -32,7 +32,10 @@ var config = {
 	    'SOAJS_MONGO_PREFIX=' + gConfig.mongo.prefix,
         'SOAJS_GIT_OWNER=' + src.owner,
         'SOAJS_GIT_REPO=' + src.repo,
-        'SOAJS_GIT_BRANCH=' + src.branch
+        'SOAJS_GIT_BRANCH=' + src.branch,
+        'SOAJS_GIT_PROVIDER=' + gConfig.git.provider,
+        'SOAJS_GIT_DOMAIN=' + gConfig.git.domain,
+        'SOAJS_DEPLOY_ACC=' + gConfig.deploy_acc
     ],
     mounts: [
 		{
@@ -55,7 +58,7 @@ var config = {
     command: [
         'bash',
         '-c',
-        '/etc/init.d/postfix start; ./soajsDeployer.sh -T service -X deploy -L'
+        '/etc/init.d/postfix start; node index.js -T service'
     ]
 };
 
