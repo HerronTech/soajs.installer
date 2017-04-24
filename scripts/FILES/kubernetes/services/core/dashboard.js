@@ -85,8 +85,8 @@ var components = {
 	                        "image": gConfig.imagePrefix + "/soajs",
                             "imagePullPolicy": gConfig.imagePullPolicy,
                             "workingDir": "/opt/soajs/FILES/deployer/",
-                            "command": ["./soajsDeployer.sh"],
-                            "args": ["-T", "service", "-X", "deploy", "-L"],
+                            "command": ["node"],
+                            "args": ["index.js", "-T", "service"],
                             "ports": [
                                 {
                                     "name": "service",
@@ -136,6 +136,18 @@ var components = {
                                 {
                                     "name": "SOAJS_GIT_REPO",
                                     "value": "soajs.dashboard"
+                                },
+                                {
+                                    "name": "SOAJS_GIT_PROVIDER",
+                                    "value": gConfig.git.provider
+                                },
+                                {
+                                    "name": "SOAJS_GIT_DOMAIN",
+                                    "value": gConfig.git.domain
+                                },
+                                {
+                                    "name": "SOAJS_DEPLOY_ACC",
+                                    "value": gConfig.deploy_acc
                                 },
                                 {
                                     "name": "SOAJS_DEPLOY_HA",

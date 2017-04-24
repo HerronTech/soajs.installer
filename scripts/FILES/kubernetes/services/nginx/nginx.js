@@ -91,8 +91,8 @@ var components = {
 							"image": gConfig.imagePrefix + "/nginx",
 							"imagePullPolicy": gConfig.imagePullPolicy,
 							"workingDir": "/opt/soajs/FILES/deployer/",
-							"command": ["./soajsDeployer.sh"],
-							"args": ["-T", "nginx", "-X", "deploy"],
+							"command": ["node"],
+							"args": ["index.js", "-T", "nginx"],
                             "ports": [
                                 {
                                     "name": "http",
