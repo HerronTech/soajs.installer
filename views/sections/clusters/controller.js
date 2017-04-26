@@ -205,7 +205,8 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 						"keepAlive": true,
 						"maxSockets": 30,
 						"number_of_shards": 5,
-						"number_of_replicas": 1
+						"number_of_replicas": 1,
+						"apiVersion": "5.x"
 					}, null, 2)
 				};
 				$scope.analytics = true;

@@ -56,6 +56,7 @@ var dashboard = {
             }
         },
         "databases": {
+	        "%es_database_name%": "%databases_value%",
             "urac": {
                 "cluster": "dash_cluster",
                 "tenantSpecific": true

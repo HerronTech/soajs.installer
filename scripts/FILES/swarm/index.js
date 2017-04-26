@@ -501,7 +501,6 @@ var lib = {
     },
 	
 	configureElastic: function (deployer, serviceOptions, cb) {
-		return cb(null, true);
 		mongo.findOne('analytics', {_type: 'settings'}, function (error, settings) {
 			if (error) {
 				return cb(error);
@@ -532,7 +531,7 @@ var lib = {
 			});
 		});
 		
-		function pingElastic(cb, ping) {
+		function pingElastic(cb) {
 			esClient.ping(function (error) {
 				if (error) {
 					lib.printProgress('Waiting for ' + serviceOptions.Name + ' server to become connected');
@@ -578,19 +577,20 @@ var lib = {
 		}
 		
 		function putMapping(cb) {
-			mongo.find('analytics', {_type: 'mapping'}, function (error, mapping) {
+			mongo.findOne('analytics', {_type: 'mapping'}, function (error, mapping) {
 				if (error) return cb(error);
-				
-				var mapping = {
+				var mappings = {
 					index: '.kibana',
 				};
-				esClient.db.indices.exists(mapping, function (error, result) {
+				esClient.db.indices.exists(mappings, function (error, result) {
 					if (error || !result) {
-						mapping = {
+						mappings = {
 							index: '.kibana',
-							body: mapping._json
+							body: {
+								"mappings": mapping._json
+							}
 						};
-						esClient.db.indices.create(mapping, function (error) {
+						esClient.db.indices.create(mappings, function (error) {
 							return cb(error, true);
 						});
 					}
@@ -622,7 +622,7 @@ var lib = {
 				"multi": false,
 				"upsert": true
 			};
-			mongo.update('analytics', condition, criteria, options, function (error, body) {
+			mongo.update('analytics', condition, criteria, options, function (error) {
 				if (error) {
 					return cb(error);
 				}
@@ -633,7 +633,6 @@ var lib = {
 	},
 	
 	configureKibana: function (deployer, serviceOptions, cb) {
-		return cb(null, true);
 		var dockerServiceName = serviceOptions.Name;
 		var serviceGroup, serviceName, serviceEnv, serviceType;
 		
@@ -680,25 +679,25 @@ var lib = {
 				task_Name.name = task_Name.name.replace(/[\/*?"<>|,.-]/g, "_");
 				
 				//filebeat-service-environment-taskname-*
-				var filebeatIndex = require("../analytics/indexes/filebeat-index");
+				//var filebeatIndex = require("../analytics/indexes/filebeat-index");
 				var allIndex = require("../analytics/indexes/all-index");
-				analyticsArray = analyticsArray.concat(
-					[
-						{
-							index: {
-								_index: '.kibana',
-								_type: 'index-pattern',
-								_id: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + task_Name.name + "-" + "*"
-							}
-						},
-						{
-							title: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + task_Name.name + "-" + "*",
-							timeFieldName: '@timestamp',
-							fields: filebeatIndex.fields,
-							fieldFormatMap: filebeatIndex.fieldFormatMap
-						}
-					]
-				);
+				// analyticsArray = analyticsArray.concat(
+				// 	[
+				// 		{
+				// 			index: {
+				// 				_index: '.kibana',
+				// 				_type: 'index-pattern',
+				// 				_id: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + task_Name.name + "-" + "*"
+				// 			}
+				// 		},
+				// 		{
+				// 			title: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + task_Name.name + "-" + "*",
+				// 			timeFieldName: '@timestamp',
+				// 			fields: filebeatIndex.fields,
+				// 			fieldFormatMap: filebeatIndex.fieldFormatMap
+				// 		}
+				// 	]
+				// );
 				
 				analyticsArray = analyticsArray.concat(
 					[
@@ -721,23 +720,23 @@ var lib = {
 				if (key == 0) {
 					//filebeat-service-environment-*
 					
-					analyticsArray = analyticsArray.concat(
-						[
-							{
-								index: {
-									_index: '.kibana',
-									_type: 'index-pattern',
-									_id: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + "*"
-								}
-							},
-							{
-								title: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + "*",
-								timeFieldName: '@timestamp',
-								fields: filebeatIndex.fields,
-								fieldFormatMap: filebeatIndex.fieldFormatMap
-							}
-						]
-					);
+					// analyticsArray = analyticsArray.concat(
+					// 	[
+					// 		{
+					// 			index: {
+					// 				_index: '.kibana',
+					// 				_type: 'index-pattern',
+					// 				_id: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + "*"
+					// 			}
+					// 		},
+					// 		{
+					// 			title: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + "*",
+					// 			timeFieldName: '@timestamp',
+					// 			fields: filebeatIndex.fields,
+					// 			fieldFormatMap: filebeatIndex.fieldFormatMap
+					// 		}
+					// 	]
+					// );
 					
 					
 					analyticsArray = analyticsArray.concat(
@@ -761,23 +760,23 @@ var lib = {
 					//filebeat-service-environment-*
 					
 					
-					analyticsArray = analyticsArray.concat(
-						[
-							{
-								index: {
-									_index: '.kibana',
-									_type: 'index-pattern',
-									_id: 'filebeat-' + serviceName + '-' + "*"
-								}
-							},
-							{
-								title: 'filebeat-' + serviceName + '-' + "*",
-								timeFieldName: '@timestamp',
-								fields: filebeatIndex.fields,
-								fieldFormatMap: filebeatIndex.fieldFormatMap
-							}
-						]
-					);
+					// analyticsArray = analyticsArray.concat(
+					// 	[
+					// 		{
+					// 			index: {
+					// 				_index: '.kibana',
+					// 				_type: 'index-pattern',
+					// 				_id: 'filebeat-' + serviceName + '-' + "*"
+					// 			}
+					// 		},
+					// 		{
+					// 			title: 'filebeat-' + serviceName + '-' + "*",
+					// 			timeFieldName: '@timestamp',
+					// 			fields: filebeatIndex.fields,
+					// 			fieldFormatMap: filebeatIndex.fieldFormatMap
+					// 		}
+					// 	]
+					// );
 					
 					analyticsArray = analyticsArray.concat(
 						[
@@ -848,7 +847,6 @@ var lib = {
 									_id: oneRecord.id
 								}
 							};
-							
 							analyticsArray = analyticsArray.concat([recordIndex, oneRecord._source]);
 						});
 					}
@@ -889,12 +887,11 @@ var lib = {
 	},
 	
 	setDefaultIndex: function (cb) {
-		return cb(null, true);
 		var index = {
 			index: ".kibana",
 			type: 'config',
 			body: {
-				doc: {"defaultIndex": "filebeat-nginx-dashboard-*"}
+				doc: {"defaultIndex": "*-nginx-dashboard-dashboard_nginx_1-*"}
 			}
 		};
 		var condition = {

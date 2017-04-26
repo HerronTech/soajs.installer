@@ -286,6 +286,7 @@ module.exports = {
 		    envData = envData.replace(/%es_database_name%: "%databases_value%"/g, '');
 		    settings = settings.replace(/"db_name": "%db_name%"/g, '');
 	    }
+	    fs.writeFile(folder + "analytics/settings.js", settings, "utf8");
         envData = envData.replace(/%keySecret%/g, body.security.key);
         envData = envData.replace(/%sessionSecret%/g, body.security.session);
         envData = envData.replace(/%cookieSecret%/g, body.security.cookie);
