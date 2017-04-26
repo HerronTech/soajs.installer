@@ -85,7 +85,7 @@ var components = {
                             "name": "dashboard-controller-v1",
                             "image": gConfig.imagePrefix + "/soajs",
                             "imagePullPolicy": gConfig.imagePullPolicy,
-                            "workingDir": "/opt/soajs/FILES/deployer/",
+                            "workingDir": "/opt/soajs/deployer/",
                             "command": ["node"],
                             "args": ["index.js", "-T", "service"],
                             "ports": [

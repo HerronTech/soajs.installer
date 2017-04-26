@@ -60,9 +60,11 @@ var config = {
 		"soajs.service.label": "dashboard_soajs_controller",
 		"soajs.service.mode": "replicated"
 	},
-	workingDir: '/opt/soajs/FILES/deployer/',
+	workingDir: '/opt/soajs/deployer/',
 	command: [
-		"node index.js -T service"
+        'bash',
+        '-c',
+        "node index.js -T service"
 	],
 	placement: [
         'node.role == manager'
@@ -86,7 +88,7 @@ module.exports = {
 		},
 		"Resources": {
 			"Limits": {
-				"MemoryBytes": 209715200.0
+				"MemoryBytes": 509715200.0
 			}
 		},
 		"RestartPolicy": {

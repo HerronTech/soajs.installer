@@ -84,7 +84,7 @@ var components = {
                             "name": "dashboard-urac-v2",
                             "image": gConfig.imagePrefix + "/soajs",
                             "imagePullPolicy": gConfig.imagePullPolicy,
-                            "workingDir": "/opt/soajs/FILES/deployer/",
+                            "workingDir": "/opt/soajs/deployer/",
                             "command": ["node"],
                             "args": ["index.js", "-T", "service"],
                             "ports": [

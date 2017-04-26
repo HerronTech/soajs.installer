@@ -54,11 +54,11 @@ var config = {
 		"soajs.service.label": "dashboard_soajs_urac",
         "soajs.service.mode": "replicated"
     },
-    workingDir: '/opt/soajs/FILES/deployer/',
+    workingDir: '/opt/soajs/deployer/',
     command: [
         'bash',
         '-c',
-        '/etc/init.d/postfix start; node index.js -T service'
+        '/etc/init.d/postfix start && node index.js -T service'
     ]
 };
 
@@ -78,7 +78,7 @@ module.exports = {
         "Placement": {},
         "Resources": {
             "Limits": {
-                "MemoryBytes": 209715200.0
+                "MemoryBytes": 509715200.0
             }
         },
         "RestartPolicy": {

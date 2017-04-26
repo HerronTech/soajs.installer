@@ -49,7 +49,8 @@ var config = {
 
         'SOAJS_NX_CONTROLLER_NB=1',
         'SOAJS_NX_CONTROLLER_IP_1=' + controllerServiceName,
-        'SOAJS_NX_CONTROLLER_PORT_1=' + controllerServicePort
+        'SOAJS_NX_CONTROLLER_PORT_1=' + controllerServicePort,
+
     ],
     mounts: [
         {
@@ -69,11 +70,9 @@ var config = {
     },
     workingDir: '/opt/soajs/FILES/deployer/',
     command: [
-        //'bash',
-        //'-c',
-        // '/etc/init.d/filebeat start; /etc/init.d/topbeat start; ./soajsDeployer.sh -T nginx -X deploy' + deployerExtra
-        //'./soajsDeployer.sh -T nginx -X deploy' + deployerExtra + gitSource + gitProvider
-        "node index.js -T nginx"
+        'bash',
+        '-c',
+        'node index.js -T nginx -X deploy' + deployerExtra + gitSource + gitProvider
     ],
     exposedPorts: [
         {
@@ -123,7 +122,7 @@ module.exports = {
         "Placement": {},
         "Resources": {
             "Limits": {
-                "MemoryBytes": 209715200.0
+                "MemoryBytes": 509715200.0
             }
         },
         "RestartPolicy": {
