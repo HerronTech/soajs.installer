@@ -43,10 +43,11 @@ var components = {
 					"containers": [
 						{
 							"name": "filebeat",
-							"image": gConfig.imagePrefix + "/filebeat",
+							//"image": gConfig.imagePrefix + "/filebeat",
+							"image": "soajstest" + "/filebeat",
 							"imagePullPolicy": "IfNotPresent",
 							"command": [
-								"filebeat",  "-e",  "-c", "/etc/filebeat/filebeat.yml"
+								"/usr/share/filebeat/bin/filebeat",  "-e",  "-c", "/etc/filebeat/filebeat.yml"
 							],
 							"ports": [
 								{

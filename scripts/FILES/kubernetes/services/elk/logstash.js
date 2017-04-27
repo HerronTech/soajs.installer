@@ -64,12 +64,13 @@ var components = {
 					"containers": [
 						{
 							"name": "dashboard-logstash",
-							"image": gConfig.imagePrefix + "/logstash",
+							//"image": gConfig.imagePrefix + "/logstash",
+							"image": "soajstest" + "/logstash",
 							"imagePullPolicy": "IfNotPresent",
 							"command": [
 								"bash",
 								"-c",
-								"chown logstash:logstash /conf/logstash.conf; logstash -f /conf/logstash.conf"
+								"logstash -f /usr/share/logstash/config/logstash.conf"
 							],
 							"ports": []
 						}

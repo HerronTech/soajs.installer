@@ -54,7 +54,9 @@ var components = {
                 "soajs.service.type": "service",
                 "soajs.service.version": "2",
                 "soajs.service.label": "dashboard-urac-v2",
-                "soajs.service.mode": "deployment"
+                "soajs.service.mode": "deployment",
+	            "soajs.service.repo.name": "soajs_urac"
+	            
             }
         },
         "spec": {

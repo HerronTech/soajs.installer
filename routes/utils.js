@@ -213,7 +213,7 @@ module.exports = {
 				    es_clusters.servers = [
 					    {
 						    host: "dashboard-soajsdata." + namespace,
-						    port: 5000 + 9200
+						    port: 30920
 					    }
 				    ];
 			    }

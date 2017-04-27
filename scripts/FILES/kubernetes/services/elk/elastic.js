@@ -1,6 +1,17 @@
 'use strict';
 
 var gConfig = require("../../config.js");
+var annotation = [
+	{
+		"name": "sysctl",
+		"image": "busybox",
+		"imagePullPolicy": "IfNotPresent",
+		"command": ["sysctl", "-w", "vm.max_map_count=262144"],
+		"securityContext": {
+			"privileged": true
+		}
+	}
+];
 var components = {
 	service: {
 		"apiVersion": "v1",
@@ -56,13 +67,16 @@ var components = {
 						"soajs.service.name": "elasticsearch",
 						"soajs.service.group": "elk",
 						"soajs.service.label": "elasticsearch"
+					},
+					"annotations": {
+						"pod.beta.kubernetes.io/init-containers": JSON.stringify(annotation)
 					}
 				},
 				"spec": {
 					"containers": [
 						{
 							"name": "elasticsearch",
-							"image": "elasticsearch:5.3.0",
+							"image": "elasticsearch",
 							"imagePullPolicy": "IfNotPresent",
 							 "ports": [
 								{

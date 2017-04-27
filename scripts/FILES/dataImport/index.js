@@ -18,7 +18,6 @@ var mongo = new soajsModules.mongo(profile);
 var fs= require("fs");
 
 mongo.dropDatabase(function () {
-	console.log("1")
 	lib.addEnvs(function () {
 		lib.addProducts(function () {
 			lib.addServices(function () {

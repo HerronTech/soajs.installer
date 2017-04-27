@@ -61,7 +61,7 @@ var components = {
 					"containers": [
 						{
 							"name": "kibana",
-							"image": "kibana:4.6.4",
+							"image": "kibana",
 							"imagePullPolicy": "IfNotPresent",
 							"command": ["kibana"],
 							"ports": [

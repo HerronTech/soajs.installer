@@ -460,7 +460,7 @@ var lib = {
 			else {
 				throw new Error("No Elastic db name found!");
 			}
-			lib.getServiceNames(serviceOptions.Name, deployer, serviceOptions.Mode.Replicated.Replicas, function (error, elasticIPs) {
+			lib.getServiceIPs(serviceOptions.service.metadata.name, deployer, serviceOptions.deployment.spec.replicas, function (error, esResponse) {
 				if (error) return cb(error);
 				pingElastic(function (err, esResponse) {
 					utilLog.log('Configuring elasticsearch ...');
@@ -492,23 +492,23 @@ var lib = {
 					}, 2000);
 				}
 				else {
-					infoElastic(function (err) {
-						return cb(err, true);
+					infoElastic(function (err, response) {
+						return cb(err, response);
 					})
 				}
 			});
 		}
 		
 		function infoElastic(cb) {
-			esClient.db.info(function (error) {
+			esClient.db.info(function (error, response) {
 				if (error) {
-					lib.printProgress('Waiting for ' + serviceOptions.deployment.metadata.name+ ' server to become available');
+					lib.printProgress('Waiting for ' + serviceOptions.deployment.metadata.name + ' server to become available');
 					setTimeout(function () {
 						infoElastic(cb);
 					}, 3000);
 				}
 				else {
-					return cb(null, true);
+					return cb(null, response);
 				}
 			});
 		}
@@ -529,16 +529,20 @@ var lib = {
 		}
 		
 		function putMapping(cb) {
-			mongo.find('analytics', {_type: 'mapping'}, function (error, mapping) {
+			mongo.findOne('analytics', {_type: 'mapping'}, function (error, mapping) {
 				if (error) return cb(error);
-				
-				var mapping = {
+				var mappings = {
 					index: '.kibana',
-					body: mapping._json
 				};
-				esClient.db.indices.existsType(mapping, function (error, result) {
+				esClient.db.indices.exists(mappings, function (error, result) {
 					if (error || !result) {
-						esClient.db.indices.create(mapping, function (error) {
+						mappings = {
+							index: '.kibana',
+							body: {
+								"mappings": mapping._json
+							}
+						};
+						esClient.db.indices.create(mappings, function (error) {
 							return cb(error, true);
 						});
 					}
@@ -628,25 +632,25 @@ var lib = {
 				
 				//filebeat-service-environment-taskname-*
 				
-				var filebeatIndex = require("../analytics/indexes/filebeat-index");
+				//var filebeatIndex = require("../analytics/indexes/filebeat-index");
 				var allIndex = require("../analytics/indexes/all-index");
-				analyticsArray = analyticsArray.concat(
-					[
-						{
-							index: {
-								_index: '.kibana',
-								_type: 'index-pattern',
-								_id: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + task_Name.name + "-" + "*"
-							}
-						},
-						{
-							title: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + task_Name.name + "-" + "*",
-							timeFieldName: '@timestamp',
-							fields: filebeatIndex.fields,
-							fieldFormatMap: filebeatIndex.fieldFormatMap
-						}
-					]
-				);
+				// analyticsArray = analyticsArray.concat(
+				// 	[
+				// 		{
+				// 			index: {
+				// 				_index: '.kibana',
+				// 				_type: 'index-pattern',
+				// 				_id: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + task_Name.name + "-" + "*"
+				// 			}
+				// 		},
+				// 		{
+				// 			title: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + task_Name.name + "-" + "*",
+				// 			timeFieldName: '@timestamp',
+				// 			fields: filebeatIndex.fields,
+				// 			fieldFormatMap: filebeatIndex.fieldFormatMap
+				// 		}
+				// 	]
+				// );
 				
 				analyticsArray = analyticsArray.concat(
 					[
@@ -668,24 +672,24 @@ var lib = {
 				
 				if (key == 0) {
 					//filebeat-service-environment-*
-					
-					analyticsArray = analyticsArray.concat(
-						[
-							{
-								index: {
-									_index: '.kibana',
-									_type: 'index-pattern',
-									_id: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + "*"
-								}
-							},
-							{
-								title: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + "*",
-								timeFieldName: '@timestamp',
-								fields: filebeatIndex.fields,
-								fieldFormatMap: filebeatIndex.fieldFormatMap
-							}
-						]
-					);
+					//
+					// analyticsArray = analyticsArray.concat(
+					// 	[
+					// 		{
+					// 			index: {
+					// 				_index: '.kibana',
+					// 				_type: 'index-pattern',
+					// 				_id: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + "*"
+					// 			}
+					// 		},
+					// 		{
+					// 			title: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + "*",
+					// 			timeFieldName: '@timestamp',
+					// 			fields: filebeatIndex.fields,
+					// 			fieldFormatMap: filebeatIndex.fieldFormatMap
+					// 		}
+					// 	]
+					// );
 					
 					analyticsArray = analyticsArray.concat(
 						[
@@ -708,23 +712,23 @@ var lib = {
 					//filebeat-service-environment-*
 					
 					
-					analyticsArray = analyticsArray.concat(
-						[
-							{
-								index: {
-									_index: '.kibana',
-									_type: 'index-pattern',
-									_id: 'filebeat-' + serviceName + '-' + "*"
-								}
-							},
-							{
-								title: 'filebeat-' + serviceName + '-' + "*",
-								timeFieldName: '@timestamp',
-								fields: filebeatIndex.fields,
-								fieldFormatMap: filebeatIndex.fieldFormatMap
-							}
-						]
-					);
+					// analyticsArray = analyticsArray.concat(
+					// 	[
+					// 		{
+					// 			index: {
+					// 				_index: '.kibana',
+					// 				_type: 'index-pattern',
+					// 				_id: 'filebeat-' + serviceName + '-' + "*"
+					// 			}
+					// 		},
+					// 		{
+					// 			title: 'filebeat-' + serviceName + '-' + "*",
+					// 			timeFieldName: '@timestamp',
+					// 			fields: filebeatIndex.fields,
+					// 			fieldFormatMap: filebeatIndex.fieldFormatMap
+					// 		}
+					// 	]
+					// );
 					
 					analyticsArray = analyticsArray.concat(
 						[
@@ -841,7 +845,7 @@ var lib = {
 			index: ".kibana",
 			type: 'config',
 			body: {
-				doc: {"defaultIndex": "filebeat-nginx-dashboard-*"}
+				doc: {"defaultIndex": "*-nginx-dashboard-dashboard_nginx_1-*"}
 			}
 		};
 		var condition = {

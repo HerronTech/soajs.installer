@@ -26,6 +26,7 @@ var config = {
 		"soajs.service.group": "elk",
 		"soajs.service.label": "dashboard-filebeat"
 	},
+	 //todo: Do we really need this?
 	command: [
 		"/usr/share/filebeat/bin/filebeat",  "-e",  "-c", "/etc/filebeat/filebeat.yml"
 	],
