@@ -9,19 +9,17 @@ var customUISrc = {
     owner: gConfig.customUISrc.owner,
     repo: gConfig.customUISrc.repo,
     branch: gConfig.customUISrc.branch,
-    token: gConfig.customUISrc.token
+    token: gConfig.customUISrc.token,
+	provider: gConfig.customUISrc.provider,
+	domain: gConfig.customUISrc.domain
 };
 
 var ssl = gConfig.nginx.ssl;
-var deployerExtra = (ssl) ? ' -s ' : '';
 
 var masterDomain = gConfig.masterDomain;
 
 var controllerServiceName = 'dashboard-controller';
 var controllerServicePort = '4000';
-
-var gitProvider = (process.env.SOAJS_GIT_PROVIDER) ? " -G " + process.env.SOAJS_GIT_PROVIDER : "";
-var gitSource = (process.env.SOAJS_GIT_SOURCE) ? " -g " + process.env.SOAJS_GIT_SOURCE : "";
 
 var config = {
     servName: 'dashboard_nginx',
@@ -68,11 +66,11 @@ var config = {
         "soajs.service.label": "dashboard_nginx",
         "soajs.service.mode": "replicated"
     },
-    workingDir: '/opt/soajs/FILES/deployer/',
+    workingDir: '/opt/soajs/deployer/',
     command: [
         'bash',
         '-c',
-        'node index.js -T nginx -X deploy' + deployerExtra + gitSource + gitProvider
+        'node index.js -T nginx'
     ],
     exposedPorts: [
         {
@@ -102,6 +100,14 @@ if (customUISrc.repo && customUISrc.owner) {
     if (customUISrc.branch) {
         config.env.push('SOAJS_GIT_BRANCH=' + customUISrc.branch || "develop");
     }
+
+	if (customUISrc.provider) {
+		config.env.push('SOAJS_GIT_PROVIDER=' + customUISrc.provider);
+	}
+
+	if (customUISrc.domain) {
+		config.env.push('SOAJS_GIT_DOMAIN=' + customUISrc.domain);
+	}
 
     if (customUISrc.token) {
         config.env.push('SOAJS_GIT_TOKEN=' + customUISrc.token);
