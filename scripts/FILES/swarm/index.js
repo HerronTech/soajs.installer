@@ -565,6 +565,14 @@ var lib = {
 			mongo.find('analytics', {_type: 'template'}, function (error, templates) {
 				if (error) return cb(error);
 				async.each(templates, function (oneTemplate, callback) {
+					if(oneTemplate._json.dynamic_templates && oneTemplate._json.dynamic_templates["system-process-cgroup-cpuacct-percpu"]){
+						oneTemplate._json.dynamic_templates["system.process.cgroup.cpuacct.percpu"] = oneTemplate._json.dynamic_templates["system-process-cgroup-cpuacct-percpu"];
+						delete oneTemplate._json.dynamic_templates["system-process-cgroup-cpuacct-percpu"];
+					}
+					oneTemplate._json.settings["index.mapping.total_fields.limit"] = oneTemplate._json.settings["index-mapping-total_fields-limit"];
+					oneTemplate._json.settings["index.refresh_interval"] = oneTemplate._json.settings["index-refresh_interval"];
+					delete oneTemplate._json.settings["index-refresh_interval"];
+					delete oneTemplate._json.settings["index-mapping-total_fields-limit"];
 					var options = {
 						'name': oneTemplate._name,
 						'body': oneTemplate._json
@@ -680,7 +688,8 @@ var lib = {
 				
 				//filebeat-service-environment-taskname-*
 				//var filebeatIndex = require("../analytics/indexes/filebeat-index");
-				var allIndex = require("../analytics/indexes/all-index");
+				var metricbeatIndex = require("../analytics/indexes/metricbeat-index");
+				// var allIndex = require("../analytics/indexes/all-index");
 				// analyticsArray = analyticsArray.concat(
 				// 	[
 				// 		{
@@ -699,20 +708,54 @@ var lib = {
 				// 	]
 				// );
 				
+				// analyticsArray = analyticsArray.concat(
+				// 	[
+				// 		{
+				// 			index: {
+				// 				_index: '.kibana',
+				// 				_type: 'index-pattern',
+				// 				_id: '*-' + serviceName + "-" + serviceEnv + "-" + task_Name.name + "-" + "*"
+				// 			}
+				// 		},
+				// 		{
+				// 			title: '*-' + serviceName + "-" + serviceEnv + "-" + task_Name.name + "-" + "*",
+				// 			timeFieldName: '@timestamp',
+				// 			fields: allIndex.fields,
+				// 			fieldFormatMap: allIndex.fieldFormatMap
+				// 		}
+				// 	]
+				// );
 				analyticsArray = analyticsArray.concat(
 					[
 						{
 							index: {
 								_index: '.kibana',
 								_type: 'index-pattern',
-								_id: '*-' + serviceName + "-" + serviceEnv + "-" + task_Name.name + "-" + "*"
+								_id: 'metricbeat-*'
 							}
 						},
 						{
-							title: '*-' + serviceName + "-" + serviceEnv + "-" + task_Name.name + "-" + "*",
+							title: 'metricbeat-*',
 							timeFieldName: '@timestamp',
-							fields: allIndex.fields,
-							fieldFormatMap: allIndex.fieldFormatMap
+							fields: metricbeatIndex.fields,
+							fieldFormatMap: metricbeatIndex.fieldFormatMap
+						}
+					]
+				);
+				analyticsArray = analyticsArray.concat(
+					[
+						{
+							index: {
+								_index: '.kibana',
+								_type: 'index-pattern',
+								_id: 'metricbeat-'+ serviceEnv + "-*"
+							}
+						},
+						{
+							title: 'metricbeat-'+ serviceEnv + "-*",
+							timeFieldName: '@timestamp',
+							fields: metricbeatIndex.fields,
+							fieldFormatMap: metricbeatIndex.fieldFormatMap
 						}
 					]
 				);
