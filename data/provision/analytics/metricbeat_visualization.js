@@ -1,7 +1,7 @@
 'use strict';
 var visuals = [
 	{
-		"_id": "Docker-Container",
+		"id": "Docker-Container",
 		"_type": "visualization",
 		"_shipper": "metricbeat",
 		"_source": {
@@ -18,7 +18,7 @@ var visuals = [
 		}
 	},
 	{
-		"_id": "Docker-Containers",
+		"id": "Docker-Containers",
 		"_type": "visualization",
 		"_shipper": "metricbeat",
 		"_source": {
@@ -35,7 +35,7 @@ var visuals = [
 		}
 	},
 	{
-		"_id": "Docker-CPU-usage",
+		"id": "Docker-CPU-usage",
 		"_type": "visualization",
 		"_shipper": "metricbeat",
 		"_source": {
@@ -51,7 +51,7 @@ var visuals = [
 		}
 	},
 	{
-		"_id": "Docker-memory-usage",
+		"id": "Docker-memory-usage",
 		"_type": "visualization",
 		"_shipper": "metricbeat",
 		"_source": {
@@ -67,7 +67,7 @@ var visuals = [
 		}
 	},
 	{
-		"_id": "Docker-Network-IO",
+		"id": "Docker-Network-IO",
 		"_type": "visualization",
 		"_shipper": "metricbeat",
 		"_source": {

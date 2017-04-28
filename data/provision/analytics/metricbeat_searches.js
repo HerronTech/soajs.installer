@@ -1,8 +1,9 @@
 'use strict';
 var searches = [
 	{
-		"_id": "Metricbeat-Docker",
+		"id": "Metricbeat-Docker",
 		"_type": "search",
+		"_shipper": "metricbeat",
 		"_source": {
 			"env": "%env%",
 			"columns": [
