@@ -686,7 +686,7 @@ var lib = {
 						task_Name.name = task_Name.name.replace(/[\/*?"<>|,.-]/g, "_");
 						
 						//filebeat-service-environment-taskname-*
-						//var filebeatIndex = require("../analytics/indexes/filebeat-index");
+						var filebeatIndex = require("../analytics/indexes/filebeat-index");
 						// var allIndex = require("../analytics/indexes/all-index");
 						// analyticsArray = analyticsArray.concat(
 						// 	[
@@ -728,23 +728,23 @@ var lib = {
 						if (key == 0) {
 							//filebeat-service-environment-*
 							
-							// analyticsArray = analyticsArray.concat(
-							// 	[
-							// 		{
-							// 			index: {
-							// 				_index: '.kibana',
-							// 				_type: 'index-pattern',
-							// 				_id: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + "*"
-							// 			}
-							// 		},
-							// 		{
-							// 			title: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + "*",
-							// 			timeFieldName: '@timestamp',
-							// 			fields: filebeatIndex.fields,
-							// 			fieldFormatMap: filebeatIndex.fieldFormatMap
-							// 		}
-							// 	]
-							// );
+							analyticsArray = analyticsArray.concat(
+								[
+									{
+										index: {
+											_index: '.kibana',
+											_type: 'index-pattern',
+											_id: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + "*"
+										}
+									},
+									{
+										title: 'filebeat-' + serviceName + "-" + serviceEnv + "-" + "*",
+										timeFieldName: '@timestamp',
+										fields: filebeatIndex.fields,
+										fieldFormatMap: filebeatIndex.fieldFormatMap
+									}
+								]
+							);
 							
 							
 							// analyticsArray = analyticsArray.concat(
@@ -933,7 +933,6 @@ var lib = {
 			function esBulk(array, cb) {
 				esClient.bulk(array, function (error, response) {
 					if (error) {
-						console.log(JSON.stringify(error, null, 2))
 						return cb(error);
 					}
 					return cb(null, response);
