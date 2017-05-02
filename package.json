@@ -33,7 +33,7 @@
     "ncp": "*",
     "npm": "*",
     "rimraf": "*",
-    "soajs": "1.*",
+    "soajs": "1.0.*",
     "util": "*",
     "whereis": "*"
   }

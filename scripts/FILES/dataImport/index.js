@@ -6,7 +6,7 @@
  * DASHBOARD CORE_PROVISION
  *
  ***************************************************************/
-var soajsModules = require("soajs.core.modules");
+var soajs = require("soajs");
 var async = require("async");
 
 var dataFolder = process.env.SOAJS_DATA_FOLDER;
@@ -14,7 +14,7 @@ delete require.cache[process.env.SOAJS_PROFILE];
 var profile = require(process.env.SOAJS_PROFILE);
 
 profile.name = "core_provision";
-var mongo = new soajsModules.mongo(profile);
+var mongo = new soajs.mongo(profile);
 
 
 mongo.dropDatabase(function () {

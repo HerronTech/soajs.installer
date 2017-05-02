@@ -5,7 +5,7 @@ var path = require("path");
 var exec = require("child_process").exec;
 
 var soajs = require("soajs");
-var soajsModules = require("soajs.core.modules");
+var soajs = require("soajs");
 
 var whereis = require('whereis');
 
@@ -77,7 +77,7 @@ module.exports = {
 
     "generateExtKeys": function (opts, cb) {
         //soajs encryption engine
-        var module = require("soajs.core.modules/soajs.core").key;
+        var module = require("soajs").core.key;
         var key = opts.key;
 
         var tenant = {
@@ -205,7 +205,7 @@ module.exports = {
         userData = userData.replace(/%username%/g, body.gi.username);
         userData = userData.replace(/%email%/g, body.gi.email);
 
-        var Hasher = soajsModules.hasher;
+        var Hasher = soajs.hasher;
         Hasher.init({
             "hashIterations": 1024,
             "seedLength": 32
@@ -912,7 +912,7 @@ module.exports = {
              3- query hosts collection
              */
             var profile = require(path.normalize(dataDir + "startup/profile.js"));
-            var myMongo = new soajsModules.mongo(profile);
+            var myMongo = new soajs.mongo(profile);
 
             myMongo.find("hosts", {"env": "dashboard"}, function (error, hosts) {
                 if (error) {
