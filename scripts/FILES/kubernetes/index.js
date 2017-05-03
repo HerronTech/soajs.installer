@@ -845,7 +845,7 @@ var lib = {
 			index: ".kibana",
 			type: 'config',
 			body: {
-				doc: {"defaultIndex": "*-nginx-dashboard-dashboard_nginx_1-*"}
+				doc: {"defaultIndex": "metricbeat-*"}
 			}
 		};
 		var condition = {
@@ -907,7 +907,10 @@ var lib = {
 						}, cb)
 					}
 					else {
-						return cb(null, true);
+						setTimeout(function () {
+							lib.printProgress('Waiting for kibana to become available');
+							lib.setDefaultIndex(cb);
+						}, 5000);
 					}
 				});
 			}
