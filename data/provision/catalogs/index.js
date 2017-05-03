@@ -19,11 +19,11 @@ var catalogs = [
                         "path": "/heartbeat",
                         "port": "maintenance"
                     },
-                    "initialDelaySeconds": "",
-                    "timeoutSeconds": "",
-                    "periodSeconds": "",
-                    "successThreshold": "",
-                    "failureThreshold": ""
+                    "initialDelaySeconds": 0,
+                    "timeoutSeconds": 0,
+                    "periodSeconds": 0,
+                    "successThreshold": 0,
+                    "failureThreshold": 0
                 },
                 "restartPolicy": {
                     "condition": "", //Always || OnFailure || Never
@@ -40,7 +40,7 @@ var catalogs = [
             },
             "buildOptions": {
                 "settings": {
-                    "accelerateDeployment": true || false,
+                    "accelerateDeployment": true
                 },
                 "env": {
                     "NODE_ENV": "production",
@@ -85,6 +85,63 @@ var catalogs = [
         }
     },
     {
+        "name": "Nodejs Recipe",
+        "type": "nodejs",
+        "description": "This is a sample nodejs catalog recipe",
+        "locked": true,
+        "recipe": {
+            "deployOptions": {
+                "image": {
+                    "prefix": "soajsorg",
+                    "name": "soajs",
+                    "tag": "latest",
+                    "pullPolicy": "Always"
+                },
+                "readinessProbe": {
+                    "httpGet": {
+                        "path": "/",
+                        "port": ""
+                    },
+                    "initialDelaySeconds": 0,
+                    "timeoutSeconds": 0,
+                    "periodSeconds": 0,
+                    "successThreshold": 0,
+                    "failureThreshold": 0
+                },
+                "restartPolicy": {
+                    "condition": "", //Always || OnFailure || Never
+                    "maxAttempts": 0 //only valid for docker
+                },
+                "container": {
+                    "network": "", //container network for docker
+                    "workingDir": "" //container working directory
+                },
+                "voluming": {
+                    "volumes": [], //array of objects
+                    "volumeMounts": [] //array of objects
+                }
+            },
+            "buildOptions": {
+                "settings": {
+                    "accelerateDeployment": true
+                },
+                "env": {
+                    "NODE_ENV": "production"
+
+                    "SOAJS_CONFIG_REPO_PROVIDER": "", //github|bitbucket|bitbucket_enterprise
+                    "SOAJS_CONFIG_REPO_OWNER": "",
+                    "SOAJS_CONFIG_REPO_BRANCH": "",
+                    "SOAJS_CONFIG_REPO_NAME": "",
+                    "SOAJS_CONFIG_REPO_TOKEN": ""
+                },
+                "cmd": {
+                    "pre_deploy": [],
+                    "post_deploy": []
+                }
+            }
+        }
+    },
+    {
         "name": "Daemon Recipe",
         "type": "daemon",
         "description": "This is a sample daemon recipe",
@@ -102,11 +159,11 @@ var catalogs = [
                         "path": "/heartbeat",
                         "port": "maintenance"
                     },
-                    "initialDelaySeconds": "",
-                    "timeoutSeconds": "",
-                    "periodSeconds": "",
-                    "successThreshold": "",
-                    "failureThreshold": ""
+                    "initialDelaySeconds": 0,
+                    "timeoutSeconds": 0,
+                    "periodSeconds": 0,
+                    "successThreshold": 0,
+                    "failureThreshold": 0
                 },
                 "restartPolicy": {
                     "condition": "", //Always || OnFailure || Never
@@ -123,7 +180,7 @@ var catalogs = [
             },
             "buildOptions": {
                 "settings": {
-                    "accelerateDeployment": true || false,
+                    "accelerateDeployment": true
                 },
                 "env": {
                     "NODE_ENV": "production",
@@ -138,7 +195,6 @@ var catalogs = [
 
                     "SOAJS_GIT_OWNER": "",
                     "SOAJS_GIT_BRANCH": "",
-                    "SOAJS_GIT_COMMIT": "",
                     "SOAJS_GIT_REPO": "",
                     "SOAJS_GIT_TOKEN": "", //optional (only if private repo)
 
@@ -184,11 +240,11 @@ var catalogs = [
                         "path": "/",
                         "port": "http"
                     },
-                    "initialDelaySeconds": "",
-                    "timeoutSeconds": "",
-                    "periodSeconds": "",
-                    "successThreshold": "",
-                    "failureThreshold": ""
+                    "initialDelaySeconds": 0,
+                    "timeoutSeconds": 0,
+                    "periodSeconds": 0,
+                    "successThreshold": 0,
+                    "failureThreshold": 0
                 },
                 "restartPolicy": {
                     "condition": "", //Always || OnFailure || Never
@@ -227,11 +283,10 @@ var catalogs = [
                     "SOAJS_NX_SSL_CERTS_LOCATION": "/etc/soajs/ssl/", //only for user-provided certs
                     "SOAJS_NX_SSL_SECRET": "", //only for user-provided certs
 
-                    // "SOAJS_GIT_OWNER": "",
-                    // "SOAJS_GIT_BRANCH": "",
-                    // "SOAJS_GIT_COMMIT": "",
-                    // "SOAJS_GIT_REPO": "",
-                    // "SOAJS_GIT_TOKEN": "", //optional (only if private repo)
+                    "SOAJS_GIT_OWNER": "",
+                    "SOAJS_GIT_BRANCH": "",
+                    "SOAJS_GIT_REPO": "",
+                    "SOAJS_GIT_TOKEN": "", //optional (only if private repo)
 
                     "SOAJS_DEPLOY_HA": "", //swarm || kubernetes
                     "SOAJS_HA_NAME": "", //computed field
@@ -267,11 +322,11 @@ var catalogs = [
                         "path": "/",
                         "port": "27017"
                     },
-                    "initialDelaySeconds": "",
-                    "timeoutSeconds": "",
-                    "periodSeconds": "",
-                    "successThreshold": "",
-                    "failureThreshold": ""
+                    "initialDelaySeconds": 0,
+                    "timeoutSeconds": 0,
+                    "periodSeconds": 0,
+                    "successThreshold": 0,
+                    "failureThreshold": 0
                 },
                 "restartPolicy": {
                     "condition": "", //Always || OnFailure || Never
@@ -319,11 +374,11 @@ var catalogs = [
                         "path": "/",
                         "port": "9200"
                     },
-                    "initialDelaySeconds": "",
-                    "timeoutSeconds": "",
-                    "periodSeconds": "",
-                    "successThreshold": "",
-                    "failureThreshold": ""
+                    "initialDelaySeconds": 0,
+                    "timeoutSeconds": 0,
+                    "periodSeconds": 0,
+                    "successThreshold": 0,
+                    "failureThreshold": 0
                 },
                 "restartPolicy": {
                     "condition": "", //Always || OnFailure || Never
