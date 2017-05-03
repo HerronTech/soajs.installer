@@ -4,7 +4,7 @@ var gConfig = require("../../config.js");
 var src = {
 	owner: 'soajs',
 	repo: 'soajs.dashboard',
-	branch: 'feature/analytics-alpha'
+	branch: "feature/analytics-alpha"//gConfig.git.branch
 };
 
 var config = {

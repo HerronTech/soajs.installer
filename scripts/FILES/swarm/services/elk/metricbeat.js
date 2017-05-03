@@ -24,17 +24,18 @@ var config = {
 			"Type": "bind",
 			"Source": '/var/run/docker.sock',
 			"Target": '/var/run/docker.sock',
-		},
-		{
-			"Type": "bind",
-			"Source": "/proc",
-			"Target": "/hostfs/proc",
-		},
-		{
-			"Type": "bind",
-			"Source": "/sys/fs/cgroup",
-			"Target": "/hostfs/sys/fs/cgroup",
 		}
+		// next version
+		// {
+		// 	"Type": "bind",
+		// 	"Source": "/proc",
+		// 	"Target": "/hostfs/proc",
+		// },
+		// {
+		// 	"Type": "bind",
+		// 	"Source": "/sys/fs/cgroup",
+		// 	"Target": "/hostfs/sys/fs/cgroup",
+		// }
 	]
 };
 

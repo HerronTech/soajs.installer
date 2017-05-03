@@ -63,10 +63,10 @@ var components = {
 								// 	"mountPath":"/proc",
 								// 	"name": "proc"
 								// },
-								{
-									"mountPath":"/sys/fs/cgroup",
-									"name": "cgroups"
-								}
+								// {
+								// 	"mountPath":"/sys/fs/cgroup",
+								// 	"name": "cgroups"
+								// }
 							]
 						}
 					],
@@ -84,12 +84,12 @@ var components = {
 						// 		"path": "/hostfs/proc"
 						// 	}
 						// },
-						{
-							"name": "cgroups",
-							"hostPath": {
-								"path": "/hostfs/sys/fs/cgroup"
-							}
-						}
+						// {
+						// 	"name": "cgroups",
+						// 	"hostPath": {
+						// 		"path": "/hostfs/sys/fs/cgroup"
+						// 	}
+						// }
 					]
 				}
 			}
