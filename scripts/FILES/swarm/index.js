@@ -1011,6 +1011,11 @@ var lib = {
 											"dashboard": {
 												"status": "deployed"
 											}
+										},
+										"metricbeat": {
+											"dashboard": {
+												"status": "deployed"
+											}
 										}
 									}
 								};

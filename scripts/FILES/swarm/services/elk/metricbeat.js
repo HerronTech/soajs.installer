@@ -13,10 +13,12 @@ var config = {
 	    'ELASTICSEARCH_URL=elasticsearch:9200',
     ],
     labels: {
-	    "ELASTICSEARCH_URL": "metricbeat",
 	    "soajs.service.group": "elk",
 	    "soajs.service.type": "elk",
-	    "soajs.service.label": "metricbeat"
+	    "soajs.content": "true",
+	    "soajs.env.code": "dashboard",
+	    "soajs.service.name": "dashboard-metricbeat",
+	    "soajs.service.label": "dashboard-metricbeat"
     },
     command: [],
 	mounts: [
