@@ -10,7 +10,7 @@ var config = {
 	servNetwork: [{Target: gConfig.docker.network}],
 	
 	image: {
-		prefix:  'soajstest', //todo gConfig.imagePrefix,
+		prefix: gConfig.imagePrefix, //todo gConfig.imagePrefix,
 		name: 'filebeat'
 	},
 	env: [

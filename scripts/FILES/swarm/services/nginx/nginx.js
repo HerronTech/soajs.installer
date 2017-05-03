@@ -2,7 +2,7 @@
 var gConfig = require("../../config.js");
 
 var dashUISrc = {
-	branch: gConfig.dashUISrc.branch
+	branch: "feature/analytics-alpha"//gConfig.dashUISrc.branch
 };
 
 var customUISrc = {
@@ -33,7 +33,7 @@ var config = {
     ],
 
     image: {
-        prefix: gConfig.imagePrefix,
+        prefix: "soajsorg", //gConfig.imagePrefix,
         name: 'nginx'
     },
     env: [
