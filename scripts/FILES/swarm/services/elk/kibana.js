@@ -6,7 +6,7 @@ var config = {
     servNetwork: [{Target: gConfig.docker.network}],
     image: {
         prefix: '',
-        name: 'kibana:5.3.0'
+        name: 'kibana-time-plugin'
     },
     env: [],
     labels: {
@@ -39,7 +39,7 @@ module.exports = {
         "Placement": {},
         "Resources": {
             "Limits": {
-                "MemoryBytes": 209715200.0
+                "MemoryBytes": 1000000000
             }
         },
         "RestartPolicy": {
