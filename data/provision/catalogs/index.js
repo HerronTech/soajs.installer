@@ -19,11 +19,11 @@ var catalogs = [
                         "path": "/heartbeat",
                         "port": "maintenance"
                     },
-                    "initialDelaySeconds": 0,
-                    "timeoutSeconds": 0,
-                    "periodSeconds": 0,
-                    "successThreshold": 0,
-                    "failureThreshold": 0
+                    "initialDelaySeconds": 5,
+                    "timeoutSeconds": 2,
+                    "periodSeconds": 5,
+                    "successThreshold": 1,
+                    "failureThreshold": 3
                 },
                 "restartPolicy": {
                     "condition": "", //Always || OnFailure || Never
@@ -161,11 +161,11 @@ var catalogs = [
                         "path": "/",
                         "port": ""
                     },
-                    "initialDelaySeconds": 0,
-                    "timeoutSeconds": 0,
-                    "periodSeconds": 0,
-                    "successThreshold": 0,
-                    "failureThreshold": 0
+                    "initialDelaySeconds": 5,
+                    "timeoutSeconds": 2,
+                    "periodSeconds": 5,
+                    "successThreshold": 1,
+                    "failureThreshold": 3
                 },
                 "restartPolicy": {
                     "condition": "", //Always || OnFailure || Never
@@ -217,11 +217,11 @@ var catalogs = [
                         "path": "/heartbeat",
                         "port": "maintenance"
                     },
-                    "initialDelaySeconds": 0,
-                    "timeoutSeconds": 0,
-                    "periodSeconds": 0,
-                    "successThreshold": 0,
-                    "failureThreshold": 0
+                    "initialDelaySeconds": 5,
+                    "timeoutSeconds": 2,
+                    "periodSeconds": 5,
+                    "successThreshold": 1,
+                    "failureThreshold": 3
                 },
                 "restartPolicy": {
                     "condition": "", //Always || OnFailure || Never
@@ -354,11 +354,11 @@ var catalogs = [
                         "path": "/",
                         "port": "http"
                     },
-                    "initialDelaySeconds": 0,
-                    "timeoutSeconds": 0,
-                    "periodSeconds": 0,
-                    "successThreshold": 0,
-                    "failureThreshold": 0
+                    "initialDelaySeconds": 5,
+                    "timeoutSeconds": 2,
+                    "periodSeconds": 5,
+                    "successThreshold": 1,
+                    "failureThreshold": 3
                 },
                 "restartPolicy": {
                     "condition": "", //Always || OnFailure || Never
@@ -448,11 +448,11 @@ var catalogs = [
                         "path": "/",
                         "port": "27017"
                     },
-                    "initialDelaySeconds": 0,
-                    "timeoutSeconds": 0,
-                    "periodSeconds": 0,
-                    "successThreshold": 0,
-                    "failureThreshold": 0
+                    "initialDelaySeconds": 5,
+                    "timeoutSeconds": 2,
+                    "periodSeconds": 5,
+                    "successThreshold": 1,
+                    "failureThreshold": 3
                 },
                 "restartPolicy": {
                     "condition": "", //Always || OnFailure || Never
@@ -496,11 +496,11 @@ var catalogs = [
                         "path": "/",
                         "port": "9200"
                     },
-                    "initialDelaySeconds": 0,
-                    "timeoutSeconds": 0,
-                    "periodSeconds": 0,
-                    "successThreshold": 0,
-                    "failureThreshold": 0
+                    "initialDelaySeconds": 5,
+                    "timeoutSeconds": 2,
+                    "periodSeconds": 5,
+                    "successThreshold": 1,
+                    "failureThreshold": 3
                 },
                 "restartPolicy": {
                     "condition": "", //Always || OnFailure || Never
