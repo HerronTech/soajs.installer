@@ -380,12 +380,6 @@ var catalogs = [
                         "type": "computed",
                         "value": "$SOAJS_ENV"
                     },
-
-                    "SOAJS_GIT_DASHBOARD_BRANCH": {
-                        "type": "computed",
-                        "value": "$SOAJS_GIT_DASHBOARD_BRANCH"
-                    },
-
                     "SOAJS_NX_DOMAIN": {
                         "type": "computed",
                         "value": "$SOAJS_NX_DOMAIN"
