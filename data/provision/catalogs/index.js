@@ -372,7 +372,20 @@ var catalogs = [
                     "volumes": [], //array of objects
                     "volumeMounts": [] //array of objects
                 },
-                "ports": []
+                "ports": [
+                    {
+                        "name": "http",
+                        "target": 80,
+                        "isPublished": true,
+                        "published": 81
+                    },
+                    {
+                        "name": "https",
+                        "target": 443,
+                        "isPublished": true,
+                        "published": 444
+                    }
+                ]
             },
             "buildOptions": {
                 "env": {
