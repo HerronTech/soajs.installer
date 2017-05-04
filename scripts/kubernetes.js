@@ -29,16 +29,24 @@ lib.getDeployer(config.kubernetes.config, function (error, deployer) {
                     return callback(null, true);
                 });
             }, function (error, result) {
-                if (error) throw new Error (error);
-	            lib.setDefaultIndex(function (err){
-		            if (err){
-			            throw new Error (error)
-		            }
-		            lib.closeDbCon(function(){
+	            if (error) throw new Error(error);
+	            if (config.analytics === "true") {
+		            lib.setDefaultIndex(function (err) {
+			            if (err) {
+				            throw new Error(error)
+			            }
+			            lib.closeDbCon(function () {
+				            utilLog.log('SOAJS Has been deployed.');
+				            process.exit();
+			            });
+		            });
+	            }
+	            else {
+		            lib.closeDbCon(function () {
 			            utilLog.log('SOAJS Has been deployed.');
 			            process.exit();
 		            });
-	            });
+	            }
             });
         }, 5000);
     });
