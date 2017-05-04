@@ -2,7 +2,7 @@
 var gConfig = require("../../config.js");
 
 var dashUISrc = {
-	branch: "feature/DASHBOARD-138"//gConfig.dashUISrc.branch
+	branch: gConfig.dashUISrc.branch
 };
 
 var customUISrc = {
