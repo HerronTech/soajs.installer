@@ -282,8 +282,9 @@ var lib = {
 	
 	deployService: function (deployer, options, cb) {
 		deployer.createService(options, function () {
+			//check if service name elasticsearch to configure it
 			if (config.analytics === "true") {
-				if (options.Name === 'elasticsearch') {
+				if (options.Name === 'soajs-analytics-elasticsearch') {
 					lib.configureElastic(deployer, options, cb);
 				}
 				else {
@@ -524,7 +525,7 @@ var lib = {
 							putTemplate(callback);
 						},
 						"settings": function (callback) {
-							putSettings(esResponse, callback);
+							putSettings(esResponse, settings, callback);
 						}
 					}, cb);
 				});
@@ -610,27 +611,13 @@ var lib = {
 			});
 		}
 		
-		function putSettings(esResponse, cb) {
-			var condition = {
-				"$and": [
-					{
-						"_type": "settings"
-					}
-				]
+		function putSettings(esResponse, settings, cb) {
+			settings.env = {
+				"dashboard": true
 			};
-			var criteria = {"$set": {"env.dashboard": true}};
-			
-			criteria["$set"].elasticsearch = {
-				status: "deployed",
-				version: esResponse.version.number
-			};
-			
-			var options = {
-				"safe": true,
-				"multi": false,
-				"upsert": true
-			};
-			mongo.update('analytics', condition, criteria, options, function (error) {
+			settings.elasticsearch.status = "deployed";
+			settings.elasticsearch.version = esResponse.version.number;
+			mongo.save('analytics', settings, function (error) {
 				if (error) {
 					return cb(error);
 				}

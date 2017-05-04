@@ -1,7 +1,7 @@
 'use strict';
 var gConfig = require("../../config.js");
 var config = {
-    servName: 'elasticsearch',
+    servName: 'soajs-analytics-elasticsearch',
     servReplica: 1,
     servNetwork: [{Target: gConfig.docker.network}],
 
@@ -12,9 +12,9 @@ var config = {
     env: [],
     labels: {
 	    "soajs.service.type": "elk",
-	    "soajs.service.name": "elasticsearch",
+	    "soajs.service.name": "soajs-analytics-elasticsearch",
 	    "soajs.service.group": "elk",
-	    "soajs.service.label": "elasticsearch"
+	    "soajs.service.label": "soajs-analytics-elasticsearch"
     },
     //command: ["bash", "-c", "elasticsearch"],
     exposedPorts: [

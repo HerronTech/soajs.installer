@@ -13,7 +13,9 @@ var config = {
 		prefix: gConfig.imagePrefix, //todo  gConfig.imagePrefix,
 		name: 'logstash'
 	},
-	env: [],
+	env: [
+		'ELASTICSEARCH_URL=soajs-analytics-elasticsearch:9200'
+	],
 	labels: {
 		"soajs.content": "true",
 		"soajs.env.code": "dashboard",

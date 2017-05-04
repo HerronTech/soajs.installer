@@ -8,16 +8,15 @@ var config = {
         prefix: '',
         name: 'kibana-time-plugin'
     },
-    env: [],
+    env: [
+	    'ELASTICSEARCH_URL=http://soajs-analytics-elasticsearch:9200'
+    ],
     labels: {
 	    "soajs.service.name": "kibana",
 	    "soajs.service.group": "elk",
 	    "soajs.service.type": "elk",
 	    "soajs.service.label": "kibana"
     },
-    command: [
-        "kibana"
-    ],
     exposedPorts: [
         {
             "Protocol": "tcp",
@@ -33,8 +32,8 @@ module.exports = {
         "ContainerSpec": {
             "Image": config.image.name,
             "Env": config.env,
-            "Command": [config.command[0]],
-            "Args": config.command.splice(1)
+           //"Command": [config.command[0]],
+            //"Args": config.command.splice(1)
         },
         "Placement": {},
         "Resources": {

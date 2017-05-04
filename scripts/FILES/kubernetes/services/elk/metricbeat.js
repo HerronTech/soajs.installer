@@ -51,7 +51,7 @@ var components = {
 								},
 								{
 									"name": "ELASTICSEARCH_URL",
-									"value": "elasticsearch:9200"
+									"value": "soajs-elasticsearch:9200" //add namespace
 								}
 							],
 							"volumeMounts": [

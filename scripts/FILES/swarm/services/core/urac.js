@@ -76,7 +76,7 @@ module.exports = {
         "Placement": {},
         "Resources": {
             "Limits": {
-                "MemoryBytes": 209715200.0
+                "MemoryBytes": 500000000.0
             }
         },
         "RestartPolicy": {

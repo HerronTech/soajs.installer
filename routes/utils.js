@@ -200,7 +200,7 @@ module.exports = {
 			    if (body.deployment.deployDriver.indexOf("container.docker") !== -1) {
 				    es_clusters.servers = [
 					    {
-						    host: "dashboard-soajsdata",
+						    host: "soajs-analytics-elasticsearch",
 						    port: 9200
 					    }
 				    ];
@@ -212,7 +212,7 @@ module.exports = {
 				    }
 				    es_clusters.servers = [
 					    {
-						    host: "dashboard-soajsdata." + namespace,
+						    host: "soajs-analytics-elasticsearch." + namespace,
 						    port: 30920
 					    }
 				    ];
@@ -763,7 +763,19 @@ module.exports = {
             else {
                 obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard-soajsdata";
             }
-
+            if (body.es_clusters && body.es_clusters.servers){
+	            if(type === 'kubernetes'){
+		            var namespace = body.deployment.namespaces.default;
+		            if (body.deployment.namespaces.perService) {
+			            namespace += 'soajs-analytics-elasticsearch';
+		            }
+		            obj['hosts'].elasticsearch = body.es_clusters.servers[0].host + " soajs-analytics-elasticsearch." + namespace;
+	            }
+	            else {
+		            obj['hosts'].elasticsearch = body.es_clusters.servers[0].host + " soajs-analytics-elasticsearch";
+	            }
+            }
+			console.log(JSON.stringify(body, null, 2))
             return cb(null, obj);
         }
     },

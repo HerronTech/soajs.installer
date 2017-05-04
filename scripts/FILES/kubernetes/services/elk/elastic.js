@@ -17,18 +17,18 @@ var components = {
 		"apiVersion": "v1",
 		"kind": "Service",
 		"metadata": {
-			"name": "elasticsearch",
+			"name": "soajs-elasticsearch",
 			"labels": {
 				"soajs.service.type": "database",
-				"soajs.service.name": "elasticsearch",
+				"soajs.service.name": "soajs-elasticsearch",
 				"soajs.service.group": "elk",
-				"soajs.service.label": "elasticsearch"
+				"soajs.service.label": "soajs-elasticsearch"
 			}
 		},
 		"spec": {
 			"type": "NodePort",
 			"selector": {
-				"soajs.service.label": "elasticsearch"
+				"soajs.service.label": "soajs-elasticsearch"
 			},
 			"ports": [
 				{
@@ -44,29 +44,29 @@ var components = {
 		"apiVersion": "extensions/v1beta1",
 		"kind": "Deployment",
 		"metadata": {
-			"name": "elasticsearch",
+			"name": "soajs-elasticsearch",
 			"labels": {
 				"soajs.service.type": "database",
-				"soajs.service.name": "elasticsearch",
+				"soajs.service.name": "soajs-elasticsearch",
 				"soajs.service.group": "elk",
-				"soajs.service.label": "elasticsearch"
+				"soajs.service.label": "soajs-elasticsearch"
 			}
 		},
 		"spec": {
 			"replicas": 1,
 			"selector": {
 				"matchLabels": {
-					"soajs.service.label": "elasticsearch"
+					"soajs.service.label": "soajs-elasticsearch"
 				}
 			},
 			"template": {
 				"metadata": {
-					"name": "elasticsearch",
+					"name": "soajs-elasticsearch",
 					"labels": {
 						"soajs.service.type": "database",
-						"soajs.service.name": "elasticsearch",
+						"soajs.service.name": "soajs-elasticsearch",
 						"soajs.service.group": "elk",
-						"soajs.service.label": "elasticsearch"
+						"soajs.service.label": "soajs-elasticsearch"
 					},
 					"annotations": {
 						"pod.beta.kubernetes.io/init-containers": JSON.stringify(annotation)
@@ -75,7 +75,7 @@ var components = {
 				"spec": {
 					"containers": [
 						{
-							"name": "elasticsearch",
+							"name": "soajs-elasticsearch",
 							"image": "elasticsearch",
 							"imagePullPolicy": "IfNotPresent",
 							 "ports": [

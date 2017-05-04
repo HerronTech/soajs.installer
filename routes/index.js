@@ -79,7 +79,8 @@ var routes = {
                 data.deployer = {
                     deployType: customData.deployType,
                     deployDriver: customData.deployDriver,
-                    os : osName
+                    os : osName,
+	                deployAnalytics: customData.deployAnalytics ? customData.deployAnalytics : false
                 };
             }
             else {

@@ -30,13 +30,7 @@ var config = {
 	command: [
 		"/usr/share/filebeat/bin/filebeat",  "-e",  "-c", "/etc/filebeat/filebeat.yml"
 	],
-	exposedPorts: [
-		{
-			"Protocol": "tcp",
-			"PublishedPort": 12201,
-			"TargetPort": 12201
-		}
-	],
+	exposedPorts: [],
 	mounts: [
 		{
 			"Type": "volume",

@@ -10,7 +10,7 @@ var config = {
         name: 'metricbeat-docker'
     },
     env: [
-	    'ELASTICSEARCH_URL=elasticsearch:9200',
+	    'ELASTICSEARCH_URL=soajs-analytics-elasticsearch:9200',
     ],
     labels: {
 	    "soajs.service.group": "elk",
@@ -54,7 +54,7 @@ module.exports = {
         "Placement": {},
         "Resources": {
             "Limits": {
-                "MemoryBytes": 209715200.0
+                "MemoryBytes": 500000000.0
             }
         },
         "RestartPolicy": {
