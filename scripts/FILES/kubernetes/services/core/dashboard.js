@@ -131,7 +131,7 @@ var components = {
                                 },
                                 {
                                     "name": "SOAJS_GIT_BRANCH",
-                                    "value": gConfig.git.branch
+                                    "value": "feature/DASHBOARD-138"//gConfig.git.branch
                                 },
                                 {
                                     "name": "SOAJS_GIT_REPO",

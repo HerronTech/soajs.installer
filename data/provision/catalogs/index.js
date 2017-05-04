@@ -125,11 +125,11 @@ var catalogs = [
                         "type": "computed",
                         "value": "$SOAJS_MONGO_SSL"
                     },
-                    "SOAJS_MONGO_IP_N": {
+                    "SOAJS_MONGO_IP_1": {
                         "type": "computed",
                         "value": "$SOAJS_MONGO_IP_1"
                     },
-                    "SOAJS_MONGO_PORT_N": {
+                    "SOAJS_MONGO_PORT_1": {
                         "type": "computed",
                         "value": "$SOAJS_MONGO_PORT_1"
                     }
@@ -318,11 +318,11 @@ var catalogs = [
                         "type": "computed",
                         "value": "$SOAJS_MONGO_SSL"
                     },
-                    "SOAJS_MONGO_IP_N": {
+                    "SOAJS_MONGO_IP_1": {
                         "type": "computed",
                         "value": "$SOAJS_MONGO_IP_1"
                     },
-                    "SOAJS_MONGO_PORT_N": {
+                    "SOAJS_MONGO_PORT_1": {
                         "type": "computed",
                         "value": "$SOAJS_MONGO_PORT_1"
                     }
@@ -403,11 +403,11 @@ var catalogs = [
                         "type": "computed",
                         "value": "$SOAJS_NX_CONTROLLER_NB"
                     },
-                    "SOAJS_NX_CONTROLLER_IP_N": {
+                    "SOAJS_NX_CONTROLLER_IP_1": {
                         "type": "computed",
                         "value": "$SOAJS_NX_CONTROLLER_IP_1"
                     },
-                    "SOAJS_NX_CONTROLLER_PORT_N": {
+                    "SOAJS_NX_CONTROLLER_PORT_1": {
                         "type": "computed",
                         "value": "$SOAJS_NX_CONTROLLER_PORT_1"
                     },
