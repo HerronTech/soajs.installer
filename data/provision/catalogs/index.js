@@ -407,9 +407,9 @@ var catalogs = [
                         "type": "computed",
                         "value": "$SOAJS_NX_CONTROLLER_IP_1"
                     },
-                    "SOAJS_NX_CONTROLLER_PORT_1": {
+                    "SOAJS_NX_CONTROLLER_PORT": {
                         "type": "computed",
-                        "value": "$SOAJS_NX_CONTROLLER_PORT_1"
+                        "value": "$SOAJS_NX_CONTROLLER_PORT"
                     },
 
                     "SOAJS_DEPLOY_HA": {
