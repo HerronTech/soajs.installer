@@ -126,7 +126,7 @@ var catalogs = [
                     "accelerateDeployment": true
                 },
                 "env": {
-                    "NODE_ENV": "production"
+                    "NODE_ENV": "production",
 
                     "SOAJS_CONFIG_REPO_PROVIDER": "", //github|bitbucket|bitbucket_enterprise
                     "SOAJS_CONFIG_REPO_OWNER": "",
