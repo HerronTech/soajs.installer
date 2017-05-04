@@ -72,7 +72,13 @@ var components = {
 								"-c",
 								"logstash -f /usr/share/logstash/config/logstash.conf"
 							],
-							"ports": []
+							"ports": [],
+							"env": [
+								{
+									"name": "ELASTICSEARCH_URL",
+									"value": "soajs-analytics-elasticsearch:9200"
+								}
+							]
 						}
 					]
 				}

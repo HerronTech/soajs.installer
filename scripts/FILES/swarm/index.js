@@ -607,7 +607,6 @@ var lib = {
 						return cb(null, true);
 					}
 				});
-				
 			});
 		}
 		
@@ -1011,15 +1010,9 @@ var lib = {
 									"multi": false,
 									"upsert": true
 								};
-								mongo.update('analytics', condition, criteria, options, function (error, body) {
-									if (error) {
-										return call(error);
-									}
-									return call(null, true)
-								});
+								mongo.update('analytics', condition, criteria, options, call);
 							}
-							
-						}, cb)
+						}, cb);
 					}
 					else {
 						return cb(null, true);
@@ -1030,7 +1023,7 @@ var lib = {
 				setTimeout(function () {
 					lib.printProgress('Waiting for kibana to become available');
 					lib.setDefaultIndex(cb);
-				}, 5000);
+				}, 1000);
 			}
 		});
 		

@@ -769,13 +769,12 @@ module.exports = {
 		            if (body.deployment.namespaces.perService) {
 			            namespace += 'soajs-analytics-elasticsearch';
 		            }
-		            obj['hosts'].elasticsearch = body.es_clusters.servers[0].host + " soajs-analytics-elasticsearch." + namespace;
+		            obj['hosts'].elasticsearch =  body.deployment.containerHost + " soajs-analytics-elasticsearch." + namespace;
 	            }
 	            else {
 		            obj['hosts'].elasticsearch = body.es_clusters.servers[0].host + " soajs-analytics-elasticsearch";
 	            }
             }
-			console.log(JSON.stringify(body, null, 2))
             return cb(null, obj);
         }
     },

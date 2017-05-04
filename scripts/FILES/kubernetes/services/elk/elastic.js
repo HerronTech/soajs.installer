@@ -17,18 +17,18 @@ var components = {
 		"apiVersion": "v1",
 		"kind": "Service",
 		"metadata": {
-			"name": "soajs-elasticsearch",
+			"name": "soajs-analytics-elasticsearch",
 			"labels": {
 				"soajs.service.type": "database",
-				"soajs.service.name": "soajs-elasticsearch",
+				"soajs.service.name": "ssoajs-analytics-elasticsearch",
 				"soajs.service.group": "elk",
-				"soajs.service.label": "soajs-elasticsearch"
+				"soajs.service.label": "soajs-analytics-elasticsearch"
 			}
 		},
 		"spec": {
 			"type": "NodePort",
 			"selector": {
-				"soajs.service.label": "soajs-elasticsearch"
+				"soajs.service.label": "soajs-analytics-elasticsearch"
 			},
 			"ports": [
 				{
@@ -44,29 +44,29 @@ var components = {
 		"apiVersion": "extensions/v1beta1",
 		"kind": "Deployment",
 		"metadata": {
-			"name": "soajs-elasticsearch",
+			"name": "soajs-analytics-elasticsearch",
 			"labels": {
 				"soajs.service.type": "database",
-				"soajs.service.name": "soajs-elasticsearch",
+				"soajs.service.name": "soajs-analytics-elasticsearch",
 				"soajs.service.group": "elk",
-				"soajs.service.label": "soajs-elasticsearch"
+				"soajs.service.label": "soajs-analytics-elasticsearch"
 			}
 		},
 		"spec": {
 			"replicas": 1,
 			"selector": {
 				"matchLabels": {
-					"soajs.service.label": "soajs-elasticsearch"
+					"soajs.service.label": "soajs-analytics-elasticsearch"
 				}
 			},
 			"template": {
 				"metadata": {
-					"name": "soajs-elasticsearch",
+					"name": "soajs-analytics-elasticsearch",
 					"labels": {
 						"soajs.service.type": "database",
-						"soajs.service.name": "soajs-elasticsearch",
+						"soajs.service.name": "soajs-analytics-elasticsearch",
 						"soajs.service.group": "elk",
-						"soajs.service.label": "soajs-elasticsearch"
+						"soajs.service.label": "soajs-analytics-elasticsearch"
 					},
 					"annotations": {
 						"pod.beta.kubernetes.io/init-containers": JSON.stringify(annotation)
@@ -75,7 +75,7 @@ var components = {
 				"spec": {
 					"containers": [
 						{
-							"name": "soajs-elasticsearch",
+							"name": "soajs-analytics-elasticsearch",
 							"image": "elasticsearch",
 							"imagePullPolicy": "IfNotPresent",
 							 "ports": [

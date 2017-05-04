@@ -61,15 +61,19 @@ var components = {
 					"containers": [
 						{
 							"name": "kibana",
-							"image": "kibana",
+							"image": "kibana-time-plugin",
 							"imagePullPolicy": "IfNotPresent",
-							"command": ["kibana"],
 							"ports": [
 								{
 									"containerPort": 5601
 								}
 							],
-							"env": []
+							"env": [
+								{
+									"name": "ELASTICSEARCH_URL",
+									"value": "http://soajs-analytics-elasticsearch:9200"
+								}
+							]
 						}
 					]
 				}

@@ -133,7 +133,8 @@ var components = {
                                 },
                                 {
                                     "name": "SOAJS_GIT_BRANCH",
-                                    "value": gConfig.git.branch
+                                   // "value": gConfig.git.branch
+                                    "value": "feature/analytics-alpha"
                                 },
                                 {
                                     "name": "SOAJS_GIT_REPO",
