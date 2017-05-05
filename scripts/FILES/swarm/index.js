@@ -5,7 +5,7 @@ var async = require('async');
 var path = require('path');
 var fs = require('fs');
 var Grid = require('gridfs-stream');
-var exec = require('child_process').exec;
+var spawn = require('child_process').spawn;
 var soajs = require('soajs');
 var soajsModules = require('soajs.core.modules');
 var request = require('request');
@@ -130,15 +130,143 @@ var lib = {
         }
 
         async.eachSeries(services, function (oneService, callback) {
+            if(type === "core"){
+                oneService.Labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
+            }
+            else if (type === "nginx"){
+                oneService.Labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
+            }
+
             lib.deployService(deployer, oneService, callback);
         }, cb);
     },
 
+
+    /**
+     * Customizes a new nginx recipe used to deploy the NGINX of the dashboard environment
+     * @param nginxRecipe
+     * @param cb
+     * @returns {*}
+     */
+    updateNginxRecipe (nginxRecipe) {
+        nginxRecipe.name = "Dashboard Nginx Recipe";
+        nginxRecipe.description = "This is the nginx catalog recipe used to deploy the nginx in the dashboard environment."
+
+        if(process.env.SOAJS_NX_SSL === 'true'){
+            process.env['SOAJS_NX_API_HTTPS']=1;
+            process.env['SOAJS_NX_API_HTTP_REDIRECT']=1;
+            process.env['SOAJS_NX_SITE_HTTPS']=1;
+            process.env['SOAJS_NX_SITE_HTTP_REDIRECT']=1;
+        }
+
+        //Add every environment variable that is added by the installer.
+        //Add environment variables related to SSL
+        if(process.env.SOAJS_NX_API_HTTPS){
+            nginxRecipe.recipe.buildOptions.env["SOAJS_NX_API_HTTPS"] = {
+                "type": "userInput",
+                "value": process.env.SOAJS_NX_API_HTTPS
+            };
+        }
+        if(process.env.SOAJS_NX_API_HTTP_REDIRECT){
+            nginxRecipe.recipe.buildOptions.env["SOAJS_NX_API_HTTP_REDIRECT"] = {
+                "type": "userInput",
+                "value": process.env.SOAJS_NX_API_HTTP_REDIRECT
+            };
+        }
+        if(process.env.SOAJS_NX_SITE_HTTPS){
+            nginxRecipe.recipe.buildOptions.env["SOAJS_NX_SITE_HTTPS"] = {
+                "type": "userInput",
+                "value": process.env.SOAJS_NX_SITE_HTTPS
+            };
+        }
+        if(process.env.SOAJS_NX_SITE_HTTP_REDIRECT){
+            nginxRecipe.recipe.buildOptions.env["SOAJS_NX_SITE_HTTP_REDIRECT"] = {
+                "type": "userInput",
+                "value": process.env.SOAJS_NX_SITE_HTTP_REDIRECT
+            };
+        }
+
+        return nginxRecipe;
+    },
+
+    /**
+     * Customizes a new service recipe used to deploy the core services of the dashboard environment
+     * @param serviceRecipe
+     * @param cb
+     * @returns {*}
+     */
+    updateServiceRecipe (serviceRecipe) {
+        serviceRecipe.name = "Dashboard Service Recipe";
+        nginxRecipe.description = "This is the service catalog recipe used to deploy the core services in the dashboard environment."
+
+        //Add environment variables containing mongo information
+        if(process.env.SOAJS_MONGO_NB){
+            serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_NB"] = {
+                "type": "computed",
+                "value": "$SOAJS_MONGO_NB"
+            };
+        }
+        if(process.env.SOAJS_MONGO_PREFIX){
+            serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_PREFIX"] = {
+                "type": "computed",
+                "value": "$SOAJS_MONGO_PREFIX"
+            };
+        }
+        if(process.env.SOAJS_MONGO_RSNAME){
+            serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_RSNAME"] = {
+                "type": "computed",
+                "value": "$SOAJS_MONGO_RSNAME"
+            };
+        }
+        if(process.env.SOAJS_MONGO_AUTH_DB){
+            serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_AUTH_DB"] = {
+                "type": "computed",
+                "value": "$SOAJS_MONGO_AUTH_DB"
+            };
+        }
+        return serviceRecipe;
+    },
+
     importData: function (mongoInfo, cb) {
         utilLog.log('Importing provision data to:', profile.servers[0].host + ":" + profile.servers[0].port);
-        var dataImportFile = __dirname + "/../dataImport/index.js";
-        var execString = process.env.NODE_PATH + " " + dataImportFile;
-        exec(execString, cb);
+        var dataImportFile = __dirname + "/../dataImport/";
+        const importFiles = spawn(process.env.NODE_PATH, [ 'index.js' ], { stdio: 'inherit', cwd: dataImportFile });
+        importFiles.on('data', (data) => {
+            console.log(data.toString());
+        });
+
+        importFiles.on('close', (code) => {
+            if (code === 0) {
+                utilLog.log("Successfully imported the data files.");
+                //get the Dashboard Nginx recipe Mongo ID
+                setTimeout(function () {
+                    const dataFolder = process.env.SOAJS_DATA_FOLDER;
+                    //require service and nginx catalog recipes
+                    var catalogDefaulEntries = require(dataFolder + "catalogs/index.js");
+                    var dashboardCatalogEntries = [catalogDefaulEntries[0], catalogDefaulEntries[3]];
+                    //update the catalog recipes to include data used for dashboard environment deployment
+                    dashboardCatalogEntries[0] = lib.updateServiceRecipe(dashboardCatalogEntries[0]);
+                    dashboardCatalogEntries[1] = lib.updateNginxRecipe(dashboardCatalogEntries[1]);
+                    //add catalogs to the database
+                    mongo.insert("catalogs", dashboardCatalogEntries, (error, catalogEntries) => {
+                        if(error){
+                           return cb(error);
+                        }
+
+                        process.env.DASH_SRV_ID = catalogEntries[0]._id.toString();
+                        process.env.DASH_NGINX_ID = catalogEntries[1]._id.toString();
+                        return cb();
+                    });
+                }, 2000);
+            }
+            else {
+                throw new Error(`Data import failed, exit code: ${code}`);
+            }
+        });
+        importFiles.on("error", (error) => {
+            utilLog.log ("Error while importing the data files.");
+            return cb(error);
+        });
     },
 
     importCertificates: function (cb) {

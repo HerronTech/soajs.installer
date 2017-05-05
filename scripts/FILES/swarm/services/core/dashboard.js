@@ -1,6 +1,5 @@
 'use strict';
 var gConfig = require("../../config.js");
-
 var src = {
 	owner: 'soajs',
 	repo: 'soajs.dashboard',

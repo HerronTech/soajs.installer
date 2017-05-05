@@ -1,21 +1,17 @@
-/**
- * Created by Nicolas on 12/7/16.
- */
 /***************************************************************
  *
  * DASHBOARD CORE_PROVISION
  *
  ***************************************************************/
-var soajsModules = require("soajs.core.modules");
-var async = require("async");
+const soajsModules = require("soajs.core.modules");
+const async = require("async");
 
-var dataFolder = process.env.SOAJS_DATA_FOLDER;
+const dataFolder = process.env.SOAJS_DATA_FOLDER;
 delete require.cache[process.env.SOAJS_PROFILE];
-var profile = require(process.env.SOAJS_PROFILE);
+const profile = require(process.env.SOAJS_PROFILE);
 
 profile.name = "core_provision";
-var mongo = new soajsModules.mongo(profile);
-
+let mongo = new soajsModules.mongo(profile);
 
 mongo.dropDatabase(function () {
 	lib.addEnvs(function () {
@@ -44,7 +40,7 @@ mongo.dropDatabase(function () {
 	});
 });
 
-var lib = {
+const lib = {
 	/*
 	 Environments
 	 */
@@ -99,21 +95,7 @@ var lib = {
 	 */
 	"addCatalogs": function (cb) {
 		var records = require(dataFolder + "catalogs/index.js");
-		
-		/**
-		 * create a copy of service and nginx catalog entries
-		 */
 		mongo.insert("catalogs", records, cb);
-		
-		/**
-		 * after you insert the first batch of catalog entries
-		 * 1- update the env variables that were computed by the installer and that are not found in the copies taken above
-		 * 2- update the copies
-		 * 3- insert the copies and name them: DASHBOARD SERVICE RECIPE & DASHBOARD NGINX RECIPE
-		 * 4- grab the response of the second insert and extract the mongo id of the 2 copies inserted
-		 * 5- create process.env variables from the mongo ids
-		 * 6- update the templates by adding a new label soajs.catalog.id: copy._id
-		 */
 	},
 
 	/***************************************************************
@@ -235,3 +217,4 @@ var lib = {
 		}, cb);
 	}
 };
+
