@@ -66,13 +66,17 @@ var components = {
 								},
 								{
 									"name":"SOAJS_LOGSTASH_HOST" ,
-									"value": "dashboard-logstash"
+									"value": "dashboard-logstash-service"
 								}
 							],
 							"volumeMounts": [
 								{
 									"mountPath": gConfig.kubernetes.volumes.log.path,
 									"name": gConfig.kubernetes.volumes.log.label
+								},
+								{
+									"mountPath": "/usr/share/filebeat/bin/data",
+									"name": "soajs-filebeat"
 								}
 							]
 						}
@@ -82,6 +86,12 @@ var components = {
 							"name": gConfig.kubernetes.volumes.log.label,
 							"hostPath": {
 								"path": gConfig.kubernetes.volumes.log.path
+							}
+						},
+						{
+							"name": "soajs-filebeat",
+							"hostPath": {
+								"path": "/usr/share/filebeat/bin/data"
 							}
 						}
 					]

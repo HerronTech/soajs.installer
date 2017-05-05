@@ -4,6 +4,11 @@
 'use strict';
 var gConfig = require("../../config.js");
 
+var namespace = gConfig.kubernetes.config.namespaces.default;
+if (gConfig.kubernetes.config.namespaces.perService) {
+	namespace += '-soajs-analytics-elasticsearch-service';
+}
+
 var components = {
 	deployment: {
 		"apiVersion": "extensions/v1beta1",
@@ -51,7 +56,7 @@ var components = {
 								},
 								{
 									"name": "ELASTICSEARCH_URL",
-									"value": "soajs-analytics-elasticsearc:9200" //add namespace
+									"value": "soajs-analytics-elasticsearch-service." + namespace + ":9200" //add namespace
 								}
 							],
 							"volumeMounts": [

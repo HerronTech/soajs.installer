@@ -1,12 +1,17 @@
 'use strict';
 var gConfig = require("../../config.js");
 
+var namespace = gConfig.kubernetes.config.namespaces.default;
+if (gConfig.kubernetes.config.namespaces.perService) {
+	namespace += '-soajs-analytics-elasticsearch-service';
+}
+
 var components = {
 	service: {
 		"apiVersion": "v1",
 		"kind": "Service",
 		"metadata": {
-			"name": "dashboard-logstash",
+			"name": "dashboard-logstash-service",
 			"labels": {
 				"soajs.content": "true",
 				"soajs.env.code": "dashboard",
@@ -76,7 +81,7 @@ var components = {
 							"env": [
 								{
 									"name": "ELASTICSEARCH_URL",
-									"value": "soajs-analytics-elasticsearch:9200"
+									"value": "soajs-analytics-elasticsearch-service." + namespace + ":9200"
 								}
 							]
 						}

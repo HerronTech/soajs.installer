@@ -36,6 +36,11 @@ var config = {
 			"Type": "volume",
 			"Source": gConfig.docker.volumes.log.label,
 			"Target": gConfig.docker.volumes.log.path
+		},
+		{
+			"Type": "volume",
+			"Source": "soajs-filebeat",
+			"Target": "/usr/share/filebeat/bin/data"
 		}
 	]
 };

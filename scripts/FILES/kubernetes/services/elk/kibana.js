@@ -1,11 +1,16 @@
 'use strict';
-var config = require('../../config.js');
+var gConfig = require("../../config.js");
+
+var namespace = gConfig.kubernetes.config.namespaces.default;
+if (gConfig.kubernetes.config.namespaces.perService) {
+	namespace += '-soajs-analytics-elasticsearch-service';
+}
 var components = {
 	service: {
 		"apiVersion": "v1",
 		"kind": "Service",
 		"metadata": {
-			"name": "kibana",
+			"name": "kibana-service",
 			"labels": {
 				"soajs.service.name": "kibana",
 				"soajs.service.group": "elk",
@@ -71,7 +76,7 @@ var components = {
 							"env": [
 								{
 									"name": "ELASTICSEARCH_URL",
-									"value": "http://soajs-analytics-elasticsearch:9200"
+									"value": "http://soajs-analytics-elasticsearch-service." + namespace + ":9200"
 								}
 							]
 						}
@@ -82,40 +87,40 @@ var components = {
 	}
 };
 
-if (process.SOAJS_ELASTIC_EXTERNAL) {
-	if (config.elasticsearch && config.elasticsearch.servers && config.elasticsearch.servers[0].host && config.elasticsearch.servers[0].port) {
-		components.deployment.spec.template.spec.containers[0].env.push(
-			{
-				"name": "ELASTICSEARCH_URL",
-				"value": "http://" + config.elasticsearch.servers[0].host + ":" + config.elasticsearch.servers[0].port
-			}
-		);
-	}
-	if (config.elasticsearch && config.elasticsearch.credentials && config.elasticsearch.credentials.username) {
-		components.deployment.spec.template.spec.containers[0].env.push(
-			{
-				"name": "ELASTICSEARCH_USERNAME",
-				"value": config.elasticsearch.credentials.username
-			}
-		);
-	}
-	if (config.elasticsearch && config.credentials.servers && config.elasticsearch.credentials.password ) {
-		components.deployment.spec.template.spec.containers[0].env.push(
-			{
-				"name": "ELASTICSEARCH_PASSWORD",
-				"value": config.elasticsearch.credentials.password
-			}
-		);
-	}
-	if (config.elasticsearch && config.extraParam.servers && config.elasticsearch.extraParam.requestTimeout ) {
-		components.deployment.spec.template.spec.containers[0].env.push(
-			{
-				"name": "ELASTICSEARCH_REQUESTTIMEOUT",
-				"value": config.elasticsearch.extraParam.requestTimeout
-			}
-		);
-	}
-}
+// if (process.SOAJS_ELASTIC_EXTERNAL) {
+// 	if (config.elasticsearch && config.elasticsearch.servers && config.elasticsearch.servers[0].host && config.elasticsearch.servers[0].port) {
+// 		components.deployment.spec.template.spec.containers[0].env.push(
+// 			{
+// 				"name": "ELASTICSEARCH_URL",
+// 				"value": "http://" + config.elasticsearch.servers[0].host + ":" + config.elasticsearch.servers[0].port
+// 			}
+// 		);
+// 	}
+// 	if (config.elasticsearch && config.elasticsearch.credentials && config.elasticsearch.credentials.username) {
+// 		components.deployment.spec.template.spec.containers[0].env.push(
+// 			{
+// 				"name": "ELASTICSEARCH_USERNAME",
+// 				"value": config.elasticsearch.credentials.username
+// 			}
+// 		);
+// 	}
+// 	if (config.elasticsearch && config.credentials.servers && config.elasticsearch.credentials.password ) {
+// 		components.deployment.spec.template.spec.containers[0].env.push(
+// 			{
+// 				"name": "ELASTICSEARCH_PASSWORD",
+// 				"value": config.elasticsearch.credentials.password
+// 			}
+// 		);
+// 	}
+// 	if (config.elasticsearch && config.extraParam.servers && config.elasticsearch.extraParam.requestTimeout ) {
+// 		components.deployment.spec.template.spec.containers[0].env.push(
+// 			{
+// 				"name": "ELASTICSEARCH_REQUESTTIMEOUT",
+// 				"value": config.elasticsearch.extraParam.requestTimeout
+// 			}
+// 		);
+// 	}
+// }
 
 
 module.exports = components;
