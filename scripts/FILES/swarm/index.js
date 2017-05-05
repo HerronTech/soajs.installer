@@ -149,6 +149,7 @@ var lib = {
      * @returns {*}
      */
     updateNginxRecipe (nginxRecipe) {
+    	delete nginxRecipe.locked;
         nginxRecipe.name = "Dashboard Nginx Recipe";
         nginxRecipe.description = "This is the nginx catalog recipe used to deploy the nginx in the dashboard environment."
 
@@ -196,6 +197,7 @@ var lib = {
      * @returns {*}
      */
     updateServiceRecipe (serviceRecipe) {
+	    delete serviceRecipe.locked;
         serviceRecipe.name = "Dashboard Service Recipe";
 	    serviceRecipe.description = "This is the service catalog recipe used to deploy the core services in the dashboard environment."
         
@@ -292,7 +294,7 @@ var lib = {
                         process.env.DASH_NGINX_ID = catalogEntries[1]._id.toString();
                         return cb();
                     });
-                }, 2000);
+                }, 5000);
             }
             else {
                 throw new Error(`Data import failed, exit code: ${code}`);
