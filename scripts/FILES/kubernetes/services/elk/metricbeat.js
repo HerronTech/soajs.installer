@@ -62,7 +62,7 @@ var components = {
 							"volumeMounts": [
 								{
 									"mountPath":"/var/run/docker.sock",
-									"name": "docker-dock"
+									"name": "docker-sock"
 								},
 								// {
 								// 	"mountPath":"/proc",
@@ -78,7 +78,7 @@ var components = {
 					//source
 					"volumes": [
 						{
-							"name": "docker-dock",
+							"name": "docker-sock",
 							"hostPath": {
 								"path": "/var/run/docker.sock"
 							}
