@@ -22,7 +22,8 @@ var config = {
 		"soajs.service.type": "elk",
 		"soajs.service.name": "dashboard-logstash",
 		"soajs.service.group": "elk",
-		"soajs.service.label": "dashboard-logstash"
+		"soajs.service.label": "dashboard-logstash",
+		"soajs.service.mode": "global"
 	},
 	command: [
 		"bash",

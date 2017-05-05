@@ -17,7 +17,8 @@ var components = {
 				"soajs.service.type": "elk",
 				"soajs.service.name": "dashboard-filebeat",
 				"soajs.service.group": "elk",
-				"soajs.service.label": "dashboard-filebeat"
+				"soajs.service.label": "dashboard-filebeat",
+				"soajs.service.mode": "deployment"
 			}
 		},
 		"spec": {

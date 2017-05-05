@@ -21,7 +21,8 @@ var components = {
 				"soajs.service.type": "elk",
 				"soajs.service.name": "dashboard-metricbeat",
 				"soajs.service.group": "elk",
-				"soajs.service.label": "dashboard-metricbeat"
+				"soajs.service.label": "dashboard-metricbeat",
+				"soajs.service.mode": "deployment"
 			}
 		},
 		"spec": {

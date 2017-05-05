@@ -17,7 +17,8 @@ var components = {
 				"soajs.env.code": "dashboard",
 				"soajs.service.name": "dashboard-logstash",
 				"soajs.service.group": "elk",
-				"soajs.service.label": "dashboard-logstash"
+				"soajs.service.label": "dashboard-logstash",
+				"soajs.service.mode": "daemonset"
 			}
 		},
 		"spec": {
