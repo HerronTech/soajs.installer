@@ -213,7 +213,7 @@ module.exports = {
 				    es_clusters.servers = [
 					    {
 						    host: "soajs-analytics-elasticsearch." + namespace,
-						    port: 30920
+						    port: 9200
 					    }
 				    ];
 			    }
@@ -283,7 +283,7 @@ module.exports = {
 	    }
 	    else {
 		    envData = envData.replace(/"%es_analytics_cluster_name%": "%es_analytics_cluster%",/g, '');
-		    envData = envData.replace(/%es_database_name%: "%databases_value%"/g, '');
+		    envData = envData.replace(/"%es_database_name%": "%databases_value%",/g, '');
 		    settings = settings.replace(/"db_name": "%db_name%"/g, '');
 	    }
 	    fs.writeFile(folder + "analytics/settings.js", settings, "utf8");

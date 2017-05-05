@@ -116,7 +116,7 @@ var lib = {
             utilLog.log('External Mongo deployment detected, data containers will not be deployed ...');
             return cb(null, true);
         }
-	    if (type === 'elk' && !config.analytics) {
+	    if (type === 'elk' && config.analytics === "false") {
 		    return cb(null, true);
 	    }
         async.eachSeries(services, function (oneService, callback) {
@@ -455,6 +455,8 @@ var lib = {
 			}
 			if (settings && settings.elasticsearch && dbConfiguration.dbs.databases[settings.elasticsearch.db_name]) {
 				var cluster = dbConfiguration.dbs.databases[settings.elasticsearch.db_name].cluster;
+				//change to exposed port
+				dbConfiguration.dbs.clusters[cluster].servers[0].port = 30920;
 				esClient = new soajs.es(dbConfiguration.dbs.clusters[cluster]);
 			}
 			else {
