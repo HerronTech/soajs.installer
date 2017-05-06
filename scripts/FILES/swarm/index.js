@@ -160,7 +160,12 @@ var lib = {
             process.env['SOAJS_NX_SITE_HTTPS']=1;
             process.env['SOAJS_NX_SITE_HTTP_REDIRECT']=1;
         }
-
+	
+	    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_DASHBOARD_BRANCH"] = {
+		    "type": "static",
+		    "value": "true"
+	    };
+	    
         //Add every environment variable that is added by the installer.
         //Add environment variables related to SSL
         if(process.env.SOAJS_NX_API_HTTPS){
