@@ -22,8 +22,8 @@ module.exports = {
 		"repo": process.env.SOAJS_GIT_REPO || null,
 		"branch": process.env.SOAJS_GIT_CUSTOM_UI_BRANCH || null,
 		"token": process.env.SOAJS_GIT_TOKEN || null,
-		"provider": process.env.SOAJS_GIT_PROVIDER || null,
-		"domain": process.env.SOAJS_GIT_DOMAIN || null
+		"provider": process.env.SOAJS_GIT_SOURCE || null,
+		"domain": process.env.SOAJS_GIT_PROVIDER || null
 	},
 	"mongo":{
 		"prefix": profile.prefix,
@@ -76,7 +76,8 @@ module.exports = {
 		}
 	},
 
-	"deployGroups": ['db', 'core', 'nginx'],
+	// "deployGroups": ['db', 'core', 'nginx'],
+	"deployGroups": ['db', 'nginx'],
 	"services":{
 		"path": {
 			"dir": __dirname + '/services/',
