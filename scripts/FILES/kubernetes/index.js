@@ -5,7 +5,7 @@ var async = require('async');
 var path = require('path');
 var fs = require('fs');
 var Grid = require('gridfs-stream');
-var spawn = require('child_process').spawn;
+var exec = require('child_process').exec;
 var soajs = require('soajs');
 var soajsModules = require('soajs.core.modules');
 var request = require('request');
@@ -122,7 +122,7 @@ var lib = {
                 oneService.deployment.spec.template.metadata.labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
             }
             else if (type === "nginx"){
-                oneService.service.metadat.Labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
+                oneService.service.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
                 oneService.deployment.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
                 oneService.deployment.spec.template.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
             }
@@ -272,41 +272,30 @@ var lib = {
     importData: function (mongoInfo, cb) {
         utilLog.log('Importing provision data to:', profile.servers[0].host + ":" + profile.servers[0].port);
         var dataImportFile = __dirname + "/../dataImport/index.js";
-        const importFiles = spawn(process.env.NODE_PATH, [ 'index.js' ], { stdio: 'inherit', cwd: dataImportFile });
-        importFiles.on('data', (data) => {
-            console.log(data.toString());
-        });
-
-        importFiles.on('close', (code) => {
-            if (code === 0) {
-                utilLog.log("Successfully imported the data files.");
-                setTimeout(function () {
-                    const dataFolder = process.env.SOAJS_DATA_FOLDER;
-                    //require the default nginx and service catalog recipes
-                    var catalogDefaulEntries = require(dataFolder + "catalogs/index.js");
-                    var dashboardCatalogEntries = [catalogDefaulEntries[0], catalogDefaulEntries[3]];
-                    //update the catalog recipes to include data used for dashboard environment deployment
-                    dashboardCatalogEntries[0] = lib.updateServiceRecipe(dashboardCatalogEntries[0]);
-                    dashboardCatalogEntries[1] = lib.updateNginxRecipe(dashboardCatalogEntries[1]);
-                    //add catalogs to the database
-                    mongo.insert("catalogs", dashboardCatalogEntries, (error, catalogEntries) => {
-                        if(error){
-                            return cb(error);
-                        }
-
-                        process.env.DASH_SRV_ID = catalogEntries[0]._id.toString();
-                        process.env.DASH_NGINX_ID = catalogEntries[1]._id.toString();
-                        return cb();
-                    });
-                }, 5000);
+        var execString = process.env.NODE_PATH + " " + dataImportFile;
+        exec(execString, function (error, stdout, stderr) {
+            if (error) {
+                utilLog.log(error);
             }
-            else {
-                throw new Error(`Data import failed, exit code: ${code}`);
-            }
-        });
-        importFiles.on("error", (error) => {
-            utilLog.log ("Error while importing the data files.");
-            return cb(error);
+            setTimeout(function () {
+                const dataFolder = process.env.SOAJS_DATA_FOLDER;
+                //require the default nginx and service catalog recipes
+                var catalogDefaulEntries = require(dataFolder + "catalogs/index.js");
+                var dashboardCatalogEntries = [catalogDefaulEntries[0], catalogDefaulEntries[3]];
+                //update the catalog recipes to include data used for dashboard environment deployment
+                dashboardCatalogEntries[0] = lib.updateServiceRecipe(dashboardCatalogEntries[0]);
+                dashboardCatalogEntries[1] = lib.updateNginxRecipe(dashboardCatalogEntries[1]);
+                //add catalogs to the database
+                mongo.insert("catalogs", dashboardCatalogEntries, (error, catalogEntries) => {
+                    if(error){
+                        return cb(error);
+                    }
+
+                    process.env.DASH_SRV_ID = catalogEntries[0]._id.toString();
+                    process.env.DASH_NGINX_ID = catalogEntries[1]._id.toString();
+                    return cb();
+                });
+            }, 5000);
         });
     },
 
