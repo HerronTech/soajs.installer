@@ -201,6 +201,14 @@ var lib = {
         serviceRecipe.name = "Dashboard Service Recipe";
 	    serviceRecipe.description = "This is the service catalog recipe used to deploy the core services in the dashboard environment."
 	    serviceRecipe.recipe.deployOptions.image.prefix = config.imagePrefix;
+	    
+	    if(config.deploy_acc){
+		    serviceRecipe.recipe.buildOptions.env["SOAJS_DEPLOY_ACC"] = {
+			    "type": "static",
+			    "value": "true"
+		    };
+	    }
+	    
         //Add environment variables containing mongo information
         if(profile.servers && profile.servers.length > 0){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_NB"] = {
