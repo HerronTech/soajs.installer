@@ -165,6 +165,46 @@ var lib = {
 		    "type": "static",
 		    "value": "true"
 	    };
+        
+	    if (config.customUISrc.repo && config.customUISrc.owner) {
+		    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_REPO"] = {
+			    "type": "userInput",
+			    "value": config.customUISrc.repo
+		    };
+		
+		    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_OWNER"] = {
+			    "type": "userInput",
+			    "value": config.customUISrc.owner
+		    };
+		
+		    if (config.customUISrc.branch) {
+			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_BRANCH"] = {
+				    "type": "userInput",
+				    "value": config.customUISrc.branch
+			    };
+		    }
+		
+		    if (config.customUISrc.provider) {
+			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_PROVIDER"] = {
+				    "type": "userInput",
+				    "value": config.customUISrc.provider
+			    };
+		    }
+		
+		    if (config.customUISrc.domain) {
+			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_DOMAIN"] = {
+				    "type": "userInput",
+				    "value": config.customUISrc.domain
+			    };
+		    }
+		
+		    if (config.customUISrc.token) {
+			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_TOKEN"] = {
+				    "type": "userInput",
+				    "value": config.customUISrc.token
+			    };
+		    }
+	    }
 	    
         //Add every environment variable that is added by the installer.
         //Add environment variables related to SSL
