@@ -18,7 +18,8 @@ var config = {
 	    "soajs.content": "true",
 	    "soajs.env.code": "dashboard",
 	    "soajs.service.name": "dashboard-metricbeat",
-	    "soajs.service.label": "dashboard-metricbeat"
+	    "soajs.service.label": "dashboard-metricbeat",
+	    "soajs.service.mode": "replicated"
     },
     command: [],
 	mounts: [

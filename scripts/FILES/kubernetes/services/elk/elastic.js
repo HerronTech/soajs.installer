@@ -1,6 +1,7 @@
 'use strict';
 
 var gConfig = require("../../config.js");
+
 var annotation = [
 	{
 		"name": "sysctl",
@@ -17,12 +18,14 @@ var components = {
 		"apiVersion": "v1",
 		"kind": "Service",
 		"metadata": {
-			"name": "soajs-analytics-elasticsearch",
+			"name": "soajs-analytics-elasticsearch-service",
 			"labels": {
 				"soajs.service.type": "database",
-				"soajs.service.name": "ssoajs-analytics-elasticsearch",
+				"soajs.service.name": "soajs-analytics-elasticsearch",
 				"soajs.service.group": "elk",
-				"soajs.service.label": "soajs-analytics-elasticsearch"
+				"soajs.service.label": "soajs-analytics-elasticsearch",
+				"soajs.service.mode": "deployment"
+				
 			}
 		},
 		"spec": {

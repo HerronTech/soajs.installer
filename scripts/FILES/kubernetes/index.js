@@ -196,6 +196,7 @@ var lib = {
                     if (error) return cb(error);
 	                createDeployment(function () {
 		                if (config.analytics === "true") {
+		                	//check if elasticsearch
 			                if (options.deployment.metadata.name === "soajs-analytics-elasticsearch") {
 				                lib.configureElastic(deployer, options, cb);
 			                }
@@ -462,7 +463,7 @@ var lib = {
 			else {
 				throw new Error("No Elastic db name found!");
 			}
-			lib.getServiceIPs(serviceOptions.service.metadata.name, deployer, serviceOptions.deployment.spec.replicas, function (error) {
+			lib.getServiceIPs(serviceOptions.deployment.metadata.name, deployer, serviceOptions.deployment.spec.replicas, function (error) {
 				if (error) return cb(error);
 				pingElastic(function (err, esResponse) {
 					utilLog.log('Configuring elasticsearch ...');

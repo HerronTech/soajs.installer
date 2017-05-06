@@ -24,7 +24,8 @@ var config = {
 		"soajs.service.type": "elk",
 		"soajs.service.name": "dashboard-filebeat",
 		"soajs.service.group": "elk",
-		"soajs.service.label": "dashboard-filebeat"
+		"soajs.service.label": "dashboard-filebeat",
+		"soajs.service.mode": "replicated"
 	},
 	 //todo: Do we really need this?
 	command: [
@@ -36,6 +37,11 @@ var config = {
 			"Type": "volume",
 			"Source": gConfig.docker.volumes.log.label,
 			"Target": gConfig.docker.volumes.log.path
+		},
+		{
+			"Type": "volume",
+			"Source": "soajs-filebeat",
+			"Target": "/usr/share/filebeat/bin/data"
 		}
 	]
 };

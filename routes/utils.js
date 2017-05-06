@@ -208,11 +208,11 @@ module.exports = {
 			    if (body.deployment.deployDriver.indexOf("container.kubernetes") !== -1) {
 				    //build elasticsearch service with based on namespace
 				    if (deployment && deployment.namespaces && deployment.namespaces.perService) {
-					    namespace += '-dashboard-soajsdata';
+					    namespace += '-soajs-analytics-elasticsearch-service';
 				    }
 				    es_clusters.servers = [
 					    {
-						    host: "soajs-analytics-elasticsearch." + namespace,
+						    host: "soajs-analytics-elasticsearch-service." + namespace,
 						    port: 9200
 					    }
 				    ];
@@ -767,9 +767,9 @@ module.exports = {
 	            if(type === 'kubernetes'){
 		            var namespace = body.deployment.namespaces.default;
 		            if (body.deployment.namespaces.perService) {
-			            namespace += 'soajs-analytics-elasticsearch';
+			            namespace += 'soajs-analytics-elasticsearch-service';
 		            }
-		            obj['hosts'].elasticsearch =  body.deployment.containerHost + " soajs-analytics-elasticsearch." + namespace;
+		            obj['hosts'].elasticsearch =  body.deployment.containerHost + " soajs-analytics-elasticsearch-service." + namespace;
 	            }
 	            else {
 		            obj['hosts'].elasticsearch = body.es_clusters.servers[0].host + " soajs-analytics-elasticsearch";

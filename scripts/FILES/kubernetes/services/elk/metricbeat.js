@@ -4,6 +4,11 @@
 'use strict';
 var gConfig = require("../../config.js");
 
+var namespace = gConfig.kubernetes.config.namespaces.default;
+if (gConfig.kubernetes.config.namespaces.perService) {
+	namespace += '-soajs-analytics-elasticsearch-service';
+}
+
 var components = {
 	deployment: {
 		"apiVersion": "extensions/v1beta1",
@@ -16,7 +21,8 @@ var components = {
 				"soajs.service.type": "elk",
 				"soajs.service.name": "dashboard-metricbeat",
 				"soajs.service.group": "elk",
-				"soajs.service.label": "dashboard-metricbeat"
+				"soajs.service.label": "dashboard-metricbeat",
+				"soajs.service.mode": "deployment"
 			}
 		},
 		"spec": {
@@ -51,13 +57,13 @@ var components = {
 								},
 								{
 									"name": "ELASTICSEARCH_URL",
-									"value": "soajs-analytics-elasticsearc:9200" //add namespace
+									"value": "soajs-analytics-elasticsearch-service." + namespace + ":9200" //add namespace
 								}
 							],
 							"volumeMounts": [
 								{
 									"mountPath":"/var/run/docker.sock",
-									"name": "docker-dock"
+									"name": "docker-sock"
 								},
 								// {
 								// 	"mountPath":"/proc",
@@ -73,7 +79,7 @@ var components = {
 					//source
 					"volumes": [
 						{
-							"name": "docker-dock",
+							"name": "docker-sock",
 							"hostPath": {
 								"path": "/var/run/docker.sock"
 							}
