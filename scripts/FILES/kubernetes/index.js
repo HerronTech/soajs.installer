@@ -150,7 +150,7 @@ var lib = {
 	
 	    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_DASHBOARD_BRANCH"] = {
 		    "type": "static",
-		    "value": "true"
+		    "value": config.dashUISrc.branch
 	    };
 	
 	    if (config.customUISrc.repo && config.customUISrc.owner) {
