@@ -152,7 +152,8 @@ var lib = {
     	delete nginxRecipe.locked;
         nginxRecipe.name = "Dashboard Nginx Recipe";
         nginxRecipe.description = "This is the nginx catalog recipe used to deploy the nginx in the dashboard environment."
-
+	    nginxRecipe.recipe.deployOptions.image.prefix = config.imagePrefix;
+        
         if(process.env.SOAJS_NX_SSL === 'true'){
             process.env['SOAJS_NX_API_HTTPS']=1;
             process.env['SOAJS_NX_API_HTTP_REDIRECT']=1;
