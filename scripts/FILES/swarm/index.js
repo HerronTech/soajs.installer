@@ -343,7 +343,7 @@ var lib = {
                         if(error){
                            return cb(error);
                         }
-
+	                    utilLog.log("Dashboard Catalog Recipes updated.");
                         process.env.DASH_SRV_ID = catalogEntries[0]._id.toString();
                         process.env.DASH_NGINX_ID = catalogEntries[1]._id.toString();
                         return cb();
