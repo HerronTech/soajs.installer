@@ -205,7 +205,7 @@ var lib = {
     	delete serviceRecipe.locked;
         serviceRecipe.name = "Dashboard Service Recipe";
 	    serviceRecipe.description = "This is the service catalog recipe used to deploy the core services in the dashboard environment."
-        
+        serviceRecipe.recipe.deployOptions.image.prefix = config.imagePrefix;
         //Add environment variables containing mongo information
         if(profile.servers && profile.servers.length > 0){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_NB"] = {
@@ -213,12 +213,12 @@ var lib = {
                 "value": "$SOAJS_MONGO_NB"
             };
 	
-	        serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_IP_N"] = {
+	        serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_IP"] = {
 		        "type": "computed",
 		        "value": "$SOAJS_MONGO_IP_N"
 	        };
 	
-	        serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_PORT_N"] = {
+	        serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_PORT"] = {
 		        "type": "computed",
 		        "value": "$SOAJS_MONGO_PORT_N"
 	        };
