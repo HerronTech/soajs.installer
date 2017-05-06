@@ -404,6 +404,7 @@ module.exports = {
                 var output = "#!/bin/bash" + os.EOL + os.EOL;
 
                 var envs = {
+                    "SOAJS_DEPLOY_HA": driver,
                     "SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "master",
                     "SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "master",
                     "SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
@@ -493,6 +494,7 @@ module.exports = {
                 var output = "#!/bin/bash" + os.EOL + os.EOL;
 
                 var envs = {
+                    "SOAJS_DEPLOY_HA": driver,
                     "SOAJS_GIT_DASHBOARD_BRANCH": process.env.SOAJS_GIT_DASHBOARD_BRANCH || "master",
                     "SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "master",
                     "SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),

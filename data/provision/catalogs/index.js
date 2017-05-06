@@ -1,5 +1,36 @@
 'use strict';
 
+var defaultVoluming = {};
+if (process.env.SOAJS_DEPLOY_HA === 'docker') {
+    defaultVoluming = {
+        "volumes": [
+            {
+                "Type": "volume",
+                "Source": "soajs_log_volume",
+                "Target": "/var/log/soajs/",
+            }
+        ]
+    };
+}
+else if (process.env.SOAJS_DEPLOY_HA === 'kubernetes') {
+    defaultVoluming = {
+        "volumes": [
+            {
+                "name": "soajs-log-volume",
+                "hostPath": {
+                    "path": "/var/log/soajs/"
+                }
+            }
+        ],
+        "volumeMounts": [
+            {
+                "mountPath": "/var/log/soajs/",
+                "name": "soajs-log-volume"
+            }
+        ]
+    };
+}
+
 var catalogs = [
     {
         "name": "Service Recipe",
@@ -33,10 +64,7 @@ var catalogs = [
                     "network": "", //container network for docker
                     "workingDir": "" //container working directory
                 },
-                "voluming": {
-                    "volumes": [], //array of objects
-                    "volumeMounts": [] //array of objects
-                }
+                "voluming": JSON.parse(JSON.stringify(defaultVoluming))
             },
             "buildOptions": {
                 "settings": {
@@ -231,10 +259,7 @@ var catalogs = [
                     "network": "", //container network for docker
                     "workingDir": "" //container working directory
                 },
-                "voluming": {
-                    "volumes": [], //array of objects
-                    "volumeMounts": [] //array of objects, only applicable in case of kubernetes
-                }
+                "voluming": JSON.parse(JSON.stringify(defaultVoluming))
             },
             "buildOptions": {
                 "settings": {
@@ -368,10 +393,7 @@ var catalogs = [
                     "network": "", //container network for docker
                     "workingDir": "" //container working directory
                 },
-                "voluming": {
-                    "volumes": [], //array of objects
-                    "volumeMounts": [] //array of objects
-                },
+                "voluming": JSON.parse(JSON.stringify(defaultVoluming)),
                 "ports": [
                     {
                         "name": "http",
