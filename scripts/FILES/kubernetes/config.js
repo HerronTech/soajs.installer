@@ -8,9 +8,12 @@ module.exports = {
 	"sitePrefix": process.env.SITE_PREFIX || "dashboard",
 	"folder": process.env.SOAJS_DATA_FOLDER || "/opt/soajs/node_modules/soajs.installer/data/startup/",
 	"profile": process.env.SOAJS_PROFILE || "/opt/soajs/node_modules/soajs.installer/data/startup/profile.js",
-	"git":{
-		"branch": process.env.SOAJS_GIT_BRANCH || 'develop'
-	},
+    "deploy_acc": process.env.SOAJS_DEPLOY_ACC || "true",
+    "git":{
+        "branch": process.env.SOAJS_GIT_BRANCH || 'develop',
+        "domain": process.env.SOAJS_GIT_DOMAIN || 'github.com',
+        "provider": process.env.SOAJS_GIT_PROVIDER || 'github'
+    },
 	"dashUISrc": {
 		"branch": process.env.SOAJS_GIT_DASHBOARD_BRANCH || 'develop'
 	},
@@ -18,7 +21,9 @@ module.exports = {
 		"owner": process.env.SOAJS_GIT_OWNER || null,
 		"repo": process.env.SOAJS_GIT_REPO || null,
 		"branch": process.env.SOAJS_GIT_CUSTOM_UI_BRANCH || null,
-		"token": process.env.SOAJS_GIT_TOKEN || null
+		"token": process.env.SOAJS_GIT_TOKEN || null,
+		"provider": process.env.SOAJS_GIT_SOURCE || null,
+		"domain": process.env.SOAJS_GIT_PROVIDER || null
 	},
 	"mongo":{
 		"prefix": profile.prefix,

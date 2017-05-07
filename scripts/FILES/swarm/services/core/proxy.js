@@ -32,7 +32,10 @@ var config = {
 		'SOAJS_MONGO_PREFIX=' + gConfig.mongo.prefix,
 		'SOAJS_GIT_OWNER=' + src.owner,
 		'SOAJS_GIT_REPO=' + src.repo,
-		'SOAJS_GIT_BRANCH=' + src.branch
+		'SOAJS_GIT_BRANCH=' + src.branch,
+        'SOAJS_GIT_PROVIDER=' + gConfig.git.provider,
+        'SOAJS_GIT_DOMAIN=' + gConfig.git.domain,
+        'SOAJS_DEPLOY_ACC=' + gConfig.deploy_acc
 	],
 	mounts: [
 		{
@@ -51,11 +54,12 @@ var config = {
 		"soajs.service.label": "dashboard_soajs_prx",
 		"soajs.service.mode": "replicated"
 	},
-	workingDir: '/opt/soajs/FILES/deployer/',
+	workingDir: '/opt/soajs/deployer/',
 	command: [
-		'bash',
-		'-c',
-		'./soajsDeployer.sh -T service -X deploy -L'
+        //"node index.js -T service"
+        'bash',
+        '-c',
+       "node index.js -T service"
 	]
 };
 
@@ -73,7 +77,7 @@ module.exports = {
 		"Placement": {},
 		"Resources": {
 			"Limits": {
-				"MemoryBytes": 209715200.0
+				"MemoryBytes": 509715200.0
 			},
 			"Reservations": {}
 		},

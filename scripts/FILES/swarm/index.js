@@ -5,7 +5,7 @@ var async = require('async');
 var path = require('path');
 var fs = require('fs');
 var Grid = require('gridfs-stream');
-var exec = require('child_process').exec;
+var spawn = require('child_process').spawn;
 var soajs = require('soajs');
 var request = require('request');
 
@@ -129,15 +129,237 @@ var lib = {
         }
 
         async.eachSeries(services, function (oneService, callback) {
+            if(type === "core"){
+                oneService.Labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
+            }
+            else if (type === "nginx"){
+                oneService.Labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
+            }
+
             lib.deployService(deployer, oneService, callback);
         }, cb);
     },
 
+
+    /**
+     * Customizes a new nginx recipe used to deploy the NGINX of the dashboard environment
+     * @param nginxRecipe
+     * @param cb
+     * @returns {*}
+     */
+    updateNginxRecipe (nginxRecipe) {
+    	delete nginxRecipe.locked;
+        nginxRecipe.name = "Dashboard Nginx Recipe";
+        nginxRecipe.description = "This is the nginx catalog recipe used to deploy the nginx in the dashboard environment."
+	    nginxRecipe.recipe.deployOptions.image.prefix = config.imagePrefix;
+        
+	    nginxRecipe.recipe.deployOptions.ports[0].published = config.nginx.port.http;
+	    nginxRecipe.recipe.deployOptions.ports[1].published = config.nginx.port.https;
+        
+        if(process.env.SOAJS_NX_SSL === 'true'){
+            process.env['SOAJS_NX_API_HTTPS']=1;
+            process.env['SOAJS_NX_API_HTTP_REDIRECT']=1;
+            process.env['SOAJS_NX_SITE_HTTPS']=1;
+            process.env['SOAJS_NX_SITE_HTTP_REDIRECT']=1;
+        }
+	
+	    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_DASHBOARD_BRANCH"] = {
+		    "type": "static",
+		    "value": config.dashUISrc.branch
+	    };
+        
+	    if (config.customUISrc.repo && config.customUISrc.owner) {
+		    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_REPO"] = {
+			    "type": "userInput",
+			    "value": config.customUISrc.repo
+		    };
+		
+		    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_OWNER"] = {
+			    "type": "userInput",
+			    "value": config.customUISrc.owner
+		    };
+		
+		    if (config.customUISrc.branch) {
+			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_BRANCH"] = {
+				    "type": "userInput",
+				    "value": config.customUISrc.branch
+			    };
+		    }
+		
+		    if (config.customUISrc.provider) {
+			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_PROVIDER"] = {
+				    "type": "userInput",
+				    "value": config.customUISrc.provider
+			    };
+		    }
+		
+		    if (config.customUISrc.domain) {
+			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_DOMAIN"] = {
+				    "type": "userInput",
+				    "value": config.customUISrc.domain
+			    };
+		    }
+		
+		    if (config.customUISrc.token) {
+			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_TOKEN"] = {
+				    "type": "userInput",
+				    "value": config.customUISrc.token
+			    };
+		    }
+	    }
+	    
+        //Add every environment variable that is added by the installer.
+        //Add environment variables related to SSL
+        if(process.env.SOAJS_NX_API_HTTPS){
+            nginxRecipe.recipe.buildOptions.env["SOAJS_NX_API_HTTPS"] = {
+                "type": "userInput",
+                "value": process.env.SOAJS_NX_API_HTTPS
+            };
+        }
+        if(process.env.SOAJS_NX_API_HTTP_REDIRECT){
+            nginxRecipe.recipe.buildOptions.env["SOAJS_NX_API_HTTP_REDIRECT"] = {
+                "type": "userInput",
+                "value": process.env.SOAJS_NX_API_HTTP_REDIRECT
+            };
+        }
+        if(process.env.SOAJS_NX_SITE_HTTPS){
+            nginxRecipe.recipe.buildOptions.env["SOAJS_NX_SITE_HTTPS"] = {
+                "type": "userInput",
+                "value": process.env.SOAJS_NX_SITE_HTTPS
+            };
+        }
+        if(process.env.SOAJS_NX_SITE_HTTP_REDIRECT){
+            nginxRecipe.recipe.buildOptions.env["SOAJS_NX_SITE_HTTP_REDIRECT"] = {
+                "type": "userInput",
+                "value": process.env.SOAJS_NX_SITE_HTTP_REDIRECT
+            };
+        }
+
+        return nginxRecipe;
+    },
+
+    /**
+     * Customizes a new service recipe used to deploy the core services of the dashboard environment
+     * @param serviceRecipe
+     * @param cb
+     * @returns {*}
+     */
+    updateServiceRecipe (serviceRecipe) {
+	    delete serviceRecipe.locked;
+        serviceRecipe.name = "Dashboard Service Recipe";
+	    serviceRecipe.description = "This is the service catalog recipe used to deploy the core services in the dashboard environment."
+	    serviceRecipe.recipe.deployOptions.image.prefix = config.imagePrefix;
+	    
+	    if(config.deploy_acc){
+		    serviceRecipe.recipe.buildOptions.env["SOAJS_DEPLOY_ACC"] = {
+			    "type": "static",
+			    "value": "true"
+		    };
+	    }
+	    
+        //Add environment variables containing mongo information
+        if(profile.servers && profile.servers.length > 0){
+            serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_NB"] = {
+                "type": "computed",
+                "value": "$SOAJS_MONGO_NB"
+            };
+	
+	        serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_IP"] = {
+		        "type": "computed",
+		        "value": "$SOAJS_MONGO_IP_N"
+	        };
+	
+	        serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_PORT"] = {
+		        "type": "computed",
+		        "value": "$SOAJS_MONGO_PORT_N"
+	        };
+        }
+        
+        if(profile.prefix && profile.prefix !== ''){
+            serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_PREFIX"] = {
+                "type": "computed",
+                "value": "$SOAJS_MONGO_PREFIX"
+            };
+        }
+        
+        if(profile.URLParam.replicaSet){
+            serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_RSNAME"] = {
+                "type": "computed",
+                "value": "$SOAJS_MONGO_RSNAME"
+            };
+        }
+        
+        if(profile.URLParam.authSource){
+            serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_AUTH_DB"] = {
+                "type": "computed",
+                "value": "$SOAJS_MONGO_AUTH_DB"
+            };
+        }
+        
+        if(profile.URLParam.ssl){
+            serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_SSL"] = {
+                "type": "computed",
+                "value": "$SOAJS_MONGO_SSL"
+            };
+        }
+	
+	    if(profile.credentials.username){
+		    serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_USERNAME"] = {
+			    "type": "computed",
+			    "value": "$SOAJS_MONGO_USERNAME"
+		    };
+	    }
+	
+	    if(profile.credentials.password){
+		    serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_PASSWORD"] = {
+			    "type": "computed",
+			    "value": "$SOAJS_MONGO_PASSWORD"
+		    };
+	    }
+	    
+        return serviceRecipe;
+    },
+
     importData: function (mongoInfo, cb) {
         utilLog.log('Importing provision data to:', profile.servers[0].host + ":" + profile.servers[0].port);
-        var dataImportFile = __dirname + "/../dataImport/index.js";
-        var execString = process.env.NODE_PATH + " " + dataImportFile;
-        exec(execString, cb);
+        var dataImportFile = __dirname + "/../dataImport/";
+        const importFiles = spawn(process.env.NODE_PATH, [ 'index.js' ], { stdio: 'inherit', cwd: dataImportFile });
+        importFiles.on('data', (data) => {
+            console.log(data.toString());
+        });
+
+        importFiles.on('close', (code) => {
+            if (code === 0) {
+                utilLog.log("Successfully imported the data files.");
+                //get the Dashboard Nginx recipe Mongo ID
+                setTimeout(function () {
+                    const dataFolder = process.env.SOAJS_DATA_FOLDER;
+                    //require service and nginx catalog recipes
+                    var catalogDefaulEntries = require(dataFolder + "catalogs/index.js");
+                    var dashboardCatalogEntries = [catalogDefaulEntries[0], catalogDefaulEntries[3]];
+                    //update the catalog recipes to include data used for dashboard environment deployment
+                    dashboardCatalogEntries[0] = lib.updateServiceRecipe(dashboardCatalogEntries[0]);
+                    dashboardCatalogEntries[1] = lib.updateNginxRecipe(dashboardCatalogEntries[1]);
+                    //add catalogs to the database
+                    mongo.insert("catalogs", dashboardCatalogEntries, (error, catalogEntries) => {
+                        if(error){
+                           return cb(error);
+                        }
+	                    utilLog.log("Dashboard Catalog Recipes updated.");
+                        process.env.DASH_SRV_ID = catalogEntries[0]._id.toString();
+                        process.env.DASH_NGINX_ID = catalogEntries[1]._id.toString();
+                        return cb();
+                    });
+                }, 5000);
+            }
+            else {
+                throw new Error(`Data import failed, exit code: ${code}`);
+            }
+        });
+        importFiles.on("error", (error) => {
+            utilLog.log ("Error while importing the data files.");
+            return cb(error);
+        });
     },
 
     importCertificates: function (cb) {
