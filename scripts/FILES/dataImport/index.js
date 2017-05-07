@@ -23,7 +23,7 @@ mongo.dropDatabase(function () {
 						lib.addCatalogs(function () {
 							mongo.closeDb();
 							profile.name = "DBTN_urac";
-							mongo = new soajsModules.mongo(profile);
+							mongo = new soajs.mongo(profile);
 							mongo.dropDatabase(function () {
 								lib.addUsers(function () {
 									lib.addGroups(function () {
