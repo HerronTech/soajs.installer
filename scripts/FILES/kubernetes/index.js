@@ -958,6 +958,9 @@ var lib = {
 											"dashboard": {
 												"status": "deployed"
 											}
+										},
+										"metricbeat": {
+											"status": "deployed"
 										}
 									}
 								};
