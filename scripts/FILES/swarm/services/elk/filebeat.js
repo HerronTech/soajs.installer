@@ -10,7 +10,7 @@ var config = {
 	servNetwork: [{Target: gConfig.docker.network}],
 	
 	image: {
-		prefix: gConfig.imagePrefix, //todo gConfig.imagePrefix,
+		prefix: gConfig.imagePrefix,
 		name: 'filebeat'
 	},
 	env: [
@@ -27,7 +27,6 @@ var config = {
 		"soajs.service.label": "dashboard-filebeat",
 		"soajs.service.mode": "replicated"
 	},
-	 //todo: Do we really need this?
 	command: [
 		"/usr/share/filebeat/bin/filebeat",  "-e",  "-c", "/etc/filebeat/filebeat.yml"
 	],

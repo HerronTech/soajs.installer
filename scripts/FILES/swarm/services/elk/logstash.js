@@ -10,7 +10,7 @@ var config = {
 	servNetwork: [{Target: gConfig.docker.network}],
 	
 	image: {
-		prefix: gConfig.imagePrefix, //todo  gConfig.imagePrefix,
+		prefix: gConfig.imagePrefix,
 		name: 'logstash'
 	},
 	env: [
@@ -23,7 +23,7 @@ var config = {
 		"soajs.service.name": "dashboard-logstash",
 		"soajs.service.group": "elk",
 		"soajs.service.label": "dashboard-logstash",
-		"soajs.service.mode": "global"
+		"soajs.service.mode": "replicated"
 	},
 	command: [
 		"bash",

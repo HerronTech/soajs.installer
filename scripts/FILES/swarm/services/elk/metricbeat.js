@@ -6,8 +6,8 @@ var config = {
     servNetwork: [{Target: gConfig.docker.network}],
 
     image: {
-        prefix: '',
-        name: 'metricbeat-docker'
+	    prefix: gConfig.imagePrefix,
+        name: 'metricbeat'
     },
     env: [
 	    'ELASTICSEARCH_URL=soajs-analytics-elasticsearch:9200',
@@ -15,11 +15,9 @@ var config = {
     labels: {
 	    "soajs.service.group": "elk",
 	    "soajs.service.type": "elk",
-	    "soajs.content": "true",
-	    "soajs.env.code": "dashboard",
-	    "soajs.service.name": "dashboard-metricbeat",
-	    "soajs.service.label": "dashboard-metricbeat",
-	    "soajs.service.mode": "replicated"
+	    "soajs.service.name": "soajs-metricbeat",
+	    "soajs.service.label": "soajs-metricbeat",
+	    "soajs.service.mode": "global"
     },
     command: [],
 	mounts: [
@@ -28,17 +26,6 @@ var config = {
 			"Source": '/var/run/docker.sock',
 			"Target": '/var/run/docker.sock',
 		}
-		// next version
-		// {
-		// 	"Type": "bind",
-		// 	"Source": "/proc",
-		// 	"Target": "/hostfs/proc",
-		// },
-		// {
-		// 	"Type": "bind",
-		// 	"Source": "/sys/fs/cgroup",
-		// 	"Target": "/hostfs/sys/fs/cgroup",
-		// }
 	]
 };
 
@@ -46,10 +33,8 @@ module.exports = {
     "Name": config.servName,
     "TaskTemplate": {
         "ContainerSpec": {
-            "Image": config.image.name,
+            "Image": config.image.prefix + '/' + config.image.name,
             "Env": config.env,
-            //"Command": [config.command[0]],
-            //"Args": config.command.splice(1),
 	        "Mounts": config.mounts
         },
         "Placement": {},

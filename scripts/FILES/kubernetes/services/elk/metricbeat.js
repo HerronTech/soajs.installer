@@ -14,47 +14,41 @@ var components = {
 		"apiVersion": "extensions/v1beta1",
 		"kind": "Deployment",
 		"metadata": {
-			"name": "metricbeat-docker",
+			"name": "soajs-metricbeat",
 			"labels": {
 				"soajs.content": "true",
-				"soajs.env.code": "dashboard",
 				"soajs.service.type": "elk",
-				"soajs.service.name": "dashboard-metricbeat",
+				"soajs.service.name": "soajs-metricbeat",
 				"soajs.service.group": "elk",
-				"soajs.service.label": "dashboard-metricbeat",
-				"soajs.service.mode": "deployment"
+				"soajs.service.label": "soajs-metricbeat",
+				"soajs.service.mode": "daemonset"
 			}
 		},
 		"spec": {
 			"replicas": 1,
 			"selector": {
 				"matchLabels": {
-					"soajs.service.label": "dashboard-metricbeat"
+					"soajs.service.label": "soajs-metricbeat"
 				}
 			},
 			"template": {
 				"metadata": {
-					"name": "dashboard-metricbeat",
+					"name": "soajs-metricbeat",
 					"labels": {
 						"soajs.content": "true",
-						"soajs.env.code": "dashboard",
 						"soajs.service.type": "elk",
-						"soajs.service.name": "dashboard-metricbeat",
+						"soajs.service.name": "soajs-metricbeat",
 						"soajs.service.group": "elk",
-						"soajs.service.label": "dashboard-metricbeat"
+						"soajs.service.label": "soajs-metricbeat"
 					}
 				},
 				"spec": {
 					"containers": [
 						{
-							"name": "dashboard-metricbeat",
-							"image": "metricbeat-docker",
+							"name": "soajs-metricbeat",
+							"image":  gConfig.imagePrefix + "/metricbeat",
 							"imagePullPolicy": "IfNotPresent",
 							"env": [
-								{
-									"name": "SOAJS_ENV",
-									"value": "dashboard"
-								},
 								{
 									"name": "ELASTICSEARCH_URL",
 									"value": "soajs-analytics-elasticsearch-service." + namespace + ":9200" //add namespace

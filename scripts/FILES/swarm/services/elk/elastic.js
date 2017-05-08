@@ -17,7 +17,6 @@ var config = {
 	    "soajs.service.label": "soajs-analytics-elasticsearch",
 	    "soajs.service.mode": "replicated"
     },
-    //command: ["bash", "-c", "elasticsearch"],
     exposedPorts: [
         {
             "Protocol": "tcp",
@@ -40,8 +39,6 @@ module.exports = {
         "ContainerSpec": {
             "Image": config.image.name,
             "Env": config.env,
-           // "Command": [config.command[0]],
-           // "Args": config.command.splice(1),
 	        "Mounts": config.mounts
         },
         "Placement": {},

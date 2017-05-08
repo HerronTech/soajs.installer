@@ -5,8 +5,8 @@ var config = {
     servReplica: 1,
     servNetwork: [{Target: gConfig.docker.network}],
     image: {
-        prefix: '',
-        name: 'kibana-time-plugin'
+	    prefix: gConfig.imagePrefix,
+        name: 'kibana'
     },
     env: [
 	    'ELASTICSEARCH_URL=http://soajs-analytics-elasticsearch:9200'
@@ -31,10 +31,8 @@ module.exports = {
     "Name": config.servName,
     "TaskTemplate": {
         "ContainerSpec": {
-            "Image": config.image.name,
-            "Env": config.env,
-           //"Command": [config.command[0]],
-            //"Args": config.command.splice(1)
+            "Image": config.image.prefix + '/' + config.image.name,
+            "Env": config.env
         },
         "Placement": {},
         "Resources": {

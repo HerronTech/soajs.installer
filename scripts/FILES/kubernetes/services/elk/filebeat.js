@@ -18,7 +18,7 @@ var components = {
 				"soajs.service.name": "dashboard-filebeat",
 				"soajs.service.group": "elk",
 				"soajs.service.label": "dashboard-filebeat",
-				"soajs.service.mode": "deployment"
+				"soajs.service.mode": "daemonset"
 			}
 		},
 		"spec": {
@@ -44,8 +44,7 @@ var components = {
 					"containers": [
 						{
 							"name": "filebeat",
-							//"image": gConfig.imagePrefix + "/filebeat",
-							"image": "soajstest" + "/filebeat",
+							"image": gConfig.imagePrefix + "/filebeat",
 							"imagePullPolicy": "IfNotPresent",
 							"command": [
 								"/usr/share/filebeat/bin/filebeat",  "-e",  "-c", "/etc/filebeat/filebeat.yml"

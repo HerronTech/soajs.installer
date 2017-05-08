@@ -1001,9 +1001,7 @@ var lib = {
 											}
 										},
 										"metricbeat": {
-											"dashboard": {
-												"status": "deployed"
-											}
+											"status": "deployed"
 										}
 									}
 								};

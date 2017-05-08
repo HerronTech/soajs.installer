@@ -33,7 +33,7 @@ var config = {
     ],
 
     image: {
-        prefix: "soajsorg", //gConfig.imagePrefix,
+        prefix: gConfig.imagePrefix,
         name: 'nginx'
     },
     env: [

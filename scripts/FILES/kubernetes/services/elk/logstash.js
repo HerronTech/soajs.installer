@@ -18,7 +18,7 @@ var components = {
 				"soajs.service.name": "dashboard-logstash",
 				"soajs.service.group": "elk",
 				"soajs.service.label": "dashboard-logstash",
-				"soajs.service.mode": "daemonset"
+				"soajs.service.mode": "deployment"
 			}
 		},
 		"spec": {
@@ -70,8 +70,7 @@ var components = {
 					"containers": [
 						{
 							"name": "dashboard-logstash",
-							//"image": gConfig.imagePrefix + "/logstash",
-							"image": "soajstest" + "/logstash",
+							"image": gConfig.imagePrefix + "/logstash",
 							"imagePullPolicy": "IfNotPresent",
 							"command": [
 								"bash",

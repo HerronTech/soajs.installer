@@ -67,7 +67,7 @@ var components = {
 					"containers": [
 						{
 							"name": "kibana",
-							"image": "kibana-time-plugin",
+							"image": gConfig.imagePrefix + "kibana",
 							"imagePullPolicy": "IfNotPresent",
 							"ports": [
 								{
