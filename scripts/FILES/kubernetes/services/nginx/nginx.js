@@ -90,9 +90,9 @@ var components = {
 							"name": "dashboard-nginx",
 							"image": gConfig.imagePrefix + "/nginx",
 							"imagePullPolicy": gConfig.imagePullPolicy,
-							"workingDir": "/opt/soajs/FILES/deployer/",
-							"command": ["./soajsDeployer.sh"],
-							"args": ["-T", "nginx", "-X", "deploy"],
+							"workingDir": "/opt/soajs/deployer/",
+							"command": ["node"],
+							"args": ["index.js", "-T", "nginx"],
                             "ports": [
                                 {
                                     "name": "http",
@@ -196,14 +196,12 @@ if (gConfig.customUISrc.repo && gConfig.customUISrc.owner) {
 	}
 }
 
-if(process.env.SOAJS_GIT_PROVIDER){
-	components.deployment.spec.template.spec.containers[0].args.push("-G");
-	components.deployment.spec.template.spec.containers[0].args.push(process.env.SOAJS_GIT_PROVIDER);
+if(gConfig.customUISrc.provider){
+	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_PROVIDER", "value": gConfig.customUISrc.provider});
 }
 
-if(process.env.SOAJS_GIT_SOURCE){
-	components.deployment.spec.template.spec.containers[0].args.push("-g");
-	components.deployment.spec.template.spec.containers[0].args.push(process.env.SOAJS_GIT_SOURCE);
+if(gConfig.customUISrc.domain){
+	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_DOMAIN", "value": gConfig.customUISrc.domain});
 }
 
 if (gConfig.customUISrc.token) {
@@ -215,8 +213,6 @@ if (gConfig.nginx.ssl) {
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_API_HTTP_REDIRECT", "value": "1"});
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_SITE_HTTPS", "value": "1"});
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_SITE_HTTP_REDIRECT", "value": "1"});
-
-	components.deployment.spec.template.spec.containers[0].args.push("-s");
 
 	if (gConfig.nginx.sslSecret) {
 		components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_CUSTOM_SSL", "value": "1"});

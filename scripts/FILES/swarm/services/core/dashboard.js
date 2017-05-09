@@ -1,10 +1,9 @@
 'use strict';
 var gConfig = require("../../config.js");
-
 var src = {
 	owner: 'soajs',
 	repo: 'soajs.dashboard',
-	branch: "feature/analytics-alpha"//gConfig.git.branch
+	branch: gConfig.git.branch
 };
 
 var config = {
@@ -33,6 +32,9 @@ var config = {
 		'SOAJS_GIT_OWNER=' + src.owner,
 		'SOAJS_GIT_REPO=' + src.repo,
 		'SOAJS_GIT_BRANCH=' + src.branch,
+        'SOAJS_GIT_PROVIDER=' + gConfig.git.provider,
+        'SOAJS_GIT_DOMAIN=' + gConfig.git.domain,
+        'SOAJS_DEPLOY_ACC=' + gConfig.deploy_acc,
 
 		'NODE_TLS_REJECT_UNAUTHORIZED=0' //TODO: check whether this should be kept for testing purposes
 	],
@@ -54,11 +56,11 @@ var config = {
 		"soajs.service.mode": "replicated",
 		"soajs.service.repo.name": "soajs_dashboard"
 	},
-	workingDir: '/opt/soajs/FILES/deployer/',
+	workingDir: '/opt/soajs/deployer/',
 	command: [
-		'bash',
-		'-c',
-		'./soajsDeployer.sh -T service -X deploy -L'
+        'bash',
+        '-c',
+        "node index.js -T service"
 	]
 };
 
@@ -75,7 +77,7 @@ module.exports = {
 		},
 		"Resources": {
 			"Limits": {
-				"MemoryBytes": 500000000.0
+				"MemoryBytes": 509715200.0
 			}
 		},
 		"RestartPolicy": {

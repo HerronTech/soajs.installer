@@ -1,20 +1,17 @@
-/**
- * Created by Nicolas on 12/7/16.
- */
 /***************************************************************
  *
  * DASHBOARD CORE_PROVISION
  *
  ***************************************************************/
-var soajsModules = require("soajs.core.modules");
+var soajs = require("soajs");
 var async = require("async");
 
-var dataFolder = process.env.SOAJS_DATA_FOLDER;
+const dataFolder = process.env.SOAJS_DATA_FOLDER;
 delete require.cache[process.env.SOAJS_PROFILE];
-var profile = require(process.env.SOAJS_PROFILE);
+const profile = require(process.env.SOAJS_PROFILE);
 
 profile.name = "core_provision";
-var mongo = new soajsModules.mongo(profile);
+var mongo = new soajs.mongo(profile);
 var fs= require("fs");
 
 mongo.dropDatabase(function () {
@@ -22,19 +19,21 @@ mongo.dropDatabase(function () {
 		lib.addProducts(function () {
 			lib.addServices(function () {
 				lib.addTenants(function () {
-					lib.addAnalytics(function (errAnalytics) {
-						if (errAnalytics) {
-							throw new Error("Error while importing analytics \n" + errAnalytics);
-						}
-						lib.addGitAccounts(function () {
-							mongo.closeDb();
-							profile.name = "DBTN_urac";
-							mongo = new soajsModules.mongo(profile);
-							mongo.dropDatabase(function () {
-								lib.addUsers(function () {
-									lib.addGroups(function () {
-										lib.uracIndex(function () {
-											mongo.closeDb();
+					lib.addGitAccounts(function () {
+						lib.addAnalytics(function (errAnalytics) {
+							if (errAnalytics) {
+								throw new Error("Error while importing analytics \n" + errAnalytics);
+							}
+							lib.addCatalogs(function () {
+								mongo.closeDb();
+								profile.name = "DBTN_urac";
+								mongo = new soajs.mongo(profile);
+								mongo.dropDatabase(function () {
+									lib.addUsers(function () {
+										lib.addGroups(function () {
+											lib.uracIndex(function () {
+												mongo.closeDb();
+											});
 										});
 									});
 								});
@@ -47,7 +46,7 @@ mongo.dropDatabase(function () {
 	});
 });
 
-var lib = {
+const lib = {
 	/*
 	 Environments
 	 */
@@ -123,6 +122,15 @@ var lib = {
 		
 		
 	},
+	
+	/*
+	 Catalogs
+	 */
+	"addCatalogs": function (cb) {
+		var records = require(dataFolder + "catalogs/index.js");
+		mongo.insert("catalogs", records, cb);
+	},
+	
 	/***************************************************************
 	 *
 	 * DASHBOARD URAC

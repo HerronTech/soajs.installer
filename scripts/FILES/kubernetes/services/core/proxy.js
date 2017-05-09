@@ -86,9 +86,9 @@ var components = {
                             "name": "dashboard-proxy-v1",
                             "image": gConfig.imagePrefix + "/soajs",
                             "imagePullPolicy": gConfig.imagePullPolicy,
-                            "workingDir": "/opt/soajs/FILES/deployer/",
-                            "command": ["./soajsDeployer.sh"],
-                            "args": ["-T", "service", "-X", "deploy", "-L"],
+                            "workingDir": "/opt/soajs/deployer/",
+                            "command": ["node"],
+                            "args": ["index.js", "-T", "service"],
                             "ports": [
                                 {
                                     "name": "service",
@@ -138,6 +138,18 @@ var components = {
                                 {
                                     "name": "SOAJS_GIT_REPO",
                                     "value": "soajs.prx"
+                                },
+                                {
+                                    "name": "SOAJS_GIT_PROVIDER",
+                                    "value": gConfig.git.provider
+                                },
+                                {
+                                    "name": "SOAJS_GIT_DOMAIN",
+                                    "value": gConfig.git.domain
+                                },
+                                {
+                                    "name": "SOAJS_DEPLOY_ACC",
+                                    "value": gConfig.deploy_acc
                                 },
                                 {
                                     "name": "SOAJS_DEPLOY_HA",

@@ -1,7 +1,7 @@
 {
   "name": "soajs.installer",
   "description": "soajs installer to install soajs dashboard",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "soajs team",
     "email": "team@soajs.org"
@@ -33,7 +33,7 @@
     "ncp": "*",
     "npm": "*",
     "rimraf": "*",
-    "soajs": "1.*",
+    "soajs": "1.0.*",
     "util": "*",
     "whereis": "*"
   }
