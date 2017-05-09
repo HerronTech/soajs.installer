@@ -24,7 +24,6 @@ var components = {
 			}
 		},
 		"spec": {
-			"replicas": 1,
 			"selector": {
 				"matchLabels": {
 					"soajs.service.label": "soajs-metricbeat"

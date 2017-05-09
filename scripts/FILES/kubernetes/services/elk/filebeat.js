@@ -8,7 +8,7 @@ var gConfig = require("../../config.js");
 var components = {
 	deployment: {
 		"apiVersion": "extensions/v1beta1",
-		"kind": "DaemonSet",
+		"kind": "Daemonset",
 		"metadata": {
 			"name": "filebeat",
 			"labels": {
@@ -21,7 +21,6 @@ var components = {
 			}
 		},
 		"spec": {
-			"replicas": 1,
 			"selector": {
 				"matchLabels": {
 					"soajs.service.label": "dashboard-filebeat"
