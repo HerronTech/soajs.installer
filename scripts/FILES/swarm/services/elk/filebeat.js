@@ -19,6 +19,7 @@ var config = {
 		'SOAJS_LOGSTASH_PORT=12201'
 	],
 	labels: {
+		"soajs.content": "true",
 		"soajs.env.code": "dashboard",
 		"soajs.service.type": "elk",
 		"soajs.service.name": "dashboard-filebeat",

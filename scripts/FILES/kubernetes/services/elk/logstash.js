@@ -13,6 +13,7 @@ var components = {
 		"metadata": {
 			"name": "dashboard-logstash-service",
 			"labels": {
+				"soajs.content": "true",
 				"soajs.env.code": "dashboard",
 				"soajs.service.name": "dashboard-logstash",
 				"soajs.service.group": "elk",

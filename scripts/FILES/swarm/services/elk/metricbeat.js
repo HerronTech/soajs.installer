@@ -13,6 +13,7 @@ var config = {
 	    'ELASTICSEARCH_URL=soajs-analytics-elasticsearch:9200',
     ],
     labels: {
+	    "soajs.content": "true",
 	    "soajs.service.group": "elk",
 	    "soajs.service.type": "elk",
 	    "soajs.service.name": "soajs-metricbeat",
