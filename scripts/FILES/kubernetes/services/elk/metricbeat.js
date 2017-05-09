@@ -12,7 +12,7 @@ if (gConfig.kubernetes.config.namespaces.perService) {
 var components = {
 	deployment: {
 		"apiVersion": "extensions/v1beta1",
-		"kind": "Daemonset",
+		"kind": "DaemonSet",
 		"metadata": {
 			"name": "soajs-metricbeat",
 			"labels": {

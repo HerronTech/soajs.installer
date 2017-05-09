@@ -8,7 +8,7 @@ var gConfig = require("../../config.js");
 var components = {
 	deployment: {
 		"apiVersion": "extensions/v1beta1",
-		"kind": "Daemonset",
+		"kind": "DaemonSet",
 		"metadata": {
 			"name": "filebeat",
 			"labels": {
