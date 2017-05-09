@@ -11,6 +11,7 @@ var config = {
     },
     env: [],
     labels: {
+	    "soajs.content": "true",
 	    "soajs.service.type": "elk",
 	    "soajs.service.name": "soajs-analytics-elasticsearch",
 	    "soajs.service.group": "elk",

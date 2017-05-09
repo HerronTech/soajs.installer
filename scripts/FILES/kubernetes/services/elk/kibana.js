@@ -12,6 +12,7 @@ var components = {
 		"metadata": {
 			"name": "kibana-service",
 			"labels": {
+				"soajs.content": "true",
 				"soajs.service.name": "kibana",
 				"soajs.service.group": "elk",
 				"soajs.service.type": "elk",

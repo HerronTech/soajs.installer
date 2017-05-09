@@ -20,6 +20,7 @@ var components = {
 		"metadata": {
 			"name": "soajs-analytics-elasticsearch-service",
 			"labels": {
+				"soajs.content": "true",
 				"soajs.service.type": "database",
 				"soajs.service.name": "soajs-analytics-elasticsearch",
 				"soajs.service.group": "elk",

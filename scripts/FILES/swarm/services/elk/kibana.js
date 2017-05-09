@@ -12,6 +12,7 @@ var config = {
 	    'ELASTICSEARCH_URL=http://soajs-analytics-elasticsearch:9200'
     ],
     labels: {
+	    "soajs.content": "true",
 	    "soajs.service.name": "kibana",
 	    "soajs.service.group": "elk",
 	    "soajs.service.type": "elk",

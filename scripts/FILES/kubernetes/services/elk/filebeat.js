@@ -12,6 +12,7 @@ var components = {
 		"metadata": {
 			"name": "filebeat",
 			"labels": {
+				"soajs.content": "true",
 				"soajs.env.code": "dashboard",
 				"soajs.service.type": "elk",
 				"soajs.service.name": "dashboard-filebeat",
