@@ -49,9 +49,7 @@ module.exports = {
         }
     },
     "Mode": {
-        "Replicated": {
-            "Replicas": config.servReplica
-        }
+	    "Global": {}
     },
     "UpdateConfig": {
         "Delay": 500.0,

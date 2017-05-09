@@ -17,7 +17,6 @@ var config = {
 		'ELASTICSEARCH_URL=soajs-analytics-elasticsearch:9200'
 	],
 	labels: {
-		"soajs.content": "true",
 		"soajs.env.code": "dashboard",
 		"soajs.service.type": "elk",
 		"soajs.service.name": "dashboard-logstash",

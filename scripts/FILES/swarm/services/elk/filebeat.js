@@ -19,13 +19,12 @@ var config = {
 		'SOAJS_LOGSTASH_PORT=12201'
 	],
 	labels: {
-		"soajs.content": "true",
 		"soajs.env.code": "dashboard",
 		"soajs.service.type": "elk",
 		"soajs.service.name": "dashboard-filebeat",
 		"soajs.service.group": "elk",
 		"soajs.service.label": "dashboard-filebeat",
-		"soajs.service.mode": "replicated"
+		"soajs.service.mode": "global"
 	},
 	command: [
 		"/usr/share/filebeat/bin/filebeat",  "-e",  "-c", "/etc/filebeat/filebeat.yml"
@@ -67,9 +66,7 @@ module.exports = {
 		}
 	},
 	"Mode": {
-		"Replicated": {
-			"Replicas": config.servReplica
-		}
+		"Global": {}
 	},
 	"UpdateConfig": {
 		"Delay": 500.0,

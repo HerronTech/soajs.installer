@@ -8,11 +8,10 @@ var gConfig = require("../../config.js");
 var components = {
 	deployment: {
 		"apiVersion": "extensions/v1beta1",
-		"kind": "Deployment",
+		"kind": "Daemonset",
 		"metadata": {
 			"name": "filebeat",
 			"labels": {
-				"soajs.content": "true",
 				"soajs.env.code": "dashboard",
 				"soajs.service.type": "elk",
 				"soajs.service.name": "dashboard-filebeat",

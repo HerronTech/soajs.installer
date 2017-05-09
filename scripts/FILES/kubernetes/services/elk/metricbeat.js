@@ -12,11 +12,10 @@ if (gConfig.kubernetes.config.namespaces.perService) {
 var components = {
 	deployment: {
 		"apiVersion": "extensions/v1beta1",
-		"kind": "Deployment",
+		"kind": "Daemonset",
 		"metadata": {
 			"name": "soajs-metricbeat",
 			"labels": {
-				"soajs.content": "true",
 				"soajs.service.type": "elk",
 				"soajs.service.name": "soajs-metricbeat",
 				"soajs.service.group": "elk",
