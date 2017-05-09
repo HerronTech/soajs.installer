@@ -34,7 +34,8 @@ else if (process.env.SOAJS_DEPLOY_HA === 'kubernetes') {
 var catalogs = [
     {
         "name": "Service Recipe",
-        "type": "service",
+	    "type": "soajs",
+	    "subtype": "service",
         "description": "This is a sample service catalog recipe",
         "locked": true,
         "recipe": {
@@ -45,6 +46,7 @@ var catalogs = [
                     "tag": "latest",
                     "pullPolicy": "Always"
                 },
+	            "specifyGitConfiguration": true,
                 "readinessProbe": {
                     "httpGet": {
                         "path": "/heartbeat",
@@ -173,7 +175,7 @@ var catalogs = [
     },
     {
         "name": "Nodejs Recipe",
-        "type": "nodejs",
+        "type": "service",
         "description": "This is a sample nodejs catalog recipe",
         "locked": true,
         "recipe": {
@@ -229,7 +231,8 @@ var catalogs = [
     },
     {
         "name": "Daemon Recipe",
-        "type": "daemon",
+	    "type": "soajs",
+	    "subtype": "daemon",
         "description": "This is a sample daemon recipe",
         "locked": true,
         "recipe": {
@@ -240,6 +243,7 @@ var catalogs = [
                     "tag": "latest",
                     "pullPolicy": "Always"
                 },
+	            "specifyGitConfiguration": true,
                 "readinessProbe": {
                     "httpGet": {
                         "path": "/heartbeat",
