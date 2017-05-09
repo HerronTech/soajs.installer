@@ -8,9 +8,9 @@ var gConfig = require("../../config.js");
 var components = {
 	deployment: {
 		"apiVersion": "extensions/v1beta1",
-		"kind": "Daemonset",
+		"kind": "DaemonSet",
 		"metadata": {
-			"name": "filebeat",
+			"name": "dashboard-filebeat",
 			"labels": {
 				"soajs.content": "true",
 				"soajs.env.code": "dashboard",
@@ -29,22 +29,23 @@ var components = {
 			},
 			"template": {
 				"metadata": {
-					"name": "filebeat",
+					"name": "dashboard-filebeat",
 					"labels": {
 						"soajs.content": "true",
 						"soajs.env.code": "dashboard",
 						"soajs.service.type": "elk",
 						"soajs.service.name": "dashboard-filebeat",
 						"soajs.service.group": "elk",
-						"soajs.service.label": "dashboard-filebeat"
+						"soajs.service.label": "dashboard-filebeat",
+						"soajs.service.mode": "daemonset"
 					}
 				},
 				"spec": {
 					"containers": [
 						{
-							"name": "filebeat",
+							"name": "dashboard-filebeat",
 							"image": gConfig.imagePrefix + "/filebeat",
-							"imagePullPolicy": "IfNotPresent",
+							"imagePullPolicy": gConfig.imagePullPolicy,
 							"command": [
 								"/usr/share/filebeat/bin/filebeat",  "-e",  "-c", "/etc/filebeat/filebeat.yml"
 							],

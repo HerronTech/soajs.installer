@@ -50,10 +50,12 @@ var components = {
 		"metadata": {
 			"name": "soajs-analytics-elasticsearch",
 			"labels": {
+				"soajs.content": "true",
 				"soajs.service.type": "database",
 				"soajs.service.name": "soajs-analytics-elasticsearch",
 				"soajs.service.group": "elk",
-				"soajs.service.label": "soajs-analytics-elasticsearch"
+				"soajs.service.label": "soajs-analytics-elasticsearch",
+				"soajs.service.mode": "deployment"
 			}
 		},
 		"spec": {
@@ -67,10 +69,12 @@ var components = {
 				"metadata": {
 					"name": "soajs-analytics-elasticsearch",
 					"labels": {
+						"soajs.content": "true",
 						"soajs.service.type": "database",
 						"soajs.service.name": "soajs-analytics-elasticsearch",
 						"soajs.service.group": "elk",
-						"soajs.service.label": "soajs-analytics-elasticsearch"
+						"soajs.service.label": "soajs-analytics-elasticsearch",
+						"soajs.service.mode": "deployment"
 					},
 					"annotations": {
 						"pod.beta.kubernetes.io/init-containers": JSON.stringify(annotation)
@@ -81,7 +85,7 @@ var components = {
 						{
 							"name": "soajs-analytics-elasticsearch",
 							"image": "elasticsearch",
-							"imagePullPolicy": "IfNotPresent",
+							"imagePullPolicy": gConfig.imagePullPolicy,
 							 "ports": [
 								{
 									

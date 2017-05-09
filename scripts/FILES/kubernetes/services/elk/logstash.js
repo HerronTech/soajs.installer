@@ -17,6 +17,7 @@ var components = {
 				"soajs.env.code": "dashboard",
 				"soajs.service.name": "dashboard-logstash",
 				"soajs.service.group": "elk",
+				"soajs.service.type": "elk",
 				"soajs.service.label": "dashboard-logstash",
 				"soajs.service.mode": "deployment"
 			}
@@ -44,7 +45,8 @@ var components = {
 				"soajs.service.type": "elk",
 				"soajs.service.name": "dashboard-logstash",
 				"soajs.service.group": "elk",
-				"soajs.service.label": "dashboard-logstash"
+				"soajs.service.label": "dashboard-logstash",
+				"soajs.service.mode": "deployment"
 			}
 		},
 		"spec": {
@@ -63,7 +65,8 @@ var components = {
 						"soajs.service.type": "elk",
 						"soajs.service.name": "dashboard-logstash",
 						"soajs.service.group": "elk",
-						"soajs.service.label": "dashboard-logstash"
+						"soajs.service.label": "dashboard-logstash",
+						"soajs.service.mode": "deployment"
 					}
 				},
 				"spec": {
@@ -71,7 +74,7 @@ var components = {
 						{
 							"name": "dashboard-logstash",
 							"image": gConfig.imagePrefix + "/logstash",
-							"imagePullPolicy": "IfNotPresent",
+							"imagePullPolicy": gConfig.imagePullPolicy,
 							"command": [
 								"bash",
 								"-c",

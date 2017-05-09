@@ -17,9 +17,9 @@ var components = {
 			"name": "soajs-metricbeat",
 			"labels": {
 				"soajs.content": "true",
+				"soajs.service.group": "elk",
 				"soajs.service.type": "elk",
 				"soajs.service.name": "soajs-metricbeat",
-				"soajs.service.group": "elk",
 				"soajs.service.label": "soajs-metricbeat",
 				"soajs.service.mode": "daemonset"
 			}
@@ -35,10 +35,11 @@ var components = {
 					"name": "soajs-metricbeat",
 					"labels": {
 						"soajs.content": "true",
+						"soajs.service.group": "elk",
 						"soajs.service.type": "elk",
 						"soajs.service.name": "soajs-metricbeat",
-						"soajs.service.group": "elk",
-						"soajs.service.label": "soajs-metricbeat"
+						"soajs.service.label": "soajs-metricbeat",
+						"soajs.service.mode": "daemonset"
 					}
 				},
 				"spec": {
@@ -46,7 +47,7 @@ var components = {
 						{
 							"name": "soajs-metricbeat",
 							"image":  gConfig.imagePrefix + "/metricbeat",
-							"imagePullPolicy": "IfNotPresent",
+							"imagePullPolicy": gConfig.imagePullPolicy,
 							"env": [
 								{
 									"name": "ELASTICSEARCH_URL",
@@ -57,38 +58,17 @@ var components = {
 								{
 									"mountPath":"/var/run/docker.sock",
 									"name": "docker-sock"
-								},
-								// {
-								// 	"mountPath":"/proc",
-								// 	"name": "proc"
-								// },
-								// {
-								// 	"mountPath":"/sys/fs/cgroup",
-								// 	"name": "cgroups"
-								// }
+								}
 							]
 						}
 					],
-					//source
 					"volumes": [
 						{
 							"name": "docker-sock",
 							"hostPath": {
 								"path": "/var/run/docker.sock"
 							}
-						},
-						// {
-						// 	"name": "proc",
-						// 	"hostPath": {
-						// 		"path": "/hostfs/proc"
-						// 	}
-						// },
-						// {
-						// 	"name": "cgroups",
-						// 	"hostPath": {
-						// 		"path": "/hostfs/sys/fs/cgroup"
-						// 	}
-						// }
+						}
 					]
 				}
 			}

@@ -41,10 +41,12 @@ var components = {
 		"metadata": {
 			"name": "kibana",
 			"labels": {
+				"soajs.content": "true",
 				"soajs.service.name": "kibana",
 				"soajs.service.group": "elk",
 				"soajs.service.type": "elk",
-				"soajs.service.label": "kibana"
+				"soajs.service.label": "kibana",
+				"soajs.service.mode": "deployment"
 			}
 		},
 		"spec": {
@@ -58,10 +60,12 @@ var components = {
 				"metadata": {
 					"name": "kibana",
 					"labels": {
+						"soajs.content": "true",
 						"soajs.service.name": "kibana",
 						"soajs.service.group": "elk",
+						"soajs.service.type": "elk",
 						"soajs.service.label": "kibana",
-						"soajs.service.type": "elk"
+						"soajs.service.mode": "deployment"
 					}
 				},
 				"spec": {
@@ -69,7 +73,7 @@ var components = {
 						{
 							"name": "kibana",
 							"image": gConfig.imagePrefix + "/kibana",
-							"imagePullPolicy": "IfNotPresent",
+							"imagePullPolicy": gConfig.imagePullPolicy,
 							"ports": [
 								{
 									"containerPort": 5601
