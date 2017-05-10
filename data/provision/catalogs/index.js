@@ -550,8 +550,7 @@ var catalogs = [
                     {
                         "name": "mongo",
                         "target": 27017,
-                        "isPublished": true,
-                        "published": 2767
+                        "isPublished": true
                     }
                 ]
             },
@@ -603,8 +602,7 @@ var catalogs = [
                     {
                         "name": "es",
                         "target": 9200,
-                        "isPublished": true,
-                        "published": 32000
+                        "isPublished": true
                     }
                 ]
             },
