@@ -74,7 +74,7 @@ else if (process.env.SOAJS_DEPLOY_HA === 'kubernetes') {
         ],
         "volumeMounts": [
             {
-                "path": "/usr/share/elasticsearch/data/",
+                "mountPath": "/usr/share/elasticsearch/data/",
                 "name": "custom-es-volume"
             }
         ]
