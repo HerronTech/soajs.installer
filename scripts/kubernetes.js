@@ -24,7 +24,7 @@ lib.getDeployer(config.kubernetes.config, function (error, deployer) {
             async.eachSeries(config.deployGroups, function (oneGroup, callback) {
                 deploy(oneGroup, deployer, function (error) {
                     if (error) return callback(error);
-	                if (!(config.analytics === "false" && oneGroup === 'elk')){
+	                if (!((!config.analytics || config.analytics === "false") && oneGroup === 'elk')){
 		                utilLog.log(oneGroup + ' services deployed successfully ...');
 	                }
                     return callback(null, true);

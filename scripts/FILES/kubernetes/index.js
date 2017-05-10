@@ -115,7 +115,7 @@ var lib = {
             utilLog.log('External Mongo deployment detected, data containers will not be deployed ...');
             return cb(null, true);
         }
-	    if (type === 'elk' && config.analytics === "false") {
+	    if (type === 'elk' && (!config.analytics || config.analytics === "false")){
 		    return cb(null, true);
 	    }
         async.eachSeries(services, function (oneService, callback) {
@@ -751,8 +751,19 @@ var lib = {
 				}
 				else {
 					infoElastic(function (err, response) {
-						return cb(err, response);
-					})
+						if (error) {
+							cb(err);
+						}
+						else {
+							//delete all indexes
+							var params = {
+								index: '_all'
+							};
+							esClient.db.indices.delete(params, function (err) {
+								return cb(err, response);
+							});
+						}
+					});
 				}
 			});
 		}
