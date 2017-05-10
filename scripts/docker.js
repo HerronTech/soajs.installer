@@ -78,7 +78,7 @@ function deploySOAJS(deployer) {
 			if (config.analytics === "true"){
 				lib.setDefaultIndex(function (err){
 					if (err){
-						throw new Error (error)
+						throw new Error (err)
 					}
 					lib.closeDbCon(function(){
 						utilLog.log('SOAJS Has been deployed.');
