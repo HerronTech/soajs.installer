@@ -1,13 +1,31 @@
 'use strict';
 
-var defaultVoluming = {};
+var defaultVoluming = {}, mongoVoluming = {}, esVoluming = {};
 if (process.env.SOAJS_DEPLOY_HA === 'docker') {
     defaultVoluming = {
         "volumes": [
             {
                 "Type": "volume",
                 "Source": "soajs_log_volume",
-                "Target": "/var/log/soajs/",
+                "Target": "/var/log/soajs/"
+            }
+        ]
+    };
+    mongoVoluming = {
+        "volumes": [
+            {
+                "Type": "volume",
+                "Source": "/data/custom/db/",
+                "Target": "/data/db/"
+            }
+        ]
+    };
+    esVoluming = {
+        "volumes": [
+            {
+                "Type": "volume",
+                "Source": "/usr/share/elasticsearch/custom/data/",
+                "Target": "/usr/share/elasticsearch/data/"
             }
         ]
     };
@@ -26,6 +44,38 @@ else if (process.env.SOAJS_DEPLOY_HA === 'kubernetes') {
             {
                 "mountPath": "/var/log/soajs/",
                 "name": "soajs-log-volume"
+            }
+        ]
+    };
+    mongoVoluming = {
+        "volumes": [
+            {
+                "name": "custom-mongo-volume",
+                "hostPath": {
+                    "path": "/data/custom/db/"
+                }
+            }
+        ],
+        "volumeMounts": [
+            {
+                "mountPath": "/data/db/",
+                "name": "custom-mongo-volume"
+            }
+        ]
+    };
+    esVoluming = {
+        "volumes": [
+            {
+                "name": "custom-es-volume",
+                "hostPath": {
+                    "path": "/usr/share/elasticsearch/custom/data/"
+                }
+            }
+        ],
+        "volumeMounts": [
+            {
+                "path": "/usr/share/elasticsearch/data/",
+                "name": "custom-es-volume"
             }
         ]
     };
@@ -479,7 +529,7 @@ var catalogs = [
                 "readinessProbe": {
                     "httpGet": {
                         "path": "/",
-                        "port": "27017"
+                        "port": 27017
                     },
                     "initialDelaySeconds": 5,
                     "timeoutSeconds": 2,
@@ -495,10 +545,15 @@ var catalogs = [
                     "network": "", //container network for docker
                     "workingDir": "" //container working directory
                 },
-                "voluming": {
-                    "volumes": [], //array of objects
-                    "volumeMounts": [] //array of objects
-                }
+                "voluming": JSON.parse(JSON.stringify(mongoVoluming)),
+                "ports": [
+                    {
+                        "name": "mongo",
+                        "target": 27017,
+                        "isPublished": true,
+                        "published": 2767
+                    }
+                ]
             },
             "buildOptions": {
                 "env": {},
@@ -527,7 +582,7 @@ var catalogs = [
                 "readinessProbe": {
                     "httpGet": {
                         "path": "/",
-                        "port": "9200"
+                        "port": 9200
                     },
                     "initialDelaySeconds": 5,
                     "timeoutSeconds": 2,
@@ -543,10 +598,15 @@ var catalogs = [
                     "network": "", //container network for docker
                     "workingDir": "" //container working directory
                 },
-                "voluming": {
-                    "volumes": [], //array of objects
-                    "volumeMounts": [] //array of objects
-                }
+                "voluming": JSON.parse(JSON.stringify(esVoluming)),
+                "ports": [
+                    {
+                        "name": "es",
+                        "target": 9200,
+                        "isPublished": true,
+                        "published": 32000
+                    }
+                ]
             },
             "buildOptions": {
                 "env": {},
