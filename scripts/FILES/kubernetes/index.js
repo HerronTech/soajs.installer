@@ -751,8 +751,19 @@ var lib = {
 				}
 				else {
 					infoElastic(function (err, response) {
-						return cb(err, response);
-					})
+						if (error) {
+							cb(err);
+						}
+						else {
+							//delete all indexes
+							var params = {
+								index: '_all'
+							};
+							esClient.db.indices.delete(params, function (err) {
+								return cb(err, response);
+							});
+						}
+					});
 				}
 			});
 		}

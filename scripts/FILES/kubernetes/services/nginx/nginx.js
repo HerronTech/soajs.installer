@@ -121,7 +121,7 @@ var components = {
 								},
 								{
 									"name": "SOAJS_GIT_DASHBOARD_BRANCH",
-									"value": gConfig.git.branch
+									"value": "develop"
 								},
 								{
 									"name": "SOAJS_NX_API_DOMAIN",
