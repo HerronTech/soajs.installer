@@ -115,7 +115,7 @@ var lib = {
             utilLog.log('External Mongo deployment detected, data containers will not be deployed ...');
             return cb(null, true);
         }
-	    if (type === 'elk' && config.analytics === "false") {
+	    if (type === 'elk' && (!config.analytics || config.analytics === "false")){
 		    return cb(null, true);
 	    }
         async.eachSeries(services, function (oneService, callback) {
