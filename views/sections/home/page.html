@@ -50,10 +50,10 @@
 					<b><u>Deployment Type:</u></b><br/>
 					<input type="radio" name="localButtons" ng-model="data.deployDriver" value="container.docker.local" ng-change="selectDeployment('docker')"/>&nbsp;Docker
 					Deployment (Ubuntu or Mac only)<br/>
-					<div ng-if="docker && local" class="analyticsButtons" ><input type="checkbox" name="localButtons" ng-model="analytics.local" ng-value ="analytics.local" />Activate Analytics <br/></div>
+					<div ng-if="docker && local" class="analyticsButtons" ><input type="checkbox" name="localButtons" ng-model="analytics.local" ng-value ="analytics.local" />&nbsp;<b>Activate Analytics</b><br/></div>
 					<input type="radio" name="localButtons" ng-model="data.deployDriver" value="container.kubernetes.local" ng-change="selectDeployment('kubernetes')"/>&nbsp;Kubernetes
 					Deployment (Ubuntu or Mac only)<br/>
-					<div ng-if="kubernetes && local" class="analyticsButtons"><input type="checkbox" name="localButtons" ng-model="analytics.local"  ng-value ="analytics.local" />Activate Analytics<br/></div><br/>
+					<div ng-if="kubernetes && local" class="analyticsButtons"><input type="checkbox" name="localButtons" ng-model="analytics.local"  ng-value ="analytics.local" />&nbsp;<b>Activate Analytics</b><br/></div><br/>
 					
 					<pre ng-show="docker && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
 {{style.kubernetes.local.v}}</code></pre>
