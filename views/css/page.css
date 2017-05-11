@@ -251,6 +251,12 @@ pre {background: #fff; padding: 5px; margin: 5px; }
     clear: both;
 }
 
+#deploymentInfoBox {
+    display: inline-block;
+    max-width: 975px;
+    overflow-x: scroll;
+}
+
 pre.bash{
     background: #f0f0f0;
 }
