@@ -713,6 +713,12 @@ var lib = {
 				var cluster = dbConfiguration.dbs.databases[settings.elasticsearch.db_name].cluster;
 				//change to exposed port
 				dbConfiguration.dbs.clusters[cluster].servers[0].port = 30920;
+				if (!process.env.SOAJS_INSTALL_DEBUG){
+					dbConfiguration.dbs.clusters[cluster].extraParam.log = [{
+						type: 'stdio',
+						levels: [] // remove the logs
+					}];
+				}
 				esClient = new soajs.es(dbConfiguration.dbs.clusters[cluster]);
 			}
 			else {
