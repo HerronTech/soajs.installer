@@ -1006,11 +1006,22 @@ module.exports = {
                         }
                     });
                 }
-
-                deployer.namespaces.deployments.get({}, function (error, deploymentList) {
+	
+	            var namespace = body.deployment.namespaces.default;
+	            	            
+	            //get all services regardless of their namespace value
+                deployer.deployments.get({}, function (error, deploymentList) {
                     if (error) return cb(error);
+                    
                     async.map(deploymentList.items, function (oneService, mcb) {
-                        if (services.indexOf(oneService.metadata.name) !== -1) {
+	                    
+                    	var serviceName = oneService.metadata.name;
+	                    if (body.deployment.namespaces.perService) {
+		                    namespace += '-' + oneService.metadata.labels['soajs.service.label'];
+		                    
+	                    }
+                    	
+                        if (services.indexOf(serviceName) !== -1 && oneService.metadata.namespace === namespace) {
                             return mcb(null, (oneService.status.availableReplicas === body.deployment.dockerReplica));
                         }
                         else return mcb(null, null);
