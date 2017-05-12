@@ -66,7 +66,7 @@ var lib = {
         deployerConfig.request = {
             strictSSL: false
         };
-		
+
         deployerConfig.version = 'v1beta1';
         deployer.extensions = new K8Api.Extensions(deployerConfig);
 
@@ -416,7 +416,7 @@ var lib = {
     deployService: function (deployer, options, cb) {
         var namespace = config.kubernetes.config.namespaces.default, serviceName;
         if (config.kubernetes.config.namespaces.perService) {
-            serviceName = options.service.metadata.labels['soajs.service.label'];
+            serviceName = options.deployment.metadata.labels['soajs.service.label'];
             namespace += '-' + serviceName;
         }
 
@@ -702,8 +702,8 @@ var lib = {
 
         return cb(null, services);
     },
-	
-	
+
+
 	configureElastic: function (deployer, serviceOptions, cb) {
 		mongo.findOne('analytics', {_type: 'settings'}, function (error, settings) {
 			if (error) {
@@ -740,13 +740,13 @@ var lib = {
 						}
 					}, function (err) {
 						if (err) return cb(err);
-						
+
 						return cb(null, true);
 					});
 				});
 			});
 		});
-		
+
 		function pingElastic(cb) {
 			esClient.ping(function (error) {
 				if (error) {
@@ -773,7 +773,7 @@ var lib = {
 				}
 			});
 		}
-		
+
 		function infoElastic(cb) {
 			esClient.db.info(function (error, response) {
 				if (error) {
@@ -787,7 +787,7 @@ var lib = {
 				}
 			});
 		}
-		
+
 		function putTemplate(cb) {
 			mongo.find('analytics', {_type: 'template'}, function (error, templates) {
 				if (error) return cb(error);
@@ -810,7 +810,7 @@ var lib = {
 				}, cb);
 			});
 		}
-		
+
 		function putMapping(cb) {
 			mongo.findOne('analytics', {_type: 'mapping'}, function (error, mapping) {
 				if (error) return cb(error);
@@ -835,7 +835,7 @@ var lib = {
 				});
 			});
 		}
-		
+
 		function putSettings(esResponse, settings, cb) {
 			settings.env = {
 				"dashboard": true
@@ -850,11 +850,11 @@ var lib = {
 			});
 		}
 	},
-	
+
 	configureKibana: function (deployer, serviceOptions, cb) {
 		var dockerServiceName = serviceOptions.deployment.metadata.name;
 		var serviceGroup, serviceName, serviceEnv, serviceType;
-		
+
 		if (serviceOptions.deployment.metadata.labels) {
 			serviceGroup = serviceOptions.deployment.metadata.labels['soajs.service.group'];
 			serviceName = serviceOptions.deployment.metadata.labels['soajs.service.repo.name'];
@@ -890,7 +890,7 @@ var lib = {
 										"_service": serviceType
 									}
 								]
-								
+
 							}
 						]
 					};
@@ -898,9 +898,9 @@ var lib = {
 					//insert index-patterns to kibana
 					serviceIPs.forEach(function (task_Name, key) {
 						task_Name.name = task_Name.name.replace(/[\/*?"<>|,.-]/g, "_");
-						
+
 						//filebeat-service-environment-taskname-*
-						
+
 						//filebeat-service-environment-taskname-*
 						var filebeatIndex = require("../analytics/indexes/filebeat-index");
 						// var allIndex = require("../analytics/indexes/all-index");
@@ -921,7 +921,7 @@ var lib = {
 						// 		}
 						// 	]
 						// );
-						
+
 						// analyticsArray = analyticsArray.concat(
 						// 	[
 						// 		{
@@ -939,11 +939,11 @@ var lib = {
 						// 		}
 						// 	]
 						// );
-						
-						
+
+
 						if (key == 0) {
 							//filebeat-service-environment-*
-							
+
 							analyticsArray = analyticsArray.concat(
 								[
 									{
@@ -961,8 +961,8 @@ var lib = {
 									}
 								]
 							);
-							
-							
+
+
 							// analyticsArray = analyticsArray.concat(
 							// 	[
 							// 		{
@@ -980,10 +980,10 @@ var lib = {
 							// 		}
 							// 	]
 							// );
-							
+
 							//filebeat-service-environment-*
-							
-							
+
+
 							// analyticsArray = analyticsArray.concat(
 							// 	[
 							// 		{
@@ -1001,7 +1001,7 @@ var lib = {
 							// 		}
 							// 	]
 							// );
-							
+
 							// analyticsArray = analyticsArray.concat(
 							// 	[
 							// 		{
@@ -1021,7 +1021,7 @@ var lib = {
 							// );
 						}
 					});
-					
+
 					//insert visualization, search and deshbord rrecords per service  to kibana
 					mongo.find(analyticsCollection, options, function (error, records) {
 						if (error) {
@@ -1044,7 +1044,7 @@ var lib = {
 											serviceIndex = serviceIndex + serviceEnv + "-" + task_Name.name + "-" + "*";
 										}
 									}
-									
+
 									var injector;
 									if (oneRecord._injector === 'service') {
 										injector = serviceName + "-" + serviceEnv;
@@ -1071,7 +1071,7 @@ var lib = {
 											_id: oneRecord.id
 										}
 									};
-									
+
 									analyticsArray = analyticsArray.concat([recordIndex, oneRecord._source]);
 								});
 							}
@@ -1138,10 +1138,10 @@ var lib = {
 							};
 							analyticsArray = analyticsArray.concat([recordIndex, onRecord._source]);
 						});
-						
+
 					}
 					return callback(null, true);
-					
+
 				});
 			}
 		}, function (err) {
@@ -1156,7 +1156,7 @@ var lib = {
 					return cb(error, response);
 				});
 			}
-			
+
 			if (analyticsArray.length !== 0) {
 				esClient.checkIndex('.kibana', function (error, response) {
 					if (error) {
@@ -1180,9 +1180,9 @@ var lib = {
 			}
 		});
 	},
-	
+
 	setDefaultIndex: function (cb) {
-		
+
 		var index = {
 			index: ".kibana",
 			type: 'config',
@@ -1205,7 +1205,7 @@ var lib = {
 					}
 					if (result && result.env && result.env.dashboard) {
 						index.id = res.hits.hits[0]._id;
-						
+
 						async.parallel({
 							"updateES": function (call) {
 								esClient.db.update(index, call);
@@ -1243,7 +1243,7 @@ var lib = {
 								};
 								mongo.update('analytics', condition, criteria, options, call);
 							}
-							
+
 						}, cb);
 					}
 					else {
@@ -1262,7 +1262,7 @@ var lib = {
 			}
 		});
 	},
-	
+
 	closeDbCon: function (cb) {
 		mongo.closeDb();
 		if (esClient) {
