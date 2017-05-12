@@ -738,7 +738,11 @@ module.exports = {
                 "ui": "http://" + body.gi.site + "." + body.gi.domain,
                 "cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
             };
-
+	        
+            if(body.deployment.nginxPort !== 80){
+	        	obj["ui"] = "http://" + body.gi.site + "." + body.gi.domain + ":" + body.deployment.nginxPort;
+	        }
+	        
             if(type === 'kubernetes'){
                 obj = {
                     "hosts": {
@@ -887,7 +891,13 @@ module.exports = {
              */
             if (body.deployment.deployDriver.indexOf("docker") !== -1) {
                 // docker
-                var services = ["dashboard_soajs_oauth", "dashboard_soajs_prx", "dashboard_soajs_urac", "dashboard_soajs_dashboard", "dashboard-controller", "dashboard_nginx"];
+                var services = ["dashboard-soajsdata", "dashboard_soajs_oauth", "dashboard_soajs_prx", "dashboard_soajs_urac", "dashboard_soajs_dashboard", "dashboard-controller", "dashboard_nginx"];
+                
+                if(body.deployment.deployAnalytics){
+                	var analyticsContaiers = ["kibana", "dashboard-filebeat", "soajs-analytics-elasticsearch", "soajs-metricbeat", "dashboard-logstash"];
+	                services = services.concat(analyticsContaiers);
+                }
+                
                 var Docker = require('dockerode');
                 var deployerConfig = {
                     "host": body.deployment.containerHost,
@@ -948,7 +958,13 @@ module.exports = {
             }
             else {
                 // kubernetes
-                var services = ["dashboard-oauth", "dashboard-proxy", "dashboard-urac", "dashboard-dashboard", "dashboard-controller", "dashboard-nginx"];
+                var services = ["dashboard-soajsdata", "dashboard-oauth-v1", "dashboard-proxy-v1", "dashboard-urac-v2", "dashboard-dashboard-v1", "dashboard-controller-v1", "dashboard-nginx"];
+	
+	            if(body.deployment.deployAnalytics){
+		            var analyticsContaiers = ["kibana", "dashboard-filebeat", "soajs-analytics-elasticsearch", "soajs-metricbeat", "dashboard-logstash"];
+		            services = services.concat(analyticsContaiers);
+	            }
+	            
                 var K8Api = require('kubernetes-client');
 
                 if (!body.deployment.kubernetes.containerDir && !body.deployment.kubernetes.certificatesFolder) {
