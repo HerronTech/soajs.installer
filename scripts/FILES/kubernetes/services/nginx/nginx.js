@@ -207,6 +207,10 @@ if (gConfig.customUISrc.token) {
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_TOKEN", "value": gConfig.customUISrc.token});
 }
 
+if (gConfig.customUISrc.path) {
+	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_PATH", "value": gConfig.customUISrc.path});
+}
+
 if (gConfig.nginx.ssl) {
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_API_HTTPS", "value": "1"});
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_API_HTTP_REDIRECT", "value": "1"});

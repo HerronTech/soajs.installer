@@ -11,7 +11,8 @@ var customUISrc = {
     branch: gConfig.customUISrc.branch,
     token: gConfig.customUISrc.token,
 	provider: gConfig.customUISrc.provider,
-	domain: gConfig.customUISrc.domain
+	domain: gConfig.customUISrc.domain,
+	path: gConfig.customUISrc.path
 };
 
 var ssl = gConfig.nginx.ssl;
@@ -112,6 +113,10 @@ if (customUISrc.repo && customUISrc.owner) {
     if (customUISrc.token) {
         config.env.push('SOAJS_GIT_TOKEN=' + customUISrc.token);
     }
+	
+	if (customUISrc.path) {
+		config.env.push('SOAJS_GIT_PATH=' + customUISrc.path);
+	}
 }
 
 module.exports = {
