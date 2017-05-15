@@ -298,8 +298,7 @@ var lib = {
 	    if(config.deploy_acc){
 		    serviceRecipe.recipe.buildOptions.env["SOAJS_DEPLOY_ACC"] = {
 			    "type": "static",
-			    "value": "true",
-                "label": "Accelerate Deployment"
+			    "value": "true"
 		    };
 	    }
 
@@ -307,68 +306,59 @@ var lib = {
         if(profile.servers && profile.servers.length > 0){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_NB"] = {
                 "type": "computed",
-                "value": "$SOAJS_MONGO_NB",
-                "label": "Initial Number of Replicas"
+                "value": "$SOAJS_MONGO_NB"
             };
 
 	        serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_IP"] = {
 		        "type": "computed",
-		        "value": "$SOAJS_MONGO_IP_N",
-                "label": "Hostname"
+		        "value": "$SOAJS_MONGO_IP_N"
 	        };
 
 	        serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_PORT"] = {
 		        "type": "computed",
-		        "value": "$SOAJS_MONGO_PORT_N",
-                "label": "Port Number"
+		        "value": "$SOAJS_MONGO_PORT_N"
 	        };
         }
 
         if(profile.prefix && profile.prefix !== ''){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_PREFIX"] = {
                 "type": "computed",
-                "value": "$SOAJS_MONGO_PREFIX",
-                "label": "Cluster Prefix"
+                "value": "$SOAJS_MONGO_PREFIX"
             };
         }
 
         if(profile.URLParam.replicaSet){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_RSNAME"] = {
                 "type": "computed",
-                "value": "$SOAJS_MONGO_RSNAME",
-                "label": "Replica Set Name"
+                "value": "$SOAJS_MONGO_RSNAME"
             };
         }
 
         if(profile.URLParam.authSource){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_AUTH_DB"] = {
                 "type": "computed",
-                "value": "$SOAJS_MONGO_AUTH_DB",
-                "label": "Authentication Database"
+                "value": "$SOAJS_MONGO_AUTH_DB"
             };
         }
 
         if(profile.URLParam.ssl){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_SSL"] = {
                 "type": "computed",
-                "value": "$SOAJS_MONGO_SSL",
-                "label": "Activate Mongo SSL"
+                "value": "$SOAJS_MONGO_SSL"
             };
         }
 
 	    if(profile.credentials.username){
 		    serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_USERNAME"] = {
 			    "type": "computed",
-			    "value": "$SOAJS_MONGO_USERNAME",
-                "label": "Username"
+			    "value": "$SOAJS_MONGO_USERNAME"
 		    };
 	    }
 
 	    if(profile.credentials.password){
 		    serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_PASSWORD"] = {
 			    "type": "computed",
-			    "value": "$SOAJS_MONGO_PASSWORD",
-                "label": "Password"
+			    "value": "$SOAJS_MONGO_PASSWORD"
 		    };
 	    }
 
