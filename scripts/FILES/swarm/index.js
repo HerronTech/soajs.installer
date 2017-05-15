@@ -170,7 +170,7 @@ var lib = {
 	
 	    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_DASHBOARD_BRANCH"] = {
 		    "type": "static",
-		    "value": config.dashUISrc.branch
+		    "value": config.dashUISrc.branch,
             "label": "Git Branch"
 	    };
      

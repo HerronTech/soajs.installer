@@ -166,7 +166,7 @@ var lib = {
 	    if (config.customUISrc.repo && config.customUISrc.owner) {
 		    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_REPO"] = {
 			    "type": "userInput",
-			    "value": config.customUISrc.repo
+			    "value": config.customUISrc.repo,
                 "label": "Git Repository"
 		    };
 
