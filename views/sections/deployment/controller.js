@@ -82,7 +82,9 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				delete data[i];
 			}
 		}
-
+		if (!data.gitPath && data.gitOwner && data.gitRepo && data.gitProvider){
+			data.gitPath = "/";
+		}
 		var options = {
 			url: appConfig.url + "/installer/deployment",
 			method: "post",
@@ -124,7 +126,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
         } else if($scope.deployment.deployDriver.indexOf("docker.remote") !== -1){
             $scope.alerts.push({'type': 'danger', 'msg': 'Missing required fields [certificates]'});
 		}
-    }
+    };
 
 	$scope.installSOAJS = function(){
 
@@ -167,6 +169,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
                 "gitRepo": (response && response.gitRepo) ? response.gitRepo : null,
                 "gitBranch": (response && response.gitBranch) ? response.gitBranch : "master",
                 "gitToken": (response && response.gitToken) ? response.gitToken : null,
+                "gitPath": (response && response.gitPath) ? response.gitPath : null,
 				"imagePrefix": (response && response.imagePrefix) ? response.imagePrefix : "soajsorg",
 				"certsRequired": false,
 

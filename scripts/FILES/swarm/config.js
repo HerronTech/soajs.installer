@@ -24,7 +24,8 @@ var lib= {
 		"branch": process.env.SOAJS_GIT_CUSTOM_UI_BRANCH || null,
 		"token": process.env.SOAJS_GIT_TOKEN || null,
 		"provider": process.env.SOAJS_GIT_SOURCE || null,
-		"domain": process.env.SOAJS_GIT_PROVIDER || null
+		"domain": process.env.SOAJS_GIT_PROVIDER || null,
+		"path": process.env.SOAJS_GIT_PATH || null
 	},
 	"mongo":{
 		"prefix": profile.prefix,

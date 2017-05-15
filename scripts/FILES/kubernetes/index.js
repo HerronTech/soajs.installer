@@ -207,6 +207,14 @@ var lib = {
                     "label": "Git Token"
 			    };
 		    }
+		
+		    if (config.customUISrc.path) {
+			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_PATH"] = {
+				    "type": "userInput",
+				    "value": config.customUISrc.path,
+				    "label": "Git Path"
+			    };
+		    }
 	    }
 
         //Add every environment variable that is added by the installer.

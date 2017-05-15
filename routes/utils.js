@@ -68,7 +68,7 @@ module.exports = {
                     }
                 }
                 catch (e){
-                    console.log (e);
+                    console.log(e);
                     return cb(null);
                 }
             }
@@ -502,6 +502,7 @@ module.exports = {
                     "SOAJS_GIT_OWNER": body.deployment.gitOwner,
                     "SOAJS_GIT_REPO": body.deployment.gitRepo,
                     "SOAJS_GIT_TOKEN": body.deployment.gitToken,
+                    "SOAJS_GIT_PATH": body.deployment.gitPath,
                     "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
 
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
@@ -603,6 +604,7 @@ module.exports = {
                     "SOAJS_GIT_OWNER": body.deployment.gitOwner,
                     "SOAJS_GIT_REPO": body.deployment.gitRepo,
                     "SOAJS_GIT_TOKEN": body.deployment.gitToken,
+                    "SOAJS_GIT_PATH": body.deployment.gitPath,
                     "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
 
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),

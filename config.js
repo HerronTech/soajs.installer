@@ -222,6 +222,7 @@ module.exports = {
                             "gitRepo": {"type": "string", "required": false},
                             "gitBranch": {"type": "string", "required": false},
                             "gitToken": {"type": "string", "required": false},
+                            "gitPath": {"type": "string", "required": false},
 
                             "imagePrefix": {"type": "string", "required": false},
                             "nginxPort": {"type": "number", "required": false},
