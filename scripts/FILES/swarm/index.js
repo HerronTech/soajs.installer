@@ -171,44 +171,51 @@ var lib = {
 	    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_DASHBOARD_BRANCH"] = {
 		    "type": "static",
 		    "value": config.dashUISrc.branch
+            "label": "Git Branch"
 	    };
      
 	    if (config.customUISrc.repo && config.customUISrc.owner) {
 		    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_REPO"] = {
 			    "type": "userInput",
-			    "value": config.customUISrc.repo
+			    "value": config.customUISrc.repo,
+                "label": "Git Repo"
 		    };
 		
 		    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_OWNER"] = {
 			    "type": "userInput",
-			    "value": config.customUISrc.owner
+			    "value": config.customUISrc.owner,
+                "label": "Git Repo"
 		    };
 		
 		    if (config.customUISrc.branch) {
 			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_BRANCH"] = {
 				    "type": "userInput",
-				    "value": config.customUISrc.branch
+				    "value": config.customUISrc.branch,
+                    "label": "Git Branch"
 			    };
 		    }
 		
 		    if (config.customUISrc.provider) {
 			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_PROVIDER"] = {
 				    "type": "userInput",
-				    "value": config.customUISrc.provider
+				    "value": config.customUISrc.provider,
+                    "label": "Git Provider"
 			    };
 		    }
 		
 		    if (config.customUISrc.domain) {
 			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_DOMAIN"] = {
 				    "type": "userInput",
-				    "value": config.customUISrc.domain
+				    "value": config.customUISrc.domain,
+                    "label": "Git Provider"
 			    };
 		    }
 		
 		    if (config.customUISrc.token) {
 			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_TOKEN"] = {
 				    "type": "userInput",
-				    "value": config.customUISrc.token
+				    "value": config.customUISrc.token,
+                    "label": "Git Token"
 			    };
 		    }
 	    }
@@ -218,25 +225,29 @@ var lib = {
         if(process.env.SOAJS_NX_API_HTTPS){
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_API_HTTPS"] = {
                 "type": "userInput",
-                "value": process.env.SOAJS_NX_API_HTTPS
+                "value": process.env.SOAJS_NX_API_HTTPS,
+                "label": "API HTTPS"
             };
         }
         if(process.env.SOAJS_NX_API_HTTP_REDIRECT){
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_API_HTTP_REDIRECT"] = {
                 "type": "userInput",
-                "value": process.env.SOAJS_NX_API_HTTP_REDIRECT
+                "value": process.env.SOAJS_NX_API_HTTP_REDIRECT,
+                "label": "API HTTP Redirect"
             };
         }
         if(process.env.SOAJS_NX_SITE_HTTPS){
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_SITE_HTTPS"] = {
                 "type": "userInput",
-                "value": process.env.SOAJS_NX_SITE_HTTPS
+                "value": process.env.SOAJS_NX_SITE_HTTPS,
+                "label": "Site HTTPS"
             };
         }
         if(process.env.SOAJS_NX_SITE_HTTP_REDIRECT){
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_SITE_HTTP_REDIRECT"] = {
                 "type": "userInput",
-                "value": process.env.SOAJS_NX_SITE_HTTP_REDIRECT
+                "value": process.env.SOAJS_NX_SITE_HTTP_REDIRECT,
+                "label": "Site HTTP Redirect"
             };
         }
 
@@ -258,7 +269,8 @@ var lib = {
 	    if(config.deploy_acc){
 		    serviceRecipe.recipe.buildOptions.env["SOAJS_DEPLOY_ACC"] = {
 			    "type": "static",
-			    "value": "true"
+			    "value": "true",
+                "label": "Accelerate Deployment"
 		    };
 	    }
 	    
@@ -266,59 +278,68 @@ var lib = {
         if(profile.servers && profile.servers.length > 0){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_NB"] = {
                 "type": "computed",
-                "value": "$SOAJS_MONGO_NB"
+                "value": "$SOAJS_MONGO_NB",
+                "label": "Initial Number of Replicas"
             };
 	
 	        serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_IP"] = {
 		        "type": "computed",
-		        "value": "$SOAJS_MONGO_IP_N"
+		        "value": "$SOAJS_MONGO_IP_N",
+                "label": "Hostname"
 	        };
 	
 	        serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_PORT"] = {
 		        "type": "computed",
-		        "value": "$SOAJS_MONGO_PORT_N"
+		        "value": "$SOAJS_MONGO_PORT_N",
+                "label": "Port Number"
 	        };
         }
         
         if(profile.prefix && profile.prefix !== ''){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_PREFIX"] = {
                 "type": "computed",
-                "value": "$SOAJS_MONGO_PREFIX"
+                "value": "$SOAJS_MONGO_PREFIX",
+                "label": "Cluster Prefix"
             };
         }
         
         if(profile.URLParam.replicaSet){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_RSNAME"] = {
                 "type": "computed",
-                "value": "$SOAJS_MONGO_RSNAME"
+                "value": "$SOAJS_MONGO_RSNAME",
+                "label": "Replica Set Name"
             };
         }
         
         if(profile.URLParam.authSource){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_AUTH_DB"] = {
                 "type": "computed",
-                "value": "$SOAJS_MONGO_AUTH_DB"
+                "value": "$SOAJS_MONGO_AUTH_DB",
+                "label": "Authentication Database"
             };
         }
         
         if(profile.URLParam.ssl){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_SSL"] = {
                 "type": "computed",
-                "value": "$SOAJS_MONGO_SSL"
+                "value": "$SOAJS_MONGO_SSL",
+                "label": "Activate Mongo SSL"
             };
         }
 	
 	    if(profile.credentials.username){
 		    serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_USERNAME"] = {
 			    "type": "computed",
-			    "value": "$SOAJS_MONGO_USERNAME"
+			    "value": "$SOAJS_MONGO_USERNAME",
+                "label": "Username"
 		    };
 	    }
 	
 	    if(profile.credentials.password){
 		    serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_PASSWORD"] = {
 			    "type": "computed",
-			    "value": "$SOAJS_MONGO_PASSWORD"
+			    "value": "$SOAJS_MONGO_PASSWORD",
+                "label": "Password"
 		    };
 	    }
 	    
