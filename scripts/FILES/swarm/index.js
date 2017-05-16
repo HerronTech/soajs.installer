@@ -176,20 +176,20 @@ var lib = {
 	    if (config.customUISrc.repo && config.customUISrc.owner) {
 		    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_REPO"] = {
 			    "type": "userInput",
-			    "value": config.customUISrc.repo,
+			    "default": config.customUISrc.repo,
                 "label": "Git Repo"
 		    };
 		
 		    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_OWNER"] = {
 			    "type": "userInput",
-			    "value": config.customUISrc.owner,
+			    "default": config.customUISrc.owner,
                 "label": "Git Repo"
 		    };
 		
 		    if (config.customUISrc.branch) {
 			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_BRANCH"] = {
 				    "type": "userInput",
-				    "value": config.customUISrc.branch,
+				    "default": config.customUISrc.branch,
                     "label": "Git Branch"
 			    };
 		    }
@@ -197,7 +197,7 @@ var lib = {
 		    if (config.customUISrc.provider) {
 			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_PROVIDER"] = {
 				    "type": "userInput",
-				    "value": config.customUISrc.provider,
+				    "default": config.customUISrc.provider,
                     "label": "Git Provider"
 			    };
 		    }
@@ -205,7 +205,7 @@ var lib = {
 		    if (config.customUISrc.domain) {
 			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_DOMAIN"] = {
 				    "type": "userInput",
-				    "value": config.customUISrc.domain,
+				    "default": config.customUISrc.domain,
                     "label": "Git Provider"
 			    };
 		    }
@@ -213,14 +213,14 @@ var lib = {
 		    if (config.customUISrc.token) {
 			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_TOKEN"] = {
 				    "type": "userInput",
-				    "value": config.customUISrc.token,
+				    "default": config.customUISrc.token,
                     "label": "Git Token"
 			    };
 		    }
 		    if (config.customUISrc.path) {
 			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_PATH"] = {
 				    "type": "userInput",
-				    "value": config.customUISrc.path,
+				    "default": config.customUISrc.path,
 				    "label": "Git Path"
 			    };
 		    }
@@ -231,28 +231,28 @@ var lib = {
         if(process.env.SOAJS_NX_API_HTTPS){
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_API_HTTPS"] = {
                 "type": "userInput",
-                "value": process.env.SOAJS_NX_API_HTTPS,
+                "default": process.env.SOAJS_NX_API_HTTPS,
                 "label": "API HTTPS"
             };
         }
         if(process.env.SOAJS_NX_API_HTTP_REDIRECT){
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_API_HTTP_REDIRECT"] = {
                 "type": "userInput",
-                "value": process.env.SOAJS_NX_API_HTTP_REDIRECT,
+                "default": process.env.SOAJS_NX_API_HTTP_REDIRECT,
                 "label": "API HTTP Redirect"
             };
         }
         if(process.env.SOAJS_NX_SITE_HTTPS){
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_SITE_HTTPS"] = {
                 "type": "userInput",
-                "value": process.env.SOAJS_NX_SITE_HTTPS,
+                "default": process.env.SOAJS_NX_SITE_HTTPS,
                 "label": "Site HTTPS"
             };
         }
         if(process.env.SOAJS_NX_SITE_HTTP_REDIRECT){
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_SITE_HTTP_REDIRECT"] = {
                 "type": "userInput",
-                "value": process.env.SOAJS_NX_SITE_HTTP_REDIRECT,
+                "default": process.env.SOAJS_NX_SITE_HTTP_REDIRECT,
                 "label": "Site HTTP Redirect"
             };
         }
@@ -363,7 +363,7 @@ var lib = {
                     dashboardCatalogEntries[0] = lib.updateServiceRecipe(dashboardCatalogEntries[0]);
                     dashboardCatalogEntries[1] = lib.updateNginxRecipe(dashboardCatalogEntries[1]);
                     //add catalogs to the database
-                    mongo.insert("catalogs", dashboardCatalogEntries, (error, catalogEntries) => {
+                    mongo.insert("catalogs", dashboardCatalogEntries, true, (error, catalogEntries) => {
                         if(error){
                            return cb(error);
                         }
