@@ -145,6 +145,10 @@ var catalogs = [
                         "type": "computed",
                         "value": "$SOAJS_SRV_MEMORY"
                     },
+                    "SOAJS_SRV_MAIN": {
+                        "type": "computed",
+                        "value": "$SOAJS_SRV_MAIN"
+                    },
 
                     "SOAJS_GC_NAME": {
                         "type": "computed",
@@ -340,6 +344,10 @@ var catalogs = [
                     "SOAJS_SRV_MEMORY": {
                         "type": "computed",
                         "value": "$SOAJS_SRV_MEMORY"
+                    },
+                    "SOAJS_SRV_MAIN": {
+                        "type": "computed",
+                        "value": "$SOAJS_SRV_MAIN"
                     },
 
                     "SOAJS_DAEMON_GRP_CONF": {
