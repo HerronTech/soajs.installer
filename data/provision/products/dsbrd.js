@@ -68,7 +68,14 @@ var dsbrdProduct = {
 						"access": ["owner"]
 					},
 					"dashboard": {
-						"access": ["owner"]
+						"access": ["owner"],
+						"post":{
+							"apis": {
+								"/cd/deploy": {
+									"access": false
+								}
+							}
+						}
 					},
 					"proxy": {
 						"access": false
