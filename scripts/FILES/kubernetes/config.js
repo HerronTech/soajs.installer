@@ -50,7 +50,7 @@ var lib  = {
 		"sslSecret": process.env.SOAJS_NX_SSL_SECRET || null
 	},
 	"imagePrefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
-	"imagePullPolicy": process.env.SOAJS_IMAGE_PULL_POLICY || 'Always',
+	"imagePullPolicy": process.env.SOAJS_IMAGE_PULL_POLICY || 'IfNotPresent',
 	"kubernetes": {
 		"config":{
 			"url": 'https://' + (process.env.CONTAINER_HOST || "127.0.0.1") + ':' + (parseInt(process.env.CONTAINER_PORT) || 8443),
