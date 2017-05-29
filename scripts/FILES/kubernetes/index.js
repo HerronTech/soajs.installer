@@ -123,11 +123,15 @@ var lib = {
                 oneService.service.metadata.labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
                 oneService.deployment.metadata.labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
                 oneService.deployment.spec.template.metadata.labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
+	            oneService.deployment.spec.template.metadata.labels["soajs.catalog.v"] = "1";
+	            oneService.deployment.spec.template.metadata.labels["service.image.ts"] = new Date().getTime().toString();
             }
             else if (type === "nginx"){
                 oneService.service.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
                 oneService.deployment.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
                 oneService.deployment.spec.template.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
+	            oneService.deployment.spec.template.metadata.labels["soajs.catalog.v"] = "1";
+	            oneService.deployment.spec.template.metadata.labels["service.image.ts"] = new Date().getTime().toString();
             }
             lib.deployService(deployer, oneService, callback);
         }, cb);

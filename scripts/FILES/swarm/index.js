@@ -136,9 +136,13 @@ var lib = {
         async.eachSeries(services, function (oneService, callback) {
             if(type === "core"){
                 oneService.Labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
+                oneService.Labels["soajs.catalog.v"] = "1";
+	            oneService.Labels["soajs.image.ts"] = new Date().getTime().toString();
             }
             else if (type === "nginx"){
                 oneService.Labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
+	            oneService.Labels["soajs.catalog.v"] = "1";
+	            oneService.Labels["soajs.image.ts"] = new Date().getTime().toString();
             }
 
             lib.deployService(deployer, oneService, callback);
