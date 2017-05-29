@@ -137,12 +137,12 @@ var lib = {
             if(type === "core"){
                 oneService.Labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
                 oneService.Labels["soajs.catalog.v"] = "1";
-	            oneService.Labels["soajs.image.ts"] = new Date().getTime().toString();
+	            oneService.Labels["service.image.ts"] = new Date().getTime().toString();
             }
             else if (type === "nginx"){
                 oneService.Labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
 	            oneService.Labels["soajs.catalog.v"] = "1";
-	            oneService.Labels["soajs.image.ts"] = new Date().getTime().toString();
+	            oneService.Labels["service.image.ts"] = new Date().getTime().toString();
             }
 
             lib.deployService(deployer, oneService, callback);
