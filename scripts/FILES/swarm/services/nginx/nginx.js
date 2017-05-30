@@ -2,7 +2,7 @@
 var gConfig = require("../../config.js");
 
 var dashUISrc = {
-	branch: gConfig.dashUISrc.branch
+	branch: 'feature/sessionLessCtrl'//gConfig.dashUISrc.branch
 };
 
 var customUISrc = {

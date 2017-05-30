@@ -4,7 +4,7 @@ var gConfig = require("../../config.js");
 var src = {
     owner: 'soajs',
     repo: 'soajs.oauth',
-    branch: gConfig.git.branch
+    branch: 'feature/sessionLessCtrl'//gConfig.git.branch
 };
 
 var config = {
@@ -50,7 +50,7 @@ var config = {
 	    "soajs.service.type": "service",
 		"soajs.service.name": "oauth",
 		"soajs.service.group": "soajs-core-services",
-		"soajs.service.version": "2",
+		"soajs.service.version": "1",
 		"soajs.service.label": "dashboard_soajs_oauth",
 	    "soajs.service.repo.name": "soajs_oauth"
     },
