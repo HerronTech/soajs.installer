@@ -27,6 +27,7 @@ var services = [
 		"versions": {
 			"1": {
 				"extKeyRequired": true,
+				"oauth": true,
 				"awareness": false,
 				"apis": [
 					{
@@ -143,6 +144,262 @@ var services = [
 						'v': "/admin/all"
 					}
 				]
+			},
+			"2": {
+				"extKeyRequired": true,
+				"oauth": true,
+				"apis": [
+					{
+						"l": "Login Through Passport",
+						"v": "/passport/login/:strategy",
+						"m": "get",
+						"group": "Guest"
+					},
+					{
+						"l": "Login Through Passport Validate",
+						"v": "/passport/validate/:strategy",
+						"m": "get",
+						"group": "Guest"
+					},
+					{
+						"l": "Validate Register",
+						"v": "/join/validate",
+						"m": "get",
+						"group": "Guest"
+					},
+					{
+						"l": "Forgot Password",
+						"v": "/forgotPassword",
+						"m": "get",
+						"group": "Guest"
+					},
+					{
+						"l": "Check If Username Exists",
+						"v": "/checkUsername",
+						"m": "get",
+						"group": "Guest"
+					},
+					{
+						"l": "Validate Change Email",
+						"v": "/changeEmail/validate",
+						"m": "get",
+						"group": "Guest"
+					},
+					{
+						"l": "Get User Info",
+						"v": "/account/getUser",
+						"m": "get",
+						"group": "My Account",
+						"groupMain": true
+					},
+					{
+						"l": "Change User Status",
+						"v": "/admin/changeUserStatus",
+						"m": "get",
+						"group": "Administration"
+					},
+					{
+						"l": "List Users",
+						"v": "/admin/listUsers",
+						"m": "get",
+						"group": "Administration",
+						"groupMain": true
+					},
+					{
+						"l": "Total Users Count",
+						"v": "/admin/users/count",
+						"m": "get",
+						"group": "Administration"
+					},
+					{
+						"l": "Get User Record",
+						"v": "/admin/getUser",
+						"m": "get",
+						"group": "Administration"
+					},
+					{
+						"l": "List Groups",
+						"v": "/admin/group/list",
+						"m": "get",
+						"group": "Administration"
+					},
+					{
+						"l": "Get all Users & Groups",
+						"v": "/admin/all",
+						"m": "get",
+						"group": "Administration"
+					},
+					{
+						"l": "Total Users Count",
+						"v": "/owner/admin/users/count",
+						"m": "get",
+						"group": "Owner"
+					},
+					{
+						"l": "List Users",
+						"v": "/owner/admin/listUsers",
+						"m": "get",
+						"group": "Owner",
+						"groupMain": true
+					},
+					{
+						"l": "Change User Status",
+						"v": "/owner/admin/changeUserStatus",
+						"m": "get",
+						"group": "Owner"
+					},
+					{
+						"l": "Get User Record",
+						"v": "/owner/admin/getUser",
+						"m": "get",
+						"group": "Owner"
+					},
+					{
+						"l": "List Groups",
+						"v": "/owner/admin/group/list",
+						"m": "get",
+						"group": "Owner"
+					},
+					{
+						"l": "List Tokens",
+						"v": "/owner/admin/tokens/list",
+						"m": "get",
+						"group": "Owner"
+					},
+					{
+						"l": "OpenAM Login",
+						"v": "/openam/login",
+						"m": "post",
+						"group": "Guest"
+					},
+					{
+						"l": "Ldap Login",
+						"v": "/ldap/login",
+						"m": "post",
+						"group": "Guest"
+					},
+					{
+						"l": "Register",
+						"v": "/join",
+						"m": "post",
+						"group": "Guest"
+					},
+					{
+						"l": "Reset Password",
+						"v": "/resetPassword",
+						"m": "post",
+						"group": "Guest"
+					},
+					{
+						"l": "Change Password",
+						"v": "/account/changePassword",
+						"m": "post",
+						"group": "My Account"
+					},
+					{
+						"l": "Change Email",
+						"v": "/account/changeEmail",
+						"m": "post",
+						"group": "My Account"
+					},
+					{
+						"l": "Edit Profile",
+						"v": "/account/editProfile",
+						"m": "post",
+						"group": "My Account"
+					},
+					{
+						"l": "Add new User",
+						"v": "/admin/addUser",
+						"m": "post",
+						"group": "Administration"
+					},
+					{
+						"l": "Edit User Record",
+						"v": "/admin/editUser",
+						"m": "post",
+						"group": "Administration"
+					},
+					{
+						"l": "Edit User Config",
+						"v": "/admin/editUserConfig",
+						"m": "post",
+						"group": "Administration"
+					},
+					{
+						"l": "Add new Group",
+						"v": "/admin/group/add",
+						"m": "post",
+						"group": "Administration"
+					},
+					{
+						"l": "Edit Group",
+						"v": "/admin/group/edit",
+						"m": "post",
+						"group": "Administration"
+					},
+					{
+						"l": "Add Users to Group",
+						"v": "/admin/group/addUsers",
+						"m": "post",
+						"group": "Administration"
+					},
+					{
+						"l": "Add new User",
+						"v": "/owner/admin/addUser",
+						"m": "post",
+						"group": "Owner"
+					},
+					{
+						"l": "Edit User Record",
+						"v": "/owner/admin/editUser",
+						"m": "post",
+						"group": "Owner"
+					},
+					{
+						"l": "Edit User Config",
+						"v": "/owner/admin/editUserConfig",
+						"m": "post",
+						"group": "Owner"
+					},
+					{
+						"l": "Add new Group",
+						"v": "/owner/admin/group/add",
+						"m": "post",
+						"group": "Owner"
+					},
+					{
+						"l": "Edit Group",
+						"v": "/owner/admin/group/edit",
+						"m": "post",
+						"group": "Owner"
+					},
+					{
+						"l": "Add Users to Group",
+						"v": "/owner/admin/group/addUsers",
+						"m": "post",
+						"group": "Owner"
+					},
+					{
+						"l": "Delete Group",
+						"v": "/admin/group/delete",
+						"m": "delete",
+						"group": "Administration"
+					},
+					{
+						"l": "Delete Group",
+						"v": "/owner/admin/group/delete",
+						"m": "delete",
+						"group": "Owner"
+					},
+					{
+						"l": "Delete Token",
+						"v": "/owner/admin/tokens/delete",
+						"m": "delete",
+						"group": "Owner"
+					}
+				],
+				"awareness": true
 			}
 		}
 	},
@@ -160,6 +417,11 @@ var services = [
 		"versions": {
 			"1": {
 				"extKeyRequired": true,
+				"urac" : true,
+				"uracDriver" : true,
+				"urac_Profile" : true,
+				"urac_ACL" : true,
+				"provision_ACL" : true,
 				"awareness": true,
 				"apis": [
 					{
@@ -534,30 +796,30 @@ var services = [
 			}
 		}
 	},
-	{
-		"name": "proxy",
-		"group": "SOAJS Core Services",
-		"port": 4009,
-		"requestTimeout": 30,
-		"requestTimeoutRenewal": 5,
-		"src": {
-			"provider": "github",
-			"owner": "soajs",
-			"repo": "soajs.prx"
-		},
-		"versions": {
-			"1": {
-				"extKeyRequired": true,
-				"awareness": false,
-				"apis": [
-					{
-						"l":" Redirect",
-						"v": "/redirect"
-					}
-				]
-			}
-		}
-	},
+	// {
+	// 	"name": "proxy",
+	// 	"group": "SOAJS Core Services",
+	// 	"port": 4009,
+	// 	"requestTimeout": 30,
+	// 	"requestTimeoutRenewal": 5,
+	// 	"src": {
+	// 		"provider": "github",
+	// 		"owner": "soajs",
+	// 		"repo": "soajs.prx"
+	// 	},
+	// 	"versions": {
+	// 		"1": {
+	// 			"extKeyRequired": true,
+	// 			"awareness": false,
+	// 			"apis": [
+	// 				{
+	// 					"l":" Redirect",
+	// 					"v": "/redirect"
+	// 				}
+	// 			]
+	// 		}
+	// 	}
+	// },
 	{
 		"name": "oauth",
 		"group": "SOAJS Core Services",
@@ -573,6 +835,7 @@ var services = [
 		"versions": {
 			"1": {
 				"extKeyRequired": true,
+				"oauth": true,
 				"apis": [
 					{
 						"l": "Get the authorization value",
