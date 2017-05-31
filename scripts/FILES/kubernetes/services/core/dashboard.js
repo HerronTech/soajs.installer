@@ -17,7 +17,9 @@ var components = {
                 "soajs.service.version": "1",
                 "soajs.service.label": "dashboard-dashboard-v1",
                 "soajs.service.mode": "deployment",
-	            "soajs.service.repo.name": "soajs_dashboard"
+	            "soajs.service.repo.name": "soajs_dashboard",
+                "service.branch": gConfig.git.branch,
+                "service.repo": "soajs.dashboard"
             }
         },
         "spec": {
@@ -55,7 +57,9 @@ var components = {
                 "soajs.service.version": "1",
                 "soajs.service.label": "dashboard-dashboard-v1",
                 "soajs.service.mode": "deployment",
-	            "soajs.service.repo.name": "soajs_dashboard"
+	            "soajs.service.repo.name": "soajs_dashboard",
+                "service.branch": gConfig.git.branch,
+                "service.repo": "soajs.dashboard"
             }
         },
         "spec": {
@@ -77,7 +81,9 @@ var components = {
                         "soajs.service.type": "service",
                         "soajs.service.version": "1",
                         "soajs.service.label": "dashboard-dashboard-v1",
-                        "soajs.service.mode": "deployment"
+                        "soajs.service.mode": "deployment",
+                        "service.branch": gConfig.git.branch,
+                        "service.repo": "soajs.dashboard"
                     }
                 },
                 "spec": {
