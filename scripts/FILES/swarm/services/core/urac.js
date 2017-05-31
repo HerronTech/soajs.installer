@@ -45,6 +45,8 @@ var config = {
         }
     ],
     labels: {
+	    "service.branch": gConfig.git.branch,
+	    "service.repo": "soajs.urac",
         "soajs.content": "true",
 		"soajs.env.code": "dashboard",
 	    "soajs.service.type": "service",
@@ -59,7 +61,7 @@ var config = {
     command: [
         'bash',
         '-c',
-        '/etc/init.d/postfix start && node index.js -T service'
+        '/etc/init.d/postfix start; node index.js -T service'
     ]
 };
 

@@ -220,8 +220,8 @@ var catalogs = [
                 },
                 "cmd": {
                     "deploy": {
-                        "command": ["bash", "-c"],
-                        "args": ["node index.js -T service"]
+                        "command": ["bash"],
+                        "args": ["-c","node index.js -T service"]
                     }
                 }
             }
@@ -416,8 +416,8 @@ var catalogs = [
                 },
                 "cmd": {
                     "deploy": {
-                        "command": ["bash", "-c"],
-                        "args": ["node index.js -T service"]
+                        "command": ["bash"],
+                        "args": ["-c", "node index.js -T service"]
                     }
                 }
             }
@@ -514,8 +514,8 @@ var catalogs = [
                 },
                 "cmd": {
                     "deploy": {
-                        "command": ["bash", "-c"],
-                        "args": ["node index.js -T nginx"]
+                        "command": ["bash"],
+                        "args": ["-c", "node index.js -T nginx"]
                     }
                 }
             }

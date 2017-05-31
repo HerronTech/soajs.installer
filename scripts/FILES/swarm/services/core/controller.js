@@ -51,6 +51,8 @@ var config = {
         }
 	],
 	labels: {
+		"service.branch": gConfig.git.branch,
+		"service.repo": "soajs.controller",
 		"soajs.content": "true",
 		"soajs.env.code": "dashboard",
 		"soajs.service.type": "service",
