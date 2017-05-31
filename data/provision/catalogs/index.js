@@ -114,7 +114,7 @@ var catalogs = [
                 },
                 "container": {
                     "network": "", //container network for docker
-                    "workingDir": "" //container working directory
+                    "workingDir": "/opt/soajs/deployer/" //container working directory
                 },
                 "voluming": JSON.parse(JSON.stringify(defaultVoluming))
             },
@@ -257,7 +257,7 @@ var catalogs = [
                 },
                 "container": {
                     "network": "", //container network for docker
-                    "workingDir": "" //container working directory
+                    "workingDir": "/opt/soajs/deployer/" //container working directory
                 },
                 "voluming": {
                     "volumes": [], //array of objects
@@ -276,8 +276,8 @@ var catalogs = [
                 },
                 "cmd": {
                     "deploy": {
-                        "command": [],
-                        "args": []
+                        "command": ["bash"],
+                        "args": ["-c","node index.js -T nodejs"]
                     }
                 }
             }
@@ -315,7 +315,7 @@ var catalogs = [
                 },
                 "container": {
                     "network": "", //container network for docker
-                    "workingDir": "" //container working directory
+                    "workingDir": "/opt/soajs/deployer/" //container working directory
                 },
                 "voluming": JSON.parse(JSON.stringify(defaultVoluming))
             },
@@ -453,7 +453,7 @@ var catalogs = [
                 },
                 "container": {
                     "network": "", //container network for docker
-                    "workingDir": "" //container working directory
+                    "workingDir": "/opt/soajs/deployer/" //container working directory
                 },
                 "voluming": JSON.parse(JSON.stringify(defaultVoluming)),
                 "ports": [
