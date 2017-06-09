@@ -796,30 +796,6 @@ var services = [
 			}
 		}
 	},
-	// {
-	// 	"name": "proxy",
-	// 	"group": "SOAJS Core Services",
-	// 	"port": 4009,
-	// 	"requestTimeout": 30,
-	// 	"requestTimeoutRenewal": 5,
-	// 	"src": {
-	// 		"provider": "github",
-	// 		"owner": "soajs",
-	// 		"repo": "soajs.prx"
-	// 	},
-	// 	"versions": {
-	// 		"1": {
-	// 			"extKeyRequired": true,
-	// 			"awareness": false,
-	// 			"apis": [
-	// 				{
-	// 					"l":" Redirect",
-	// 					"v": "/redirect"
-	// 				}
-	// 			]
-	// 		}
-	// 	}
-	// },
 	{
 		"name": "oauth",
 		"group": "SOAJS Core Services",

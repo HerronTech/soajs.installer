@@ -37,13 +37,15 @@ var dsbrd = {
 							"oauth":{
 								"loginMode": "urac"
 							},
-                            "mail": {
-                                "from": '%email%',
-                                "transport": {
-                                    "type": "sendmail",
-                                    "options": {}
-                                }
-                            },
+                           "commonFields":{
+	                           "mail": {
+		                           "from": '%email%',
+		                           "transport": {
+			                           "type": "sendmail",
+			                           "options": {}
+		                           }
+	                           }
+                           },
                             "urac": {
                                 "hashIterations": 1024,
                                 "seedLength": 32,
@@ -107,12 +109,14 @@ var dsbrd = {
 	                        "oauth":{
 		                        "loginMode": "urac"
 	                        },
-                            "mail": {
-                                "from": '%email%',
-                                "transport": {
-                                    "type": "sendmail",
-                                    "options": {}
-                                }
+                            "commonFields":{
+	                            "mail": {
+		                            "from": '%email%',
+		                            "transport": {
+			                            "type": "sendmail",
+			                            "options": {}
+		                            }
+	                            }
                             },
                             "urac": {
                                 "hashIterations": 1024,
