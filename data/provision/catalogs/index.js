@@ -92,8 +92,8 @@ else if (process.env.SOAJS_DEPLOY_HA === 'kubernetes') {
 var catalogs = [
     {
         "name": "Service Recipe",
-	    "type": "soajs",
-	    "subtype": "service",
+        "type": "soajs",
+        "subtype": "service",
         "description": "This is a sample service catalog recipe",
         "locked": true,
         "recipe": {
@@ -104,7 +104,7 @@ var catalogs = [
                     "tag": "latest",
                     "pullPolicy": "IfNotPresent"
                 },
-	            "specifyGitConfiguration": true,
+                "specifyGitConfiguration": true,
                 "readinessProbe": {
                     "httpGet": {
                         "path": "/heartbeat",
@@ -293,8 +293,8 @@ var catalogs = [
     },
     {
         "name": "Daemon Recipe",
-	    "type": "soajs",
-	    "subtype": "daemon",
+        "type": "soajs",
+        "subtype": "daemon",
         "description": "This is a sample daemon recipe",
         "locked": true,
         "recipe": {
@@ -305,7 +305,7 @@ var catalogs = [
                     "tag": "latest",
                     "pullPolicy": "IfNotPresent"
                 },
-	            "specifyGitConfiguration": true,
+                "specifyGitConfiguration": true,
                 "readinessProbe": {
                     "httpGet": {
                         "path": "/heartbeat",
@@ -524,6 +524,69 @@ var catalogs = [
                     "deploy": {
                         "command": ["bash"],
                         "args": ["-c", "node index.js -T nginx"]
+                    }
+                }
+            }
+        }
+    },
+    {
+        "name": "Java Recipe",
+        "type": "service",
+        "description": "This is a sample java catalog recipe",
+        "locked": true,
+        "recipe": {
+            "deployOptions": {
+                "image": {
+                    "prefix": "soajsorg",
+                    "name": "java",
+                    "tag": "latest",
+                    "pullPolicy": "IfNotPresent"
+                },
+                "specifyGitConfiguration": true,
+                "container": {
+                    "workingDir": "/opt/soajs/deployer/"
+                },
+                "voluming": {
+                    "volumes": [],
+                    "volumeMounts": []
+                }
+            },
+            "buildOptions": {
+                "env": {
+                    "SOAJS_GIT_OWNER": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_OWNER"
+                    },
+                    "SOAJS_GIT_BRANCH": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_BRANCH"
+                    },
+                    "SOAJS_GIT_COMMIT": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_COMMIT"
+                    },
+                    "SOAJS_GIT_REPO": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_REPO"
+                    },
+                    "SOAJS_GIT_TOKEN": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_TOKEN"
+                    },
+                    "SOAJS_JAVA_APP_PORT": {
+                        "type": "computed",
+                        "value": "$SOAJS_SRV_PORT"
+                    }
+                },
+                "cmd": {
+                    "deploy": {
+                        "command": [
+                            "sh"
+                        ],
+                        "args": [
+                            "-c",
+                            "node index.js -T java"
+                        ]
                     }
                 }
             }
