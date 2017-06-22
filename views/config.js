@@ -1,3 +1,5 @@
+var mydomain = location.hostname || "localhost";
+
 var appConfig = {
-    url: "http://localhost:1337"
+    url: "http://" + mydomain + ":1337"
 };
