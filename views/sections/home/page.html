@@ -12,7 +12,7 @@
 			<div ng-bind-html="previousDeployment|toTrustedHtml"></div>
 		</alert>
 		<alert type="info" ng-show="!previousCheckComplete">Checking for Previous Deployments ... please wait.</alert>-->
-		
+
 		<div ng-show="previousCheckComplete && alerts.length > 0">
 			<alert ng-repeat="oneAlert in alerts" type="oneAlert.type">{{msg}}</alert>
 		</div>
@@ -39,7 +39,7 @@
 						Once installed, click proceed at the bottom of this page to move on to the next sections.
 					</p>
 				</accordion-group>
-				
+
 				<accordion-group heading="Local Cloud Deployment" is-open="local" ng-click="selectLocation('local')">
 					<p>
 						<b>Overview:</b><br/>
@@ -54,22 +54,22 @@
 					<input type="radio" name="localButtons" ng-model="data.deployDriver" value="container.kubernetes.local" ng-change="selectDeployment('kubernetes')"/>&nbsp;Kubernetes
 					Deployment (Ubuntu or Mac only)<br/>
 					<div ng-if="kubernetes && local" class="analyticsButtons"><input type="checkbox" name="localButtons" ng-model="analytics.local"  ng-value ="analytics.local" />&nbsp;<b>Activate Analytics</b><br/></div><br/>
-					
+
 					<pre ng-show="docker && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
-{{style.kubernetes.local.v}}</code></pre>
-					
-					
+{{style.docker.local.v}}</code></pre>
+
+
 					<div ng-show="docker && local && osName==='mac'"><b>Click on this link to download Docker for Mac:</b>
 						<a href="{{style.docker.local.v}}" target="_blank">{{style.docker.local.v}}</a>
 					</div>
-					
+
 					<pre ng-show="kubernetes && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
 {{style.kubernetes.local.v}}</code></pre>
-					
+
 					<pre ng-show="kubernetes && local && osName==='mac'" class="bash"><code># Execute the command below in your terminal on your local machine
 {{style.kubernetes.local.v}}</code></pre>
 				</accordion-group>
-				
+
 				<accordion-group heading="Remote Cloud Deployment" is-open="remote" ng-click="selectLocation('remote')">
 					<p>
 						<b>Overview:</b><br />
@@ -86,10 +86,10 @@
 					<div ng-if="kubernetes" class="analyticsButtons"><input type="checkbox" name="localButtons" ng-model="analytics.remote"  ng-value ="analytics.remote"/>Activate Analytics<br/></div><br/>
 					<pre ng-show="data.deployDriver ==='container.docker.remote'" class="bash"><code># Execute the command below on the remote machine terminal
 {{style.docker.remote.v}}</code></pre>
-					
+
 					<pre ng-show="data.deployDriver ==='container.kubernetes.remote'" class="bash"><code># Execute the command below on the remote machine terminal
 {{style.kubernetes.remote.v}}</code></pre>
-					
+
 					<alert type="warning">
 						<b><u>Note:</u></b><br/>
 						This deployment is only supported on machines running Ubuntu<br />
@@ -117,7 +117,7 @@
 						</div>
 					</alert>
 				</accordion-group>
-			
+
 			</accordion>
 			<br/>
 			<div class="w-100 table">
