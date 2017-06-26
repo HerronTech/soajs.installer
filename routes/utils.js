@@ -1052,7 +1052,7 @@ module.exports = {
             myMongo.find("hosts", {"env": "dashboard"}, function (error, hosts) {
                 if (error) {
                     return cb(error);
-                }sudo /opt/soajs/node_modules/soajs.installer/scripts/swarm-deploy.sh
+                }
 
                 var data = {
                     download: download.download
