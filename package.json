@@ -27,6 +27,7 @@
     "async": "*",
     "clone": "*",
     "dockerode": "*",
+    "express": "^4.15.3",
     "gridfs-stream": "*",
     "kubernetes-client": "*",
     "mkdirp": "*",
@@ -35,6 +36,7 @@
     "rimraf": "*",
     "soajs": "1.0.*",
     "util": "*",
+    "uuid": "^3.1.0",
     "whereis": "*"
   }
 }
