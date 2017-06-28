@@ -166,7 +166,14 @@ var catalogs = [
                         "type": "computed",
                         "value": "$SOAJS_GC_VERSION"
                     },
-
+	                "SOAJS_GIT_PROVIDER": {
+		                "type": "computed",
+		                "value": "$SOAJS_GIT_PROVIDER"
+	                },
+	                "SOAJS_GIT_DOMAIN": {
+		                "type": "computed",
+		                "value": "$SOAJS_GIT_DOMAIN"
+	                },
                     "SOAJS_GIT_OWNER": {
                         "type": "computed",
                         "value": "$SOAJS_GIT_OWNER"
@@ -362,7 +369,14 @@ var catalogs = [
                         "type": "computed",
                         "value": "$SOAJS_DAEMON_GRP_CONF"
                     },
-
+	                "SOAJS_GIT_PROVIDER": {
+		                "type": "computed",
+		                "value": "$SOAJS_GIT_PROVIDER"
+	                },
+	                "SOAJS_GIT_DOMAIN": {
+		                "type": "computed",
+		                "value": "$SOAJS_GIT_DOMAIN"
+	                },
                     "SOAJS_GIT_OWNER": {
                         "type": "computed",
                         "value": "$SOAJS_GIT_OWNER"
