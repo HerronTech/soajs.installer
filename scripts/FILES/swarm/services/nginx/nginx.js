@@ -113,7 +113,7 @@ if (customUISrc.repo && customUISrc.owner) {
     if (customUISrc.token) {
         config.env.push('SOAJS_GIT_TOKEN=' + customUISrc.token);
     }
-	
+
 	if (customUISrc.path) {
 		config.env.push('SOAJS_GIT_PATH=' + customUISrc.path);
 	}
@@ -131,11 +131,6 @@ module.exports = {
             "Mounts": config.mounts
         },
         "Placement": {},
-        "Resources": {
-            "Limits": {
-                "MemoryBytes": 509715200.0
-            }
-        },
         "RestartPolicy": {
             "Condition": "any",
             "MaxAttempts": 5

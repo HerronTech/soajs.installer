@@ -78,11 +78,6 @@ module.exports = {
             "Mounts": config.mounts
         },
         "Placement": {},
-        "Resources": {
-            "Limits": {
-                "MemoryBytes": 509715200.0
-            }
-        },
         "RestartPolicy": {
             "Condition": "any",
             "MaxAttempts": 5

@@ -89,11 +89,6 @@ module.exports = {
 		"Placement": {
 			"Constraints": config.placement
 		},
-		"Resources": {
-			"Limits": {
-				"MemoryBytes": 509715200.0
-			}
-		},
 		"RestartPolicy": {
 			"Condition": "any",
 			"MaxAttempts": 5

@@ -77,11 +77,6 @@ module.exports = {
 			"Args": config.command.splice(1),
 			"Mounts": config.mounts
 		},
-		"Resources": {
-			"Limits": {
-				"MemoryBytes": 509715200.0
-			}
-		},
 		"RestartPolicy": {
 			"Condition": "any",
 			"MaxAttempts": 5
