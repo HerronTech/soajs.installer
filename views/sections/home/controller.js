@@ -116,6 +116,9 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 	
 	$scope.selectLocation = function (type) {
 		
+		$scope.docker = false;
+		$scope.kubernetes = false;
+		
 		if (type === 'manual') {
 			$scope.manual = true;
 			$scope.local = false;
@@ -137,19 +140,20 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 	};
 	
 	$scope.selectDeployment = function (type) {
-		
-		if (type === null) {
-			$scope.docker = false;
-			$scope.kubernetes = false;
-		}
-		if (type === 'docker') {
-			$scope.docker = true;
-			$scope.kubernetes = false;
-		}
-		if (type === 'kubernetes') {
-			$scope.docker = false;
-			$scope.kubernetes = true;
-		}
+		$timeout(function(){
+			if (type === null) {
+				$scope.docker = false;
+				$scope.kubernetes = false;
+			}
+			if (type === 'docker') {
+				$scope.docker = true;
+				$scope.kubernetes = false;
+			}
+			if (type === 'kubernetes') {
+				$scope.docker = false;
+				$scope.kubernetes = true;
+			}
+		}, 100);
 	};
 	
 	$scope.loadOverview = function () {
