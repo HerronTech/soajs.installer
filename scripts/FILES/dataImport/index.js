@@ -127,8 +127,19 @@ const lib = {
 	 Catalogs
 	 */
 	"addCatalogs": function (cb) {
-		var records = require(dataFolder + "catalogs/index.js");
-		mongo.insert("catalogs", records, cb);
+		var options =
+			{
+				col: 'catalogs',
+				index: {name: 1},
+				options: {unique: true}
+			};
+		
+		mongo.ensureIndex(options.col, options.index, options.options, function (error) {
+			lib.errorLogger(error);
+			var records = require(dataFolder + "catalogs/index.js");
+			mongo.insert("catalogs", records, cb);
+		});
+		
 	},
 	
 	/***************************************************************

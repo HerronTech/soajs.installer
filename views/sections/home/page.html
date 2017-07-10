@@ -84,38 +84,54 @@
 					<input type="radio" name="remoteButtons" ng-model="data.deployDriver" value="container.kubernetes.remote" ng-change="selectDeployment('kubernetes')"/>&nbsp;Kubernetes
 					Deployment (Ubuntu Only)<br/>
 					<div ng-if="kubernetes" class="analyticsButtons"><input type="checkbox" name="localButtons" ng-model="analytics.remote"  ng-value ="analytics.remote"/>Activate Analytics<br/></div><br/>
-					<pre ng-show="data.deployDriver ==='container.docker.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+					
+					<tabset>
+						<tab heading="AWS">
+							<br>
+							<table width="100%" border="0">
+								<tr>
+									<td><a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697737/Docker" target="_blank"><img src="images/docker_logo.png" width="50%" border="0"></a></td>
+									<td><a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697794/Kubernetes" target="_blank"><img src="images/kubernetes_logo.png" width="50%" border="0"></a></td>
+								</tr>
+							</table>
+						</tab>
+						<tab heading="Custom">
+							<br>
+							<pre ng-show="data.deployDriver ==='container.docker.remote'" class="bash"><code># Execute the command below on the remote machine terminal
 {{style.docker.remote.v}}</code></pre>
-
-					<pre ng-show="data.deployDriver ==='container.kubernetes.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+							
+							<pre ng-show="data.deployDriver ==='container.kubernetes.remote'" class="bash"><code># Execute the command below on the remote machine terminal
 {{style.kubernetes.remote.v}}</code></pre>
-
-					<alert type="warning">
-						<b><u>Note:</u></b><br/>
-						This deployment is only supported on machines running Ubuntu<br />
-						Follow the instructions below before proceeding to the next page:<br/><br/>
-						<div>
-							<ol>
-								<li>Create a remote machine with Ubuntu on it.</li>
-								<li>The script above will install the chosen driver, and generate self-signed certificates for you.</li>
-								<li>Copy these certificates to a folder on this machine.</li>
-								<li>Provide the IP address of the remote machine and the certificates location in the last step of this wizard when asked.</li>
-							</ol>
-							<b>Or:</b>
-							<ol>
-								<li>Create a remote machine with Ubuntu on it.</li>
-								<li>Purchase certificates for a third party provider.</li>
-								<li>Copy these certificates to a folder on the remote machine.<br/>
-									<u>ex:</u><br/>
-									- <b>Docker:</b>&nbsp;'~/.docker/'<br>
-									- <b>Kubernetes:</b>&nbsp;'/etc/kubernetes/pki/'
-								</li>
-								<li>The instructions above will guide you to install the chosen driver, and use your certificates.</li>
-								<li>Copy the same certificates to a folder on this machine.</li>
-								<li>Provide the IP address of the remote machine and the certificates location in the last step of this wizard when asked.</li>
-							</ol>
-						</div>
-					</alert>
+							
+							<alert type="warning">
+								<b><u>Note:</u></b><br/>
+								This deployment is only supported on machines running Ubuntu<br />
+								Follow the instructions below before proceeding to the next page:<br/><br/>
+								<div>
+									<ol>
+										<li>Create a remote machine with Ubuntu on it.</li>
+										<li>The script above will install the chosen driver, and generate self-signed certificates for you.</li>
+										<li>Copy these certificates to a folder on this machine.</li>
+										<li>Provide the IP address of the remote machine and the certificates location in the last step of this wizard when asked.</li>
+									</ol>
+									<b>Or:</b>
+									<ol>
+										<li>Create a remote machine with Ubuntu on it.</li>
+										<li>Purchase certificates for a third party provider.</li>
+										<li>Copy these certificates to a folder on the remote machine.<br/>
+											<u>ex:</u><br/>
+											- <b>Docker:</b>&nbsp;'~/.docker/'<br>
+											- <b>Kubernetes:</b>&nbsp;'/etc/kubernetes/pki/'
+										</li>
+										<li>The instructions above will guide you to install the chosen driver, and use your certificates.</li>
+										<li>Copy the same certificates to a folder on this machine.</li>
+										<li>Provide the IP address of the remote machine and the certificates location in the last step of this wizard when asked.</li>
+									</ol>
+								</div>
+							</alert>
+						</tab>
+					</tabset>
+					
 				</accordion-group>
 
 			</accordion>
