@@ -305,3 +305,15 @@ table.bulletin th {
     max-width: 975px;
     overflow-x: scroll;
 }
+
+a.nonhighlightedDriver{
+    display: block;
+    padding: 6px;
+    border-radius: 8px;
+    width: 80%;
+    background-color:white;
+}
+
+a.highlightedDirver {
+    background-color: #efefef;
+}

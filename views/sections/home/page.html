@@ -80,18 +80,18 @@
 					<b><u>Deployment Type:</u></b><br/>
 					<input type="radio" name="remoteButtons" ng-model="data.deployDriver" value="container.docker.remote" ng-change="selectDeployment('docker')"/>&nbsp;Docker
 					Deployment (Ubuntu Only)<br/>
-					<div ng-if="docker" class="analyticsButtons" ><input type="checkbox" name="localButtons"  ng-model="analytics.remote"  ng-value ="analytics.remote"/>Activate Analytics<br/></div>
+					<div ng-if="docker" class="analyticsButtons" ><input type="checkbox" name="localButtons"  ng-model="analytics.remote"  ng-value ="analytics.remote"/>&nbsp;<b>Activate Analytics</b><br/></div>
 					<input type="radio" name="remoteButtons" ng-model="data.deployDriver" value="container.kubernetes.remote" ng-change="selectDeployment('kubernetes')"/>&nbsp;Kubernetes
 					Deployment (Ubuntu Only)<br/>
-					<div ng-if="kubernetes" class="analyticsButtons"><input type="checkbox" name="localButtons" ng-model="analytics.remote"  ng-value ="analytics.remote"/>Activate Analytics<br/></div><br/>
+					<div ng-if="kubernetes" class="analyticsButtons"><input type="checkbox" name="localButtons" ng-model="analytics.remote"  ng-value ="analytics.remote"/>&nbsp;<b>Activate Analytics</b><br/></div><br/>
 					
 					<tabset>
 						<tab heading="AWS">
 							<br>
 							<table width="100%" border="0">
 								<tr>
-									<td><a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697737/AWS+Docker" target="_blank"><img src="images/docker_logo.png" width="50%" border="0"></a></td>
-									<td><a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697794/AWS+Kubernetes" target="_blank"><img src="images/kubernetes_logo.png" width="50%" border="0"></a></td>
+									<td><a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on AWS to deploy SOAJS using Docker Swarm" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697737/AWS+Docker" target="_blank"><img src="images/docker_logo.png" width="70%" border="0"></a></td>
+									<td><a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on AWS to deploy SOAJS using Kubernetes" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697794/AWS+Kubernetes" target="_blank"><img src="images/kubernetes_logo.png" width="70%" border="0"></a></td>
 								</tr>
 							</table>
 						</tab>
