@@ -25,14 +25,16 @@ mongo.dropDatabase(function () {
 								throw new Error("Error while importing analytics \n" + errAnalytics);
 							}
 							lib.addCatalogs(function () {
-								mongo.closeDb();
-								profile.name = "DBTN_urac";
-								mongo = new soajs.mongo(profile);
-								mongo.dropDatabase(function () {
-									lib.addUsers(function () {
-										lib.addGroups(function () {
-											lib.uracIndex(function () {
-												mongo.closeDb();
+								lib.addCiRecipes(function () {
+									mongo.closeDb();
+									profile.name = "DBTN_urac";
+									mongo = new soajs.mongo(profile);
+									mongo.dropDatabase(function () {
+										lib.addUsers(function () {
+											lib.addGroups(function () {
+												lib.uracIndex(function () {
+													mongo.closeDb();
+												});
 											});
 										});
 									});
@@ -134,10 +136,28 @@ const lib = {
 				options: {unique: true}
 			};
 		
-		mongo.ensureIndex(options.col, options.index, options.options, function (error) {
+		mongo.createIndex(options.col, options.index, options.options, function (error) {
 			lib.errorLogger(error);
 			var records = require(dataFolder + "catalogs/index.js");
 			mongo.insert("catalogs", records, cb);
+		});
+		
+	},
+	
+	/*
+	 CI Recipes
+	 */
+	"addCiRecipes": function (cb) {
+		var options =
+			{
+				col: 'cicd',
+				index: {type: 1}
+			};
+		
+		mongo.createIndex(options.col, options.index, null, function (error) {
+			lib.errorLogger(error);
+			var records = require(dataFolder + "ci");
+			mongo.insert("cicd", records, cb);
 		});
 		
 	},
@@ -254,7 +274,7 @@ const lib = {
 		];
 
 		async.each(indexes, function (oneIndex, callback) {
-			mongo.ensureIndex(oneIndex.col, oneIndex.index, oneIndex.options, function (error) {
+			mongo.createIndex(oneIndex.col, oneIndex.index, oneIndex.options, function (error) {
 				lib.errorLogger(error);
 				return callback();
 			});
