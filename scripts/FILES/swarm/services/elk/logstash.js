@@ -44,11 +44,6 @@ module.exports = {
 			"Args": config.command.splice(1)
 		},
 		"Placement": {},
-		"Resources": {
-			"Limits": {
-				"MemoryBytes": 1000000000.0 //approx 1gb
-			}
-		},
 		"RestartPolicy": {
 			"Condition": "any",
 			"MaxAttempts": 5

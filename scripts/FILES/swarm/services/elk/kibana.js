@@ -36,11 +36,6 @@ module.exports = {
             "Env": config.env
         },
         "Placement": {},
-        "Resources": {
-            "Limits": {
-                "MemoryBytes": 1000000000.0
-            }
-        },
         "RestartPolicy": {
             "Condition": "any",
             "MaxAttempts": 5
