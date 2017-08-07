@@ -135,7 +135,10 @@ var catalogs = [
                         "type": "static",
                         "value":"production"
                     },
-
+                    "NODE_TLS_REJECT_UNAUTHORIZED": {
+                        "type": "static",
+                        "value": "0"
+                    },
                     "SOAJS_ENV": {
                         "type": "computed",
                         "value": "$SOAJS_ENV"
