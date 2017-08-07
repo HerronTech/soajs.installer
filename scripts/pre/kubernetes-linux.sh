@@ -27,14 +27,6 @@ function installOneTool(){
     fi
 }
 
-function installMongo(){
-	echo "Installing MongoDB ..."
-	apt-get update && apt-get install -y mongodb
-	echo "MongoDB successfully installed..."
-	echo "Stopping MongoDB Service ..."
-    service mongodb stop
-}
-
 function installKubernetes(){
     echo "Beginning the installation of the Kubernetes tools ..."
     curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
@@ -84,7 +76,6 @@ function initKubernetes(){
 }
 #Start here########
 installTools
-installMongo
 installKubernetes
 initKubernetes
 ###################

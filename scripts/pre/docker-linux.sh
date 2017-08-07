@@ -3,9 +3,6 @@
 #This script installs prerequisites that enable this machine to join a docker swarm
 #Compatible with Ubuntu
 
-DOCKER_URL='https://get.docker.com/'
-DOCKER_VERSION="1.12.3"
-
 mkdir -p ${HOME}/certs
 CERTS_PATH=${HOME}/certs
 
@@ -26,47 +23,34 @@ fi
 function installDocker(){
     local IS_DOCKER_INSTALLED=$(command -v docker)
     if [ -z ${IS_DOCKER_INSTALLED} ]; then
-        echo "Installing Docker from "${DOCKER_URL}" ..."
-        curl -fsSL ${DOCKER_URL} | sh
-        echo "----- DONE -----"
+        # Add Docker’s official GPG key:
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 
-        echo "Adding user to 'docker' group ..."
-        usermod -aG docker ${USER}
-        echo "----- DONE -----"
+        # Set up the stable repository:
+        add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+        apt-get update
+
+        apt-get install docker-ce
     else
-        local CURRENT_DOCKER_VERSION=$(docker -v | cut -d " " -f 3 | cut -d "," -f 1)
-        if [ ${CURRENT_DOCKER_VERSION} == ${DOCKER_VERSION} ]; then
-            echo "Docker "${DOCKER_VERSION}" is installed, proceeding ..."
-        else
-            echo "Incompatible Docker version detected ("${CURRENT_DOCKER_VERSION}"), purging ..."
-            apt-get purge -y docker-engine
-
-            installDocker
-        fi
+        echo "Docker is installed at "${IS_DOCKER_INSTALLED}", skipping ..."
     fi
 }
 
 function installTools(){
     echo "Updating local repositories ..."
     apt-get update
-    echo "----- DONE -----"
 
     installOneTool "ca-certificates"
     installOneTool "curl"
     installOneTool "openssl"
+    installOneTool "apt-transport-https"
+    installOneTool "software-properties-common"
 }
 
 function installOneTool(){
     local TOOL=${1}
-
-    local IS_TOOL_INSTALLED=$(command -v ${TOOL})
-    if [ -z ${IS_TOOL_INSTALLED} ]; then
-        echo ${TOOL}" not found, installing now ..."
-        apt-get install -y ${TOOL}
-        echo "----- DONE -----"
-    else
-        echo ${TOOL}" is installed, proceeding ..."
-    fi
+    apt-get install -y ${TOOL}
 }
 
 function checkCertificates(){
@@ -165,14 +149,7 @@ function reloadDocker(){
     #Starting docker daemon with TLS enabled and exposed port 2376
     #Another way to start the daemon is by using 'service docker start' and exporting the tls params in DOCKER_OPTS env variable
     #Example: DOCKER_OPTS="-D --tls=true --tlscert=/var/docker/server.pem --tlskey=/var/docker/serverkey.pem -H tcp://192.168.59.3:2376"
-    docker daemon --tlsverify --tlscacert=${CA_PATH} --tlscert=${SERVER_CERT_PATH} --tlskey=${SERVER_KEY_PATH} -H unix:///var/run/docker.sock -H=0.0.0.0:2376
-}
-
-function installMongo(){
-	echo "Installing MongoDB ..."
-	apt-get update && apt-get install -y mongodb
-	echo "Stopping MongoDB Service ..."
-    service mongodb stop
+    dockerd --tlsverify --tlscacert=${CA_PATH} --tlscert=${SERVER_CERT_PATH} --tlskey=${SERVER_KEY_PATH} -H unix:///var/run/docker.sock -H=0.0.0.0:2376
 }
 
 #Start here########
@@ -181,5 +158,4 @@ installDocker
 checkCertificates
 enableCLIAccess
 reloadDocker
-installMongo
 ###################
