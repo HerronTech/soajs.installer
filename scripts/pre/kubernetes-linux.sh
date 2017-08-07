@@ -76,6 +76,10 @@ function initKubernetes(){
     systemctl start kubelet.service
     kubeadm init --pod-network-cidr=10.244.0.0/16
     kubectl taint nodes --all dedicated-
+    mkdir -p $HOME/.kube
+    cp -rf /etc/kubernetes/admin.conf $HOME/.kube/config
+    chown "${SUDO_USER}:${SUDO_USER}" $HOME/.kube/config
+    kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel-rbac.yml
     kubectl apply -f flannel.yml
 }
 #Start here########
