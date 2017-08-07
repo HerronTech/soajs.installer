@@ -115,9 +115,8 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 	};
 	
 	$scope.selectLocation = function (type) {
-		
-		$scope.docker = false;
-		$scope.kubernetes = false;
+		$scope.docker  = $scope.docker ? $scope.docker : false;
+		$scope.kubernetes =  $scope.kubernetes ? $scope.kubernetes : false;
 		
 		if (type === 'manual') {
 			$scope.manual = true;
