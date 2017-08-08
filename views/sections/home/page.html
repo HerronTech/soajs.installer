@@ -97,6 +97,30 @@
 								</tr>
 							</table>
 						</tab>
+						<tab heading="Rackspace">
+							<br>
+							<p>
+								Choose one of the Drivers below to learn how to set it up on Rackspace.
+							</p>
+							<table width="100%" border="0">
+								<tr>
+									<td><a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on Rackspace to deploy SOAJS using Docker Swarm" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698725/Rackspace+Docker" target="_blank"><img src="images/docker_logo.png" width="70%" border="0"></a></td>
+									<td><a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on Rackspace to deploy SOAJS using Kubernetes" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698935/Rackspace+Kubernetes" target="_blank"><img src="images/kubernetes_logo.png" width="70%" border="0"></a></td>
+								</tr>
+							</table>
+						</tab>
+						<tab heading="Google Cloud Platform">
+							<br>
+							<p>
+								Choose one of the Drivers below to learn how to set it up on Google Cloud Platform.
+							</p>
+							<table width="100%" border="0">
+								<tr>
+									<td><a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on Google to deploy SOAJS using Docker Swarm" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698493/Google+Docker" target="_blank"><img src="images/docker_logo.png" width="70%" border="0"></a></td>
+									<td><a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on Google to deploy SOAJS using Kubernetes" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698553/Google+Kubernetes" target="_blank"><img src="images/kubernetes_logo.png" width="70%" border="0"></a></td>
+								</tr>
+							</table>
+						</tab>
 						<tab heading="Custom">
 							<br>
 							<pre ng-show="data.deployDriver ==='container.docker.remote'" class="bash"><code># Execute the command below on the remote machine terminal
