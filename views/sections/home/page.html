@@ -83,10 +83,15 @@
 					<input type="radio" name="remoteButtons" ng-model="data.deployDriver" value="container.kubernetes.remote" ng-change="selectDeployment('kubernetes')"/>&nbsp;Kubernetes
 					Deployment (Ubuntu Only)<br/>
 					<div ng-if="kubernetes" class="analyticsButtons"><input type="checkbox" name="localButtons" ng-model="analytics.remote"  ng-value ="analytics.remote"/>&nbsp;<b>Activate Analytics</b><br/></div><br/>
-					
+
 					<tabset>
 						<tab heading="AWS">
 							<br>
+							<pre ng-show="data.deployDriver ==='container.docker.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+{{style.docker.remote.v}}</code></pre>
+
+							<pre ng-show="data.deployDriver ==='container.kubernetes.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+{{style.kubernetes.remote.v}}</code></pre>
 							<p>
 								Choose one of the Drivers below to learn how to set it up on Amazon Web Services.
 							</p>
@@ -97,14 +102,82 @@
 								</tr>
 							</table>
 						</tab>
+						<tab heading="Rackspace">
+							<br>
+							<pre ng-show="data.deployDriver ==='container.docker.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+{{style.docker.remote.v}}</code></pre>
+
+							<pre ng-show="data.deployDriver ==='container.kubernetes.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+{{style.kubernetes.remote.v}}</code></pre>
+							<p>
+								Choose one of the Drivers below to learn how to set it up on Rackspace.
+							</p>
+							<table width="100%" border="0">
+								<tr>
+									<td><a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on Rackspace to deploy SOAJS using Docker Swarm" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698725/Rackspace+Docker" target="_blank"><img src="images/docker_logo.png" width="70%" border="0"></a></td>
+									<td><a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on Rackspace to deploy SOAJS using Kubernetes" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698935/Rackspace+Kubernetes" target="_blank"><img src="images/kubernetes_logo.png" width="70%" border="0"></a></td>
+								</tr>
+							</table>
+						</tab>
+						<tab heading="Google Cloud">
+							<br>
+							<pre ng-show="data.deployDriver ==='container.docker.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+{{style.docker.remote.v}}</code></pre>
+
+							<pre ng-show="data.deployDriver ==='container.kubernetes.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+{{style.kubernetes.remote.v}}</code></pre>
+							<p>
+								Choose one of the Drivers below to learn how to set it up on Google Cloud.
+							</p>
+							<table width="100%" border="0">
+								<tr>
+									<td><a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on Google to deploy SOAJS using Docker Swarm" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698493/Google+Docker" target="_blank"><img src="images/docker_logo.png" width="70%" border="0"></a></td>
+									<td><a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on Google to deploy SOAJS using Kubernetes" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698553/Google+Kubernetes" target="_blank"><img src="images/kubernetes_logo.png" width="70%" border="0"></a></td>
+								</tr>
+							</table>
+						</tab>
+						<tab heading="Microsoft Azure">
+							<br>
+							<pre ng-show="data.deployDriver ==='container.docker.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+{{style.docker.remote.v}}</code></pre>
+
+							<pre ng-show="data.deployDriver ==='container.kubernetes.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+{{style.kubernetes.remote.v}}</code></pre>
+							<p>
+								Choose one of the Drivers below to learn how to set it up on Microsoft Azure.
+							</p>
+							<table width="100%" border="0">
+								<tr>
+									<td><a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on Azure to deploy SOAJS using Docker Swarm" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64293754/Azure+Docker" target="_blank"><img src="images/docker_logo.png" width="70%" border="0"></a></td>
+									<td><a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on Azure to deploy SOAJS using Kubernetes" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64293936/Azure+Kubernetes" target="_blank"><img src="images/kubernetes_logo.png" width="70%" border="0"></a></td>
+								</tr>
+							</table>
+						</tab>
+						<tab heading="Joyent">
+							<br>
+							<pre ng-show="data.deployDriver ==='container.docker.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+{{style.docker.remote.v}}</code></pre>
+
+							<pre ng-show="data.deployDriver ==='container.kubernetes.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+{{style.kubernetes.remote.v}}</code></pre>
+							<p>
+								Choose one of the Drivers below to learn how to set it up on Joyent.
+							</p>
+							<table width="100%" border="0">
+								<tr>
+									<td><a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on Joyent to deploy SOAJS using Docker Swarm" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294622/Joyent+Docker" target="_blank"><img src="images/docker_logo.png" width="70%" border="0"></a></td>
+									<td><a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on Joyent to deploy SOAJS using Kubernetes" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294695/Joyent+Kubernetes" target="_blank"><img src="images/kubernetes_logo.png" width="70%" border="0"></a></td>
+								</tr>
+							</table>
+						</tab>
 						<tab heading="Custom">
 							<br>
 							<pre ng-show="data.deployDriver ==='container.docker.remote'" class="bash"><code># Execute the command below on the remote machine terminal
 {{style.docker.remote.v}}</code></pre>
-							
+
 							<pre ng-show="data.deployDriver ==='container.kubernetes.remote'" class="bash"><code># Execute the command below on the remote machine terminal
 {{style.kubernetes.remote.v}}</code></pre>
-							
+
 							<alert type="warning">
 								<b><u>Note:</u></b><br/>
 								This deployment is only supported on machines running Ubuntu<br />
@@ -133,7 +206,7 @@
 							</alert>
 						</tab>
 					</tabset>
-					
+
 				</accordion-group>
 
 			</accordion>
