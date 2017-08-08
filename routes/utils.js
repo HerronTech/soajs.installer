@@ -529,9 +529,12 @@ module.exports = {
                 if (body.clusters.replicaSet) {
                     envs['SOAJS_MONGO_RSNAME'] = body.clusters.replicaSet;
                 }
-
-                if (body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder) {
-                    envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder;
+                
+                if (body.deployment.certificates) {
+                	body.deployment.docker.certificatesFolder = body.deployment.certificates.caCertificate.split("/");
+	                body.deployment.docker.certificatesFolder.pop();
+	                body.deployment.docker.certificatesFolder = body.deployment.docker.certificatesFolder.join("/");
+                    envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder + "/";
                 }
 
 	            envs['SOAJS_DEPLOY_ANALYTICS'] = body.deployment.deployAnalytics ? true : false;
@@ -635,10 +638,18 @@ module.exports = {
                 if (body.clusters.replicaSet) {
                     envs['SOAJS_MONGO_RSNAME'] = body.clusters.replicaSet;
                 }
-
-                if (body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder) {
-                    envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder;
-                }
+	
+	            if (body.deployment.certificates) {
+		            body.deployment.docker.certificatesFolder = body.deployment.certificates.caCertificate.split("/");
+		            body.deployment.docker.certificatesFolder.pop();
+		            body.deployment.docker.certificatesFolder = body.deployment.docker.certificatesFolder.join("/");
+		            envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder + "/";
+	            }
+	            
+                // if (body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder) {
+                //     envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder;
+                // }
+	            
 	            envs['SOAJS_DEPLOY_ANALYTICS'] = body.deployment.deployAnalytics ? true : false;
 
 	            if (body.es_clusters && Object.keys(body.es_clusters).length > 0) {
