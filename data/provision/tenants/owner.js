@@ -73,7 +73,7 @@ var dsbrd = {
 	                                "changeUserStatus": {
 		                                "subject": "Account Status changed at SOAJS",
 		                                //use custom HTML
-                                        "content": "%wrkDir%/soajs/node_modules/soajs.urac/mail/urac/changeUserStatus.tmpl"
+                                        "path": "%wrkDir%/soajs/node_modules/soajs.urac/mail/urac/changeUserStatus.tmpl"
 	                                },
 	                                "changeEmail": {
 		                                "subject": "Change Account Email at SOAJS",
@@ -144,7 +144,7 @@ var dsbrd = {
                                     },
                                     "changeUserStatus": {
                                         "subject": "Account Status changed at SOAJS",
-                                        "content": "%wrkDir%/soajs/node_modules/soajs.urac/mail/urac/changeUserStatus.tmpl"
+                                        "path": "%wrkDir%/soajs/node_modules/soajs.urac/mail/urac/changeUserStatus.tmpl"
                                     },
                                     "changeEmail": {
                                         "subject": "Change Account Email at SOAJS",
