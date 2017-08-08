@@ -19,27 +19,27 @@ var routes = {
         if(platform === 'linux'){
             osName = 'linux';
             data.manual = {
-                "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-linux.sh"),
+                "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-linux.sh <%Your_Domain%>"),
                 "t": "sh"
             };
             data.docker = {
                 local: {
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
+                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh <%Your_Domain%>"),
                     "t": "sh"
                 },
                 remote:{
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
+                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh <%Your_Domain%>"),
                     "t": "sh"
                 }
             };
 
             data.kubernetes = {
                 local: {
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
+                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh <%Your_Domain%>"),
                     "l": "sh"
                 },
                 remote: {
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
+                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh <%Your_Domain%>"),
                     "l": "sh"
                 }
             };
@@ -47,7 +47,7 @@ var routes = {
         else if(platform === 'darwin'){
             osName = 'mac';
             data.manual = {
-                "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-mac.sh"),
+                "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-mac.sh <%Your_Domain%>"),
                 "t": "sh"
             };
 
@@ -57,18 +57,18 @@ var routes = {
                     "t": "link"
                 },
                 remote:{
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
+                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh <%Your_Domain%>"),
                     "t": "sh"
                 }
             };
 
             data.kubernetes = {
                 local: {
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-mac.sh"),
+                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-mac.sh <%Your_Domain%>"),
                     "l": "sh"
                 },
                 remote: {
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
+                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh <%Your_Domain%>"),
                     "l": "sh"
                 }
             };
@@ -284,12 +284,12 @@ var routes = {
             utils.loadCustomData(null, function (body) {
 
                 body = utils.unifyData(defaultData, body);
-	            
+
                 utils.updateCustomData(req, res, body.gi, "gi", function(){
-	
+
 	                //fill the files with the user values
 	                utils.fillFiles(folder, body);
-	
+
 	                //launch deployer script
 	                switch(body.deployment.deployDriver){
 		                case 'manual':
@@ -308,7 +308,7 @@ var routes = {
 				                return res.json(req.soajs.buildResponse(null, data));
 			                });
 			                break;
-		
+
 		                case 'container.docker.remote':
 			                utils.deployContainer(body, 'docker', 'remote', function (error, data) {
 				                if (error) {
@@ -317,7 +317,7 @@ var routes = {
 				                return res.json(req.soajs.buildResponse(null, data));
 			                });
 			                break;
-		
+
 		                case 'container.kubernetes.local':
 			                utils.deployContainer(body, 'kubernetes', 'local', function (error, data) {
 				                if (error) {
@@ -326,7 +326,7 @@ var routes = {
 				                return res.json(req.soajs.buildResponse(null, data));
 			                });
 			                break;
-		
+
 		                case 'container.kubernetes.remote':
 			                utils.deployContainer(body, 'kubernetes', 'remote', function (error, data) {
 				                if (error) {
@@ -358,7 +358,7 @@ var routes = {
                     type = 'kubernetes';
                     break;
             }
-	        
+
             utils.regenerateInfo(type, customData, function(error, response){
                 if(error){
                     return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message }));
