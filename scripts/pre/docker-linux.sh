@@ -31,7 +31,7 @@ function installDocker(){
 
         apt-get update
 
-        apt-get install docker-ce
+        apt-get install -y docker-ce
     else
         echo "Docker is installed at "${IS_DOCKER_INSTALLED}", skipping ..."
     fi
@@ -149,7 +149,7 @@ function reloadDocker(){
     #Starting docker daemon with TLS enabled and exposed port 2376
     #Another way to start the daemon is by using 'service docker start' and exporting the tls params in DOCKER_OPTS env variable
     #Example: DOCKER_OPTS="-D --tls=true --tlscert=/var/docker/server.pem --tlskey=/var/docker/serverkey.pem -H tcp://192.168.59.3:2376"
-    dockerd --tlsverify --tlscacert=${CA_PATH} --tlscert=${SERVER_CERT_PATH} --tlskey=${SERVER_KEY_PATH} -H unix:///var/run/docker.sock -H=0.0.0.0:2376
+    dockerd --tlsverify --tlscacert=${CA_PATH} --tlscert=${SERVER_CERT_PATH} --tlskey=${SERVER_KEY_PATH} -H unix:///var/run/docker.sock -H=0.0.0.0:2376 &
 }
 
 #Start here########
