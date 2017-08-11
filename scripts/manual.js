@@ -37,60 +37,72 @@ function setupNginx(cb) {
 	utilLog.log("\n=====================================");
 	utilLog.log("CONFIGURING NGINX");
 	utilLog.log("=====================================");
-	mkdirp(path.normalize(WRK_DIR + "/../nginx"), function (err) {
-		if (err) return cb(err);
-
-		process.env.SOAJS_NX_LOC = path.normalize(WRK_DIR + "/../");
-		process.env.SOAJS_NX_OS = "local";
-
-		exec(NODE + " " + path.normalize(process.env.INSTALLER_DIR + "/FILES/deployer/nginx.js"), function (error) {
-			if (error) {
-				return cb(error);
-			}
-
-			if (process.platform === 'linux') {
-				var files = [
-					{
-						's': path.normalize(WRK_DIR + "/../nginx/upstream.conf"),
-						'd': NGINX_DEST + "conf.d/upstream.conf"
-					},
-					{
-						's': path.normalize(WRK_DIR + "/../nginx/api.conf"),
-						'd': NGINX_DEST + "sites-enabled/api.conf"
-					},
-					{
-						's': path.normalize(WRK_DIR + "/../nginx/site.conf"),
-						'd': NGINX_DEST + "sites-enabled/site.conf"
-					}
-				];
-				async.each(files, copyConf, cb);
-			}
-			else if (process.platform === 'darwin') {
-				var files = [
-					{
-						's': path.normalize(WRK_DIR + "/../nginx/upstream.conf"),
-						'd': NGINX_DEST + "upstream.conf"
-					},
-					{
-						's': path.normalize(WRK_DIR + "/../nginx/api.conf"),
-						'd': NGINX_DEST + "api.conf"
-					},
-					{
-						's': path.normalize(WRK_DIR + "/../nginx/site.conf"),
-						'd': NGINX_DEST + "site.conf"
-					}
-				];
-				async.each(files, copyConf, cb);
-			}
-			else {
-				return cb(null, true);
-			}
+	
+	updateCustomDomainAndKey(function(){
+		mkdirp(path.normalize(WRK_DIR + "/../nginx"), function (err) {
+			if (err) return cb(err);
+			
+			process.env.SOAJS_NX_LOC = path.normalize(WRK_DIR + "/../");
+			process.env.SOAJS_NX_OS = "local";
+			
+			exec(NODE + " " + path.normalize(process.env.INSTALLER_DIR + "/FILES/deployer/nginx.js"), function (error) {
+				if (error) {
+					return cb(error);
+				}
+				
+				if (process.platform === 'linux') {
+					var files = [
+						{
+							's': path.normalize(WRK_DIR + "/../nginx/upstream.conf"),
+							'd': NGINX_DEST + "conf.d/upstream.conf"
+						},
+						{
+							's': path.normalize(WRK_DIR + "/../nginx/api.conf"),
+							'd': NGINX_DEST + "sites-enabled/api.conf"
+						},
+						{
+							's': path.normalize(WRK_DIR + "/../nginx/site.conf"),
+							'd': NGINX_DEST + "sites-enabled/site.conf"
+						}
+					];
+					async.each(files, copyConf, cb);
+				}
+				else if (process.platform === 'darwin') {
+					var files = [
+						{
+							's': path.normalize(WRK_DIR + "/../nginx/upstream.conf"),
+							'd': NGINX_DEST + "upstream.conf"
+						},
+						{
+							's': path.normalize(WRK_DIR + "/../nginx/api.conf"),
+							'd': NGINX_DEST + "api.conf"
+						},
+						{
+							's': path.normalize(WRK_DIR + "/../nginx/site.conf"),
+							'd': NGINX_DEST + "site.conf"
+						}
+					];
+					async.each(files, copyConf, cb);
+				}
+				else {
+					return cb(null, true);
+				}
+			});
 		});
 	});
 
 	function copyConf(opts, cb) {
 		utilLog.log(">>> copying", opts.s, "to", opts.d);
 		ncp(opts.s, opts.d, cb);
+	}
+	
+	function updateCustomDomainAndKey(cb){
+		var customSettings = {
+			api: process.env.API_PREFIX,
+			key: process.env.EXTKEY1
+		};
+		customSettings = "var customSettings = " + JSON.stringify(customSettings, null, 2) + ";";
+		fs.writeFile(WRK_DIR + "/soajs.dashboard/ui/settings.js", customSettings, {}, cb);
 	}
 }
 

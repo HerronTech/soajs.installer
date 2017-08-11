@@ -388,6 +388,7 @@ module.exports = {
                     "INSTALLER_DIR": path.normalize(__dirname + "/../scripts/"),
                     "SOAJS_DEPLOY_DIR": body.gi.wrkDir,
                     "API_PREFIX": body.gi.api,
+	                "EXTKEY1" : body.security.extKey1,
                     "SITE_PREFIX": body.gi.site,
                     "MASTER_DOMAIN": body.gi.domain
                 };
@@ -492,7 +493,8 @@ module.exports = {
                     "SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "master",
                     "SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
                     "NODE_PATH": nodePath,
-
+	
+	                "EXTKEY1" : body.security.extKey1,
                     "API_PREFIX": body.gi.api,
                     "SITE_PREFIX": body.gi.site,
                     "MASTER_DOMAIN": body.gi.domain,
@@ -597,7 +599,8 @@ module.exports = {
                     "SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "master",
                     "SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
                     "NODE_PATH": nodePath,
-
+	
+	                "EXTKEY1" : body.security.extKey1,
                     "API_PREFIX": body.gi.api,
                     "SITE_PREFIX": body.gi.site,
                     "MASTER_DOMAIN": body.gi.domain,

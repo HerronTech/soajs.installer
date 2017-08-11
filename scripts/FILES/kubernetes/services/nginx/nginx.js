@@ -120,6 +120,10 @@ var components = {
 									"value": "dashboard"
 								},
 								{
+									"name": "EXTKEY1",
+									"value": gConfig.extKey1
+								},
+								{
 									"name": "SOAJS_GIT_DASHBOARD_BRANCH",
 									"value": gConfig.git.branch
 								},
