@@ -157,8 +157,6 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				return false;
 			}
 			
-			console.log(response);
-
 			$scope.deployment = {
 				"deployType": (response && response.deployType) ? response.deployType : "manual",
 				"deployDriver": (response && response.deployDriver) ? response.deployDriver : "manual",
