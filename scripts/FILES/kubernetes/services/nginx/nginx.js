@@ -120,7 +120,7 @@ var components = {
 									"value": "dashboard"
 								},
 								{
-									"name": "EXTKEY1",
+									"name": "SOAJS_EXTKEY",
 									"value": gConfig.extKey1
 								},
 								{
