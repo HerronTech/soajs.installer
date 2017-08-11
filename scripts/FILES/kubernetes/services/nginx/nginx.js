@@ -35,14 +35,14 @@ var components = {
 					"protocol": "TCP",
 					"port": 80,
 					"targetPort": 80,
-					"nodePort": (30000 + gConfig.nginx.port.http)
+					"nodePort": gConfig.nginx.port.http
 				},
 				{
 					"name": "https",
 					"protocol": "TCP",
 					"port": 443,
 					"targetPort": 443,
-					"nodePort": (30000 + gConfig.nginx.port.https)
+					"nodePort": gConfig.nginx.port.https
 				}
 			]
 		}
@@ -126,6 +126,10 @@ var components = {
 								{
 									"name": "SOAJS_GIT_DASHBOARD_BRANCH",
 									"value": gConfig.git.branch
+								},
+								{
+									"name": "SOAJS_NX_DOMAIN",
+									"value": gConfig.masterDomain
 								},
 								{
 									"name": "SOAJS_NX_API_DOMAIN",
