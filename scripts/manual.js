@@ -99,7 +99,7 @@ function setupNginx(cb) {
 	function updateCustomDomainAndKey(cb){
 		var customSettings = {
 			api: process.env.API_PREFIX,
-			key: process.env.EXTKEY1
+			key: process.env.SOAJS_EXTKEY
 		};
 		customSettings = "var customSettings = " + JSON.stringify(customSettings, null, 2) + ";";
 		fs.writeFile(WRK_DIR + "/soajs.dashboard/ui/settings.js", customSettings, {}, cb);

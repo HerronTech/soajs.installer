@@ -3,7 +3,7 @@
 var profile = require(process.env.SOAJS_PROFILE);
 var mongoHostname = profile.servers[0].host;
 var lib  = {
-	"extKey1": process.env.EXTKEY1,
+	"extKey1": process.env.SOAJS_EXTKEY,
 	"analytics": process.env.SOAJS_DEPLOY_ANALYTICS,
 	"masterDomain": process.env.MASTER_DOMAIN || 'soajs.org',
 	"apiPrefix": process.env.API_PREFIX || "dashboard-api",
