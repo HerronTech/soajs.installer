@@ -37,7 +37,7 @@ var config = {
     exposedPorts: [
         {
             "Protocol": "tcp",
-            "PublishedPort": gConfig.mongo.port,
+            "PublishedPort": parseInt(process.env.MONGO_PORT) || gConfig.mongo.port,
             "TargetPort": 27017
         }
     ]

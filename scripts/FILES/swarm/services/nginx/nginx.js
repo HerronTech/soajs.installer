@@ -41,6 +41,8 @@ var config = {
         'SOAJS_DEPLOY_HA=swarm',
         'SOAJS_HA_NAME={{.Task.Name}}',
 
+	    'SOAJS_EXTKEY=' + gConfig.extKey1,
+	
         'SOAJS_GIT_DASHBOARD_BRANCH=' + dashUISrc.branch,
         'SOAJS_NX_DOMAIN=' + masterDomain,
         'SOAJS_NX_API_DOMAIN=' + gConfig.apiPrefix + '.' + masterDomain,

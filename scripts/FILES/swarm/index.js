@@ -12,8 +12,13 @@ var request = require('request');
 var config = require('./config.js');
 var folder = config.folder;
 delete require.cache[config.profile];
-var profile = require(config.profile);
-var mongo = new soajs.mongo(profile);
+var profile = soajs.utils.cloneObj(require(config.profile));
+var profile2 = JSON.parse(JSON.stringify(profile));
+if(!process.env.MONGO_EXT || process.env.MONGO_EXT === 'false'){
+	profile2.servers[0].port = parseInt(process.env.MONGO_PORT) || 27017;
+}
+
+var mongo = new soajs.mongo(profile2);
 var analyticsCollection = 'analytics';
 var utilLog = require('util');
 var dbConfiguration = require('../../../data/startup/environments/dashboard');
@@ -656,7 +661,7 @@ var lib = {
                 utilLog.log('ERROR: External Mongo information is missing URL or port, make sure SOAJS_MONGO_EXTERNAL_URL and SOAJS_MONGO_EXTERNAL_PORT are set ...');
                 return cb('ERROR: missing mongo information');
             }
-
+	        
             mongoEnv.push('SOAJS_MONGO_NB=' + profile.servers.length);
             for(var i = 0; i < profile.servers.length; i++){
 	            mongoEnv.push('SOAJS_MONGO_IP_' + (i + 1) + '=' + profile.servers[i].host);

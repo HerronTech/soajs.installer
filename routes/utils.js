@@ -388,6 +388,7 @@ module.exports = {
                     "INSTALLER_DIR": path.normalize(__dirname + "/../scripts/"),
                     "SOAJS_DEPLOY_DIR": body.gi.wrkDir,
                     "API_PREFIX": body.gi.api,
+	                "SOAJS_EXTKEY" : body.security.extKey1,
                     "SITE_PREFIX": body.gi.site,
                     "MASTER_DOMAIN": body.gi.domain
                 };
@@ -492,7 +493,8 @@ module.exports = {
                     "SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "master",
                     "SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
                     "NODE_PATH": nodePath,
-
+	
+	                "SOAJS_EXTKEY" : body.security.extKey1,
                     "API_PREFIX": body.gi.api,
                     "SITE_PREFIX": body.gi.site,
                     "MASTER_DOMAIN": body.gi.domain,
@@ -507,7 +509,7 @@ module.exports = {
 
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
                     "SOAJS_IMAGE_PREFIX": body.deployment.imagePrefix,
-
+	                
                     "NGINX_HTTP_PORT": body.deployment.nginxPort,
                     "NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
                     "SOAJS_NX_SSL": body.deployment.nginxSsl,
@@ -520,6 +522,10 @@ module.exports = {
                     "CONTAINER_PORT": body.deployment.docker.containerPort,
                     "SOAJS_DOCKER_REPLICA": body.deployment.dockerReplica
                 };
+                
+                if(!body.clusters.mongoExt){
+                	envs["MONGO_PORT"] = body.deployment.mongoExposedPort;
+                }
 
                 if(body.deployment.gitSource && body.deployment.gitSource !== 'github'){
                     envs["SOAJS_GIT_SOURCE"] = body.deployment.gitSource;
@@ -569,10 +575,6 @@ module.exports = {
                     }
                 }
 
-                if (!body.clusters.mongoExt) {
-                    output += "sudo " + "killall mongo" + os.EOL;
-                }
-
                 output += os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/docker.js") + os.EOL;
                 fs.writeFile(filename, output, function(err){
                     if(err){
@@ -597,7 +599,8 @@ module.exports = {
                     "SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "master",
                     "SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
                     "NODE_PATH": nodePath,
-
+	
+	                "SOAJS_EXTKEY" : body.security.extKey1,
                     "API_PREFIX": body.gi.api,
                     "SITE_PREFIX": body.gi.site,
                     "MASTER_DOMAIN": body.gi.domain,
@@ -612,7 +615,7 @@ module.exports = {
 
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
                     "SOAJS_IMAGE_PREFIX": body.deployment.imagePrefix,
-
+	
                     "NGINX_HTTP_PORT": body.deployment.nginxPort,
                     "NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
                     "SOAJS_NX_SSL": body.deployment.nginxSsl,
@@ -625,6 +628,10 @@ module.exports = {
 
                     "NGINX_DEPLOY_TYPE": body.deployment.nginxDeployType
                 };
+	
+	            if(!body.clusters.mongoExt){
+		            envs["MONGO_PORT"] = body.deployment.mongoExposedPort;
+	            }
 
                 if(body.deployment.nginxSsl && !body.deployment.generateSsc && body.deployment.nginxKubeSecret){
                     envs["SOAJS_NX_SSL_SECRET"] = body.deployment.nginxKubeSecret;
@@ -645,10 +652,6 @@ module.exports = {
 		            body.deployment.docker.certificatesFolder = body.deployment.docker.certificatesFolder.join("/");
 		            envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder + "/";
 	            }
-	            
-                // if (body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder) {
-                //     envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder;
-                // }
 	            
 	            envs['SOAJS_DEPLOY_ANALYTICS'] = body.deployment.deployAnalytics ? true : false;
 
@@ -680,10 +683,6 @@ module.exports = {
                     if (envs[e] !== null) {
                         output += "export " + e + "=" + envs[e] + os.EOL;
                     }
-                }
-
-                if (!body.clusters.mongoExt) {
-                    output += "sudo " + "killall mongo" + os.EOL;
                 }
 
                 output += os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/kubernetes.js") + os.EOL;

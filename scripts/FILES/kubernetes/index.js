@@ -13,8 +13,12 @@ var clone = require('clone');
 var config = require('./config.js');
 var folder = config.folder;
 delete require.cache[config.profile];
-var profile = require(config.profile);
-var mongo = new soajs.mongo(profile);
+var profile = soajs.utils.cloneObj(require(config.profile));
+var profile2 = JSON.parse(JSON.stringify(profile));
+if(!process.env.MONGO_EXT || process.env.MONGO_EXT === 'false'){
+	profile2.servers[0].port = parseInt(process.env.MONGO_PORT) || 27017;
+}
+var mongo = new soajs.mongo(profile2);
 var analyticsCollection = 'analytics';
 var dbConfiguration = require('../../../data/startup/environments/dashboard');
 var esClient;

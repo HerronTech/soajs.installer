@@ -502,6 +502,10 @@ var catalogs = [
                         "type": "computed",
                         "value": "$SOAJS_ENV"
                     },
+					"SOAJS_EXTKEY": {
+                    	"type": "computed",
+						"value": "$SOAJS_EXTKEY"
+					},
                     "SOAJS_NX_DOMAIN": {
                         "type": "computed",
                         "value": "$SOAJS_NX_DOMAIN"

@@ -156,6 +156,8 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
 				return false;
 			}
+			
+			console.log(response);
 
 			$scope.deployment = {
 				"deployType": (response && response.deployType) ? response.deployType : "manual",
@@ -173,13 +175,17 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				"imagePrefix": (response && response.imagePrefix) ? response.imagePrefix : "soajsorg",
 				"certsRequired": false,
 
-				"nginxPort": (response && response.nginxPort) ? response.nginxPort : 80,
-                "nginxSecurePort": (response && response.nginxSecurePort) ? response.nginxSecurePort : 443,
+				"nginxPort": (response && response.nginxPort) ? response.nginxPort : 30080,
+                "nginxSecurePort": (response && response.nginxSecurePort) ? response.nginxSecurePort : 30443,
                 "nginxSsl": (response && response.nginxSsl) ? response.nginxSsl : false,
 				"nginxDeployType": (response && response.nginxDeployType) ? response.nginxDeployType : "NodePort",
 
                 "dockerReplica": (response && response.dockerReplica) ? response.dockerReplica : 1
 			};
+			$scope.deployment.mongoExt = response.mongoExt;
+			if(!response.mongoExt){
+				$scope.deployment.mongoExposedPort = (response && response.mongoExposedPort) ? response.mongoExposedPort: 32017;
+			}
 
 			if($scope.deployment.deployDriver.indexOf("docker") !== -1){
 				$scope.deployment.containerDir = (response && response.docker && response.docker.containerDir) ? response.docker.containerDir : "";

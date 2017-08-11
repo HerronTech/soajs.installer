@@ -227,6 +227,7 @@ module.exports = {
                             "imagePrefix": {"type": "string", "required": false},
                             "nginxPort": {"type": "number", "required": false},
                             "nginxSecurePort": {"type": "number", "required": false},
+                            "mongoExposedPort": {"type": "number", "required": false},
                             "nginxSsl": {"type": "boolean", "required": false},
                             "generateSsc": {"type": "boolean", "required": false},
 							"nginxKubeSecret": {"type": "string", "required": false},

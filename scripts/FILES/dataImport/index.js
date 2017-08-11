@@ -11,6 +11,10 @@ delete require.cache[process.env.SOAJS_PROFILE];
 const profile = require(process.env.SOAJS_PROFILE);
 
 profile.name = "core_provision";
+if(!process.env.MONGO_EXT || process.env.MONGO_EXT === 'false'){
+	profile.servers[0].port = parseInt(process.env.MONGO_PORT) || 27017;
+}
+
 var mongo = new soajs.mongo(profile);
 var fs= require("fs");
 
