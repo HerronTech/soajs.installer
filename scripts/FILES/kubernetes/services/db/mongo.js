@@ -28,7 +28,7 @@ var components = {
                     "protocol": "TCP",
                     "port": 27017,
                     "targetPort": 27017,
-                    "nodePort": ( 5000 + 27017 )
+                    "nodePort": process.env.MONGO_PORT
                 }
             ]
         }

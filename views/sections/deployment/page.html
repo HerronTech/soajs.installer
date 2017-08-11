@@ -312,8 +312,7 @@
                                 <option value="LoadBalancer">Load Balancer</option>
                             </select>
                             <div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='LoadBalancer'">Load Balancer option uses automatic public IP / ELB provisioning when running Kubernetes cluster in AWS or GCE.</div>
-                            <div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='NodePort'">NodePort exposes NGINX to the selected port number plus 30000.</div>
-                            <div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='NodePort'">Current NGINX exposed port: {{30000 + deployment.nginxPort}}</div>
+                            <div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='NodePort'">Current NGINX exposed port: {{deployment.nginxPort}}</div>
                         </div>
                     </td>
                 </tr>
@@ -370,6 +369,23 @@
                 </tbody>
             </table>
         </fieldset>
+	    <fieldset ng-show="(docker||kubernetes) && !deployment.mongoExt ">
+		    <legend>Mongo</legend>
+		    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+			    <tbody>
+				    <tr class="form-group tr-code-wrapper">
+					    <td class="form-select">
+						    <div id="mongoExposedPort-wrapper">
+							    <label>Mongo Exposed Port</label>
+							    <input type="string" ng-required="false" class="form-control" name="mongoExposedPort"
+							           id="mongoExposedPort" ng-model="deployment.mongoExposedPort" placeholder="Mongo Exposed Port"/>
+							    <div class="fieldMsg hint">Specify the Mongo Exposed port number</div>
+						    </div>
+					    </td>
+				    </tr>
+			    </tbody>
+		    </table>
+	    </fieldset>
         <br />
         <fieldset ng-show="docker">
             <legend>Docker</legend>

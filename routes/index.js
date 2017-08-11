@@ -222,7 +222,10 @@ var routes = {
 	},
     "getDeployment": function (req, res) {
         utils.loadCustomData('deployment', function (customData) {
-            return res.json(req.soajs.buildResponse(null, customData || null));
+	        utils.loadCustomData('clusters', function (customData2) {
+	            customData.mongoExt = customData2.mongoExt;
+                return res.json(req.soajs.buildResponse(null, customData || null));
+	        });
         });
     },
     "postDeployment": function (req, res) {
