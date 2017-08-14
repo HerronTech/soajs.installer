@@ -8,8 +8,7 @@ var lib = require(__dirname + '/FILES/kubernetes/index.js');
 var utilLog = require('util');
 
 utilLog.log ('SOAJS High Availability Deployer | Kubernetes');
-utilLog.log ('Current configuration: Machine IP/URL: ' + config.kubernetes.machineIP + ' | Certificates Local Path: ' + config.kubernetes.certsPath);
-utilLog.log ('You can change this configuration by setting SOAJS_MACHINE_IP & SOAJS_KUBE_CERTS_PATH environment variables\n');
+utilLog.log ('Current configuration: Machine IP/URL: ' + config.kubernetes.machineIP);
 
 utilLog.log ('Initializing deployer ...');
 lib.getDeployer(config.kubernetes.config, function (error, deployer) {
