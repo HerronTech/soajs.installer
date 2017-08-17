@@ -4,6 +4,8 @@ var overApp = app.components;
 overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function ($scope, ngDataApi, $timeout) {
 	$scope.alerts = [];
 	
+	$scope.remoteProvider = "";
+	
 	$scope.closeAlert = function (i) {
 		$scope.alerts.splice(i, 1);
 	};
@@ -97,6 +99,8 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 			output.deployAnalytics = $scope.analytics.remote;
 		}
 		
+		output.remoteProvider = $scope.remoteProvider;
+		
 		var options = {
 			url: appConfig.url + "/overview",
 			method: "post",
@@ -138,21 +142,31 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 		}, 500);
 	};
 	
-	$scope.selectDeployment = function (type) {
-		$timeout(function(){
-			if (type === null) {
-				$scope.docker = false;
-				$scope.kubernetes = false;
-			}
-			if (type === 'docker') {
-				$scope.docker = true;
-				$scope.kubernetes = false;
-			}
-			if (type === 'kubernetes') {
-				$scope.docker = false;
-				$scope.kubernetes = true;
-			}
-		}, 100);
+	$scope.saveremoteprovider = function(vv){
+		$scope.remoteProvider = vv;
+		setTimeout(function () {
+			resizeContent();
+		}, 700);
+	};
+	
+	$scope.selectDeployment = function (type, vv) {
+		if (type === null) {
+			$scope.docker = false;
+			$scope.kubernetes = false;
+		}
+		if (type === 'docker') {
+			$scope.docker = true;
+			$scope.kubernetes = false;
+		}
+		if (type === 'kubernetes') {
+			$scope.docker = false;
+			$scope.kubernetes = true;
+		}
+		if(vv){
+			$scope.data.deployDriver = vv;
+		}
+		console.log(type, $scope.docker, $scope.kubernetes);
+		console.log($scope.data.deployDriver);
 	};
 	
 	$scope.loadOverview = function () {
@@ -167,6 +181,9 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 				return false;
 			}
 			$scope.style = response;
+			
+			$scope.remoteProvider = response.remoteProvider;
+			
 			$scope.data = {};
 			if ($scope.style.deployer) {
 				$scope.data.deployDriver = $scope.style.deployer.deployDriver;

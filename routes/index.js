@@ -88,6 +88,8 @@ var routes = {
                     os : osName
                 };
             }
+            
+            data.remoteProvider= customData.remoteProvider;
             return res.json(req.soajs.buildResponse(null, data));
             /*utils.loadProfile(function (profile) {
                 if(profile){

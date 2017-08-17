@@ -74,7 +74,8 @@ module.exports = {
 								"required": true,
 								"enum": ["manual", "container.docker.local", "container.docker.remote", "container.kubernetes.local", "container.kubernetes.remote"]
 							},
-							"deployAnalytics": {"type": "boolean", "required": false}
+							"deployAnalytics": {"type": "boolean", "required": false},
+							"remoteProvider": {"type": "string", "required": false}
 						},
 						"additionalProperties": false
 					}
