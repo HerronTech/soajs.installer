@@ -352,7 +352,7 @@ var lib = {
     },
 
     importData: function (mongoInfo, cb) {
-        utilLog.log('Importing provision data to:', profile.servers[0].host + ":" + profile.servers[0].port);
+        utilLog.log('Importing provision data to:', profile2.servers[0].host + ":" + profile2.servers[0].port);
         var dataImportFile = __dirname + "/../dataImport/";
         const importFiles = spawn(process.env.NODE_PATH, [ 'index.js' ], { stdio: 'inherit', cwd: dataImportFile });
         importFiles.on('data', (data) => {
@@ -399,7 +399,7 @@ var lib = {
                 return cb(null, true);
 
             else{
-                utilLog.log('Importing certifictes to:', profile.servers[0].host + ":" + profile.servers[0].port);
+                utilLog.log('Importing certifictes to:', profile2.servers[0].host + ":" + profile2.servers[0].port);
                 copyCACertificate(function(caErr){
                     if(caErr){
                         utilLog.log("Error while copying the certificate of type CA");
@@ -424,7 +424,7 @@ var lib = {
 
             function getDb() {
                 profile.name = "core_provision";
-                mongo = new soajs.mongo(profile);
+                mongo = new soajs.mongo(profile2);
                 return mongo;
             }
 
