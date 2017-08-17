@@ -82,6 +82,7 @@ var routes = {
                     os : osName,
 	                deployAnalytics: customData.deployAnalytics ? customData.deployAnalytics : false
                 };
+	            data.remoteProvider= customData.remoteProvider;
             }
             else {
                 data.deployer = {
@@ -89,7 +90,7 @@ var routes = {
                 };
             }
             
-            data.remoteProvider= customData.remoteProvider;
+            
             return res.json(req.soajs.buildResponse(null, data));
             /*utils.loadProfile(function (profile) {
                 if(profile){
