@@ -762,7 +762,7 @@ module.exports = {
                         "api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
                         "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
                     },
-                    "ui": "http://" + body.gi.site + "." + body.gi.domain + ":" + (30000 + body.deployment.nginxPort),
+                    "ui": "http://" + body.gi.site + "." + body.gi.domain + ":" + body.deployment.nginxPort,
                     "cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
                 };
             }
