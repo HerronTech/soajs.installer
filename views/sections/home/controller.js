@@ -177,6 +177,7 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 	
 	$scope.saveremoteprovider = function(vv){
 		$scope.remoteProvider = vv;
+		$scope.selectDeployment(null, false);
 		setTimeout(function () {
 			resizeContent();
 		}, 700);
@@ -197,6 +198,9 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 		}
 		if(vv){
 			$scope.data.deployDriver = vv;
+		}
+		else if (vv === false){
+			$scope.data.deployDriver = null;
 		}
 	};
 	
