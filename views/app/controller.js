@@ -1,5 +1,5 @@
 'use strict';
-var app = angular.module('mainApp', ['ui.bootstrap', 'ngRoute', 'ngSanitize']);
+var app = angular.module('mainApp', ['ui.bootstrap', 'ngRoute', 'ngSanitize', 'ui.select']);
 
 app.config([
 	'$routeProvider',

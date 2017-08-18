@@ -85,18 +85,19 @@
 						This type of deployment is only supported on machines running Ubuntu.
 					</p>
 					<br/>
-					<b><u>Pick a Provider:</u></b>&nbsp;
-					<select ng-model="remoteProvider" ng-change="saveremoteprovider(remoteProvider); selectDeployment(null);">
-						<option value=""></option>
-						<option value="aws">Amazon Web Services</option>
-						<option value="rackspace">Rackspace</option>
-						<option value="google">Google Cloud</option>
-						<option value="azure">Microsoft Azure</option>
-						<option value="joyent">Joyent</option>
-						<option value="custom">Custom</option>
-					</select>
+					<b>Select Provider:</b>
+					<ui-select ng-model="remoteProvider" ng-change="saveremoteprovider(remoteProvider)">
+						<ui-select-match>
+							<img ng-src="{{$select.selected.url}}" height="24" style="position: relative; top: -6px;"/>&nbsp;
+							<span ng-bind="$select.selected.label"></span>
+						</ui-select-match>
+						<ui-select-choices repeat="item in (myProviders) track by item.name">
+							<img ng-src="{{item.url}}" height="24"/>&nbsp;
+							<span ng-bind="item.label"></span>
+						</ui-select-choices>
+					</ui-select>
 					
-					<div class="w100" ng-show="remoteProvider === 'aws'">
+					<div class="w100" ng-show="remoteProvider.name === 'aws'">
 						<br/>
 						<tabset>
 							<tab heading="First Time Deployment">
@@ -156,7 +157,7 @@
 						</tabset>
 					</div>
 					
-					<div class="w100" ng-show="remoteProvider === 'rackspace'">
+					<div class="w100" ng-show="remoteProvider.name === 'rackspace'">
 						<br/>
 						<tabset>
 							<tab heading="First Time Deployment">
@@ -216,7 +217,7 @@
 						</tabset>
 					</div>
 					
-					<div class="w100" ng-show="remoteProvider === 'google'">
+					<div class="w100" ng-show="remoteProvider.name === 'google'">
 						<br/>
 						<tabset>
 							<tab heading="First Time Deployment">
@@ -276,7 +277,7 @@
 						</tabset>
 					</div>
 					
-					<div class="w100" ng-show="remoteProvider === 'azure'">
+					<div class="w100" ng-show="remoteProvider.name === 'azure'">
 						<br/>
 						<tabset>
 							<tab heading="First Time Deployment">
@@ -336,7 +337,7 @@
 						</tabset>
 					</div>
 					
-					<div class="w100" ng-show="remoteProvider === 'joyent'">
+					<div class="w100" ng-show="remoteProvider.name === 'joyent'">
 						<br/>
 						<tabset>
 							<tab heading="First Time Deployment">
@@ -349,10 +350,10 @@
 									</tr>
 									<tr>
 										<td width="50%">
-											<a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on Joyent to deploy SOAJS using Docker Swarm" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294622/Joyent+Triton+Docker" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
+											<a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on Joyent to deploy SOAJS using Docker Swarm" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294622/Joyent+Triton+Docker" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_triton.png" border="0"></a>
 										</td>
 										<td width="50%">
-											<a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on Joyent to deploy SOAJS using Kubernetes" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294695/Joyent+Triton+Kubernetes" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+											<a class="nonhighlightedDriver" tooltip="Learn how to Set Up a machine on Joyent to deploy SOAJS using Kubernetes" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294695/Joyent+Triton+Kubernetes" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_on_triton.png" border="0"></a>
 										</td>
 									</tr>
 									<tr>
@@ -377,10 +378,10 @@
 									</tr>
 									<tr>
 										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
+											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_triton.png" border="0"></a>
 										</td>
 										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_on_triton.png" border="0"></a>
 										</td>
 									</tr>
 									<tr>
@@ -397,7 +398,7 @@
 						</tabset>
 					</div>
 					
-					<div class="w100" ng-show="remoteProvider === 'custom'">
+					<div class="w100" ng-show="remoteProvider.name === 'custom'">
 						<br/>
 						<tabset>
 							<tab heading="First Time Deployment">
@@ -519,23 +520,3 @@ $ kubectl describe secrets</code></pre>
 		</div>
 	</form>
 </div>
-
-<style>
-	.depType table td {
-		width: 50%;
-	}
-	
-	.depType table td a.nonhighlightedDriver {
-		padding: 15px;
-		padding-top: 12px;
-		padding-bottom: 12px;
-		text-align: left;
-	}
-	
-	.depType table td a.nonhighlightedDriver img {
-		height: 67px;
-	}
-	table img{
-		width:70%;
-	}
-</style>

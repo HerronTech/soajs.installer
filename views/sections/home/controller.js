@@ -4,7 +4,40 @@ var overApp = app.components;
 overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function ($scope, ngDataApi, $timeout) {
 	$scope.alerts = [];
 	
-	$scope.remoteProvider = "";
+	$scope.remoteProvider = {};
+	
+	$scope.myProviders = [
+		{
+			name: 'aws',
+			label: 'Amazon Web Services',
+			url: 'http://cloudzone.azurewebsites.net/wp-content/uploads/2015/12/amazon-aws-s3-storage-logo.png'
+		},
+		{
+			name: 'rackspace',
+			label: 'Rackspace',
+			url: 'https://cdn.saaspass.com/a52e2205866340ea/authenticators/rackspace_128.png'
+		},
+		{
+			name: 'google',
+			label: 'Google Cloud',
+			url: 'https://cloud.google.com/_static/images/cloud/cloud_64dp.png'
+		},
+		{
+			name: 'azure',
+			label: 'Microsoft Azure',
+			url: 'https://dtb5pzswcit1e.cloudfront.net/assets/images/product_logos/icon_azure@2x.png'
+		},
+		{
+			name: 'joyent',
+			label: 'Joyent',
+			url: 'https://cdn1.itcentralstation.com/vendors/logos/original/joyent_avatar_reasonably_small.png?1371107403'
+		},
+		{
+			name: 'custom',
+			label: 'custom',
+			url: 'https://assets.ubuntu.com/v1/cb22ba5d-favicon-16x16.png'
+		}
+	];
 	
 	$scope.closeAlert = function (i) {
 		$scope.alerts.splice(i, 1);
@@ -165,8 +198,6 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 		if(vv){
 			$scope.data.deployDriver = vv;
 		}
-		console.log(type, $scope.docker, $scope.kubernetes);
-		console.log($scope.data.deployDriver);
 	};
 	
 	$scope.loadOverview = function () {
