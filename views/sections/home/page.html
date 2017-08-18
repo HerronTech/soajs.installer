@@ -49,32 +49,75 @@
 						Once deployed, you can interact with SOAJS ready made services via a User Interface.<br/>
 						This type of deployment is only supported on machines running Ubuntu or Mac.
 					</p>
-					<b><u>Deployment Type:</u></b><br/>
-					<input type="radio" name="localButtons" ng-model="data.deployDriver" value="container.docker.local" ng-change="selectDeployment('docker')"/>&nbsp;Docker
-					Deployment (Ubuntu or Mac only)<br/>
-					<div ng-if="docker && local" class="analyticsButtons">
-						<input type="checkbox" name="localButtons" ng-model="analytics.local" ng-value="analytics.local"/>&nbsp;<b>Activate
-						Analytics</b><br/></div>
-					<input type="radio" name="localButtons" ng-model="data.deployDriver" value="container.kubernetes.local" ng-change="selectDeployment('kubernetes')"/>&nbsp;Kubernetes
-					Deployment (Ubuntu or Mac only)<br/>
-					<div ng-if="kubernetes && local" class="analyticsButtons">
-						<input type="checkbox" name="localButtons" ng-model="analytics.local" ng-value="analytics.local"/>&nbsp;<b>Activate
-						Analytics</b><br/></div>
-					<br/>
 					
-					<pre ng-show="docker && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
+					<tabset>
+						<tab heading="First Time Deployment">
+							<br />
+							<table width="95%" border="0" style="margin: 0 auto;">
+								<tr>
+									<td colspan="2">
+										<p>Please click on the technology logo below and the Installer will help you install it on your machine so you can proceed.</p>
+									</td>
+								</tr>
+								<tr>
+									<td width="50%">
+										<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.local'}" href="" ng-click="selectDeployment('docker', 'container.docker.local')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
+									</td>
+									<td width="50%">
+										<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.local'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.local')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<br>
+										<p>
+											<input type="checkbox" name="localButtons" ng-model="analytics.local" ng-value="analytics.local"/>&nbsp;i would also like to <b>Activate Analytics</b> with the deployment.
+										</p>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<pre ng-show="docker && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
 {{style.docker.local.v}}</code></pre>
-					
-					
-					<div ng-show="docker && local && osName==='mac'"><b>Click on this link to download Docker for
-						Mac:</b>
-						<a href="{{style.docker.local.v}}" target="_blank">{{style.docker.local.v}}</a>
-					</div>
-					
-					<pre ng-show="kubernetes && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
+										<pre ng-show="docker && local && osName==='mac'" class="bash"><code># Click on this link to download Docker for Mac:
+<a href="{{style.docker.local.v}}" target="_blank">{{style.docker.local.v}}</a></code></pre>
+										<pre ng-show="kubernetes && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
 {{style.kubernetes.local.v}}</code></pre>
-					<pre ng-show="kubernetes && local && osName==='mac'" class="bash"><code># Execute the command below in your terminal on your local machine
+										<pre ng-show="kubernetes && local && osName==='mac'" class="bash"><code># Execute the command below in your terminal on your local machine
 {{style.kubernetes.local.v}}</code></pre>
+									</td>
+								</tr>
+							</table>
+						</tab>
+						<tab heading="Deploy on an Existing Cloud">
+							<br />
+							<table width="95%" border="0" style="margin: 0 auto;">
+								<tr>
+									<td colspan="2">
+										<p>
+											The SOAJS Installer does not affect any existing deployments. Please select which technology you have on the remote machine to proceed.
+										</p>
+									</td>
+								</tr>
+								<tr>
+									<td width="50%">
+										<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.local'}" href="" ng-click="selectDeployment('docker', 'container.docker.local')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
+									</td>
+									<td width="50%">
+										<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.local'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.local')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<br>
+										<p>
+											<input type="checkbox" name="localButtons" ng-model="analytics.local" ng-value="analytics.local"/>&nbsp;i would also like to <b>Activate Analytics</b> with the deployment.
+										</p>
+									</td>
+								</tr>
+							</table>
+						</tab>
+					</tabset>
 				</accordion-group>
 				
 				<accordion-group heading="Remote Cloud Deployment" is-open="remote" ng-click="selectLocation('remote')">
