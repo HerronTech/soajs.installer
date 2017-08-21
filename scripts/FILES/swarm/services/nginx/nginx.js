@@ -47,6 +47,7 @@ var config = {
         'SOAJS_NX_DOMAIN=' + masterDomain,
         'SOAJS_NX_API_DOMAIN=' + gConfig.apiPrefix + '.' + masterDomain,
         'SOAJS_NX_SITE_DOMAIN=' + gConfig.sitePrefix + '.' + masterDomain,
+        'SOAJS_NX_PORTAL_DOMAIN=' + gConfig.portalPrefix + '.' + masterDomain,
 
         'SOAJS_NX_CONTROLLER_NB=1',
         'SOAJS_NX_CONTROLLER_IP_1=' + controllerServiceName,

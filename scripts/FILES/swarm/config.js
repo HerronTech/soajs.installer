@@ -8,6 +8,7 @@ var lib= {
 	"masterDomain": process.env.MASTER_DOMAIN || 'soajs.org',
 	"apiPrefix": process.env.API_PREFIX || "dashboard-api",
 	"sitePrefix": process.env.SITE_PREFIX || "dashboard",
+	"portalPrefix": process.env.PORTAL_PREFIX || "portal",
 	"folder": process.env.SOAJS_DATA_FOLDER || "/opt/soajs/node_modules/soajs.installer/data/startup/",
 	"profile": process.env.SOAJS_PROFILE || "/opt/soajs/node_modules/soajs.installer/data/startup/profile.js",
 	"deploy_acc": process.env.SOAJS_DEPLOY_ACC || true,

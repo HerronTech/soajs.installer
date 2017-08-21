@@ -140,6 +140,10 @@ var components = {
 									"value": gConfig.sitePrefix + "." + gConfig.masterDomain
 								},
 								{
+									"name": "SOAJS_NX_PORTAL_DOMAIN",
+									"value": gConfig.portalPrefix + "." + gConfig.masterDomain
+								},
+								{
 									"name": "SOAJS_NX_CONTROLLER_NB",
 									"value": "" + gConfig.kubernetes.replicas
 								},
