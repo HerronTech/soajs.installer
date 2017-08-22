@@ -71,13 +71,51 @@ var lib = {
             strictSSL: false
         };
 
-        deployerConfig.version = 'v1beta1';
-        deployer.extensions = new K8Api.Extensions(deployerConfig);
+		lib.getServerVersion(deployerConfig, function (error, version) {
+			if(error) return cb(error);
 
-        deployerConfig.version = 'v1';
-        deployer.core = new K8Api.Core(deployerConfig);
+			if(version && version.major && version.minor) {
+				utilLog.log('Kubernetes server version is: ' + version.major + '.' + version.minor);
+			}
 
-        return cb(null, deployer);
+			deployerConfig.version = 'v1beta1';
+	        deployer.extensions = new K8Api.Extensions(deployerConfig);
+
+	        deployerConfig.version = 'v1';
+	        deployer.core = new K8Api.Core(deployerConfig);
+
+			if(version.minor === '6') {
+				deployerConfig.version = 'v2alpha1';
+				deployer.autoscaling = new K8Api.Autoscaling(deployerConfig);
+            }
+            else if (version.minor === '7') {
+				deployerConfig.version = 'v1';
+				deployer.autoscaling = new K8Api.Autoscaling(deployerConfig);
+            }
+
+	        return cb(null, deployer);
+		});
+    },
+
+	getServerVersion: function (deployerConfig, cb) {
+        var requestOptions = {
+            uri: deployerConfig.url + '/version',
+            auth: {
+                bearer: ''
+            },
+            strictSSL: false,
+            json: true
+        };
+
+        if (deployerConfig.auth && deployerConfig.auth.bearer) {
+            requestOptions.auth.bearer = deployerConfig.auth.bearer;
+        }
+
+        request.get(requestOptions, function (error, response, body) {
+            if(error) return cb(error);
+
+        	return cb(null, body);
+        });
     },
 
     getContent: function (type, group, cb) {
@@ -550,9 +588,9 @@ var lib = {
 	checkIfDeployed: function (deployer, options, cb) {
 
 		async.series({
-			deployment: function (callback) { getResource('deployment', 'extensions', callback); },
+			// deployment: function (callback) { getResource('deployment', 'extensions', callback); },
 			service: function (callback) { getResource('service', 'core', callback); },
-			serviceAccount: function (callback) { getResource('serviceAccount', 'core', callback); }
+			// serviceAccount: function (callback) { getResource('serviceAccount', 'core', callback); }
 		}, function(error, result) {
 			if(error) return cb(error);
 
@@ -563,9 +601,14 @@ var lib = {
 					null: not required, do nothing
 			 */
 			 //NOTE: if a resource is deployed, delete it and return the object, this way it will not be deployed
-			 if(result.deployment) delete options.deployment;
-			 if(result.service) delete options.service;
-			 if(result.serviceAccount) delete options.serviceAccount;
+			 //NOTE: Only plugin for now is heapster, we check the service only
+			 if(result.service && Object.keys(result.service).length > 0) {
+				 options = {};
+			 }
+
+			//  if(result.deployment) delete options.deployment;
+			//  if(result.service) delete options.service;
+			//  if(result.serviceAccount) delete options.serviceAccount;
 
 			 return cb(null, options);
 		});
@@ -616,7 +659,19 @@ var lib = {
                     if (error) return callback(error);
 
                     setTimeout(function () {
-                        deployer.extensions.namespaces(oneDeployment.metadata.namespace).deployments.delete({ name: oneDeployment.metadata.name, qs: params }, callback);
+                        deployer.extensions.namespaces(oneDeployment.metadata.namespace).deployments.delete({ name: oneDeployment.metadata.name, qs: params }, function (error) {
+							if(error) return callback(error);
+
+							//hpa objects have the same naming as their deployments
+							deployer.autoscaling.namespaces(oneDeployment.metadata.namespace).hpa.delete({ name: oneDeployment.metadata.name }, function (error) {
+								if(error) {
+									if(error.code === 404) return callback();
+									else return callback(error);
+								}
+
+								return callback();
+							});
+						});
                     }, 5000);
                 });
             }, cb);
