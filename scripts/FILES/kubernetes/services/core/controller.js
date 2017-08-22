@@ -117,6 +117,11 @@ var components = {
                                 "successThreshold": gConfig.kubernetes.readinessProbe.successThreshold,
                                 "failureThreshold": gConfig.kubernetes.readinessProbe.failureThreshold
                             },
+                            "resources": {
+                                "limits": {
+                                    "cpu": "300m"
+                                }
+                            },
                             "env": [
                                 {
                                     "name": "NODE_ENV",
