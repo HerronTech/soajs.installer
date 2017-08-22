@@ -101,6 +101,7 @@ module.exports = {
 						"properties": {
 							"api": {"type": "string", "required": false},
 							"site": {"type": "string", "required": false},
+							"portal": {"type": "string", "required": false},
 							"domain": {"type": "string", "required": false, "format": "hostname"},
 							"wrkDir": {"type": "string", "required": false, "pattern": /^\/[_a-zA-Z\/][_a-zA-Z0-9\/:]*$/},
 							"username": {"type": "string", "required": false},

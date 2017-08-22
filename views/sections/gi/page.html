@@ -39,6 +39,15 @@
 							</div>
 						</td>
 					</tr>
+					<tr class="form-group tr-code-wrapper">
+						<td class="form-select">
+							<div id="protal-wrapper">
+								<label>Portal Prefix</label>
+								<input class="form-control" id="portal" name="portal" ng-model="gi.portal" value="{{gi.portal}}" placeholder="{{gi.portal}}" tooltip="Provide a Portal prefix to the domain you entered above." ng-required="true" type="text" />
+								<div class="fieldMsg hint">Provide the Portal prefix to the domain you entered. <u>Ex:</u> portal -> portal.mydomain.com</div>
+							</div>
+						</td>
+					</tr>
 					<tr class="form-group tr-code-wrapper" ng-hide="disableWrkDir">
 						<td class="form-select">
 							<div id="wrkDir-wrapper">

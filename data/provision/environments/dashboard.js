@@ -5,6 +5,7 @@ var dashboard = {
     "domain": "%domain%",
     "sitePrefix": "%site%",
     "apiPrefix": "%api%",
+    "portalPrefix": "%portal%",
     "locked": true,
     "port": 80,
     "profile": "%wrkDir%/soajs/FILES/profiles/profile.js",

@@ -257,6 +257,7 @@ module.exports = {
 	    //modify analytics file
 	    var settings = fs.readFileSync(folder + "analytics/settings.js", "utf8");
         envData = envData.replace(/%domain%/g, body.gi.domain);
+        envData = envData.replace(/%portal%/g, body.gi.portal);
         envData = envData.replace(/%site%/g, body.gi.site);
         envData = envData.replace(/%api%/g, body.gi.api);
         if(body.deployment.deployType === 'manual'){
@@ -390,6 +391,7 @@ module.exports = {
                     "API_PREFIX": body.gi.api,
 	                "SOAJS_EXTKEY" : body.security.extKey1,
                     "SITE_PREFIX": body.gi.site,
+                    "PORTAL_PREFIX": body.gi.portal,
                     "MASTER_DOMAIN": body.gi.domain
                 };
                 if (body.clusters.replicaSet) {
@@ -497,6 +499,7 @@ module.exports = {
 	                "SOAJS_EXTKEY" : body.security.extKey1,
                     "API_PREFIX": body.gi.api,
                     "SITE_PREFIX": body.gi.site,
+	                "PORTAL_PREFIX": body.gi.portal,
                     "MASTER_DOMAIN": body.gi.domain,
 
                     "MONGO_EXT": body.clusters.mongoExt,
@@ -603,6 +606,7 @@ module.exports = {
 	                "SOAJS_EXTKEY" : body.security.extKey1,
                     "API_PREFIX": body.gi.api,
                     "SITE_PREFIX": body.gi.site,
+	                "PORTAL_PREFIX": body.gi.portal,
                     "MASTER_DOMAIN": body.gi.domain,
 
                     "MONGO_EXT": body.clusters.mongoExt,

@@ -50,6 +50,7 @@ giApp.controller('giCtrl', ['$scope', 'ngDataApi', function($scope, ngDataApi) {
 				domain: (response && response.domain)? response.domain : "soajs.org",
 				api: (response && response.api)? response.api : "dashboard-api",
 				site: (response && response.site)? response.site : "dashboard",
+				portal: (response && response.portal)? response.portal : "portal",
 				wrkDir: (response && response.wrkDir)? response.wrkDir : "/opt",
 				email: (response && response.email)? response.email : "me@localhost.com",
 				username: (response && response.username)? response.username : "owner",
