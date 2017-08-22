@@ -82,12 +82,15 @@ var routes = {
                     os : osName,
 	                deployAnalytics: customData.deployAnalytics ? customData.deployAnalytics : false
                 };
+	            data.remoteProvider= customData.remoteProvider;
             }
             else {
                 data.deployer = {
                     os : osName
                 };
             }
+            
+            
             return res.json(req.soajs.buildResponse(null, data));
             /*utils.loadProfile(function (profile) {
                 if(profile){
@@ -223,7 +226,9 @@ var routes = {
     "getDeployment": function (req, res) {
         utils.loadCustomData('deployment', function (customData) {
 	        utils.loadCustomData('clusters', function (customData2) {
-	            customData.mongoExt = customData2.mongoExt;
+	        	if(customData && customData2){
+	                customData.mongoExt = customData2.mongoExt;
+		        }
                 return res.json(req.soajs.buildResponse(null, customData || null));
 	        });
         });
