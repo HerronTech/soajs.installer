@@ -28,7 +28,7 @@
     "clone": "*",
     "dockerode": "*",
     "gridfs-stream": "*",
-    "kubernetes-client": "*",
+    "kubernetes-client": "aff04/kubernetes-client.git#v3.10.1",
     "mkdirp": "*",
     "ncp": "*",
     "npm": "*",
