@@ -573,14 +573,19 @@ var lib = {
         }
 
 		function configureELK(cb) {
-			if(!config.analytics || config.analytics !== 'true') return cb(null, true);
-
-			//check if elasticsearch
-			if (options.deployment.metadata.name === "soajs-analytics-elasticsearch") {
-				return lib.configureElastic(deployer, options, cb);
+			if (!config.analytics || config.analytics !== 'true') return cb(null, true);
+			if (options && options.deployment
+				&& options.deployment.metadata
+				&& options.deployment.metadata.name) {
+				if (options.deployment.metadata.name === "soajs-analytics-elasticsearch") {
+					return lib.configureElastic(deployer, options, cb);
+				}
+				else {
+					return lib.configureKibana(deployer, options, cb);
+				}
 			}
 			else {
-				return lib.configureKibana(deployer, options, cb);
+				return cb(null, true);
 			}
 		}
     },
