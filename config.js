@@ -238,6 +238,7 @@ module.exports = {
                             "nginxSecurePort": {"type": "number", "required": false},
                             "mongoExposedPort": {"type": "number", "required": false},
                             "nginxSsl": {"type": "boolean", "required": false},
+							"mongoExt": {"type": "boolean", "required": false},
                             "generateSsc": {"type": "boolean", "required": false},
 							"nginxKubeSecret": {"type": "string", "required": false},
 							"nginxDeployType": {"type": "string", "required": false, "enum": ["NodePort", "LoadBalancer"]},

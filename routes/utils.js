@@ -269,12 +269,16 @@ module.exports = {
         envData = envData.replace(/%deployDriver%/g, body.deployment.deployDriver);
         envData = envData.replace(/%deployDockerNodes%/g, body.deployment.deployDockerNodes);
         envData = envData.replace(/%clusterPrefix%/g, body.clusters.prefix);
-        envData = envData.replace(/"%clusters%"/g, JSON.stringify(clusters, null, 2));
-
+        
+        var mongoCluster = fs.readFileSync(folder + "resources/mongo.js", "utf8");
+	    mongoCluster = mongoCluster.replace(/"%clusters%"/g, JSON.stringify(clusters, null, 2));
+		fs.writeFile(folder + "resources/mongo.js", mongoCluster, "utf8");
+		   
 	    var uid = uuid.v4();
+	    var esCluster = fs.readFileSync(folder + "resources/es.js", "utf8");
 	    if (es_clusters) {
-		    envData = envData.replace(/"%es_analytics_cluster%"/g, JSON.stringify(es_clusters, null, 2));
-		    envData = envData.replace(/"%es_analytics_cluster_name%"/g, JSON.stringify("es_analytics_cluster_" + uid), null ,2);
+		    esCluster = esCluster.replace(/"%es_analytics_cluster%"/g, JSON.stringify(es_clusters, null, 2));
+		    esCluster = esCluster.replace(/"%es_analytics_cluster_name%"/g, JSON.stringify("es_analytics_cluster_" + uid), null ,2);
 		    envData = envData.replace(/%es_database_name%/g, "es_analytics_db_" + uid);
 		    envData = envData.replace(/"%databases_value%"/g, JSON.stringify({
 			    "cluster": "es_analytics_cluster_" + uid,
@@ -283,11 +287,14 @@ module.exports = {
 		    settings = settings.replace(/"%db_name%"/g, JSON.stringify("es_analytics_db_" + uid), null ,2);
 	    }
 	    else {
-		    envData = envData.replace(/"%es_analytics_cluster_name%": "%es_analytics_cluster%",/g, '');
+		    esCluster = "'use strict';" + os.EOL + os.EOL + "module.exports =" + JSON.stringify({}) + ";";
 		    envData = envData.replace(/"%es_database_name%": "%databases_value%",/g, '');
 		    settings = settings.replace(/"db_name": "%db_name%"/g, '');
 	    }
+	    fs.writeFile(folder + "resources/es.js", esCluster, "utf8");
 	    fs.writeFile(folder + "analytics/settings.js", settings, "utf8");
+	    
+	    
         envData = envData.replace(/%keySecret%/g, body.security.key);
         envData = envData.replace(/%sessionSecret%/g, body.security.session);
         envData = envData.replace(/%cookieSecret%/g, body.security.cookie);
