@@ -1,6 +1,6 @@
 'use strict';
 
-var defaultVoluming = {}, mongoVoluming = {}, esVoluming = {};
+var defaultVoluming = {}, mongoVoluming = {}, esVoluming = {}, restartPolicy = {}, network = '';
 if (process.env.SOAJS_DEPLOY_HA === 'docker') {
     defaultVoluming = {
         "volumes": [
@@ -37,6 +37,11 @@ if (process.env.SOAJS_DEPLOY_HA === 'docker') {
             }
         ]
     };
+    restartPolicy = {
+        "condition": "any", //none, on-failure, any
+        "maxAttempts": 5
+    };
+    network = process.env.DOCKER_NETWORK || 'soajsnet';
 }
 else if (process.env.SOAJS_DEPLOY_HA === 'kubernetes') {
     defaultVoluming = {
@@ -116,12 +121,9 @@ var catalogs = [
                     "successThreshold": 1,
                     "failureThreshold": 3
                 },
-                "restartPolicy": {
-                    "condition": "", //IfNotPresent || OnFailure || Never
-                    "maxAttempts": 0 //only valid for docker
-                },
+                "restartPolicy": restartPolicy,
                 "container": {
-                    "network": "", //container network for docker
+                    "network": network, //container network for docker
                     "workingDir": "/opt/soajs/deployer/" //container working directory
                 },
                 "voluming": JSON.parse(JSON.stringify(defaultVoluming))
@@ -269,12 +271,9 @@ var catalogs = [
                     "successThreshold": 1,
                     "failureThreshold": 3
                 },
-                "restartPolicy": {
-                    "condition": "", //Always || OnFailure || Never
-                    "maxAttempts": 0 //only valid for docker
-                },
+                "restartPolicy": restartPolicy,
                 "container": {
-                    "network": "", //container network for docker
+                    "network": network, //container network for docker
                     "workingDir": "/opt/soajs/deployer/" //container working directory
                 },
                 "voluming": {
@@ -327,12 +326,9 @@ var catalogs = [
                     "successThreshold": 1,
                     "failureThreshold": 3
                 },
-                "restartPolicy": {
-                    "condition": "", //Always || OnFailure || Never
-                    "maxAttempts": 0 //only valid for docker
-                },
+                "restartPolicy": restartPolicy,
                 "container": {
-                    "network": "", //container network for docker
+                    "network": network, //container network for docker
                     "workingDir": "/opt/soajs/deployer/" //container working directory
                 },
                 "voluming": JSON.parse(JSON.stringify(defaultVoluming))
@@ -472,12 +468,9 @@ var catalogs = [
                     "successThreshold": 1,
                     "failureThreshold": 3
                 },
-                "restartPolicy": {
-                    "condition": "", //Always || OnFailure || Never
-                    "maxAttempts": 0 //only valid for docker
-                },
+                "restartPolicy": restartPolicy,
                 "container": {
-                    "network": "", //container network for docker
+                    "network": network, //container network for docker
                     "workingDir": "/opt/soajs/deployer/" //container working directory
                 },
                 "voluming": JSON.parse(JSON.stringify(defaultVoluming)),
@@ -637,12 +630,9 @@ var catalogs = [
                     "successThreshold": 1,
                     "failureThreshold": 3
                 },
-                "restartPolicy": {
-                    "condition": "", //Always || OnFailure || Never
-                    "maxAttempts": 0 //only valid for docker
-                },
+                "restartPolicy": restartPolicy,
                 "container": {
-                    "network": "", //container network for docker
+                    "network": network, //container network for docker
                     "workingDir": "" //container working directory
                 },
                 "voluming": JSON.parse(JSON.stringify(mongoVoluming)),
@@ -689,12 +679,9 @@ var catalogs = [
                     "successThreshold": 1,
                     "failureThreshold": 3
                 },
-                "restartPolicy": {
-                    "condition": "", //Always || OnFailure || Never
-                    "maxAttempts": 0 //only valid for docker
-                },
+                "restartPolicy": restartPolicy,
                 "container": {
-                    "network": "", //container network for docker
+                    "network": network, //container network for docker
                     "workingDir": "" //container working directory
                 },
                 "voluming": JSON.parse(JSON.stringify(esVoluming)),
