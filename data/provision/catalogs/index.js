@@ -97,8 +97,8 @@ else if (process.env.SOAJS_DEPLOY_HA === 'kubernetes') {
 var catalogs = [
     {
         "name": "Service Recipe",
-        "type": "soajs",
-        "subtype": "service",
+        "type": "service",
+        "subtype": "soajs",
         "description": "This is a sample service catalog recipe",
         "locked": true,
         "recipe": {
@@ -250,6 +250,7 @@ var catalogs = [
     {
         "name": "Nodejs Recipe",
         "type": "service",
+        "subtype": "nodejs",
         "description": "This is a sample nodejs catalog recipe",
         "locked": true,
         "recipe": {
@@ -302,8 +303,8 @@ var catalogs = [
     },
     {
         "name": "Daemon Recipe",
-        "type": "soajs",
-        "subtype": "daemon",
+        "type": "daemon",
+        "subtype": "soajs",
         "description": "This is a sample daemon recipe",
         "locked": true,
         "recipe": {
@@ -446,7 +447,8 @@ var catalogs = [
     },
     {
         "name": "Nginx Recipe",
-        "type": "nginx",
+        "type": "server",
+        "subtype": "nginx",
         "description": "This is a sample nginx recipe",
         "locked": true,
         "recipe": {
@@ -546,6 +548,7 @@ var catalogs = [
     {
         "name": "Java Recipe",
         "type": "service",
+        "subtype": "java",
         "description": "This is a sample java catalog recipe",
         "locked": true,
         "recipe": {
@@ -608,7 +611,8 @@ var catalogs = [
     },
     {
         "name": "Mongo Recipe",
-        "type": "mongo",
+        "type": "cluster",
+        "subtype": "mongo",
         "description": "This is a sample mongo recipe",
         "locked": true,
         "recipe": {
@@ -657,7 +661,8 @@ var catalogs = [
     },
     {
         "name": "Elasticsearch Recipe",
-        "type": "es",
+        "type": "cluster",
+        "subtype": "elasticsearch",
         "description": "This is a sample elasticsearch recipe",
         "locked": true,
         "recipe": {
