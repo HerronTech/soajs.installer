@@ -50,6 +50,7 @@ var config = {
         "soajs.content": "true",
 		"soajs.env.code": "dashboard",
 	    "soajs.service.type": "service",
+	    "soajs.service.subtype": "soajs",
 		"soajs.service.name": "urac",
 		"soajs.service.group": "soajs-core-services",
 		"soajs.service.version": "2",

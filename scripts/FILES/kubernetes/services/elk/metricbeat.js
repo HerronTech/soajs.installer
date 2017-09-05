@@ -18,7 +18,8 @@ var components = {
 			"labels": {
 				"soajs.content": "true",
 				"soajs.service.group": "elk",
-				"soajs.service.type": "elk",
+				"soajs.service.type": "system",
+				"soajs.service.subtype": "metricbeat",
 				"soajs.service.name": "soajs-metricbeat",
 				"soajs.service.label": "soajs-metricbeat",
 				"soajs.service.mode": "daemonset"
@@ -36,7 +37,8 @@ var components = {
 					"labels": {
 						"soajs.content": "true",
 						"soajs.service.group": "elk",
-						"soajs.service.type": "elk",
+						"soajs.service.type": "system",
+						"soajs.service.subtype": "metricbeat",
 						"soajs.service.name": "soajs-metricbeat",
 						"soajs.service.label": "soajs-metricbeat",
 						"soajs.service.mode": "daemonset"

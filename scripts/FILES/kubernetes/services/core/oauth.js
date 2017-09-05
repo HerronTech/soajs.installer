@@ -13,7 +13,8 @@ var components = {
 
                 "soajs.service.name": "oauth",
                 "soajs.service.group": "soajs-core-services",
-                "soajs.service.type": "service",
+	            "soajs.service.type": "service",
+	            "soajs.service.subtype": "soajs",
                 "soajs.service.version": "1",
                 "soajs.service.label": "dashboard-oauth-v1",
                 "soajs.service.mode": "deployment",
@@ -53,7 +54,8 @@ var components = {
 
                 "soajs.service.name": "oauth",
                 "soajs.service.group": "soajs-core-services",
-                "soajs.service.type": "service",
+	            "soajs.service.type": "service",
+	            "soajs.service.subtype": "soajs",
                 "soajs.service.version": "1",
                 "soajs.service.label": "dashboard-oauth-v1",
                 "soajs.service.mode": "deployment",
@@ -78,7 +80,8 @@ var components = {
 
                         "soajs.service.name": "oauth",
                         "soajs.service.group": "soajs-core-services",
-                        "soajs.service.type": "service",
+	                    "soajs.service.type": "service",
+	                    "soajs.service.subtype": "soajs",
                         "soajs.service.version": "1",
                         "soajs.service.label": "dashboard-oauth-v1",
                         "soajs.service.mode": "deployment",

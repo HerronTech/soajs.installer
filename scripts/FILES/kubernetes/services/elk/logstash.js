@@ -17,7 +17,8 @@ var components = {
 				"soajs.env.code": "dashboard",
 				"soajs.service.name": "dashboard-logstash",
 				"soajs.service.group": "elk",
-				"soajs.service.type": "elk",
+				"soajs.service.type": "system",
+				"soajs.service.subtype": "logstash",
 				"soajs.service.label": "dashboard-logstash",
 				"soajs.service.mode": "deployment"
 			}
@@ -42,7 +43,8 @@ var components = {
 			"labels": {
 				"soajs.content": "true",
 				"soajs.env.code": "dashboard",
-				"soajs.service.type": "elk",
+				"soajs.service.type": "system",
+				"soajs.service.subtype": "logstash",
 				"soajs.service.name": "dashboard-logstash",
 				"soajs.service.group": "elk",
 				"soajs.service.label": "dashboard-logstash",
@@ -62,7 +64,8 @@ var components = {
 					"labels": {
 						"soajs.content": "true",
 						"soajs.env.code": "dashboard",
-						"soajs.service.type": "elk",
+						"soajs.service.type": "system",
+						"soajs.service.subtype": "logstash",
 						"soajs.service.name": "dashboard-logstash",
 						"soajs.service.group": "elk",
 						"soajs.service.label": "dashboard-logstash",

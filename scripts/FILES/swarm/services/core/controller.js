@@ -56,6 +56,7 @@ var config = {
 		"soajs.content": "true",
 		"soajs.env.code": "dashboard",
 		"soajs.service.type": "service",
+		"soajs.service.subtype": "soajs",
 		"soajs.service.name": "controller",
 		"soajs.service.group": "soajs-core-services",
 		"soajs.service.version": "1",

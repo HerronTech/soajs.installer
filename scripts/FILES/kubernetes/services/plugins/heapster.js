@@ -18,6 +18,8 @@ var components = {
         "kind": "Service",
         "metadata": {
             "labels": {
+	            "soajs.service.type": "system",
+	            "soajs.service.subtype": "heapster",
                 "task": "monitoring",
                 "kubernetes.io/cluster-service": "true",
                 "kubernetes.io/name": "Heapster"

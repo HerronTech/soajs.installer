@@ -15,7 +15,8 @@ var config = {
 	    "soajs.content": "true",
 	    "soajs.service.name": "kibana",
 	    "soajs.service.group": "elk",
-	    "soajs.service.type": "elk",
+	    "soajs.service.type": "system",
+	    "soajs.service.subtype": "kibana",
 	    "soajs.service.label": "kibana",
 	    "soajs.service.mode": "replicated"
     },

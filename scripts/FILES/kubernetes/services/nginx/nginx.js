@@ -19,7 +19,8 @@ var components = {
 
                 "soajs.service.name": "nginx",
                 "soajs.service.group": "nginx",
-				"soajs.service.type": "nginx",
+				"soajs.service.type": "server",
+				"soajs.service.subtype": "nginx",
 				"soajs.service.label": "dashboard-nginx",
 				"soajs.service.mode": "deployment"
 			}
@@ -58,7 +59,8 @@ var components = {
 
                 "soajs.service.name": "nginx",
                 "soajs.service.group": "nginx",
-				"soajs.service.type": "nginx",
+				"soajs.service.type": "server",
+				"soajs.service.subtype": "nginx",
 				"soajs.service.label": "dashboard-nginx",
 				"soajs.service.mode": "deployment"
 			}
@@ -79,7 +81,8 @@ var components = {
 
 		                "soajs.service.name": "nginx",
 		                "soajs.service.group": "nginx",
-						"soajs.service.type": "nginx",
+						"soajs.service.type": "server",
+						"soajs.service.subtype": "nginx",
 						"soajs.service.label": "dashboard-nginx",
 						"soajs.service.mode": "deployment"
 					}

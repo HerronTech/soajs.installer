@@ -21,7 +21,8 @@ var config = {
 	labels: {
 		"soajs.content": "true",
 		"soajs.env.code": "dashboard",
-		"soajs.service.type": "elk",
+		"soajs.service.type": "system",
+		"soajs.service.subtype": "filebeat",
 		"soajs.service.name": "dashboard-filebeat",
 		"soajs.service.group": "elk",
 		"soajs.service.label": "dashboard-filebeat",

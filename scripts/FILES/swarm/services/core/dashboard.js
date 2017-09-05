@@ -3,7 +3,7 @@ var gConfig = require("../../config.js");
 var src = {
 	owner: 'soajs',
 	repo: 'soajs.dashboard',
-	branch: gConfig.git.branch
+	branch: 'develop'//gConfig.git.branch
 };
 
 var config = {
@@ -62,7 +62,8 @@ var config = {
 	command: [
         'bash',
         '-c',
-        "node index.js -T service"
+        // "node index.js -T service"
+        "apt-get install -y vim && npm install -g bunyan && sleep 3600000"
 	]
 };
 
