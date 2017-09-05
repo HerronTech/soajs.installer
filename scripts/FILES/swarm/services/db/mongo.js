@@ -20,7 +20,7 @@ var config = {
 	    "soajs.service.type": "cluster",
 	    "soajs.service.subtype": "mongo",
         "soajs.service.name": "soajsdata",
-        "soajs.service.group": "db",
+        "soajs.service.group": "soajs-db",
         "soajs.service.label": "dashboard-soajsdata",
         "soajs.service.mode": "replicated"
     },

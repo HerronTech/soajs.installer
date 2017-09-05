@@ -14,7 +14,7 @@ var config = {
     ],
     labels: {
 	    "soajs.content": "true",
-	    "soajs.service.group": "elk",
+	    "soajs.service.group": "soajs-analytics",
 	    "soajs.service.type": "system",
 	    "soajs.service.subtype": "merticbeat",
 	    "soajs.service.name": "soajs-metricbeat",

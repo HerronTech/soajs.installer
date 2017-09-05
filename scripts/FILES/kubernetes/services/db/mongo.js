@@ -12,7 +12,7 @@ var components = {
                 "soajs.env.code": "dashboard",
 
                 "soajs.service.name": "soajsdata",
-                "soajs.service.group": "db",
+                "soajs.service.group": "soajs-db",
                 "soajs.service.type": "cluster",
                 "soajs.service.subtype": "mongo",
                 "soajs.service.label": "dashboard-soajsdata",
@@ -44,7 +44,7 @@ var components = {
                 "soajs.env.code": "dashboard",
 
                 "soajs.service.name": "soajsdata",
-                "soajs.service.group": "db",
+	            "soajs.service.group": "soajs-db",
 	            "soajs.service.type": "cluster",
 	            "soajs.service.subtype": "mongo",
                 "soajs.service.label": "dashboard-soajsdata",
@@ -66,7 +66,7 @@ var components = {
                         "soajs.env.code": "dashboard",
 
                         "soajs.service.name": "soajsdata",
-                        "soajs.service.group": "db",
+	                    "soajs.service.group": "soajs-db",
 	                    "soajs.service.type": "cluster",
 	                    "soajs.service.subtype": "mongo",
                         "soajs.service.label": "dashboard-soajsdata",

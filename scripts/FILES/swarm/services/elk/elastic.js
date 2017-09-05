@@ -15,7 +15,7 @@ var config = {
 	    "soajs.service.type": "cluster",
 	    "soajs.service.subtype": "elasticsearch",
 	    "soajs.service.name": "soajs-analytics-elasticsearch",
-	    "soajs.service.group": "elk",
+	    "soajs.service.group": "soajs-analytics",
 	    "soajs.service.label": "soajs-analytics-elasticsearch",
 	    "soajs.service.mode": "replicated"
     },

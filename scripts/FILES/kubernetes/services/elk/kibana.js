@@ -14,7 +14,7 @@ var components = {
 			"labels": {
 				"soajs.content": "true",
 				"soajs.service.name": "kibana",
-				"soajs.service.group": "elk",
+				"soajs.service.group": "soajs-analytics",
 				"soajs.service.type": "system",
 				"soajs.service.subtype": "kibana",
 				"soajs.service.label": "kibana",
@@ -44,7 +44,7 @@ var components = {
 			"labels": {
 				"soajs.content": "true",
 				"soajs.service.name": "kibana",
-				"soajs.service.group": "elk",
+				"soajs.service.group": "soajs-analytics",
 				"soajs.service.type": "system",
 				"soajs.service.subtype": "kibana",
 				"soajs.service.label": "kibana",
@@ -64,7 +64,7 @@ var components = {
 					"labels": {
 						"soajs.content": "true",
 						"soajs.service.name": "kibana",
-						"soajs.service.group": "elk",
+						"soajs.service.group": "soajs-analytics",
 						"soajs.service.type": "system",
 						"soajs.service.subtype": "kibana",
 						"soajs.service.label": "kibana",

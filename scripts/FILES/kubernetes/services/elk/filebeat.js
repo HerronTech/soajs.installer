@@ -17,7 +17,7 @@ var components = {
 				"soajs.service.type": "system",
 				"soajs.service.subtype": "filebeat",
 				"soajs.service.name": "dashboard-filebeat",
-				"soajs.service.group": "elk",
+				"soajs.service.group": "soajs-analytics",
 				"soajs.service.label": "dashboard-filebeat",
 				"soajs.service.mode": "daemonset"
 			}
@@ -37,7 +37,7 @@ var components = {
 						"soajs.service.type": "system",
 						"soajs.service.subtype": "filebeat",
 						"soajs.service.name": "dashboard-filebeat",
-						"soajs.service.group": "elk",
+						"soajs.service.group": "soajs-analytics",
 						"soajs.service.label": "dashboard-filebeat",
 						"soajs.service.mode": "daemonset"
 					}

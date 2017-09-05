@@ -66,7 +66,7 @@ var config = {
         "soajs.service.type": "server",
         "soajs.service.subtype": "nginx",
         "soajs.service.name": "nginx",
-        "soajs.service.group": "nginx",
+        "soajs.service.group": "soajs-nginx",
         "soajs.service.label": "dashboard_nginx",
         "soajs.service.mode": "replicated"
     },

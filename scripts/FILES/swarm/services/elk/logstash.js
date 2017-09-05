@@ -22,7 +22,7 @@ var config = {
 		"soajs.service.type": "system",
 		"soajs.service.subtype": "logstash",
 		"soajs.service.name": "dashboard-logstash",
-		"soajs.service.group": "elk",
+		"soajs.service.group": "soajs-analytics",
 		"soajs.service.label": "dashboard-logstash",
 		"soajs.service.mode": "replicated"
 	},
