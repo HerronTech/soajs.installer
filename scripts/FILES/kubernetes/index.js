@@ -169,19 +169,32 @@ var lib = {
 				});
 			}
 			else {
+				let imgTs = new Date().getTime().toString();
 				if(type === "core"){
 	                oneService.service.metadata.labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
 	                oneService.deployment.metadata.labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
 	                oneService.deployment.spec.template.metadata.labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
-		            oneService.deployment.spec.template.metadata.labels["soajs.catalog.v"] = "1";
-		            oneService.deployment.spec.template.metadata.labels["service.image.ts"] = new Date().getTime().toString();
+		            
+	                oneService.service.metadata.labels["soajs.catalog.v"] = "1";
+	                oneService.deployment.metadata.labels["soajs.catalog.v"] = "1";
+	                oneService.deployment.spec.template.metadata.labels["soajs.catalog.v"] = "1";
+		            
+		            oneService.service.metadata.labels["service.image.ts"] = imgTs;
+		            oneService.deployment.metadata.labels["service.image.ts"] = imgTs;
+	                oneService.deployment.spec.template.metadata.labels["service.image.ts"] = imgTs;
 	            }
 	            else if (type === "nginx"){
 	                oneService.service.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
 	                oneService.deployment.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
 	                oneService.deployment.spec.template.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
-		            oneService.deployment.spec.template.metadata.labels["soajs.catalog.v"] = "1";
-		            oneService.deployment.spec.template.metadata.labels["service.image.ts"] = new Date().getTime().toString();
+		            
+	                oneService.service.metadata.labels["soajs.catalog.v"] = "1";
+	                oneService.deployment.metadata.labels["soajs.catalog.v"] = "1";
+	                oneService.deployment.spec.template.metadata.labels["soajs.catalog.v"] = "1";
+		            
+		            oneService.service.metadata.labels["service.image.ts"] = imgTs;
+		            oneService.deployment.metadata.labels["service.image.ts"] = imgTs;
+	                oneService.deployment.spec.template.metadata.labels["service.image.ts"] = imgTs;
 	            }
 
 	            lib.deployService(deployer, oneService, callback);
