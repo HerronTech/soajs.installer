@@ -52,6 +52,8 @@ var components = {
             "template": {
                 "metadata": {
                     "labels": {
+	                    "soajs.service.type": "system",
+	                    "soajs.service.subtype": "heapster",
                         "task": "monitoring",
                         "k8s-app": "heapster"
                     }
