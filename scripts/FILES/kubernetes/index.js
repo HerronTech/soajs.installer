@@ -502,6 +502,7 @@ var lib = {
     deleteDeployments: function (deployer, options, cb) {
         var filter = { labelSelector: 'soajs.content=true' };
         deployer.extensions.deployments.get({qs: filter}, function (error, deploymentList) {
+
             if (error) return cb(error);
 
             if (!deploymentList || !deploymentList.items || deploymentList.items.length === 0) return cb();
