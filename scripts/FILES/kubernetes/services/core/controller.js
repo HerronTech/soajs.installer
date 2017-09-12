@@ -20,6 +20,7 @@ var components = {
                 "soajs.service.mode": "deployment",
 	            "soajs.service.repo.name": "soajs_controller",
                 "service.branch": gConfig.git.branch,
+	            "service.owner": "soajs",
                 "service.repo": "soajs.controller"
             }
         },
@@ -62,6 +63,7 @@ var components = {
                 "soajs.service.mode": "deployment",
 	            "soajs.service.repo.name": "soajs_controller",
                 "service.branch": gConfig.git.branch,
+	            "service.owner": "soajs",
                 "service.repo": "soajs.controller"
             }
         },
@@ -87,6 +89,7 @@ var components = {
                         "soajs.service.label": "dashboard-controller-v1",
                         "soajs.service.mode": "deployment",
                         "service.branch": gConfig.git.branch,
+	                    "service.owner": "soajs",
                         "service.repo": "soajs.controller"
                     }
                 },

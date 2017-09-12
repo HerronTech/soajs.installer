@@ -20,6 +20,7 @@ var components = {
                 "soajs.service.mode": "deployment",
 	            "soajs.service.repo.name": "soajs_oauth",
                 "service.branch": gConfig.git.branch,
+	            "service.owner": "soajs",
                 "service.repo": "soajs.oauth"
             }
         },
@@ -61,6 +62,7 @@ var components = {
                 "soajs.service.mode": "deployment",
 	            "soajs.service.repo.name": "soajs_oauth",
                 "service.branch": gConfig.git.branch,
+	            "service.owner": "soajs",
                 "service.repo": "soajs.oauth"
             }
         },
@@ -86,6 +88,7 @@ var components = {
                         "soajs.service.label": "dashboard-oauth-v1",
                         "soajs.service.mode": "deployment",
                         "service.branch": gConfig.git.branch,
+	                    "service.owner": "soajs",
                         "service.repo": "soajs.oauth"
                     }
                 },
