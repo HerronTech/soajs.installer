@@ -23,7 +23,7 @@ if (process.env.SOAJS_DEPLOY_HA === 'docker') {
         "volumes": [
             {
                 "Type": "volume",
-                "Source": "/data/custom/db/",
+                "Source": "custom-mongo-volume",
                 "Target": "/data/db/"
             }
         ]
@@ -32,7 +32,7 @@ if (process.env.SOAJS_DEPLOY_HA === 'docker') {
         "volumes": [
             {
                 "Type": "volume",
-                "Source": "/usr/share/elasticsearch/custom/data/",
+                "Source": "custom-es-volume",
                 "Target": "/usr/share/elasticsearch/data/"
             }
         ]
