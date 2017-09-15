@@ -905,8 +905,7 @@ var lib = {
 
         return cb(null, services);
     },
-
-
+	
 	configureElastic: function (deployer, serviceOptions, cb) {
 		mongo.findOne('analytics', {_type: 'settings'}, function (error, settings) {
 			if (error) {
@@ -1060,13 +1059,13 @@ var lib = {
 
 		if (serviceOptions.deployment.metadata.labels) {
 			serviceGroup = serviceOptions.deployment.metadata.labels['soajs.service.group'];
-			serviceName = serviceOptions.deployment.metadata.labels['soajs.service.repo.name'];
+			serviceName = serviceOptions.deployment.metadata.labels['soajs.service.name'];
 			serviceEnv = serviceOptions.deployment.metadata.labels['soajs.env.code'];
 		}
 		if (serviceGroup === 'soajs-core-services') {
 			serviceType = (serviceName === 'soajs_controller') ? 'controller' : 'service';
 		}
-		else if (serviceGroup === 'nginx') {
+		else if (serviceGroup === 'soajs-nginx') {
 			serviceType = 'nginx';
 			serviceName = 'nginx';
 		}
@@ -1149,6 +1148,19 @@ var lib = {
 
 							analyticsArray = analyticsArray.concat(
 								[
+									{
+										index: {
+											_index: '.kibana',
+											_type: 'index-pattern',
+											_id: 'filebeat-*'
+										}
+									},
+									{
+										title: 'filebeat-*',
+										timeFieldName: '@timestamp',
+										fields: filebeatIndex.fields,
+										fieldFormatMap: filebeatIndex.fieldFormatMap
+									},
 									{
 										index: {
 											_index: '.kibana',
@@ -1390,7 +1402,7 @@ var lib = {
 			index: ".kibana",
 			type: 'config',
 			body: {
-				doc: {"defaultIndex": "metricbeat-*"}
+				doc: {"defaultIndex": "filebeat-*"}
 			}
 		};
 		var condition = {
@@ -1433,9 +1445,6 @@ var lib = {
 											"dashboard": {
 												"status": "deployed"
 											}
-										},
-										"metricbeat": {
-											"status": "deployed"
 										}
 									}
 								};
