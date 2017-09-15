@@ -22,6 +22,7 @@ var mongo = new soajs.mongo(profile2);
 var analyticsCollection = 'analytics';
 var utilLog = require('util');
 var dbConfiguration = require('../../../data/startup/environments/dashboard');
+var esClusterConfiguration = require('../../../data/startup/resources/es');
 var esClient;
 
 var lib = {
@@ -750,14 +751,14 @@ var lib = {
 				return cb(error);
 			}
 			if (settings && settings.elasticsearch && dbConfiguration.dbs.databases[settings.elasticsearch.db_name]) {
-				var cluster = dbConfiguration.dbs.databases[settings.elasticsearch.db_name].cluster;
+				var cluster = esClusterConfiguration.config;
 				if (!process.env.SOAJS_INSTALL_DEBUG){
-					dbConfiguration.dbs.clusters[cluster].extraParam.log = [{
+					cluster.extraParam.log = [{
 						type: 'stdio',
 						levels: [] // remove the logs
 					}];
 				}
-				esClient = new soajs.es(dbConfiguration.dbs.clusters[cluster]);
+				esClient = new soajs.es(cluster);
 				
 			}
 			else {
