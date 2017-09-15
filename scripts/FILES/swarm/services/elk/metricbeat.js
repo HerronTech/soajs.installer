@@ -16,7 +16,7 @@ var config = {
 	    "soajs.content": "true",
 	    "soajs.service.group": "soajs-analytics",
 	    "soajs.service.type": "system",
-	    "soajs.service.subtype": "merticbeat",
+	    "soajs.service.subtype": "metricbeat",
 	    "soajs.service.name": "soajs-metricbeat",
 	    "soajs.service.label": "soajs-metricbeat",
 	    "soajs.service.mode": "global"
