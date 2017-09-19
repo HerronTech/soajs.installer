@@ -31,12 +31,12 @@ var navigation = [
 		'scripts': ['sections/security/controller.js']
 	},
 	{
-		'id': 'clusters',
-		'label': 'Clusters',
-		'title': 'SOAJS Installer | Clusters',
+		'id': 'resources',
+		'label': 'Resources',
+		'title': 'SOAJS Installer | Resources',
 		'description': '',
 		'keywords': '',
-		'url': '#/clusters',
+		'url': '#/resources',
 		'tplPath': 'sections/clusters/page.html',
 		'scripts': ['sections/clusters/controller.js']
 	},

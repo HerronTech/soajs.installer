@@ -5,7 +5,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 	$scope.alerts = [];
 	
 	$scope.goBack = function () {
-		$scope.$parent.go("#/clusters");
+		$scope.$parent.go("#/resources");
 	};
 	
 	$scope.removeConfirmation = function(){
