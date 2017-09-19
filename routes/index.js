@@ -276,6 +276,19 @@ var routes = {
             });
         });
     },
+	
+	"reconfirmDeployment": function(req, res){
+		utils.loadCustomData(null, function(data){
+			if(data.security){
+				delete data.security.extKey1;
+				delete data.security.extKey2;
+			}
+			if(data.gi){
+				data.gi.password = "******";
+			}
+			return res.json(req.soajs.buildResponse(null, data));
+		});
+	},
 
     "installSOAJS": function (req, res) {
         var folder = dataDir + "startup/";

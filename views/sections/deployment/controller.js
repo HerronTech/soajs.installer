@@ -1,11 +1,16 @@
 "use strict";
 
 var deploymentApp = app.components;
-deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$timeout', '$http', function ($scope, ngDataApi, $modal, $timeout, $http) {
+deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$timeout', '$cookies', function ($scope, ngDataApi, $modal, $timeout, $cookies) {
 	$scope.alerts = [];
 	
 	$scope.goBack = function () {
 		$scope.$parent.go("#/clusters");
+	};
+	
+	$scope.removeConfirmation = function(){
+		$scope.confirmation=false;
+		$cookies.remove('confirmation');
 	};
 	
 	$scope.closeAlert = function (i) {
@@ -26,6 +31,14 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 		mongo: true
 	};
 	
+	$scope.accordion2 = {
+		gi: true,
+		security: false,
+		clusters: false,
+		es_clusters: false,
+		deployment: true
+	};
+	
 	$scope.tabSwitched = function(){
 		$timeout(function(){
 			resizeContent();
@@ -37,27 +50,53 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 		$scope.docker = false;
 		$scope.kubernetes = false;
 		
-		if ($scope.deployment.deployDriver !== "manual") {
-			$scope.ha = true;
-			$scope.deployment.deployType = "container";
-			var types = ["container.docker.remote", "container.kubernetes.remote"];
-			$scope.local = (types.indexOf($scope.deployment.deployDriver) === -1);
-			
-			if ($scope.deployment.deployDriver.indexOf("docker") !== -1) {
-				$scope.docker = true;
+		// if(!$scope.confirmation){
+			if ($scope.deployment.deployDriver !== "manual") {
+				$scope.ha = true;
+				$scope.deployment.deployType = "container";
+				var types = ["container.docker.remote", "container.kubernetes.remote"];
+				$scope.local = (types.indexOf($scope.deployment.deployDriver) === -1);
+				
+				if ($scope.deployment.deployDriver.indexOf("docker") !== -1) {
+					$scope.docker = true;
+				}
+				if ($scope.deployment.deployDriver.indexOf("kubernetes") !== -1) {
+					$scope.kubernetes = true;
+				}
+				
+				if (!$scope.local) {
+					$scope.deployment.deployDockerNodes = [];
+					$scope.deployment.deployDockerNodes.push($scope.deployment.containerHost);
+				}
 			}
-			if ($scope.deployment.deployDriver.indexOf("kubernetes") !== -1) {
-				$scope.kubernetes = true;
+			else {
+				$scope.deployment.deployType = "manual";
 			}
-			
-			if (!$scope.local) {
-				$scope.deployment.deployDockerNodes = [];
-				$scope.deployment.deployDockerNodes.push($scope.deployment.containerHost);
-			}
-		}
-		else {
-			$scope.deployment.deployType = "manual";
-		}
+		// }
+		// else{
+		// 	var options = {
+		// 		url: appConfig.url + "/installer/confirmation",
+		// 		method: "get"
+		// 	};
+		//
+		// 	ngDataApi.get($scope, options, function (error, response) {
+		// 		if (error) {
+		// 			$scope.alerts.push({'type': 'danger', 'msg': error.message});
+		// 			return false;
+		// 		}
+		//
+		// 		$scope.data = {
+		// 			"gi": (response.gi) ? response.gi : {},
+		// 			"security": (response.security) ? response.security : {},
+		// 			"clusters": (response.clusters) ? response.clusters : {},
+		// 			"es_clusters": (response.es_clusters && response.es_clusters !== {}) ? response.es_clusters : false,
+		// 			"deployment": (response.deployment) ? response.deployment : {}
+		// 		};
+		// 		$timeout(function () {
+		// 			resizeContent();
+		// 		}, 10);
+		// 	});
+		// }
 	};
 	
 	$scope.getLatestSOAJSImages = function (prefix, name, reload) {
@@ -145,12 +184,13 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			}
 			
 			$scope.confirmation = true;
+			$cookies.putObject('confirmation', $scope.confirmation);
 			$scope.data = {
-				"gi": (response.gi) ? syntaxHighlight(JSON.stringify(response.gi, null, 4)) : JSON.stringify({}),
-				"security": (response.security) ? syntaxHighlight(JSON.stringify(response.security, null, 2)) : JSON.stringify({}),
-				"clusters": (response.clusters) ? syntaxHighlight(response.clusters) : JSON.stringify({}),
-				"es_clusters": (response.es_clusters && response.es_clusters !== {}) ? syntaxHighlight(response.es_clusters) : false,
-				"deployment": (response.deployment) ? syntaxHighlight(response.deployment) : JSON.stringify({})
+				"gi": (response.gi) ? response.gi: {},
+				"security": (response.security) ? response.security: {},
+				"clusters": (response.clusters) ? response.clusters: {},
+				"es_clusters": (response.es_clusters && Object.keys(response.es_clusters).length > 0) ? response.es_clusters : false,
+				"deployment": (response.deployment) ? response.deployment: {}
 			};
 			$timeout(function () {
 				resizeContent();
@@ -205,7 +245,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				"deployType": (response && response.deployType) ? response.deployType : "manual",
 				"deployDriver": (response && response.deployDriver) ? response.deployDriver : "manual",
 				"deployAnalytics": (response && response.deployAnalytics) ? response.deployAnalytics : false,
-				"deployDockerNodes": (response && response.deployDockerNodes) ? response.deployDockerNodes : [],
+				"deployDockerNodes": (response && response.deployDockerNodes) ? response.deployDockerNodes : ['127.0.0.1'],
 				"containerHost": (response && response.containerHost) ? response.containerHost : "127.0.0.1",
 				"gitSource": (response && response.gitSource) ? response.gitSource : null,
 				"gitProvider": (response && response.gitProvider) ? response.gitProvider : null,
@@ -234,7 +274,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			}
 			
 			if ($scope.deployment.deployDriver.indexOf("docker") !== -1) {
-				$scope.deployment.containerDir = (response && response.docker && response.docker.containerDir) ? response.docker.containerDir : "";
+				$scope.deployment.containerDir = (response && response.docker && response.docker.containerDir) ? response.docker.containerDir : "/opt/soajs/deployer";
 				$scope.deployment.containerPort = (response && response.docker && response.docker.containerPort) ? response.docker.containerPort : 2376;
 				$scope.deployment.networkName = (response && response.docker && response.docker.networkName) ? response.docker.networkName : "soajsnet";
 				$scope.deployment.dockerInternalPort = (response && response.docker && response.docker.dockerInternalPort) ? response.docker.dockerInternalPort : 2377;
@@ -250,7 +290,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			}
 			else if ($scope.deployment.deployDriver.indexOf("kubernetes") !== -1) {
 				$scope.deployment.certsRequired = false;
-				$scope.deployment.containerDir = (response && response.kubernetes && response.kubernetes.containerDir) ? response.kubernetes.containerDir : "";
+				$scope.deployment.containerDir = (response && response.kubernetes && response.kubernetes.containerDir) ? response.kubernetes.containerDir : "/opt/soajs/deployer";
 				$scope.deployment.kubeContainerPort = (response && response.kubernetes && response.kubernetes.containerPort) ? response.kubernetes.containerPort : 8443;
 				
 				//get certificate information

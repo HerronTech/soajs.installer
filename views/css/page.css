@@ -244,11 +244,10 @@ pre {background: #fff; padding: 5px; margin: 5px; }
     padding: 10px 15px;
 }
 
-.box-content{
-    padding: 15px;
-    content: " ";
-    display: block;
-    clear: both;
+.box-content .objectField{
+    margin: 0 10px 5px 0;
+    font-weight:bold;
+    display:inline-block;
 }
 
 #deploymentInfoBox {

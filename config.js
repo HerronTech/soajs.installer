@@ -44,6 +44,11 @@ module.exports = {
 					"l": "Load Deployment Information"
 				}
 			},
+			'/installer/confirmation' :{
+				"_apiInfo":{
+					"l": "Reload Deployment Information"
+				}
+			},
 			'/installer/go' :{
 				"_apiInfo":{
 					"l": "Proceed with Installing SOAJS"
@@ -264,7 +269,12 @@ module.exports = {
                             "gitToken": {"type": "string", "required": false},
                             "gitPath": {"type": "string", "required": false},
 
-                            "imagePrefix": {"type": "string", "required": false},
+                            "soajsImagePrefix": {"type": "string", "required": false},
+                            "nginxImagePrefix": {"type": "string", "required": false},
+							
+							"soajsImageTag": {"type": "string", "required": false},
+							"nginxImageTag": {"type": "string", "required": false},
+							
                             "nginxPort": {"type": "number", "required": false},
                             "nginxSecurePort": {"type": "number", "required": false},
                             "mongoExposedPort": {"type": "number", "required": false},

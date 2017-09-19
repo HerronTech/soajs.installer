@@ -33,6 +33,9 @@ installer.init(function () {
 	//Deployment APIs
 	installer.get('/installer/deployment', routes.getDeployment);
 	installer.post('/installer/deployment', routes.postDeployment);
+	
+	//get confirmation infro
+	installer.get('/installer/confirmation', routes.reconfirmDeployment);
 
 	//Launch Installer
 	installer.get('/installer/go', routes.installSOAJS);
