@@ -50,7 +50,16 @@ var lib  = {
 		"ssl": (process.env.SOAJS_NX_SSL === "true") || false,
 		"sslSecret": process.env.SOAJS_NX_SSL_SECRET || null
 	},
-	"imagePrefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
+	"images":{
+		"soajs": {
+			"prefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
+			"tag": process.env.SOAJS_IMAGE_TAG || 'latest'
+		},
+		"nginx": {
+			"prefix": process.env.SOAJS_NX_IMAGE_PREFIX || 'soajsorg',
+			"tag": process.env.SOAJS_NX_IMAGE_TAG || 'latest'
+		}
+	},
 	"imagePullPolicy": process.env.SOAJS_IMAGE_PULL_POLICY || 'IfNotPresent',
 	"kubernetes": {
 		"config":{

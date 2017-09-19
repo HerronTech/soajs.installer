@@ -97,7 +97,7 @@ var components = {
                     "containers": [
                         {
                             "name": "dashboard-controller-v1",
-                            "image": gConfig.imagePrefix + "/soajs",
+                            "image": gConfig.images.soajs.prefix + "/soajs:" + gConfig.images.soajs.tag,
                             "imagePullPolicy": gConfig.imagePullPolicy,
                             "workingDir": "/opt/soajs/deployer/",
                             "command": ["node"],

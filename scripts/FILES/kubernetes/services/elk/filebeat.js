@@ -46,7 +46,7 @@ var components = {
 					"containers": [
 						{
 							"name": "dashboard-filebeat",
-							"image": gConfig.imagePrefix + "/filebeat",
+							"image": "soajsorg/filebeat",
 							"imagePullPolicy": gConfig.imagePullPolicy,
 							"command": [
 								"/usr/share/filebeat/bin/filebeat",  "-e",  "-c", "/etc/filebeat/filebeat.yml"

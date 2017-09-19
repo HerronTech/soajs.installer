@@ -5,7 +5,7 @@ var config = {
     servReplica: 1,
     servNetwork: [{Target: gConfig.docker.network}],
     image: {
-	    prefix: gConfig.imagePrefix,
+	    prefix: 'soajsorg',
         name: 'kibana'
     },
     env: [

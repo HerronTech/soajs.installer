@@ -166,7 +166,8 @@ var lib = {
     	delete nginxRecipe.locked;
         nginxRecipe.name = "Dashboard Nginx Recipe";
         nginxRecipe.description = "This is the nginx catalog recipe used to deploy the nginx in the dashboard environment."
-	    nginxRecipe.recipe.deployOptions.image.prefix = config.imagePrefix;
+	    nginxRecipe.recipe.deployOptions.image.prefix = config.images.nginx.prefix;
+	    nginxRecipe.recipe.deployOptions.image.tag = config.images.nginx.tag;
      
 	    nginxRecipe.recipe.deployOptions.ports[0].published = config.nginx.port.http;
 	    nginxRecipe.recipe.deployOptions.ports[1].published = config.nginx.port.https;
@@ -280,7 +281,8 @@ var lib = {
 	    delete serviceRecipe.locked;
         serviceRecipe.name = "Dashboard Service Recipe";
 	    serviceRecipe.description = "This is the service catalog recipe used to deploy the core services in the dashboard environment."
-	    serviceRecipe.recipe.deployOptions.image.prefix = config.imagePrefix;
+	    serviceRecipe.recipe.deployOptions.image.prefix = config.images.soajs.prefix;
+	    serviceRecipe.recipe.deployOptions.image.tag = config.images.soajs.tag;
 	    
 	    if(config.deploy_acc){
 		    serviceRecipe.recipe.buildOptions.env["SOAJS_DEPLOY_ACC"] = {

@@ -32,8 +32,9 @@ var config = {
     ],
 
     image: {
-        prefix: gConfig.imagePrefix,
-        name: 'nginx'
+        prefix: gConfig.images.nginx.prefix,
+        name: 'nginx',
+        tag: gConfig.images.nginx.tag
     },
     env: [
         'SOAJS_ENV=dashboard',
@@ -126,7 +127,7 @@ module.exports = {
     "Name": config.servName,
     "TaskTemplate": {
         "ContainerSpec": {
-            "Image": config.image.prefix + '/' + config.image.name,
+            "Image": config.image.prefix + '/' + config.image.name + ":" + config.image.tag,
             "Env": config.env,
             "Dir": config.workingDir,
             "Command": [config.command[0]],

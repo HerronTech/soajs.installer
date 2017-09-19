@@ -14,10 +14,11 @@ var config = {
 			Target: gConfig.docker.network
 		}
 	],
-
+	
 	image: {
-		prefix: gConfig.imagePrefix,
-		name: 'soajs'
+		prefix: gConfig.images.soajs.prefix,
+		name: 'soajs',
+		tag: gConfig.images.soajs.tag
 	},
 	env: [
 		'NODE_ENV=production',
@@ -72,7 +73,7 @@ module.exports = {
 	"Name": config.servName,
 	"TaskTemplate": {
 		"ContainerSpec": {
-			"Image": config.image.prefix + '/' + config.image.name,
+			"Image": config.image.prefix + '/' + config.image.name + ":" + config.image.tag,
 			"Env": config.env,
 			"Dir": config.workingDir,
 			"Command": [config.command[0]],

@@ -76,7 +76,7 @@ var components = {
 					"containers": [
 						{
 							"name": "dashboard-logstash",
-							"image": gConfig.imagePrefix + "/logstash",
+							"image": "soajsorg/logstash",
 							"imagePullPolicy": gConfig.imagePullPolicy,
 							"command": [
 								"bash",

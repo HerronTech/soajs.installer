@@ -10,7 +10,7 @@ var config = {
 	servNetwork: [{Target: gConfig.docker.network}],
 	
 	image: {
-		prefix: gConfig.imagePrefix,
+		prefix: 'soajsorg',
 		name: 'logstash'
 	},
 	env: [

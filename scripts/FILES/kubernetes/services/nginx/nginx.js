@@ -91,7 +91,7 @@ var components = {
 					"containers": [
 						{
 							"name": "dashboard-nginx",
-							"image": gConfig.imagePrefix + "/nginx",
+							"image": gConfig.images.nginx.prefix + "/nginx:" + gConfig.images.nginx.tag,
 							"imagePullPolicy": gConfig.imagePullPolicy,
 							"workingDir": "/opt/soajs/deployer/",
 							"command": ["node"],

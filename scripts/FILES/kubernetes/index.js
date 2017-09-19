@@ -213,7 +213,9 @@ var lib = {
     	delete nginxRecipe.locked;
         nginxRecipe.name = "Dashboard Nginx Recipe";
         nginxRecipe.description = "This is the nginx catalog recipe used to deploy the nginx in the dashboard environment."
-	    nginxRecipe.recipe.deployOptions.image.prefix = config.imagePrefix;
+	    nginxRecipe.recipe.deployOptions.image.prefix = config.images.nginx.prefix;
+	    nginxRecipe.recipe.deployOptions.image.tag = config.images.nginx.tag;
+        
         if (process.env.SOAJS_IMAGE_PULL_POLICY) {
             nginxRecipe.recipe.deployOptions.image.pullPolicy = process.env.SOAJS_IMAGE_PULL_POLICY;
         }
@@ -368,7 +370,9 @@ var lib = {
     	delete serviceRecipe.locked;
         serviceRecipe.name = "Dashboard Service Recipe";
 	    serviceRecipe.description = "This is the service catalog recipe used to deploy the core services in the dashboard environment."
-        serviceRecipe.recipe.deployOptions.image.prefix = config.imagePrefix;
+        serviceRecipe.recipe.deployOptions.image.prefix = config.images.soajs.prefix;
+        serviceRecipe.recipe.deployOptions.image.tag = config.images.soajs.tag;
+        
         if (process.env.SOAJS_IMAGE_PULL_POLICY) {
             serviceRecipe.recipe.deployOptions.image.pullPolicy = process.env.SOAJS_IMAGE_PULL_POLICY;
         }

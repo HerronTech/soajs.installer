@@ -515,7 +515,12 @@ module.exports = {
                     "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
 
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
-                    "SOAJS_IMAGE_PREFIX": body.deployment.imagePrefix,
+
+                    "SOAJS_IMAGE_PREFIX": body.deployment.soajsImagePrefix,
+                    "SOAJS_IMAGE_TAG": body.deployment.soajsImageTag,
+	
+	                "SOAJS_NX_IMAGE_PREFIX": body.deployment.nginxImagePrefix,
+	                "SOAJS_NX_IMAGE_TAG": body.deployment.nginxImageTag,
 	                
                     "NGINX_HTTP_PORT": body.deployment.nginxPort,
                     "NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
@@ -621,8 +626,13 @@ module.exports = {
                     "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
 
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
-                    "SOAJS_IMAGE_PREFIX": body.deployment.imagePrefix,
 	
+	                "SOAJS_IMAGE_PREFIX": body.deployment.soajsImagePrefix,
+	                "SOAJS_IMAGE_TAG": body.deployment.soajsImageTag,
+	
+	                "SOAJS_NX_IMAGE_PREFIX": body.deployment.nginxImagePrefix,
+	                "SOAJS_NX_IMAGE_TAG": body.deployment.nginxImageTag,
+	                
                     "NGINX_HTTP_PORT": body.deployment.nginxPort,
                     "NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
                     "SOAJS_NX_SSL": body.deployment.nginxSsl,

@@ -75,7 +75,7 @@ var components = {
 					"containers": [
 						{
 							"name": "kibana",
-							"image": gConfig.imagePrefix + "/kibana",
+							"image": "soajsorg/kibana",
 							"imagePullPolicy": gConfig.imagePullPolicy,
 							"ports": [
 								{
