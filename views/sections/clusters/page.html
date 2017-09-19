@@ -32,6 +32,81 @@
 										    </div>
 									    </td>
 								    </tr>
+								    <tr class="form-group servers-wrapper">
+									    <td>
+										    <fieldset class="serversList">
+											    <legend>Servers List</legend>
+											    <div id="esservers">
+												    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+													    <tbody>
+														    <tr class="form-group host-wrapper" ng-repeat="oneServer in clusters.servers track by $index">
+															    <td width="80%" valign="top">
+																    <div>
+																	    <label>Hostname</label>
+																	    <input class="form-control" value="{{oneServer.host}}" type="text" disabled>
+																    </div>
+															    </td>
+															    <td width="1%"></td>
+															    <td width="14%" valign="top">
+																    <div>
+																	    <label>Port</label>
+																	    <input class="form-control" value="{{oneServer.port}}" type="text" disabled>
+																    </div>
+															    </td>
+														    </tr>
+													    </tbody>
+												    </table>
+											    </div>
+										    </fieldset>
+									    </td>
+								    </tr>
+								    <tr class="form-group credentials-wrapper">
+									    <td>
+										    <div><br>
+											    <fieldset class="floatGroup">
+												    <legend>Credentials</legend>
+												    <div>
+													    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+														    <tbody>
+															    <tr class="form-group username-wrapper" style="float:left; width:50%">
+																    <td style="width:99%; display: block">
+																	    <div>
+																		    <label>Username</label>
+																		    <input class="form-control "value="{{clusters.credentials.username}}" type="text" disabled>
+																	    </div>
+																    </td>
+															    </tr>
+															    <tr class="form-group password-wrapper" style="float:left; width:50%">
+																    <td style="width:99%; display: block">
+																	    <div>
+																		    <label>Password</label>
+																		    <input class="form-control "value="{{clusters.credentials.username}}" type="text" disabled>
+																	    </div>
+																    </td>
+															    </tr>
+														    </tbody>
+													    </table>
+												    </div>
+											    </fieldset>
+										    </div>
+									    </td>
+								    </tr>
+								    <tr class="form-group urlParam-wrapper">
+									    <td>
+										    <div>
+											    <label class="f-left">Connection Options</label>
+											    <textarea class="form-control" cols="30" rows="4" disabled>{{clusters.URLParam}}</textarea>
+										    </div>
+									    </td>
+								    </tr>
+								    <tr class="form-group streaming-wrapper">
+									    <td>
+										    <div>
+											    <label class="f-left">Streaming Options</label>
+											    <textarea class="form-control" cols="30" rows="1" disabled>{{clusters.streaming}}</textarea>
+										    </div>
+									    </td>
+								    </tr>
 							    </tbody>
 						    </table>
 					    </accordion-group>

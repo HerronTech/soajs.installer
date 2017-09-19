@@ -93,13 +93,6 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 			alert("URL Parameters should be a JSON object!");
 			return false;
 		}
-		try {
-			data.extraParam = JSON.parse(data.extraParam);
-		}
-		catch (e) {
-			alert("Extra Parameters should be a JSON object!");
-			return false;
-		}
 
 		try {
 			data.streaming = JSON.parse(data.streaming);
