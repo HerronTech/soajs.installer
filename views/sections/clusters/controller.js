@@ -25,6 +25,7 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 			resizeContent();
 		}, 100);
 	};
+	
 	$scope.AddEsNewServer = function () {
 		$scope.es_clusters.servers.push({"host": "", "port": ""});
 		
@@ -52,6 +53,13 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 	$scope.doMongoExt = function(flag) {
 		$scope.clusters.mongoExt = flag;
 		$scope.uncheckReplica();
+		resizeContent();
+	};
+	
+	$scope.onlyResize = function(){
+		$timeout(function(){
+			resizeContent();
+		}, 100);
 	};
 	
 	$scope.uncheckReplica = function() {
