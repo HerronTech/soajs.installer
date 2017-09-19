@@ -2,7 +2,10 @@
 var clustersApp = app.components;
 clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', function ($scope, $timeout, ngDataApi) {
 	$scope.alerts = [];
-
+	
+	$scope.local = true;
+	$scope.external = false;
+	
 	$scope.closeAlert = function (i) {
 		$scope.alerts.splice(i, 1);
 	};
@@ -44,6 +47,11 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 		$timeout(function () {
 			resizeContent();
 		}, 100);
+	};
+	
+	$scope.doMongoExt = function(flag) {
+		$scope.clusters.mongoExt = flag;
+		$scope.uncheckReplica();
 	};
 	
 	$scope.uncheckReplica = function() {
@@ -170,19 +178,8 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 					"password": ""
 				},
 				"URLParam": (response && response.clusters && response.clusters.URLParam) ? JSON.stringify(response.clusters.URLParam, null, 2) : JSON.stringify({
-					"connectTimeoutMS": 0,
-					"socketTimeoutMS": 0,
+					"bufferMaxEntries": 0,
 					"maxPoolSize": 5,
-					"wtimeoutMS": 0,
-					"slaveOk": true
-				}, null, 2),
-				"extraParam": (response && response.clusters && response.clusters.extraParam) ? JSON.stringify(response.clusters.extraParam, null, 2) : JSON.stringify({
-					"db": {
-						"native_parser": true,
-						"bufferMaxEntries": 0
-					},
-					"server": {
-					}
 				}, null, 2),
 				"streaming": (response && response.clusters && response.clusters.streaming) ? JSON.stringify(response.clusters.streaming, null, 2) : JSON.stringify({})
 			};

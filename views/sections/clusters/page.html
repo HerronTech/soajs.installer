@@ -6,152 +6,162 @@
     </div>
     <form name="clustersForm" class="css-form" novalidate ng-submit="clustersForm.$valid && fillClusters();">
         <div class="header">
-            <h3>Clusters Information</h3>
+            <h3>Resources</h3>
         </div>
-        <div ng-show="(!clusters.mongoExt && containerDeployment)">
-	        <alert type="warning"><b><u>Note:</u></b><br />
-		        You have chosen to deploy SOAJS using <b>Docker</b> or <b>Kubernetes</b>.<br />By default Mongo is created as a container using this deployment strategy.<br />If you want Mongo to be outside the container cloud, tick the below input <b>External Mongo</b> and provide the configuration needed to connect to Mongo.
-	        </alert>
-        </div>
-        <table width="100%" cellspacing="0" cellpadding="0" border="0">
-            <tbody>
-            <tr class="form-group credentials-wrapper">
-                <td>
-                    <div id="clusterPrefix-wrapper">
-                        <label class="f-left  ">Cluster Prefix</label>
-                        <input type="text" class="form-control" ng-required="false" ng-model="clusters.prefix" name="clusterPrefix" id="clusterPrefix" value="{{clusterPrefix}}" />
-                        <div class="fieldMsg hint">Provide a prefix for your database names</div>
-                    </div>
-                </td>
-            </tr>
-            <tr class="form-group tr-code-wrapper" ng-show="containerDeployment">
-                <td class="form-select">
-                    <div id="mongoExt-wrapper">
-                        <input class="f-left form-control" id="mongoExt" name="mongoExt" ng-model="clusters.mongoExt"
-                               tooltip="Check the box if you want Mongo to be outside the container cloud."
-                               ng-required="false" type="checkbox" ng-click="uncheckReplica()"/>&nbsp;<label>External Mongo</label>
-                        <div class="fieldMsg hint">Specify if Mongo should be outside the container cloud</div>
-                    </div>
-                </td>
-            </tr>
-            <tr class="form-group tr-code-wrapper" ng-show="(clusters.mongoExt || !containerDeployment)">
-                <td class="form-select">
-                    <div id="isReplica-wrapper">
-                        <input class="f-left form-control" id="isReplica" name="isReplica" ng-model="clusters.isReplica"
-                               tooltip="Check the box if the Mongo Database is a replica set"
-                               ng-required="false" type="checkbox" ng-change="resetMongoInput()"/>&nbsp;<label>Replicated Database</label>
-                        <div class="fieldMsg hint">Check the box if the Mongo Database is a replica set</div>
-                    </div>
-                </td>
-            </tr>
-            <tr class="form-group replicaSet-wrapper" ng-show="clusters.isReplica && clusters.mongoExt">
-                <td>
-                    <div id="replicaSet-wrapper">
-                        <label class="f-left  ">Replica Set Name</label>
-                        <input type="text" class="form-control" ng-required="false" ng-model="clusters.replicaSet"  name="replicaSet" id="replicaSet" value="{{replicaSet}}" />
-                        <div class="fieldMsg hint">Provide the name of the replica Set you are connecting to.</div>
-                    </div>
-                </td>
-            </tr>
-            <tr class="form-group servers-wrapper" ng-show="((clusters.mongoExt && containerDeployment) || !containerDeployment)">
-                <td>
-                    <fieldset class="serversList">
-                        <legend>Servers List</legend>
-                        <div id="servers">
-                            <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                                <tbody>
-                                <tr class="form-group host-wrapper" ng-repeat="oneServer in clusters.servers track by $index">
-                                    <td width="80%" valign="top">
-                                        <div>
-                                            <label>Hostname</label>
-                                            <input class="form-control " id="host{{$index}}" name="host{{$index}}" ng-model="clusters.servers[$index].host" value="{{oneServer.host}}" placeholder="<External Machine IP>" ng-required="true" type="text">
-                                            <div class="fieldMsg hint">The hostname must not hold the default localhost IP address(127.0.0.1).</div>
-                                        </div>
-                                    </td>
-                                    <td width="1%"></td>
-                                    <td width="14%" valign="top">
-                                        <div>
-                                            <label>Port</label>
-                                            <input class="form-control " id="port{{$index}}" name="port{{$index}}" ng-model="clusters.servers[$index].port" value="{{oneServer.port}}" placeholder="27017" ng-required="true" type="text">
-                                        </div>
-                                    </td>
-                                    <td width="1%"></td>
-                                    <td width="4%" valign="top">
-                                        <br /><br />
-                                        <div ng-if="$index > 0">
-                                            <input  type="button" class="f-right btn btn-sm btn-danger" value="remove" ng-click="removeServer($index)" />
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </fieldset>
-                </td>
-            </tr>
-            <tr class="form-group addServer-wrapper" ng-show="clusters.isReplica && clusters.mongoExt">
-                <td class="typeHtml">
-                    <br />
-                    <input class="btn btn-sm btn-success f-right" value="Add New Server" type="button" ng-click="AddNewServer()" />
-                </td>
-            </tr>
-            <tr class="form-group credentials-wrapper" ng-show="((clusters.mongoExt && containerDeployment) || !containerDeployment)">
-                <td>
-                    <div id="credentials-wrapper"><br>
-                        <fieldset class="floatGroup">
-                            <legend>Credentials</legend>
-                            <div id="credentials">
-                                <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                                    <tbody>
-                                    <tr class="form-group username-wrapper">
-                                        <td>
-                                            <div id="username-wrapper">
-                                                <label>Username</label>
-                                                <input class="form-control " id="username" name="username" ng-model="clusters.credentials.username" value="{{clusters.credentials.username}}" placeholder="Username" tooltip="Enter the Credentials of the cluster" ng-required="false" type="text">
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="form-group password-wrapper">
-                                        <td>
-                                            <div id="password-wrapper">
-                                                <label>Password</label>
-                                                <input class="form-control " id="password" name="password" ng-model="clusters.credentials.password" value="{{clusters.credentials.password}}" placeholder="Password" tooltip="Enter the Credentials of the cluster" ng-required="false" type="text">
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </fieldset>
-                    </div>
-                </td>
-            </tr>
-            <tr class="form-group urlParam-wrapper" ng-show="((clusters.mongoExt && containerDeployment) || !containerDeployment)">
-                <td>
-                    <div id="urlParam-wrapper">
-                        <label class="f-left  ">URL Parameters</label>
-                        <textarea class="form-control" ng-required="false" ng-model="clusters.URLParam" name="URLparam" id="URLparam" cols="30" rows="10">{{clusters.URLParam}}</textarea>
-                    </div>
-                </td>
-            </tr>
-            <tr class="form-group extraParam-wrapper" ng-show="((clusters.mongoExt && containerDeployment) || !containerDeployment)">
-                <td>
-                    <div id="extraParam-wrapper">
-                        <label class="f-left  ">Extra Parameters</label>
-                        <textarea class="form-control" ng-required="false" ng-model="clusters.extraParam" name="extraParam" id="extraParam" cols="30" rows="10">{{clusters.extraParam}}</textarea>
-                    </div>
-                </td>
-            </tr>
-            <tr class="form-group streaming-wrapper" ng-show="((clusters.mongoExt && containerDeployment) || !containerDeployment)">
-                <td>
-                    <div id="streaming-wrapper">
-                        <label class="f-left  ">Streaming Options</label>
-                        <textarea class="form-control" ng-required="false" ng-model="clusters.streaming" name="streaming" id="streaming" cols="30" rows="10">{{clusters.streaming}}</textarea>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+	    <accordion close-others="true">
+		    <accordion-group is-open="local">
+			    <accordion-heading>
+				    <span ng-click="doMongoExt(false)">Local Cloud MongoDB</span>
+			    </accordion-heading>
+			    <alert type="info">
+				    By default, <b>MongoDB</b> is deployed as a service with 1 replica when choosing <b>local</b> or <b>remote</b> cloud deployment.<br />
+				    The connection is therefore preconfigured and only supports an optional custom prefix for the databases.
+			    </alert>
+			    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+				    <tbody>
+					    <tr class="form-group credentials-wrapper">
+						    <td>
+							    <div id="clusterPrefix-wrapper1">
+								    <label class="f-left">Database Prefix</label>
+								    <input type="text" class="form-control" ng-required="false" ng-model="clusters.prefix" name="clusterPrefix" id="clusterPrefix" value="{{clusterPrefix}}" />
+								    <div class="fieldMsg hint">Provide an optional prefix for your databases names</div>
+							    </div>
+						    </td>
+					    </tr>
+				    </tbody>
+			    </table>
+		    </accordion-group>
+		    <accordion-group is-open="external">
+			    <accordion-heading>
+				    <span ng-click="doMongoExt(true)">MongoDB External or MongoDB SaaS</span>
+			    </accordion-heading>
+			    <alert type="info">
+				    You have chose to connect to an external MongoDB: <b>self-hosted MongoDB</b> cluster(s) or <b>MongoDB SaaS</b><br />
+				    Please instruct <b>SOAJS</b> how it should connect to this resource.
+			    </alert>
+			    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+				    <tbody>
+					    <tr class="form-group credentials-wrapper">
+						    <td>
+							    <div id="clusterPrefix-wrapper">
+								    <label class="f-left">Database Prefix</label>
+								    <input type="text" class="form-control" ng-required="false" ng-model="clusters.prefix" name="clusterPrefix" id="clusterPrefix" value="{{clusterPrefix}}" />
+								    <div class="fieldMsg hint">Provide an optional prefix for your databases names</div>
+							    </div>
+						    </td>
+					    </tr>
+					    <tr class="form-group tr-code-wrapper" ng-show="(clusters.mongoExt || !containerDeployment)">
+						    <td class="form-select">
+							    <div id="isReplica-wrapper">
+								    <input class="f-left form-control" id="isReplica" name="isReplica" ng-model="clusters.isReplica"
+								           tooltip="Check the box if the MongoDB Database is a replica set"
+								           ng-required="false" type="checkbox" ng-change="resetMongoInput()" style="box-shadow: none; width:2%;"/>&nbsp;<label>Replicated Database</label>
+								    <div class="fieldMsg hint">Check the box if the MongoDB is hosted on multiple servers.</div>
+							    </div>
+						    </td>
+					    </tr>
+					    <tr class="form-group replicaSet-wrapper" ng-show="clusters.isReplica && clusters.mongoExt">
+						    <td>
+							    <div id="replicaSet-wrapper">
+								    <label class="f-left  ">Replica Set Name</label>
+								    <input type="text" class="form-control" ng-required="false" ng-model="clusters.replicaSet"  name="replicaSet" id="replicaSet" value="{{replicaSet}}" />
+								    <div class="fieldMsg hint">Provide the name of the replica Set you are connecting to.</div>
+							    </div>
+						    </td>
+					    </tr>
+					    <tr class="form-group servers-wrapper" ng-show="((clusters.mongoExt && containerDeployment) || !containerDeployment)">
+						    <td>
+							    <fieldset class="serversList">
+								    <legend>Servers List</legend>
+								    <div id="servers">
+									    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+										    <tbody>
+											    <tr class="form-group host-wrapper" ng-repeat="oneServer in clusters.servers track by $index">
+												    <td width="80%" valign="top">
+													    <div>
+														    <label>Hostname</label>
+														    <input class="form-control " id="host{{$index}}" name="host{{$index}}" ng-model="clusters.servers[$index].host" value="{{oneServer.host}}" placeholder="<External Machine IP>" ng-required="true" type="text">
+														    <div class="fieldMsg hint">The hostname must not hold the default localhost IP address(127.0.0.1).</div>
+													    </div>
+												    </td>
+												    <td width="1%"></td>
+												    <td width="14%" valign="top">
+													    <div>
+														    <label>Port</label>
+														    <input class="form-control " id="port{{$index}}" name="port{{$index}}" ng-model="clusters.servers[$index].port" value="{{oneServer.port}}" placeholder="27017" ng-required="true" type="text">
+													    </div>
+												    </td>
+												    <td width="1%"></td>
+												    <td width="4%" valign="top">
+													    <br /><br />
+													    <div ng-if="$index > 0">
+														    <input  type="button" class="f-right btn btn-sm btn-danger" value="remove" ng-click="removeServer($index)" />
+													    </div>
+												    </td>
+											    </tr>
+										    </tbody>
+									    </table>
+								    </div>
+							    </fieldset>
+						    </td>
+					    </tr>
+					    <tr class="form-group addServer-wrapper" ng-show="clusters.isReplica && clusters.mongoExt">
+						    <td class="typeHtml">
+							    <br />
+							    <input class="btn btn-sm btn-success f-right" value="Add New Server" type="button" ng-click="AddNewServer()" />
+						    </td>
+					    </tr>
+					    <tr class="form-group credentials-wrapper" ng-show="((clusters.mongoExt && containerDeployment) || !containerDeployment)">
+						    <td>
+							    <div id="credentials-wrapper"><br>
+								    <fieldset class="floatGroup">
+									    <legend>Credentials</legend>
+									    <div id="credentials">
+										    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+											    <tbody>
+												    <tr class="form-group username-wrapper" style="float:left; width:50%">
+													    <td style="width:99%; display: block">
+														    <div id="username-wrapper">
+															    <label>Username</label>
+															    <input class="form-control " id="username" name="username" ng-model="clusters.credentials.username" value="{{clusters.credentials.username}}" placeholder="Username" tooltip="Enter the Credentials of the cluster" ng-required="false" type="text">
+														    </div>
+													    </td>
+												    </tr>
+												    <tr class="form-group password-wrapper" style="float:left; width:50%">
+													    <td style="width:99%; display: block">
+														    <div id="password-wrapper">
+															    <label>Password</label>
+															    <input class="form-control " id="password" name="password" ng-model="clusters.credentials.password" value="{{clusters.credentials.password}}" placeholder="Password" tooltip="Enter the Credentials of the cluster" ng-required="false" type="text">
+														    </div>
+													    </td>
+												    </tr>
+											    </tbody>
+										    </table>
+									    </div>
+								    </fieldset>
+							    </div>
+						    </td>
+					    </tr>
+					    <tr class="form-group urlParam-wrapper" ng-show="((clusters.mongoExt && containerDeployment) || !containerDeployment)">
+						    <td>
+							    <div id="urlParam-wrapper">
+								    <label class="f-left  ">Connection Options</label>
+								    <textarea class="form-control" ng-required="false" ng-model="clusters.URLParam" name="URLparam" id="URLparam" cols="30" rows="10">{{clusters.URLParam}}</textarea>
+							    </div>
+						    </td>
+					    </tr>
+					    <tr class="form-group streaming-wrapper" ng-show="((clusters.mongoExt && containerDeployment) || !containerDeployment)">
+						    <td>
+							    <div id="streaming-wrapper">
+								    <label class="f-left  ">Streaming Options</label>
+								    <textarea class="form-control" ng-required="false" ng-model="clusters.streaming" name="streaming" id="streaming" cols="30" rows="10">{{clusters.streaming}}</textarea>
+							    </div>
+						    </td>
+					    </tr>
+				    </tbody>
+			    </table>
+		    </accordion-group>
+	    </accordion>
         <div class="footer c-both table w-100">
             <br />
             <input value="Go Back" class="btn btn-sm btn-danger f-left" type="button" ng-click="goBack()"/>
