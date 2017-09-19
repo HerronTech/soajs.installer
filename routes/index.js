@@ -3,6 +3,7 @@ var os = require("os");
 var path = require("path");
 
 var utils = require("./utils");
+let config = require("../config");
 
 //configuration file
 var dataDir = __dirname + "/../data/";
@@ -387,7 +388,16 @@ var routes = {
             });
         });
 
-    }
+    },
+	
+	"versions": function(req, res){
+		utils.versions(config, req, function(error, response){
+			if(error){
+				return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message }));
+			}
+			return res.json(req.soajs.buildResponse(null, response));
+		})
+	}
 };
 
 module.exports = routes;

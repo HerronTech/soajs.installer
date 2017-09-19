@@ -5,7 +5,7 @@ var path = require("path");
 var exec = require("child_process").exec;
 var uuid = require('uuid');
 var soajs = require("soajs");
-var soajs = require("soajs");
+var request = require("request");
 
 var whereis = require('whereis');
 
@@ -1095,5 +1095,49 @@ module.exports = {
                 return cb(null, data);
             });
         }
-    }
+    },
+	
+	"versions": function(config, req, cb){
+		
+		let myUrl = config.docker.url;
+		let prefix = req.soajs.inputmaskData.prefix;
+		let name = req.soajs.inputmaskData.name;
+		myUrl = myUrl.replace("%organization%", prefix).replace("%imagename%", name);
+		
+		let options = {
+			method: 'GET',
+			url: myUrl,
+			headers: { 'cache-control': 'no-cache' },
+			json: true
+		};
+		req.soajs.log.debug(options);
+		request.get(options, function (error, response, body) {
+			if (error) {
+				return cb(error);
+			}
+			
+			let tag = req.soajs.inputmaskData.tag;
+			let output =[];
+			if(body && body.results){
+				if(tag){
+					body.results.forEach((oneTag) =>{
+						if(oneTag.name === tag){
+							output.push(oneTag);
+						}
+					});
+				}
+				else{
+					let count = 1;
+					body.results.forEach((oneTag) =>{
+						if(count <= 5){
+							output.push(oneTag);
+							count++;
+						}
+					});
+				}
+			}
+			
+			return cb(null, output);
+		});
+	}
 };

@@ -41,6 +41,9 @@ installer.init(function () {
 	installer.get('/progress/info', routes.progressInfo);
 	installer.get('/progress', routes.progress);
 	
+	//get latest soajs image versions
+	installer.get('/soajs/versions', routes.versions);
+	
 	//bind the ui
 	installer.app.use(express.static(path.join(__dirname, './views')));
 	
