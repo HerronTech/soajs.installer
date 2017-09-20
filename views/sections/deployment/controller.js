@@ -8,8 +8,8 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 		$scope.$parent.go("#/resources");
 	};
 	
-	$scope.removeConfirmation = function(){
-		$scope.confirmation=false;
+	$scope.removeConfirmation = function () {
+		$scope.confirmation = false;
 		$cookies.remove('confirmation');
 	};
 	
@@ -17,7 +17,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 		$scope.alerts.splice(i, 1);
 	};
 	
-	$scope.accordion = {
+	$scope.accordion1 = {
 		machine: true,
 		image: false,
 		certificates: true,
@@ -27,8 +27,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 		readiness: false,
 		deploymentKube: true,
 		ui: true,
-		nginx: true,
-		mongo: true
+		nginx: true
 	};
 	
 	$scope.accordion2 = {
@@ -36,11 +35,11 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 		security: false,
 		clusters: false,
 		es_clusters: false,
-		deployment: true
+		deployment: false
 	};
 	
-	$scope.tabSwitched = function(){
-		$timeout(function(){
+	$scope.tabSwitched = function () {
+		$timeout(function () {
 			resizeContent();
 		}, 100);
 	};
@@ -50,53 +49,27 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 		$scope.docker = false;
 		$scope.kubernetes = false;
 		
-		// if(!$scope.confirmation){
-			if ($scope.deployment.deployDriver !== "manual") {
-				$scope.ha = true;
-				$scope.deployment.deployType = "container";
-				var types = ["container.docker.remote", "container.kubernetes.remote"];
-				$scope.local = (types.indexOf($scope.deployment.deployDriver) === -1);
-				
-				if ($scope.deployment.deployDriver.indexOf("docker") !== -1) {
-					$scope.docker = true;
-				}
-				if ($scope.deployment.deployDriver.indexOf("kubernetes") !== -1) {
-					$scope.kubernetes = true;
-				}
-				
-				if (!$scope.local) {
-					$scope.deployment.deployDockerNodes = [];
-					$scope.deployment.deployDockerNodes.push($scope.deployment.containerHost);
-				}
+		if ($scope.deployment.deployDriver !== "manual") {
+			$scope.ha = true;
+			$scope.deployment.deployType = "container";
+			var types = ["container.docker.remote", "container.kubernetes.remote"];
+			$scope.local = (types.indexOf($scope.deployment.deployDriver) === -1);
+			
+			if ($scope.deployment.deployDriver.indexOf("docker") !== -1) {
+				$scope.docker = true;
 			}
-			else {
-				$scope.deployment.deployType = "manual";
+			if ($scope.deployment.deployDriver.indexOf("kubernetes") !== -1) {
+				$scope.kubernetes = true;
 			}
-		// }
-		// else{
-		// 	var options = {
-		// 		url: appConfig.url + "/installer/confirmation",
-		// 		method: "get"
-		// 	};
-		//
-		// 	ngDataApi.get($scope, options, function (error, response) {
-		// 		if (error) {
-		// 			$scope.alerts.push({'type': 'danger', 'msg': error.message});
-		// 			return false;
-		// 		}
-		//
-		// 		$scope.data = {
-		// 			"gi": (response.gi) ? response.gi : {},
-		// 			"security": (response.security) ? response.security : {},
-		// 			"clusters": (response.clusters) ? response.clusters : {},
-		// 			"es_clusters": (response.es_clusters && response.es_clusters !== {}) ? response.es_clusters : false,
-		// 			"deployment": (response.deployment) ? response.deployment : {}
-		// 		};
-		// 		$timeout(function () {
-		// 			resizeContent();
-		// 		}, 10);
-		// 	});
-		// }
+			
+			if (!$scope.local) {
+				$scope.deployment.deployDockerNodes = [];
+				$scope.deployment.deployDockerNodes.push($scope.deployment.containerHost);
+			}
+		}
+		else {
+			$scope.deployment.deployType = "manual";
+		}
 	};
 	
 	$scope.getLatestSOAJSImages = function (prefix, name, reload) {
@@ -117,7 +90,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
 			}
 			else {
-				if(reload){
+				if (reload) {
 					$scope.deployment[name + 'ImageTag'] = "latest";
 				}
 				
@@ -186,11 +159,11 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			$scope.confirmation = true;
 			$cookies.putObject('confirmation', $scope.confirmation);
 			$scope.data = {
-				"gi": (response.gi) ? response.gi: {},
-				"security": (response.security) ? response.security: {},
-				"clusters": (response.clusters) ? response.clusters: {},
+				"gi": (response.gi) ? response.gi : {},
+				"security": (response.security) ? response.security : {},
+				"clusters": (response.clusters) ? response.clusters : {},
 				"es_clusters": (response.es_clusters && Object.keys(response.es_clusters).length > 0) ? response.es_clusters : false,
-				"deployment": (response.deployment) ? response.deployment: {}
+				"deployment": (response.deployment) ? response.deployment : {}
 			};
 			$timeout(function () {
 				resizeContent();

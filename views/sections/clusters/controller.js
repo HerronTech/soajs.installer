@@ -3,6 +3,9 @@ var clustersApp = app.components;
 clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', function ($scope, $timeout, ngDataApi) {
 	$scope.alerts = [];
 	
+	$scope.mongo = true;
+	$scope.es = true;
+	
 	$scope.local = true;
 	$scope.external = false;
 	
@@ -50,17 +53,34 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 		}, 100);
 	};
 	
-	$scope.doMongoExt = function(flag) {
-		$scope.clusters.mongoExt = flag;
-		$scope.uncheckReplica();
-		resizeContent();
+	$scope.doMongoExt = function(optValue) {
+		if(optValue !== undefined){
+			$scope.clusters.mongoExt = optValue;
+		}
+		else{
+			$scope.clusters.mongoExt = !$scope.clusters.mongoExt;
+		}
+		renderAccordion();
 	};
 	
-	$scope.onlyResize = function(){
+	function renderAccordion(){
 		$timeout(function(){
+			if($scope.clusters.mongoExt){
+				$scope.external = true;
+				$scope.local = false;
+				$scope.accordion.groups[0].isOpen = false;
+				$scope.accordion.groups[1].isOpen = true;
+			}
+			else{
+				$scope.external = false;
+				$scope.local = true;
+				$scope.accordion.groups[0].isOpen = true;
+				$scope.accordion.groups[1].isOpen = false;
+			}
+			$scope.uncheckReplica();
 			resizeContent();
 		}, 100);
-	};
+	}
 	
 	$scope.uncheckReplica = function() {
 		if(!$scope.clusters.mongoExt) {
@@ -130,10 +150,11 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 			url: appConfig.url + "/installer/clusters",
 			method: "post",
 			data: {
-				"clusters": data
+				"clusters": data,
+				"deployment": $scope.deployment
 			}
 		};
-
+		
 		ngDataApi.post($scope, options, function (error) {
 			if (error) {
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
@@ -161,10 +182,12 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
 				return false;
 			}
+			
 			$scope.deployAnalytics = (response && response.deployment.deployAnalytics) ? response.deployment.deployAnalytics : false;
-			$scope.deployment = {
-                "deployType": (response && response.deployment.deployType) ? response.deployment.deployType : "manual"
-			};
+			
+			$scope.deployment = response.deployment;
+			$scope.deployment.deployType = (response && response.deployment.deployType) ? response.deployment.deployType : "manual";
+			$scope.deployment.mongoExposedPort = (response && response.deployment.mongoExposedPort) ? response.deployment.mongoExposedPort : 32017;
 
 			$scope.containerDeployment = $scope.deployment.deployType === "container";
 
@@ -213,8 +236,10 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 				$scope.analytics = false;
 			}
 			
-			resizeContent();
+			renderAccordion();
 		});
 	};
+	
+	//execute default method
 	$scope.loadClusters();
 }]);

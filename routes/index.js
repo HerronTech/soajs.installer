@@ -210,7 +210,9 @@ var routes = {
                 else
                     return res.json(req.soajs.buildResponse({code: 601, msg: "Invalid machine IP address: " + error + ". Provide the machine's external IP address."}));
             }
-            utils.updateCustomData(req, res, req.soajs.inputmaskData.clusters, "clusters");
+            utils.updateCustomData(req, res, req.soajs.inputmaskData.clusters, "clusters", function(){
+	            utils.updateCustomData(req, res, req.soajs.inputmaskData.deployment, "deployment");
+            });
         });
     },
 	"postEsClusters": function (req, res) {

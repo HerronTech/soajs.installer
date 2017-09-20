@@ -38,7 +38,7 @@
 			<tab heading="Machine">
 				<br>
 				<accordion close-others="false">
-					<accordion-group is-open="accordion.machine">
+					<accordion-group is-open="accordion1.machine">
 						<accordion-heading>Machine Info</accordion-heading>
 						<table width="100%" cellspacing="0" cellpadding="0" border="0">
 							<tbody>
@@ -66,7 +66,7 @@
 							</tbody>
 						</table>
 					</accordion-group>
-					<accordion-group is-open="accordion.image">
+					<accordion-group is-open="accordion1.image">
 						<accordion-heading>Image Info</accordion-heading>
 						<br />
 						<alert type="danger" ng-show="deployment.soajsImagePrefix !== deployment.nginxImagePrefix">
@@ -122,7 +122,7 @@
 		    <tab ng-if="docker" heading="Docker" ng-click="tabSwitched()">
 			    <br>
 			    <accordion close-others="false">
-				    <accordion-group ng-if="deployment.certsRequired" is-open="accordion.certificates">
+				    <accordion-group ng-if="deployment.certsRequired" is-open="accordion1.certificates">
 					    <accordion-heading>Certificates</accordion-heading>
 					    <table width="100%" cellspacing="0" cellpadding="0" border="0">
 						    <tbody>
@@ -159,7 +159,7 @@
 						    </tbody>
 					    </table>
 				    </accordion-group>
-				    <accordion-group is-open="accordion.deploymentDocker">
+				    <accordion-group is-open="accordion1.deploymentDocker">
 					    <accordion-heading>Deployment</accordion-heading>
 					    <table width="100%" cellspacing="0" cellpadding="0" border="0"width="100%" cellspacing="0" cellpadding="0" border="0">
 						    <tbody>
@@ -211,7 +211,7 @@
 		    <tab ng-if="kubernetes" heading="Kubernetes" ng-click="tabSwitched()">
 			    <br>
 			    <accordion close-others="false">
-				    <accordion-group is-open="accordion.token">
+				    <accordion-group is-open="accordion1.token">
 					    <accordion-heading>Authentication Token</accordion-heading>
 					    <table width="100%" cellspacing="0" cellpadding="0" border="0">
 						    <tbody>
@@ -228,7 +228,7 @@
 						    </tbody>
 					    </table>
 				    </accordion-group>
-				    <accordion-group is-open="accordion.namespace">
+				    <accordion-group is-open="accordion1.namespace">
 					    <accordion-heading>Namespace</accordion-heading>
 					    <table width="100%" cellspacing="0" cellpadding="0" border="0">
 						    <tbody>
@@ -259,7 +259,7 @@
 						    </tbody>
 					    </table>
 				    </accordion-group>
-				    <accordion-group is-open="accordion.readiness">
+				    <accordion-group is-open="accordion1.readiness">
 					    <accordion-heading>Readiness Probe</accordion-heading>
 					    <table width="100%" cellspacing="0" cellpadding="0" border="0">
 						    <tbody>
@@ -316,7 +316,7 @@
 						    </tbody>
 					    </table>
 				    </accordion-group>
-				    <accordion-group is-open="accordion.deploymentKube">
+				    <accordion-group is-open="accordion1.deploymentKube">
 					    <accordion-heading>Deployment</accordion-heading>
 					    <table width="100%" cellspacing="0" cellpadding="0" border="0">
 						    <tr class="form-group tr-code-wrapper">
@@ -336,7 +336,7 @@
 		    <tab heading="UI Modules" ng-click="tabSwitched()">
 			    <br>
 			    <accordion>
-				    <accordion-group is-open="accordion.ui">
+				    <accordion-group is-open="accordion1.ui">
 					    <accordion-heading>Custom UI Modules</accordion-heading>
 					    <table width="100%" cellspacing="0" cellpadding="0" border="0">
 						    <tbody>
@@ -420,7 +420,7 @@
 		    <tab heading="Nginx">
 			    <br>
 			    <accordion>
-				    <accordion-group is-open="accordion.nginx">
+				    <accordion-group is-open="accordion1.nginx">
 					    <accordion-heading>Nginx Exposed Ports</accordion-heading>
 			            <table width="100%" cellspacing="0" cellpadding="0" border="0">
 						    <tbody>
@@ -492,28 +492,6 @@
 				    </accordion-group>
 			    </accordion>
 		    </tab>
-		    <tab heading="Mongo" ng-if="!deployment.mongoExt">
-			    <br>
-			    <accordion>
-				    <accordion-group is-open="accordion.ui">
-					    <accordion-heading>Mongo Exposed Ports</accordion-heading>
-			            <table width="100%" cellspacing="0" cellpadding="0" border="0">
-				    <tbody>
-					    <tr class="form-group tr-code-wrapper">
-						    <td class="form-select">
-							    <div id="mongoExposedPort-wrapper">
-								    <label>Mongo Exposed Port</label>
-								    <input type="number" ng-required="false" class="form-control" name="mongoExposedPort"
-								           id="mongoExposedPort" ng-model="deployment.mongoExposedPort" placeholder="Mongo Exposed Port"/>
-								    <div class="fieldMsg hint">Specify the Mongo Exposed port number</div>
-							    </div>
-						    </td>
-					    </tr>
-				    </tbody>
-			    </table>
-				    </accordion-group>
-			    </accordion>
-		    </tab>
 	    </tabset>
 	    <br>
 	    <hr>
@@ -532,27 +510,27 @@
 	    
 	    <accordion close-others="false" class="box-content">
 		    <accordion-group ng-show="data.gi" is-open="accordion2.gi">
-			    <accordion-heading>General Information</accordion-heading>
+			    <accordion-heading><span ng-click="tabSwitched()">General</span></accordion-heading>
 			    <div ng-bind-html="data.gi|myObject"></div>
 		    </accordion-group>
 		
 		    <accordion-group ng-show="data.security" is-open="accordion2.security">
-			    <accordion-heading>Security Information</accordion-heading>
+			    <accordion-heading><span ng-click="tabSwitched()">Security</span></accordion-heading>
 			    <div ng-bind-html="data.security|myObject"></div>
 		    </accordion-group>
 		
 		    <accordion-group ng-show="data.clusters" is-open="accordion2.clusters">
-			    <accordion-heading>MongoDB Resource</accordion-heading>
+			    <accordion-heading><span ng-click="tabSwitched()">MongoDB</span></accordion-heading>
 			    <div ng-bind-html="data.clusters|myObject"></div>
 		    </accordion-group>
 		
 		    <accordion-group ng-show="data.es_clusters" is-open="accordion2.es_clusters">
-			    <accordion-heading>Elasticsearch Resource</accordion-heading>
+			    <accordion-heading><span ng-click="tabSwitched()">Elasticsearch</span></accordion-heading>
 			    <div ng-bind-html="data.es_clusters|myObject"></div>
 		    </accordion-group>
 		
 		    <accordion-group ng-show="data.deployment" is-open="accordion2.deployment">
-			    <accordion-heading>Deployment Information</accordion-heading>
+			    <accordion-heading><span ng-click="tabSwitched()">Deployment</span></accordion-heading>
 			    <div ng-bind-html="data.deployment|myObject"></div>
 		    </accordion-group>
 	    </accordion>

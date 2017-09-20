@@ -202,6 +202,17 @@ module.exports = {
 						},
 						"additionalProperties": false
 					}
+				},
+				"deployment": {
+					"source": ["body.deployment"],
+					"required": false,
+					"validation":{
+						"type":"object",
+						"properties":{
+							"deployType" : {"type": "string", "required": true, "enum": ["manual", "container"]},
+							"mongoExposedPort": {"type": "number", "required": false}
+						}
+					}
 				}
 			},
 			'/installer/esClusters' :{
