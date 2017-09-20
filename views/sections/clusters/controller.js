@@ -64,23 +64,41 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 	};
 	
 	function renderAccordion(){
+		
+		if($scope.clusters.mongoExt){
+			$scope.external = true;
+			$scope.local = false;
+		}
+		else{
+			$scope.external = false;
+			$scope.local = true;
+		}
 		$timeout(function(){
 			if($scope.clusters.mongoExt){
-				$scope.external = true;
-				$scope.local = false;
 				$scope.accordion.groups[0].isOpen = false;
 				$scope.accordion.groups[1].isOpen = true;
+				$scope.external = true;
+				$scope.local = false;
 			}
 			else{
-				$scope.external = false;
-				$scope.local = true;
 				$scope.accordion.groups[0].isOpen = true;
 				$scope.accordion.groups[1].isOpen = false;
+				$scope.external = false;
+				$scope.local = true;
 			}
 			$scope.uncheckReplica();
 			resizeContent();
-		}, 100);
+			
+			console.log($scope.accordion);
+		}, 10);
 	}
+	
+	$scope.doESExt = function(optValue){
+		$scope.analytics = true;
+		$timeout(function(){
+			$scope.analytics = true;
+		}, 100);
+	};
 	
 	$scope.uncheckReplica = function() {
 		if(!$scope.clusters.mongoExt) {

@@ -14,14 +14,17 @@
 			<br /><br />
 			<accordion close-others="false">
 				<accordion-group is-open="local">
-					<accordion-heading><span ng-click="doMongoExt(false)">Deploy Server</span></accordion-heading>
+					<accordion-heading>
+						<span ng-click="doMongoExt(false)">
+							<input type="radio" ng-checked="local" value="true" name="mongo_cluster"/>&nbsp;
+							I do not have a MongoDB server, i want SOAJS Installer to deploy it for me.
+						</span>
+					</accordion-heading>
 					<p>
-						I do not have a MongoDB Server.
+						SOAJS installer will deploy a preconfigured MongoDB server for you.<br />
+						You can provide an optional prefix for your databases and/or change the exposed port.
 					</p>
-					<input type="checkbox" ng-checked="!clusters.mongoExt" ng-click="doMongoExt()"/>&nbsp;I want SOAJS Installer to deploy one for me.
-					<br />
 					<hr>
-					<h4>Advanced Mode</h4>
 					<table width="100%" cellspacing="0" cellpadding="0" border="0">
 						<tbody>
 							<tr class="form-group credentials-wrapper">
@@ -48,10 +51,13 @@
 				</accordion-group>
 				<accordion-group is-open="external">
 					<accordion-heading>
-						<span ng-click="doMongoExt(true)">Connect to Server</span>
+						<span ng-click="doMongoExt(true)">
+							<input type="radio" ng-checked="external" value="true" name="mongo_cluster"/>&nbsp;
+							I have a MongoDB Server, and i want to connect to it
+						</span>
 					</accordion-heading>
 					<p>
-						I have a MongoDB Server, and here is how SOAJS Installer should connect to it:
+						Please provide the configurate to connect to your MongoDB Server.
 					</p>
 					<hr>
 					<table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -183,12 +189,16 @@
 			<legend>ElasticSearch</legend>
 			<br /><br />
 			<accordion close-others="false">
-				<accordion-group is-open="es" >
-					<accordion-heading>Deploy Server</accordion-heading>
+				<accordion-group is-open="analytics" is-disabled="true" >
+					<accordion-heading>
+						<span ng-click="doESExt(false)" disabled>
+							<input type="radio" ng-checked="analytics" value="true" disabled/>&nbsp;
+							I do not have an ElasticSearch Server, i want SOAJS Installer to deploy it for me.
+						</span>
+					</accordion-heading>
 					<p>
-						I do not have an ElasticSearch Server.
+						SOAJS installer will deploy a preconfigured ElasticSearch server for you and use it to activate your analytics.<br />
 					</p>
-					<input type="checkbox" ng-checked="analytics" disabled/>&nbsp;I want SOAJS Installer to deploy one for me.
 				</accordion-group>
 			</accordion>
 		</fieldset>

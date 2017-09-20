@@ -338,3 +338,9 @@ a.highlightedDirver {
 table img{
     width:70%;
 }
+
+.panel-title a:hover,
+.panel-title a{
+    text-decoration:none;
+    outline: 0;
+}
