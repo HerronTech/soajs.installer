@@ -36,6 +36,12 @@
     "rimraf": "*",
     "soajs": "1.0.*",
     "util": "*",
-    "whereis": "*"
-  }
+    "whereis": "*",
+    "snyk": "^1.41.1"
+  },
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
