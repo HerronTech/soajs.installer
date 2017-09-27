@@ -5,7 +5,7 @@ var path = require("path");
 var exec = require("child_process").exec;
 var uuid = require('uuid');
 var soajs = require("soajs");
-var soajs = require("soajs");
+var request = require("request");
 
 var whereis = require('whereis');
 
@@ -269,12 +269,16 @@ module.exports = {
         envData = envData.replace(/%deployDriver%/g, body.deployment.deployDriver);
         envData = envData.replace(/%deployDockerNodes%/g, body.deployment.deployDockerNodes);
         envData = envData.replace(/%clusterPrefix%/g, body.clusters.prefix);
-        envData = envData.replace(/"%clusters%"/g, JSON.stringify(clusters, null, 2));
-
+        
+        var mongoCluster = fs.readFileSync(folder + "resources/mongo.js", "utf8");
+	    mongoCluster = mongoCluster.replace(/"%clusters%"/g, JSON.stringify(clusters, null, 2));
+		fs.writeFile(folder + "resources/mongo.js", mongoCluster, "utf8");
+		   
 	    var uid = uuid.v4();
+	    var esCluster = fs.readFileSync(folder + "resources/es.js", "utf8");
 	    if (es_clusters) {
-		    envData = envData.replace(/"%es_analytics_cluster%"/g, JSON.stringify(es_clusters, null, 2));
-		    envData = envData.replace(/"%es_analytics_cluster_name%"/g, JSON.stringify("es_analytics_cluster_" + uid), null ,2);
+		    esCluster = esCluster.replace(/"%es_analytics_cluster%"/g, JSON.stringify(es_clusters, null, 2));
+		    esCluster = esCluster.replace(/"%es_analytics_cluster_name%"/g, JSON.stringify("es_analytics_cluster_" + uid), null ,2);
 		    envData = envData.replace(/%es_database_name%/g, "es_analytics_db_" + uid);
 		    envData = envData.replace(/"%databases_value%"/g, JSON.stringify({
 			    "cluster": "es_analytics_cluster_" + uid,
@@ -283,11 +287,14 @@ module.exports = {
 		    settings = settings.replace(/"%db_name%"/g, JSON.stringify("es_analytics_db_" + uid), null ,2);
 	    }
 	    else {
-		    envData = envData.replace(/"%es_analytics_cluster_name%": "%es_analytics_cluster%",/g, '');
+		    esCluster = "'use strict';" + os.EOL + os.EOL + "module.exports =" + JSON.stringify({}) + ";";
 		    envData = envData.replace(/"%es_database_name%": "%databases_value%",/g, '');
 		    settings = settings.replace(/"db_name": "%db_name%"/g, '');
 	    }
+	    fs.writeFile(folder + "resources/es.js", esCluster, "utf8");
 	    fs.writeFile(folder + "analytics/settings.js", settings, "utf8");
+	    
+	    
         envData = envData.replace(/%keySecret%/g, body.security.key);
         envData = envData.replace(/%sessionSecret%/g, body.security.session);
         envData = envData.replace(/%cookieSecret%/g, body.security.cookie);
@@ -388,6 +395,7 @@ module.exports = {
                     "INSTALLER_DIR": path.normalize(__dirname + "/../scripts/"),
                     "SOAJS_DEPLOY_DIR": body.gi.wrkDir,
                     "API_PREFIX": body.gi.api,
+	                "SOAJS_EXTKEY" : body.security.extKey1,
                     "SITE_PREFIX": body.gi.site,
                     "MASTER_DOMAIN": body.gi.domain
                 };
@@ -492,7 +500,8 @@ module.exports = {
                     "SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "master",
                     "SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
                     "NODE_PATH": nodePath,
-
+	
+	                "SOAJS_EXTKEY" : body.security.extKey1,
                     "API_PREFIX": body.gi.api,
                     "SITE_PREFIX": body.gi.site,
                     "MASTER_DOMAIN": body.gi.domain,
@@ -506,8 +515,13 @@ module.exports = {
                     "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
 
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
-                    "SOAJS_IMAGE_PREFIX": body.deployment.imagePrefix,
 
+                    "SOAJS_IMAGE_PREFIX": body.deployment.soajsImagePrefix,
+                    "SOAJS_IMAGE_TAG": body.deployment.soajsImageTag,
+	
+	                "SOAJS_NX_IMAGE_PREFIX": body.deployment.nginxImagePrefix,
+	                "SOAJS_NX_IMAGE_TAG": body.deployment.nginxImageTag,
+	                
                     "NGINX_HTTP_PORT": body.deployment.nginxPort,
                     "NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
                     "SOAJS_NX_SSL": body.deployment.nginxSsl,
@@ -520,6 +534,10 @@ module.exports = {
                     "CONTAINER_PORT": body.deployment.docker.containerPort,
                     "SOAJS_DOCKER_REPLICA": body.deployment.dockerReplica
                 };
+                
+                if(!body.clusters.mongoExt){
+                	envs["MONGO_PORT"] = body.deployment.mongoExposedPort;
+                }
 
                 if(body.deployment.gitSource && body.deployment.gitSource !== 'github'){
                     envs["SOAJS_GIT_SOURCE"] = body.deployment.gitSource;
@@ -569,10 +587,6 @@ module.exports = {
                     }
                 }
 
-                if (!body.clusters.mongoExt) {
-                    output += "sudo " + "killall mongo" + os.EOL;
-                }
-
                 output += os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/docker.js") + os.EOL;
                 fs.writeFile(filename, output, function(err){
                     if(err){
@@ -597,7 +611,8 @@ module.exports = {
                     "SOAJS_GIT_BRANCH": process.env.SOAJS_GIT_BRANCH || "master",
                     "SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
                     "NODE_PATH": nodePath,
-
+	
+	                "SOAJS_EXTKEY" : body.security.extKey1,
                     "API_PREFIX": body.gi.api,
                     "SITE_PREFIX": body.gi.site,
                     "MASTER_DOMAIN": body.gi.domain,
@@ -611,8 +626,13 @@ module.exports = {
                     "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
 
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
-                    "SOAJS_IMAGE_PREFIX": body.deployment.imagePrefix,
-
+	
+	                "SOAJS_IMAGE_PREFIX": body.deployment.soajsImagePrefix,
+	                "SOAJS_IMAGE_TAG": body.deployment.soajsImageTag,
+	
+	                "SOAJS_NX_IMAGE_PREFIX": body.deployment.nginxImagePrefix,
+	                "SOAJS_NX_IMAGE_TAG": body.deployment.nginxImageTag,
+	                
                     "NGINX_HTTP_PORT": body.deployment.nginxPort,
                     "NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
                     "SOAJS_NX_SSL": body.deployment.nginxSsl,
@@ -625,6 +645,10 @@ module.exports = {
 
                     "NGINX_DEPLOY_TYPE": body.deployment.nginxDeployType
                 };
+	
+	            if(!body.clusters.mongoExt){
+		            envs["MONGO_PORT"] = body.deployment.mongoExposedPort;
+	            }
 
                 if(body.deployment.nginxSsl && !body.deployment.generateSsc && body.deployment.nginxKubeSecret){
                     envs["SOAJS_NX_SSL_SECRET"] = body.deployment.nginxKubeSecret;
@@ -645,10 +669,6 @@ module.exports = {
 		            body.deployment.docker.certificatesFolder = body.deployment.docker.certificatesFolder.join("/");
 		            envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder + "/";
 	            }
-	            
-                // if (body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder) {
-                //     envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.kubernetes.containerDir || body.deployment.kubernetes.certificatesFolder;
-                // }
 	            
 	            envs['SOAJS_DEPLOY_ANALYTICS'] = body.deployment.deployAnalytics ? true : false;
 
@@ -680,10 +700,6 @@ module.exports = {
                     if (envs[e] !== null) {
                         output += "export " + e + "=" + envs[e] + os.EOL;
                     }
-                }
-
-                if (!body.clusters.mongoExt) {
-                    output += "sudo " + "killall mongo" + os.EOL;
                 }
 
                 output += os.EOL + nodePath + " " + path.normalize(__dirname + "/../scripts/kubernetes.js") + os.EOL;
@@ -763,7 +779,7 @@ module.exports = {
                         "api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
                         "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
                     },
-                    "ui": "http://" + body.gi.site + "." + body.gi.domain + ":" + (30000 + body.deployment.nginxPort),
+                    "ui": "http://" + body.gi.site + "." + body.gi.domain + ":" + body.deployment.nginxPort,
                     "cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
                 };
             }
@@ -975,7 +991,7 @@ module.exports = {
                 var services = ["dashboard-soajsdata", "dashboard-oauth-v1", "dashboard-urac-v2", "dashboard-dashboard-v1", "dashboard-controller-v1", "dashboard-nginx"];
 
 	            if(body.deployment.deployAnalytics){
-		            var analyticsContaiers = ["kibana", "dashboard-filebeat", "soajs-analytics-elasticsearch", "soajs-metricbeat", "dashboard-logstash"];
+		            var analyticsContaiers = ["kibana", "soajs-analytics-elasticsearch", "dashboard-logstash"];
 		            services = services.concat(analyticsContaiers);
 	            }
 
@@ -1089,5 +1105,49 @@ module.exports = {
                 return cb(null, data);
             });
         }
-    }
+    },
+	
+	"versions": function(config, req, cb){
+		
+		let myUrl = config.docker.url;
+		let prefix = req.soajs.inputmaskData.prefix;
+		let name = req.soajs.inputmaskData.name;
+		myUrl = myUrl.replace("%organization%", prefix).replace("%imagename%", name);
+		
+		let options = {
+			method: 'GET',
+			url: myUrl,
+			headers: { 'cache-control': 'no-cache' },
+			json: true
+		};
+		req.soajs.log.debug(options);
+		request.get(options, function (error, response, body) {
+			if (error) {
+				return cb(error);
+			}
+			
+			let tag = req.soajs.inputmaskData.tag;
+			let output =[];
+			if(body && body.results){
+				if(tag){
+					body.results.forEach((oneTag) =>{
+						if(oneTag.name === tag){
+							output.push(oneTag);
+						}
+					});
+				}
+				else{
+					let count = 1;
+					body.results.forEach((oneTag) =>{
+						if(count <= 5){
+							output.push(oneTag);
+							count++;
+						}
+					});
+				}
+			}
+			
+			return cb(null, output);
+		});
+	}
 };

@@ -33,6 +33,9 @@ installer.init(function () {
 	//Deployment APIs
 	installer.get('/installer/deployment', routes.getDeployment);
 	installer.post('/installer/deployment', routes.postDeployment);
+	
+	//get confirmation infro
+	installer.get('/installer/confirmation', routes.reconfirmDeployment);
 
 	//Launch Installer
 	installer.get('/installer/go', routes.installSOAJS);
@@ -40,6 +43,9 @@ installer.init(function () {
 	//Show Installation Progress
 	installer.get('/progress/info', routes.progressInfo);
 	installer.get('/progress', routes.progress);
+	
+	//get latest soajs image versions
+	installer.get('/soajs/versions', routes.versions);
 	
 	//bind the ui
 	installer.app.use(express.static(path.join(__dirname, './views')));

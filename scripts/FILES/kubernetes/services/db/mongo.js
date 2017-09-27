@@ -12,8 +12,9 @@ var components = {
                 "soajs.env.code": "dashboard",
 
                 "soajs.service.name": "soajsdata",
-                "soajs.service.group": "db",
-                "soajs.service.type": "database",
+                "soajs.service.group": "soajs-db",
+                "soajs.service.type": "cluster",
+                "soajs.service.subtype": "mongo",
                 "soajs.service.label": "dashboard-soajsdata",
                 "soajs.service.mode": "deployment"
             }
@@ -28,7 +29,7 @@ var components = {
                     "protocol": "TCP",
                     "port": 27017,
                     "targetPort": 27017,
-                    "nodePort": ( 5000 + 27017 )
+                    "nodePort": process.env.MONGO_PORT
                 }
             ]
         }
@@ -43,8 +44,9 @@ var components = {
                 "soajs.env.code": "dashboard",
 
                 "soajs.service.name": "soajsdata",
-                "soajs.service.group": "db",
-                "soajs.service.type": "database",
+	            "soajs.service.group": "soajs-db",
+	            "soajs.service.type": "cluster",
+	            "soajs.service.subtype": "mongo",
                 "soajs.service.label": "dashboard-soajsdata",
                 "soajs.service.mode": "deployment"
             }
@@ -64,8 +66,9 @@ var components = {
                         "soajs.env.code": "dashboard",
 
                         "soajs.service.name": "soajsdata",
-                        "soajs.service.group": "db",
-                        "soajs.service.type": "database",
+	                    "soajs.service.group": "soajs-db",
+	                    "soajs.service.type": "cluster",
+	                    "soajs.service.subtype": "mongo",
                         "soajs.service.label": "dashboard-soajsdata",
                         "soajs.service.mode": "deployment"
                     }

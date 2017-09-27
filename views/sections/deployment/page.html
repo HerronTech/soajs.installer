@@ -21,8 +21,7 @@
 			</p>
 		</div>
 	</div>
-    <form ng-hide="confirmation" name="deploymentForm" class="css-form" novalidate
-          ng-submit="submit(deploymentForm)" ng-show="ha">
+    <form ng-hide="confirmation" name="deploymentForm" class="css-form" novalidate ng-submit="submit(deploymentForm)" ng-show="ha">
         <div class="header">
             <h3>Deployment Information</h3>
         </div>
@@ -35,404 +34,467 @@
             </tr>
             </tbody>
         </table>
-        <fieldset ng-show="docker||kubernetes">
-        <table width="100%" cellspacing="0" cellpadding="0" border="0">
-            <tbody>
-            <tr class="form-group tr-code-wrapper">
-                <td class="form-select">
-                    <div id="containerHost-wrapper">
-                        <label>Master Node Hostname/IP</label>
-                        <input type="text" ng-required="false" class="form-control" name="containerHost"
-                               id="containerHost" ng-model="deployment.containerHost" placeholder="deployment.containerHost"/>
-                        <div class="fieldMsg hint">Specify the Hostname/IP of the Master Node.</div>
-                    </div>
-                </td>
-            </tr>
-            <tr class="form-group tr-code-wrapper">
-                <td class="form-select">
-                    <div id="imagePrefix-wrapper">
-                        <label>Image Prefix</label>
-                        <input type="text" ng-required="false" class="form-control" name="imagePrefix" id="imagePrefix"
-                               ng-model="deployment.imagePrefix" placeholder="deployment.imagePrefix"/>
-                        <div class="fieldMsg hint">Specify the Image Prefix to use for containers.</div>
-                    </div>
-                </td>
-            </tr>
-            <tr class="form-group tr-code-wrapper">
-                <td class="form-select">
-                    <div id="initialReplica-wrapper">
-                        <label>Initial Number of Replicas</label>
-                        <input type="number" ng-required="false" class="form-control" name="dockerReplica" ng-model="deployment.dockerReplica"
-                               placeholder="deployment.dockerReplica" id="dockerReplica" min="1"/>
-                        <div class="fieldMsg hint">Specify the Initial number of replicas per container to start with.
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        </fieldset>
-        <br ng-if="deployment.certsRequired"/>
-        <fieldset ng-show="deployment.certsRequired">
-            <legend>Certificates</legend>
-            <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tbody>
-                <tr class="form-group tr-code-wrapper">
-                    <td class="form-select">
-                        <div id="CA-wrapper">
-                            <label>CA</label>
-                            <input type="text" ng-required="deployment.certsRequired" class="form-control" name="caCertificate" id="caCertificate"
-                                   ng-model="deployment.certificates.caCertificate" placeholder="~/certificate.ca"/>
-                            <div class="fieldMsg hint">Specify the location of the certificate of type CA.</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper">
-                    <td class="form-select">
-                        <div id="Cert-wrapper">
-                            <label>Cert</label>
-                            <input type="text" ng-required="deployment.certsRequired" class="form-control" name="certCertificate" id="certCertificate"
-                                   ng-model="deployment.certificates.certCertificate" placeholder="~/certificate.cert"/>
-                            <div class="fieldMsg hint">Specify the location of the certificate of type Cert.</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper">
-                    <td class="form-select">
-                        <div id="Key-wrapper">
-                            <label>Key</label>
-                            <input type="text" ng-required="deployment.certsRequired" class="form-control" name="keyCertificate" id="keyCertificate"
-                                   ng-model="deployment.certificates.keyCertificate" placeholder="~/certificate.key"/>
-                            <div class="fieldMsg hint">Specify the location of the certificate of type Key.</div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </fieldset>
-        <br ng-if="kubernetes" />
-        <fieldset ng-show="kubernetes">
-            <legend>Kubernetes Authentication Token</legend>
-            <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tbody>
-                <tr class="form-group tr-code-wrapper">
-                    <td class="form-select">
-                        <div id="authToken-wrapper">
-                            <label>Kubernetes Authentication Token</label>
-                            <input type="text" ng-required="kubernetes" class="form-control" name="kubeAuthToken" id="kubeAuthToken"
-                                   ng-model="deployment.authentication.accessToken" placeholder="<Authentication token>"/>
-                            <div class="fieldMsg hint">Insert the kubernetes authentication token</div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </fieldset>
-        <br ng-if="kubernetes" />
-        <fieldset ng-show="kubernetes">
-            <legend>Readiness Probe Parametes</legend>
-            <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tbody>
-                <tr class="form-group tr-code-wrapper">
-                    <td class="form-select">
-                        <div id="initialDelaySeconds-wrapper">
-                            <label>Initial Delay Seconds</label>
-                            <input type="number" ng-required="false" class="form-control" name="initialDelaySeconds" id="initialDelaySeconds"
-                                   ng-model="deployment.readinessProbe.initialDelaySeconds" placeholder="15"/>
-                            <div class="fieldMsg hint">Specify the time (in seconds) before readiness probes are initiated..</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper">
-                    <td class="form-select">
-                        <div id="timeoutSeconds-wrapper">
-                            <label>Timeout Seconds</label>
-                            <input type="number" ng-required="false" class="form-control" name="timeoutSeconds" id="timeoutSeconds"
-                                   ng-model="deployment.readinessProbe.timeoutSeconds" placeholder="1"/>
-                            <div class="fieldMsg hint">Specify the time (in seconds) after which the probe times out.</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper">
-                    <td class="form-select">
-                        <div id="periodSeconds-wrapper">
-                            <label>Period Seconds</label>
-                            <input type="number" ng-required="false" class="form-control" name="periodSeconds" id="periodSeconds"
-                                   ng-model="deployment.readinessProbe.periodSeconds" placeholder="10"/>
-                            <div class="fieldMsg hint">Specify the interval (in seconds) between readiness checks.</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper">
-                    <td class="form-select">
-                        <div id="successThreshold-wrapper">
-                            <label>Success Threshold</label>
-                            <input type="number" ng-required="false" class="form-control" name="successThreshold" id="successThreshold"
-                                   ng-model="deployment.readinessProbe.successThreshold" placeholder="10"/>
-                            <div class="fieldMsg hint">Specify the minimum consecutive successes for the probe to be considered successful.</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper">
-                    <td class="form-select">
-                        <div id="failureThreshold-wrapper">
-                            <label>Failure Threshold</label>
-                            <input type="number" ng-required="false" class="form-control" name="failureThreshold" id="failureThreshold"
-                                   ng-model="deployment.readinessProbe.failureThreshold" placeholder="10"/>
-                            <div class="fieldMsg hint">Specify the minimum consecutive successes for the probe to be considered failed.</div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </fieldset>
-        <br ng-if="kubernetes" />
-        <fieldset ng-show="kubernetes">
-            <legend>Namespace Configuration</legend>
-            <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tbody>
-                    <tr class="form-group tr-code-wrapper">
-                        <td class="form-select">
-                            <div id="namespaceMode-wrapper">
-                                <label>Default Namespace</label>
-                                <input type="text" class="form-control" name="defaultNamespace" id="defaultNamespace"
-                                       ng-required="kubernetes" ng-model="deployment.namespaces.default" placeholder="soajs"/>
-                                <div class="fieldMsg hint">Specify the name of the default namespace for the project.</div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="form-group tr-code-wrapper">
-                        <td class="form-select">
-                            <div id="namespaceMode-wrapper">
-                                <label>Namespace Mode</label>
-                                <label class="radioLabel">
-                                    <input type="radio" ng-required="kubernetes" ng-model="deployment.namespaces.perService" name="global" ng-value="false" />&nbsp;Global Namespace Per Project
-                                </label>
-                                <label class="radioLabel">
-                                    <input type="radio" ng-required="kubernetes" ng-model="deployment.namespaces.perService" name="service" ng-value="true" />&nbsp;Specific Namespace Per Service
-                                </label>
-
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </fieldset>
-        <br ng-if="kubernetes" />
-        <fieldset ng-show="docker||kubernetes">
-            <legend>Git Account</legend>
-            <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tbody>
-                <tr class="form-group tr-code-wrapper">
-	                <td class="form-select">
-		                <div id="gitSource-wrapper">
-			                <label>Provider</label>
-			                <select name="gitSource" id="gitSource" ng-model="deployment.gitSource">
-				                <option value="github">Github</option>
-				                <option value="bitbucket">Bitbucket</option>
-			                </select>
-			                <div class="fieldMsg hint">Select the custom UI Source.</div>
-		                </div>
-	                </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper">
-	                <td class="form-select">
-		                <div id="gitProvider-wrapper">
-			                <label>Git Domain</label>
-			                <input type="text" ng-required="false" class="form-control" name="gitprovider" id="gitprovider"
-			                       ng-model="deployment.gitProvider" placeholder="github.com"/>
-			                <div class="fieldMsg hint">Specify the domain of the custom UI repo.</div>
-		                </div>
-	                </td>
-                </tr>
-	            <tr class="form-group tr-code-wrapper">
-                    <td class="form-select">
-                        <div id="gitOwner-wrapper">
-                            <label>Git Owner</label>
-                            <input type="text" ng-required="false" class="form-control" name="gitOwner" id="gitOwner"
-                                   ng-model="deployment.gitOwner" placeholder="soajs"/>
-                            <div class="fieldMsg hint">Specify the owner of the git repository.</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper">
-                    <td class="form-select">
-                        <div id="gitRepo-wrapper">
-                            <label>Git Repository</label>
-                            <input type="text" ng-required="false" class="form-control" name="gitRepo" id="gitRepo"
-                                   ng-model="deployment.gitRepo" placeholder="customUI"/>
-                            <div class="fieldMsg hint">Specify the name of the git repository.</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper">
-	                <td class="form-select">
-		                <div id="gitBranch-wrapper">
-			                <label>Git Branch</label>
-			                <input type="text" ng-required="false" class="form-control" name="gitBranch" id="gitBranch"
-			                       ng-model="deployment.gitBranch" placeholder="master"/>
-			                <div class="fieldMsg hint">Specify the branch to use.</div>
-		                </div>
-	                </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper">
-                    <td class="form-select">
-                        <div id="gitToken-wrapper">
-                            <label>Git Token</label>
-                            <input type="text" ng-required="false" class="form-control" name="gitToken" id="gitToken"
-                                   ng-model="deployment.gitToken" placeholder="Token ID"/>
-                            <div class="fieldMsg hint">Specify the token of the git repository.</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper">
-	                <td class="form-select">
-		                <div id="gitPath-wrapper">
-			                <label>Git Path</label>
-			                <input type="text" ng-required="false" class="form-control" name="gitPath" id="gitPath"
-			                       ng-model="deployment.gitPath" placeholder="/"/>
-			                <div class="fieldMsg hint">Specify the path of the git repository.</div>
-		                </div>
-	                </td>
-                </tr>
-                </tbody>
-            </table>
-        </fieldset>
-        <br />
-        <fieldset ng-show="docker||kubernetes">
-            <legend>NGINX</legend>
-            <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tbody>
-                <tr class="form-group tr-code-wrapper" ng-show="kubernetes">
-                    <td class="form-select">
-                        <div id="nginxDeployType-wrapper">
-                            <label>Service Deployment Type</label>
-                            <select ng-required="kubernetes" name="nginxDeployType" id="nginxDeployType" ng-model="deployment.nginxDeployType">
-                                <option value="NodePort">NodePort</option>
-                                <option value="LoadBalancer">Load Balancer</option>
-                            </select>
-                            <div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='LoadBalancer'">Load Balancer option uses automatic public IP / ELB provisioning when running Kubernetes cluster in AWS or GCE.</div>
-                            <div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='NodePort'">NodePort exposes NGINX to the selected port number plus 30000.</div>
-                            <div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='NodePort'">Current NGINX exposed port: {{30000 + deployment.nginxPort}}</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'">
-                    <td class="form-select">
-                        <div id="nginxPort-wrapper">
-                            <label>NGINX Port</label>
-                            <input type="number" ng-required="false" class="form-control" name="nginxPort"
-                                   id="nginxPort" ng-model="deployment.nginxPort" placeholder="deployment.nginxPort" min="1"/>
-                            <div class="fieldMsg hint">Specify the NGINX port number.</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'">
-                    <td class="form-select">
-                        <div id="nginxSecurePort-wrapper">
-                            <label>NGINX Secure Port</label>
-                            <input type="number" ng-required="false" class="form-control" name="nginxSecurePort"
-                                   id="nginxSecurePort" ng-model="deployment.nginxSecurePort" placeholder="deployment.nginxSecurePort" min="1"/>
-                            <div class="fieldMsg hint">Specify the NGINX secure port number.</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'">
-                    <td class="form-select">
-                        <div id="nginxSsl-wrapper">
-                            <input class="f-left form-control" id="nginxSsl" name="nginxSsl" ng-model="deployment.nginxSsl"
-                                   tooltip="Check the box if you want SSL certificates to be created with NGINX."
-                                   ng-required="false" type="checkbox"/>&nbsp;<label>NGINX SSL</label>
-                            <div class="fieldMsg hint">Specify if SSL certificates should be created with NGINX</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'&&kubernetes&&deployment.nginxSsl">
-                    <td class="form-select">
-                        <div id="nginxSsl-ssc">
-                            <input class="f-left form-control" id="nginxSslCertGen" name="nginxSslCertGen" ng-model="deployment.generateSsc"
-                                   tooltip="Check the box if you want SOAJS to create self signed certificates."
-                                   ng-required="false" type="checkbox"/>&nbsp;<label>Self Signed Certificates Generation</label>
-                            <div class="fieldMsg hint">Check the box if you want SOAJS to create self signed certificates.</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'&&kubernetes&&deployment.nginxSsl&&!deployment.generateSsc">
-                    <td class="form-select">
-                        <div id="nginxSslSecret-wrapper">
-                            <label>NGINX Certificates Kubernetes Secret</label>
-                            <input type="string" ng-required="false" class="form-control" name="nginxKubeSecret"
-                                   id="nginxKubeSecret" ng-model="deployment.nginxKubeSecret" placeholder="Kubernetes Secret"/>
-                            <div class="fieldMsg hint">Specify the kubernetes secret containing the NGINX certificates.</div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </fieldset>
-        <br />
-        <fieldset ng-show="docker">
-            <legend>Docker</legend>
-            <table width="100%" cellspacing="0" cellpadding="0" border="0"width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tbody>
-                <tr class="form-group tr-code-wrapper">
-                    <td class="form-select">
-                        <div id="dockerSocket-wrapper">
-                            <label>Docker Socket Directory</label>
-                            <input type="text" ng-required="false" class="form-control" name="dockerSocket" id="dockerSocket"
-                                   ng-model="deployment.dockerSocket" placeholder="deployment.dockerSocket"/>
-                            <div class="fieldMsg hint">Specify the directory of the docker socket.</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper">
-                    <td class="form-select">
-                        <div id="networkName-wrapper">
-                            <label>Network Name</label>
-                            <input type="text" ng-required="false" class="form-control" name="networkName" id="networkName"
-                                   ng-model="deployment.networkName" placeholder="deployment.networkName"/>
-                            <div class="fieldMsg hint">Specify the network name.</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper">
-                    <td class="form-select">
-                        <div id="containerPort-wrapper">
-                            <label>Docker Container Port Number</label>
-                            <input type="number" ng-required="false" class="form-control" name="containerPort" ng-model="deployment.containerPort"
-                                   id="containerPort" placeholder="deployment.containerPort" min="1"/>
-                            <div class="fieldMsg hint">Specify the docker container port number.</div>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="form-group tr-code-wrapper">
-                    <td class="form-select">
-                        <div id="dockerInternalPort-wrapper">
-                            <label>Docker Internal Port Number</label>
-                            <input type="number" ng-required="false" class="form-control" name="dockerInternalPort" ng-model="deployment.dockerInternalPort"
-                                   id="dockerInternalPort" placeholder="deployment.dockerInternalPort" min="1"/>
-                            <div class="fieldMsg hint">Specify the docker internal port number.</div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </fieldset>
-        <fieldset ng-show="kubernetes">
-            <legend>Kubernetes</legend>
-            <table width="100%" cellspacing="0" cellpadding="0" border="0"width="100%" cellspacing="0" cellpadding="0" border="0">
-            <tr class="form-group tr-code-wrapper">
-                <td class="form-select">
-                    <div id="kubeContainerPort-wrapper">
-                        <label>Kubernetes Container Port Number</label>
-                        <input type="number" ng-required="false" class="form-control" name="kubeContainerPort" ng-model="deployment.kubeContainerPort"
-                               id="kubeContainerPort" placeholder="deployment.kubeContainerPort" min="1"/>
-                        <div class="fieldMsg hint">Specify the kubernetes container port number.</div>
-                    </div>
-                </td>
-            </tr>
-            </table>
-        </fieldset>
+	    <tabset ng-show="docker||kubernetes">
+			<tab heading="Machine">
+				<br>
+				<accordion close-others="false">
+					<accordion-group is-open="accordion1.machine">
+						<accordion-heading>Machine Info</accordion-heading>
+						<table width="100%" cellspacing="0" cellpadding="0" border="0">
+							<tbody>
+								<tr class="form-group tr-code-wrapper">
+									<td class="form-select">
+										<div id="containerHost-wrapper">
+											<label>Master Node Hostname/IP</label>
+											<input type="text" ng-required="false" class="form-control" name="containerHost"
+											       id="containerHost" ng-model="deployment.containerHost" placeholder="deployment.containerHost"/>
+											<div class="fieldMsg hint">Specify the Hostname/IP of the Master Node.</div>
+										</div>
+									</td>
+								</tr>
+								<tr class="form-group tr-code-wrapper">
+									<td class="form-select">
+										<div id="initialReplica-wrapper">
+											<label>Initial Number of Replicas</label>
+											<input type="number" ng-required="false" class="form-control" name="dockerReplica" ng-model="deployment.dockerReplica"
+											       placeholder="deployment.dockerReplica" id="dockerReplica" min="1"/>
+											<div class="fieldMsg hint">Specify the Initial number of replicas per container to start with.
+											</div>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</accordion-group>
+					<accordion-group is-open="accordion1.image">
+						<accordion-heading>Image Info</accordion-heading>
+						<br />
+						<alert type="danger" ng-show="deployment.soajsImagePrefix !== deployment.nginxImagePrefix">
+							SOAJS image prefix <b>{{deployment.soajsImagePrefix}}</b> is different than the Nginx image prefix <b>{{deployment.nginxImagePrefix}}</b>.<br />
+							Please check the documentation and make sure that what you have chosen is compatible before you proceed.
+						</alert>
+						<alert type="warning" ng-show="deployment.soajsImageTag !== deployment.nginxImageTag">
+							SOAJS image version <b>{{deployment.soajsImageTag}}</b> is different than the Nginx image version <b>{{deployment.nginxImageTag}}</b>.<br />
+							Please check the documentation and make sure that what you have chosen is compatible before you proceed.
+						</alert>
+						<table width="100%" class="table" cellpadding="0" cellspacing="0" border="0">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Prefix</th>
+									<th>Version</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="odd">
+									<td width="40%">{{deployment.soajsImagePrefix}}/soajs:{{deployment.soajsImageTag}}</td>
+									<td width="30%">
+										<div id="soajsImagePrefix-wrapper">
+											<input type="text" ng-required="false" class="form-control"
+											       ng-model="deployment.soajsImagePrefix" placeholder="deployment.soajsImagePrefix" ng-change="getLatestSOAJSImages(deployment.soajsImagePrefix, 'soajs', true)"/>
+										</div>
+									</td>
+									<td width="30%" ng-init="getLatestSOAJSImages(deployment.soajsImagePrefix,'soajs')">
+										<select class="form-control" name="soajsImageTag" ng-model="deployment.soajsImageTag">
+											<option ng-repeat="oneVersion in image.soajs" value="{{oneVersion.name}}" ng-selected="oneVersion.name === deployment.soajsImageTag">{{oneVersion.name}}</option>
+										</select>
+									</td>
+								</tr>
+								<tr class="even">
+									<td>{{deployment.nginxImagePrefix}}/nginx:{{deployment.nginxImageTag}}</td>
+									<td>
+										<div id="nginxImagePrefix-wrapper">
+											<input type="text" ng-required="false" class="form-control"
+											       ng-model="deployment.nginxImagePrefix" placeholder="deployment.nginxImagePrefix" ng-change="getLatestSOAJSImages(deployment.nginxImagePrefix, 'nginx', true)"/>
+										</div>
+									</td>
+									<td ng-init="getLatestSOAJSImages(deployment.nginxImagePrefix,'nginx')">
+										<select class="form-control" name="nginxImageTag" ng-model="deployment.nginxImageTag">
+											<option ng-repeat="oneVersion in image.nginx" value="{{oneVersion.name}}" ng-selected="oneVersion.name === deployment.nginxImageTag">{{oneVersion.name}}</option>
+										</select>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</accordion-group>
+				</accordion>
+			</tab>
+		    <tab ng-if="docker" heading="Docker" ng-click="tabSwitched()">
+			    <br>
+			    <accordion close-others="false">
+				    <accordion-group ng-if="deployment.certsRequired" is-open="accordion1.certificates">
+					    <accordion-heading>Certificates</accordion-heading>
+					    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+						    <tbody>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="CA-wrapper">
+										    <label>CA</label>
+										    <input type="text" ng-required="deployment.certsRequired" class="form-control" name="caCertificate" id="caCertificate"
+										           ng-model="deployment.certificates.caCertificate" placeholder="~/certificate.ca"/>
+										    <div class="fieldMsg hint">Specify the location of the certificate of type CA.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="Cert-wrapper">
+										    <label>Cert</label>
+										    <input type="text" ng-required="deployment.certsRequired" class="form-control" name="certCertificate" id="certCertificate"
+										           ng-model="deployment.certificates.certCertificate" placeholder="~/certificate.cert"/>
+										    <div class="fieldMsg hint">Specify the location of the certificate of type Cert.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="Key-wrapper">
+										    <label>Key</label>
+										    <input type="text" ng-required="deployment.certsRequired" class="form-control" name="keyCertificate" id="keyCertificate"
+										           ng-model="deployment.certificates.keyCertificate" placeholder="~/certificate.key"/>
+										    <div class="fieldMsg hint">Specify the location of the certificate of type Key.</div>
+									    </div>
+								    </td>
+							    </tr>
+						    </tbody>
+					    </table>
+				    </accordion-group>
+				    <accordion-group is-open="accordion1.deploymentDocker">
+					    <accordion-heading>Deployment</accordion-heading>
+					    <table width="100%" cellspacing="0" cellpadding="0" border="0"width="100%" cellspacing="0" cellpadding="0" border="0">
+						    <tbody>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="dockerSocket-wrapper">
+										    <label>Docker Socket Directory</label>
+										    <input type="text" ng-required="false" class="form-control" name="dockerSocket" id="dockerSocket"
+										           ng-model="deployment.dockerSocket" placeholder="deployment.dockerSocket"/>
+										    <div class="fieldMsg hint">Specify the directory of the docker socket.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="networkName-wrapper">
+										    <label>Network Name</label>
+										    <input type="text" ng-required="false" class="form-control" name="networkName" id="networkName"
+										           ng-model="deployment.networkName" placeholder="deployment.networkName"/>
+										    <div class="fieldMsg hint">Specify the network name.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="containerPort-wrapper">
+										    <label>Docker Container Port Number</label>
+										    <input type="number" ng-required="false" class="form-control" name="containerPort" ng-model="deployment.containerPort"
+										           id="containerPort" placeholder="deployment.containerPort" min="1"/>
+										    <div class="fieldMsg hint">Specify the docker container port number.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="dockerInternalPort-wrapper">
+										    <label>Docker Internal Port Number</label>
+										    <input type="number" ng-required="false" class="form-control" name="dockerInternalPort" ng-model="deployment.dockerInternalPort"
+										           id="dockerInternalPort" placeholder="deployment.dockerInternalPort" min="1"/>
+										    <div class="fieldMsg hint">Specify the docker internal port number.</div>
+									    </div>
+								    </td>
+							    </tr>
+						    </tbody>
+					    </table>
+				    </accordion-group>
+			    </accordion>
+		    </tab>
+		    <tab ng-if="kubernetes" heading="Kubernetes" ng-click="tabSwitched()">
+			    <br>
+			    <accordion close-others="false">
+				    <accordion-group is-open="accordion1.token">
+					    <accordion-heading>Authentication Token</accordion-heading>
+					    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+						    <tbody>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="authToken-wrapper">
+										    <label>Kubernetes Authentication Token</label>
+										    <input type="text" ng-required="kubernetes" class="form-control" name="kubeAuthToken" id="kubeAuthToken"
+										           ng-model="deployment.authentication.accessToken" placeholder="<Authentication token>"/>
+										    <div class="fieldMsg hint">Insert the kubernetes authentication token</div>
+									    </div>
+								    </td>
+							    </tr>
+						    </tbody>
+					    </table>
+				    </accordion-group>
+				    <accordion-group is-open="accordion1.namespace">
+					    <accordion-heading>Namespace</accordion-heading>
+					    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+						    <tbody>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="namespaceMode-wrapper1">
+										    <label>Default Namespace</label>
+										    <input type="text" class="form-control" name="defaultNamespace" id="defaultNamespace"
+										           ng-required="kubernetes" ng-model="deployment.namespaces.default" placeholder="soajs"/>
+										    <div class="fieldMsg hint">Specify the name of the default namespace for the project.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="namespaceMode-wrapper2">
+										    <label>Namespace Mode</label>
+										    <label class="radioLabel">
+											    <input type="radio" ng-required="kubernetes" ng-model="deployment.namespaces.perService" name="global" ng-value="false" />&nbsp;Global Namespace Per Project
+										    </label>
+										    <label class="radioLabel">
+											    <input type="radio" ng-required="kubernetes" ng-model="deployment.namespaces.perService" name="service" ng-value="true" />&nbsp;Specific Namespace Per Service
+										    </label>
+									
+									    </div>
+								    </td>
+							    </tr>
+						    </tbody>
+					    </table>
+				    </accordion-group>
+				    <accordion-group is-open="accordion1.readiness">
+					    <accordion-heading>Readiness Probe</accordion-heading>
+					    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+						    <tbody>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="initialDelaySeconds-wrapper">
+										    <label>Initial Delay Seconds</label>
+										    <input type="number" ng-required="false" class="form-control" name="initialDelaySeconds" id="initialDelaySeconds"
+										           ng-model="deployment.readinessProbe.initialDelaySeconds" placeholder="15"/>
+										    <div class="fieldMsg hint">Specify the time (in seconds) before readiness probes are initiated..</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="timeoutSeconds-wrapper">
+										    <label>Timeout Seconds</label>
+										    <input type="number" ng-required="false" class="form-control" name="timeoutSeconds" id="timeoutSeconds"
+										           ng-model="deployment.readinessProbe.timeoutSeconds" placeholder="1"/>
+										    <div class="fieldMsg hint">Specify the time (in seconds) after which the probe times out.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="periodSeconds-wrapper">
+										    <label>Period Seconds</label>
+										    <input type="number" ng-required="false" class="form-control" name="periodSeconds" id="periodSeconds"
+										           ng-model="deployment.readinessProbe.periodSeconds" placeholder="10"/>
+										    <div class="fieldMsg hint">Specify the interval (in seconds) between readiness checks.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="successThreshold-wrapper">
+										    <label>Success Threshold</label>
+										    <input type="number" ng-required="false" class="form-control" name="successThreshold" id="successThreshold"
+										           ng-model="deployment.readinessProbe.successThreshold" placeholder="10"/>
+										    <div class="fieldMsg hint">Specify the minimum consecutive successes for the probe to be considered successful.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="failureThreshold-wrapper">
+										    <label>Failure Threshold</label>
+										    <input type="number" ng-required="false" class="form-control" name="failureThreshold" id="failureThreshold"
+										           ng-model="deployment.readinessProbe.failureThreshold" placeholder="10"/>
+										    <div class="fieldMsg hint">Specify the minimum consecutive successes for the probe to be considered failed.</div>
+									    </div>
+								    </td>
+							    </tr>
+						    </tbody>
+					    </table>
+				    </accordion-group>
+				    <accordion-group is-open="accordion1.deploymentKube">
+					    <accordion-heading>Deployment</accordion-heading>
+					    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+						    <tr class="form-group tr-code-wrapper">
+							    <td class="form-select">
+								    <div id="kubeContainerPort-wrapper">
+									    <label>Kubernetes Container Port Number</label>
+									    <input type="number" ng-required="false" class="form-control" name="kubeContainerPort" ng-model="deployment.kubeContainerPort"
+									           id="kubeContainerPort" placeholder="deployment.kubeContainerPort" min="1"/>
+									    <div class="fieldMsg hint">Specify the kubernetes container port number.</div>
+								    </div>
+							    </td>
+						    </tr>
+					    </table>
+				    </accordion-group>
+			    </accordion>
+		    </tab>
+		    <tab heading="UI Modules" ng-click="tabSwitched()">
+			    <br>
+			    <accordion>
+				    <accordion-group is-open="accordion1.ui">
+					    <accordion-heading>Custom UI Modules</accordion-heading>
+					    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+						    <tbody>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="gitSource-wrapper">
+										    <label>Provider</label>
+										    <select name="gitSource" id="gitSource" class="form-control" ng-model="deployment.gitSource">
+											    <option value="github">Github</option>
+											    <option value="bitbucket">Bitbucket</option>
+										    </select>
+										    <div class="fieldMsg hint">Select the custom UI Source.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="gitProvider-wrapper">
+										    <label>Git Domain</label>
+										    <input type="text" ng-required="false" class="form-control" name="gitprovider" id="gitprovider"
+										           ng-model="deployment.gitProvider" placeholder="github.com"/>
+										    <div class="fieldMsg hint">Specify the domain of the custom UI repo.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="gitOwner-wrapper">
+										    <label>Git Owner</label>
+										    <input type="text" ng-required="false" class="form-control" name="gitOwner" id="gitOwner"
+										           ng-model="deployment.gitOwner" placeholder="soajs"/>
+										    <div class="fieldMsg hint">Specify the owner of the git repository.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="gitRepo-wrapper">
+										    <label>Git Repository</label>
+										    <input type="text" ng-required="false" class="form-control" name="gitRepo" id="gitRepo"
+										           ng-model="deployment.gitRepo" placeholder="customUI"/>
+										    <div class="fieldMsg hint">Specify the name of the git repository.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="gitBranch-wrapper">
+										    <label>Git Branch</label>
+										    <input type="text" ng-required="false" class="form-control" name="gitBranch" id="gitBranch"
+										           ng-model="deployment.gitBranch" placeholder="master"/>
+										    <div class="fieldMsg hint">Specify the branch to use.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="gitToken-wrapper">
+										    <label>Git Token</label>
+										    <input type="text" ng-required="false" class="form-control" name="gitToken" id="gitToken"
+										           ng-model="deployment.gitToken" placeholder="Token ID"/>
+										    <div class="fieldMsg hint">Specify the token of the git repository.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper">
+								    <td class="form-select">
+									    <div id="gitPath-wrapper">
+										    <label>Git Path</label>
+										    <input type="text" ng-required="false" class="form-control" name="gitPath" id="gitPath"
+										           ng-model="deployment.gitPath" placeholder="/"/>
+										    <div class="fieldMsg hint">Specify the path of the git repository.</div>
+									    </div>
+								    </td>
+							    </tr>
+						    </tbody>
+					    </table>
+				    </accordion-group>
+			    </accordion>
+		    </tab>
+		    <tab heading="Nginx">
+			    <br>
+			    <accordion>
+				    <accordion-group is-open="accordion1.nginx">
+					    <accordion-heading>Nginx Exposed Ports</accordion-heading>
+			            <table width="100%" cellspacing="0" cellpadding="0" border="0">
+						    <tbody>
+							    <tr class="form-group tr-code-wrapper" ng-show="kubernetes">
+								    <td class="form-select">
+									    <div id="nginxDeployType-wrapper">
+										    <label>Service Deployment Type</label>
+										    <select ng-required="kubernetes" name="nginxDeployType" id="nginxDeployType" ng-model="deployment.nginxDeployType">
+											    <option value="NodePort">NodePort</option>
+											    <option value="LoadBalancer">Load Balancer</option>
+										    </select>
+										    <div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='LoadBalancer'">Load Balancer option uses automatic public IP / ELB provisioning when running Kubernetes cluster in AWS or GCE.</div>
+										    <div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='NodePort'">Current NGINX exposed port: {{deployment.nginxPort}}</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'">
+								    <td class="form-select">
+									    <div id="nginxPort-wrapper">
+										    <label>HTTP Port</label>
+										    <input type="number" ng-required="false" class="form-control" name="nginxPort"
+										           id="nginxPort" ng-model="deployment.nginxPort" placeholder="deployment.nginxPort" min="1"/>
+										    <div class="fieldMsg hint">Specify the NGINX port number.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'">
+								    <td class="form-select">
+									    <div id="nginxSecurePort-wrapper">
+										    <label>HTTP Secure Port</label>
+										    <input type="number" ng-required="false" class="form-control" name="nginxSecurePort"
+										           id="nginxSecurePort" ng-model="deployment.nginxSecurePort" placeholder="deployment.nginxSecurePort" min="1"/>
+										    <div class="fieldMsg hint">Specify the NGINX secure port number.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'">
+								    <td class="form-select">
+									    <div id="nginxSsl-wrapper">
+										    <input class="f-left form-control" id="nginxSsl" name="nginxSsl" ng-model="deployment.nginxSsl" style="width: 20px; box-shadow: none;"
+										           tooltip="Check the box if you want SSL certificates to be created with NGINX."
+										           ng-required="false" type="checkbox"/>&nbsp;<label>Turn on SSL support</label>
+										    <div class="fieldMsg hint">Specify if SSL certificates should be created with NGINX</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'&&kubernetes&&deployment.nginxSsl">
+								    <td class="form-select">
+									    <div id="nginxSsl-ssc">
+										    <input class="f-left form-control" id="nginxSslCertGen" name="nginxSslCertGen" ng-model="deployment.generateSsc"
+										           tooltip="Check the box if you want SOAJS to create self signed certificates."
+										           ng-required="false" type="checkbox"/>&nbsp;<label>Self Signed Certificates Generation</label>
+										    <div class="fieldMsg hint">Check the box if you want SOAJS to create self signed certificates.</div>
+									    </div>
+								    </td>
+							    </tr>
+							    <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'&&kubernetes&&deployment.nginxSsl&&!deployment.generateSsc">
+								    <td class="form-select">
+									    <div id="nginxSslSecret-wrapper">
+										    <label>NGINX Certificates Kubernetes Secret</label>
+										    <input type="string" ng-required="false" class="form-control" name="nginxKubeSecret"
+										           id="nginxKubeSecret" ng-model="deployment.nginxKubeSecret" placeholder="Kubernetes Secret"/>
+										    <div class="fieldMsg hint">Specify the kubernetes secret containing the NGINX certificates.</div>
+									    </div>
+								    </td>
+							    </tr>
+						    </tbody>
+					    </table>
+				    </accordion-group>
+			    </accordion>
+		    </tab>
+	    </tabset>
+	    <br>
+	    <hr>
         <div class="footer c-both table w-100">
             <br/>
             <input value="Go Back" class="btn btn-sm btn-danger f-left" type="button" ng-click="goBack()"/>
@@ -445,37 +507,34 @@
                 <h3>Overview</h3>
             </div>
         </form>
-        <div class="box" ng-show="data.gi">
-            <div class="box-heading">General Information</div>
-            <div class="box-content">
-                <pre ng-bind-html="data.gi"></pre>
-            </div>
-        </div>
-        <div class="box" ng-show="data.security">
-            <div class="box-heading">Security Information</div>
-            <div class="box-content">
-                <pre ng-bind-html="data.security"></pre>
-            </div>
-        </div>
-        <div class="box" ng-show="data.clusters">
-            <div class="box-heading">Mongo Clusters Information</div>
-            <div class="box-content">
-                <pre ng-bind-html="data.clusters"></pre>
-            </div>
-        </div>
-	    <div class="box" ng-show="data.es_clusters">
-		    <div class="box-heading">ElasticSearch Clusters Information</div>
-		    <div class="box-content">
-			    <pre ng-bind-html="data.es_clusters"></pre>
-		    </div>
-	    </div>
-        <div class="box" id="deploymentInfoBox" ng-show="data.deployment">
-            <div class="box-heading">Deployment Information</div>
-            <div class="box-content">
-                <pre ng-bind-html="data.deployment"></pre>
-            </div>
-        </div>
-        <input value="Go Back" class="btn btn-sm btn-danger f-left" type="button" ng-click="confirmation=false;"/>
+	    
+	    <accordion close-others="false" class="box-content">
+		    <accordion-group ng-show="data.gi" is-open="accordion2.gi">
+			    <accordion-heading><span ng-click="tabSwitched()">General</span></accordion-heading>
+			    <div ng-bind-html="data.gi|myObject"></div>
+		    </accordion-group>
+		
+		    <accordion-group ng-show="data.security" is-open="accordion2.security">
+			    <accordion-heading><span ng-click="tabSwitched()">Security</span></accordion-heading>
+			    <div ng-bind-html="data.security|myObject"></div>
+		    </accordion-group>
+		
+		    <accordion-group ng-show="data.clusters" is-open="accordion2.clusters">
+			    <accordion-heading><span ng-click="tabSwitched()">MongoDB</span></accordion-heading>
+			    <div ng-bind-html="data.clusters|myObject"></div>
+		    </accordion-group>
+		
+		    <accordion-group ng-show="data.es_clusters" is-open="accordion2.es_clusters">
+			    <accordion-heading><span ng-click="tabSwitched()">Elasticsearch</span></accordion-heading>
+			    <div ng-bind-html="data.es_clusters|myObject"></div>
+		    </accordion-group>
+		
+		    <accordion-group ng-show="data.deployment" is-open="accordion2.deployment">
+			    <accordion-heading><span ng-click="tabSwitched()">Deployment</span></accordion-heading>
+			    <div ng-bind-html="data.deployment|myObject"></div>
+		    </accordion-group>
+	    </accordion>
+        <input value="Go Back" class="btn btn-sm btn-danger f-left" type="button" ng-click="removeConfirmation()"/>
         <input type="button" value="Install / Re-Install SOAJS" class="btn btn-success f-right"
                ng-click="installSOAJS()"/>
     </div>

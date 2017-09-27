@@ -3,6 +3,7 @@
 var profile = require(process.env.SOAJS_PROFILE);
 var mongoHostname = profile.servers[0].host;
 var lib  = {
+	"extKey1": process.env.SOAJS_EXTKEY,
 	"analytics": process.env.SOAJS_DEPLOY_ANALYTICS,
 	"masterDomain": process.env.MASTER_DOMAIN || 'soajs.org',
 	"apiPrefix": process.env.API_PREFIX || "dashboard-api",
@@ -49,7 +50,16 @@ var lib  = {
 		"ssl": (process.env.SOAJS_NX_SSL === "true") || false,
 		"sslSecret": process.env.SOAJS_NX_SSL_SECRET || null
 	},
-	"imagePrefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
+	"images":{
+		"soajs": {
+			"prefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
+			"tag": process.env.SOAJS_IMAGE_TAG || 'latest'
+		},
+		"nginx": {
+			"prefix": process.env.SOAJS_NX_IMAGE_PREFIX || 'soajsorg',
+			"tag": process.env.SOAJS_NX_IMAGE_TAG || 'latest'
+		}
+	},
 	"imagePullPolicy": process.env.SOAJS_IMAGE_PULL_POLICY || 'IfNotPresent',
 	"kubernetes": {
 		"config":{
@@ -86,7 +96,7 @@ var lib  = {
 		}
 	},
 
-	"deployGroups": ['db', 'elk', 'core', 'nginx'],
+	"deployGroups": ['plugins', 'db', 'elk', 'core', 'nginx'],
 	"services":{
 		"path": {
 			"dir": __dirname + '/services/',

@@ -14,8 +14,9 @@ var components = {
 			"labels": {
 				"soajs.content": "true",
 				"soajs.service.name": "kibana",
-				"soajs.service.group": "elk",
-				"soajs.service.type": "elk",
+				"soajs.service.group": "soajs-analytics",
+				"soajs.service.type": "system",
+				"soajs.service.subtype": "kibana",
 				"soajs.service.label": "kibana",
 				"soajs.service.mode": "deployment"
 			}
@@ -43,8 +44,9 @@ var components = {
 			"labels": {
 				"soajs.content": "true",
 				"soajs.service.name": "kibana",
-				"soajs.service.group": "elk",
-				"soajs.service.type": "elk",
+				"soajs.service.group": "soajs-analytics",
+				"soajs.service.type": "system",
+				"soajs.service.subtype": "kibana",
 				"soajs.service.label": "kibana",
 				"soajs.service.mode": "deployment"
 			}
@@ -62,8 +64,9 @@ var components = {
 					"labels": {
 						"soajs.content": "true",
 						"soajs.service.name": "kibana",
-						"soajs.service.group": "elk",
-						"soajs.service.type": "elk",
+						"soajs.service.group": "soajs-analytics",
+						"soajs.service.type": "system",
+						"soajs.service.subtype": "kibana",
 						"soajs.service.label": "kibana",
 						"soajs.service.mode": "deployment"
 					}
@@ -72,7 +75,7 @@ var components = {
 					"containers": [
 						{
 							"name": "kibana",
-							"image": gConfig.imagePrefix + "/kibana",
+							"image": "soajsorg/kibana",
 							"imagePullPolicy": gConfig.imagePullPolicy,
 							"ports": [
 								{

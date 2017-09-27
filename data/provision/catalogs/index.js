@@ -1,6 +1,6 @@
 'use strict';
 
-var defaultVoluming = {}, mongoVoluming = {}, esVoluming = {};
+var defaultVoluming = {}, mongoVoluming = {}, esVoluming = {}, restartPolicy = {}, network = '';
 if (process.env.SOAJS_DEPLOY_HA === 'docker') {
     defaultVoluming = {
         "volumes": [
@@ -23,7 +23,7 @@ if (process.env.SOAJS_DEPLOY_HA === 'docker') {
         "volumes": [
             {
                 "Type": "volume",
-                "Source": "/data/custom/db/",
+                "Source": "custom-mongo-volume",
                 "Target": "/data/db/"
             }
         ]
@@ -32,11 +32,16 @@ if (process.env.SOAJS_DEPLOY_HA === 'docker') {
         "volumes": [
             {
                 "Type": "volume",
-                "Source": "/usr/share/elasticsearch/custom/data/",
+                "Source": "custom-es-volume",
                 "Target": "/usr/share/elasticsearch/data/"
             }
         ]
     };
+    restartPolicy = {
+        "condition": "any", //none, on-failure, any
+        "maxAttempts": 5
+    };
+    network = process.env.DOCKER_NETWORK || 'soajsnet';
 }
 else if (process.env.SOAJS_DEPLOY_HA === 'kubernetes') {
     defaultVoluming = {
@@ -92,8 +97,8 @@ else if (process.env.SOAJS_DEPLOY_HA === 'kubernetes') {
 var catalogs = [
     {
         "name": "Service Recipe",
-        "type": "soajs",
-        "subtype": "service",
+        "type": "service",
+        "subtype": "soajs",
         "description": "This is a sample service catalog recipe",
         "locked": true,
         "recipe": {
@@ -116,12 +121,9 @@ var catalogs = [
                     "successThreshold": 1,
                     "failureThreshold": 3
                 },
-                "restartPolicy": {
-                    "condition": "", //IfNotPresent || OnFailure || Never
-                    "maxAttempts": 0 //only valid for docker
-                },
+                "restartPolicy": restartPolicy,
                 "container": {
-                    "network": "", //container network for docker
+                    "network": network, //container network for docker
                     "workingDir": "/opt/soajs/deployer/" //container working directory
                 },
                 "voluming": JSON.parse(JSON.stringify(defaultVoluming))
@@ -248,6 +250,7 @@ var catalogs = [
     {
         "name": "Nodejs Recipe",
         "type": "service",
+        "subtype": "nodejs",
         "description": "This is a sample nodejs catalog recipe",
         "locked": true,
         "recipe": {
@@ -269,12 +272,9 @@ var catalogs = [
                     "successThreshold": 1,
                     "failureThreshold": 3
                 },
-                "restartPolicy": {
-                    "condition": "", //Always || OnFailure || Never
-                    "maxAttempts": 0 //only valid for docker
-                },
+                "restartPolicy": restartPolicy,
                 "container": {
-                    "network": "", //container network for docker
+                    "network": network, //container network for docker
                     "workingDir": "/opt/soajs/deployer/" //container working directory
                 },
                 "voluming": {
@@ -303,8 +303,8 @@ var catalogs = [
     },
     {
         "name": "Daemon Recipe",
-        "type": "soajs",
-        "subtype": "daemon",
+        "type": "daemon",
+        "subtype": "soajs",
         "description": "This is a sample daemon recipe",
         "locked": true,
         "recipe": {
@@ -327,12 +327,9 @@ var catalogs = [
                     "successThreshold": 1,
                     "failureThreshold": 3
                 },
-                "restartPolicy": {
-                    "condition": "", //Always || OnFailure || Never
-                    "maxAttempts": 0 //only valid for docker
-                },
+                "restartPolicy": restartPolicy,
                 "container": {
-                    "network": "", //container network for docker
+                    "network": network, //container network for docker
                     "workingDir": "/opt/soajs/deployer/" //container working directory
                 },
                 "voluming": JSON.parse(JSON.stringify(defaultVoluming))
@@ -450,7 +447,8 @@ var catalogs = [
     },
     {
         "name": "Nginx Recipe",
-        "type": "nginx",
+        "type": "server",
+        "subtype": "nginx",
         "description": "This is a sample nginx recipe",
         "locked": true,
         "recipe": {
@@ -472,12 +470,9 @@ var catalogs = [
                     "successThreshold": 1,
                     "failureThreshold": 3
                 },
-                "restartPolicy": {
-                    "condition": "", //Always || OnFailure || Never
-                    "maxAttempts": 0 //only valid for docker
-                },
+                "restartPolicy": restartPolicy,
                 "container": {
-                    "network": "", //container network for docker
+                    "network": network, //container network for docker
                     "workingDir": "/opt/soajs/deployer/" //container working directory
                 },
                 "voluming": JSON.parse(JSON.stringify(defaultVoluming)),
@@ -502,6 +497,10 @@ var catalogs = [
                         "type": "computed",
                         "value": "$SOAJS_ENV"
                     },
+					"SOAJS_EXTKEY": {
+                    	"type": "computed",
+						"value": "$SOAJS_EXTKEY"
+					},
                     "SOAJS_NX_DOMAIN": {
                         "type": "computed",
                         "value": "$SOAJS_NX_DOMAIN"
@@ -549,6 +548,7 @@ var catalogs = [
     {
         "name": "Java Recipe",
         "type": "service",
+        "subtype": "java",
         "description": "This is a sample java catalog recipe",
         "locked": true,
         "recipe": {
@@ -611,7 +611,8 @@ var catalogs = [
     },
     {
         "name": "Mongo Recipe",
-        "type": "mongo",
+        "type": "cluster",
+        "subtype": "mongo",
         "description": "This is a sample mongo recipe",
         "locked": true,
         "recipe": {
@@ -633,12 +634,9 @@ var catalogs = [
                     "successThreshold": 1,
                     "failureThreshold": 3
                 },
-                "restartPolicy": {
-                    "condition": "", //Always || OnFailure || Never
-                    "maxAttempts": 0 //only valid for docker
-                },
+                "restartPolicy": restartPolicy,
                 "container": {
-                    "network": "", //container network for docker
+                    "network": network, //container network for docker
                     "workingDir": "" //container working directory
                 },
                 "voluming": JSON.parse(JSON.stringify(mongoVoluming)),
@@ -663,7 +661,8 @@ var catalogs = [
     },
     {
         "name": "Elasticsearch Recipe",
-        "type": "es",
+        "type": "cluster",
+        "subtype": "elasticsearch",
         "description": "This is a sample elasticsearch recipe",
         "locked": true,
         "recipe": {
@@ -685,12 +684,9 @@ var catalogs = [
                     "successThreshold": 1,
                     "failureThreshold": 3
                 },
-                "restartPolicy": {
-                    "condition": "", //Always || OnFailure || Never
-                    "maxAttempts": 0 //only valid for docker
-                },
+                "restartPolicy": restartPolicy,
                 "container": {
-                    "network": "", //container network for docker
+                    "network": network, //container network for docker
                     "workingDir": "" //container working directory
                 },
                 "voluming": JSON.parse(JSON.stringify(esVoluming)),

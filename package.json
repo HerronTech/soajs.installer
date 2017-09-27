@@ -1,7 +1,7 @@
 {
   "name": "soajs.installer",
   "description": "soajs installer to install soajs dashboard",
-  "version": "1.1.14",
+  "version": "1.1.22",
   "author": {
     "name": "soajs team",
     "email": "team@soajs.org"
@@ -28,10 +28,11 @@
     "clone": "*",
     "dockerode": "*",
     "gridfs-stream": "*",
-    "kubernetes-client": "*",
+    "kubernetes-client": "aff04/kubernetes-client.git#v3.10.1",
     "mkdirp": "*",
     "ncp": "*",
     "npm": "*",
+    "request": "2.81.0",
     "rimraf": "*",
     "soajs": "1.0.*",
     "util": "*",

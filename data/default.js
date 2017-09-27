@@ -59,8 +59,9 @@ module.exports = {
 		"gitToken": null,
 		
 		"imagePrefix": "soajsorg",
-		"nginxPort": 80,
-		"nginxSecurePort": 443,
+		"nginxPort": 30080,
+		"nginxSecurePort": 30443,
+		"mongoExposedPort": 32017,
 		"nginxSsl": null,
 		"dockerReplica": 1,
 		

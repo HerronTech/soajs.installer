@@ -244,11 +244,10 @@ pre {background: #fff; padding: 5px; margin: 5px; }
     padding: 10px 15px;
 }
 
-.box-content{
-    padding: 15px;
-    content: " ";
-    display: block;
-    clear: both;
+.box-content .objectField{
+    margin: 0 10px 5px 0;
+    font-weight:bold;
+    display:inline-block;
 }
 
 #deploymentInfoBox {
@@ -316,4 +315,32 @@ a.nonhighlightedDriver{
 
 a.highlightedDirver {
     background-color: #efefef;
+}
+
+/**
+    Home Page CSS
+ */
+
+.depType table td {
+    width: 50%;
+}
+
+.depType table td a.nonhighlightedDriver {
+    padding: 15px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+}
+
+.depType table td a.nonhighlightedDriver img {
+    height: 67px;
+}
+table img{
+    width:70%;
+}
+
+.panel-title a:hover,
+.panel-title a{
+    text-decoration:none;
+    outline: 0;
 }

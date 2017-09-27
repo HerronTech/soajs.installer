@@ -13,12 +13,14 @@ var components = {
 
                 "soajs.service.name": "urac",
                 "soajs.service.group": "soajs-core-services",
-                "soajs.service.type": "service",
+	            "soajs.service.type": "service",
+	            "soajs.service.subtype": "soajs",
                 "soajs.service.version": "2",
                 "soajs.service.label": "dashboard-urac-v2",
                 "soajs.service.mode": "deployment",
 	            "soajs.service.repo.name": "soajs_urac",
                 "service.branch": gConfig.git.branch,
+	            "service.owner": "soajs",
                 "service.repo": "soajs.urac"
             }
         },
@@ -53,12 +55,14 @@ var components = {
 
                 "soajs.service.name": "urac",
                 "soajs.service.group": "soajs-core-services",
-                "soajs.service.type": "service",
+	            "soajs.service.type": "service",
+	            "soajs.service.subtype": "soajs",
                 "soajs.service.version": "2",
                 "soajs.service.label": "dashboard-urac-v2",
                 "soajs.service.mode": "deployment",
 	            "soajs.service.repo.name": "soajs_urac",
                 "service.branch": gConfig.git.branch,
+	            "service.owner": "soajs",
                 "service.repo": "soajs.urac"
             }
         },
@@ -78,11 +82,13 @@ var components = {
 
                         "soajs.service.name": "urac",
                         "soajs.service.group": "soajs-core-services",
-                        "soajs.service.type": "service",
+	                    "soajs.service.type": "service",
+	                    "soajs.service.subtype": "soajs",
                         "soajs.service.version": "2",
                         "soajs.service.label": "dashboard-urac-v2",
                         "soajs.service.mode": "deployment",
                         "service.branch": gConfig.git.branch,
+	                    "service.owner": "soajs",
                         "service.repo": "soajs.urac"
                     }
                 },
@@ -90,7 +96,7 @@ var components = {
                     "containers": [
                         {
                             "name": "dashboard-urac-v2",
-                            "image": gConfig.imagePrefix + "/soajs",
+	                        "image": gConfig.images.soajs.prefix + "/soajs:" + gConfig.images.soajs.tag,
                             "imagePullPolicy": gConfig.imagePullPolicy,
                             "workingDir": "/opt/soajs/deployer/",
                             "command": ["node"],

@@ -17,9 +17,10 @@ var config = {
     labels: {
         "soajs.content": "true",
 		"soajs.env.code": "dashboard",
-	    "soajs.service.type": "database",
+	    "soajs.service.type": "cluster",
+	    "soajs.service.subtype": "mongo",
         "soajs.service.name": "soajsdata",
-        "soajs.service.group": "db",
+        "soajs.service.group": "soajs-db",
         "soajs.service.label": "dashboard-soajsdata",
         "soajs.service.mode": "replicated"
     },
@@ -37,7 +38,7 @@ var config = {
     exposedPorts: [
         {
             "Protocol": "tcp",
-            "PublishedPort": gConfig.mongo.port,
+            "PublishedPort": parseInt(process.env.MONGO_PORT) || gConfig.mongo.port,
             "TargetPort": 27017
         }
     ]

@@ -15,11 +15,12 @@ var config = {
 		    Target: gConfig.docker.network
     	}
     ],
-
-    image: {
-        prefix: gConfig.imagePrefix,
-        name: 'soajs'
-    },
+	
+	image: {
+		prefix: gConfig.images.soajs.prefix,
+		name: 'soajs',
+		tag: gConfig.images.soajs.tag
+	},
     env: [
         'NODE_ENV=production',
         'SOAJS_ENV=dashboard',
@@ -46,10 +47,12 @@ var config = {
     ],
     labels: {
 	    "service.branch": gConfig.git.branch,
+	    "service.owner": "soajs",
 	    "service.repo": "soajs.urac",
         "soajs.content": "true",
 		"soajs.env.code": "dashboard",
 	    "soajs.service.type": "service",
+	    "soajs.service.subtype": "soajs",
 		"soajs.service.name": "urac",
 		"soajs.service.group": "soajs-core-services",
 		"soajs.service.version": "2",
@@ -71,7 +74,7 @@ module.exports = {
     "Name": config.servName,
     "TaskTemplate": {
         "ContainerSpec": {
-            "Image": config.image.prefix + '/' + config.image.name,
+	        "Image": config.image.prefix + '/' + config.image.name + ":" + config.image.tag,
             "Env": config.env,
             "Dir": config.workingDir,
             "Command": [config.command[0]],

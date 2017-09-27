@@ -18,8 +18,9 @@ var components = {
 				"soajs.env.code": "dashboard",
 
                 "soajs.service.name": "nginx",
-                "soajs.service.group": "nginx",
-				"soajs.service.type": "nginx",
+                "soajs.service.group": "soajs-nginx",
+				"soajs.service.type": "server",
+				"soajs.service.subtype": "nginx",
 				"soajs.service.label": "dashboard-nginx",
 				"soajs.service.mode": "deployment"
 			}
@@ -35,14 +36,14 @@ var components = {
 					"protocol": "TCP",
 					"port": 80,
 					"targetPort": 80,
-					"nodePort": (30000 + gConfig.nginx.port.http)
+					"nodePort": gConfig.nginx.port.http
 				},
 				{
 					"name": "https",
 					"protocol": "TCP",
 					"port": 443,
 					"targetPort": 443,
-					"nodePort": (30000 + gConfig.nginx.port.https)
+					"nodePort": gConfig.nginx.port.https
 				}
 			]
 		}
@@ -57,8 +58,9 @@ var components = {
 				"soajs.env.code": "dashboard",
 
                 "soajs.service.name": "nginx",
-                "soajs.service.group": "nginx",
-				"soajs.service.type": "nginx",
+				"soajs.service.group": "soajs-nginx",
+				"soajs.service.type": "server",
+				"soajs.service.subtype": "nginx",
 				"soajs.service.label": "dashboard-nginx",
 				"soajs.service.mode": "deployment"
 			}
@@ -78,8 +80,9 @@ var components = {
 						"soajs.env.code": "dashboard",
 
 		                "soajs.service.name": "nginx",
-		                "soajs.service.group": "nginx",
-						"soajs.service.type": "nginx",
+						"soajs.service.group": "soajs-nginx",
+						"soajs.service.type": "server",
+						"soajs.service.subtype": "nginx",
 						"soajs.service.label": "dashboard-nginx",
 						"soajs.service.mode": "deployment"
 					}
@@ -88,7 +91,7 @@ var components = {
 					"containers": [
 						{
 							"name": "dashboard-nginx",
-							"image": gConfig.imagePrefix + "/nginx",
+							"image": gConfig.images.nginx.prefix + "/nginx:" + gConfig.images.nginx.tag,
 							"imagePullPolicy": gConfig.imagePullPolicy,
 							"workingDir": "/opt/soajs/deployer/",
 							"command": ["node"],
@@ -120,8 +123,16 @@ var components = {
 									"value": "dashboard"
 								},
 								{
+									"name": "SOAJS_EXTKEY",
+									"value": gConfig.extKey1
+								},
+								{
 									"name": "SOAJS_GIT_DASHBOARD_BRANCH",
 									"value": gConfig.git.branch
+								},
+								{
+									"name": "SOAJS_NX_DOMAIN",
+									"value": gConfig.masterDomain
 								},
 								{
 									"name": "SOAJS_NX_API_DOMAIN",

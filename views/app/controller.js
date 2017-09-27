@@ -1,5 +1,5 @@
 'use strict';
-var app = angular.module('mainApp', ['ui.bootstrap', 'ngRoute', 'ngSanitize']);
+var app = angular.module('mainApp', ['ui.bootstrap', 'ngRoute', 'ngSanitize', 'ngCookies', 'ui.select']);
 
 app.config([
 	'$routeProvider',
@@ -59,7 +59,7 @@ app.controller('mainCtrl', ['$scope', '$location', '$routeParams', '$timeout', f
 	$scope.$on('$routeChangeSuccess', function (event, current, previous) {
 
 		$scope.currentLocation = $location.path();
-		if(previous || ['/gi','/security', '/clusters','/deployment'].indexOf($scope.currentLocation) !== -1 ){
+		if(previous || ['/gi','/security', '/resources','/deployment'].indexOf($scope.currentLocation) !== -1 ){
 			$scope.playSimulation(true);
 			if($scope.currentLocation.replace("/", "") === ""){
 				$scope.activateMenu("home");

@@ -21,9 +21,10 @@ var components = {
 			"name": "soajs-analytics-elasticsearch-service",
 			"labels": {
 				"soajs.content": "true",
-				"soajs.service.type": "database",
+				"soajs.service.type": "cluster",
+				"soajs.service.subtype": "elasticsearch",
 				"soajs.service.name": "soajs-analytics-elasticsearch",
-				"soajs.service.group": "elk",
+				"soajs.service.group": "soajs-analytics",
 				"soajs.service.label": "soajs-analytics-elasticsearch",
 				"soajs.service.mode": "deployment"
 				
@@ -51,9 +52,10 @@ var components = {
 			"name": "soajs-analytics-elasticsearch",
 			"labels": {
 				"soajs.content": "true",
-				"soajs.service.type": "database",
+				"soajs.service.type": "cluster",
+				"soajs.service.subtype": "elasticsearch",
 				"soajs.service.name": "soajs-analytics-elasticsearch",
-				"soajs.service.group": "elk",
+				"soajs.service.group": "soajs-analytics",
 				"soajs.service.label": "soajs-analytics-elasticsearch",
 				"soajs.service.mode": "deployment"
 			}
@@ -70,9 +72,10 @@ var components = {
 					"name": "soajs-analytics-elasticsearch",
 					"labels": {
 						"soajs.content": "true",
-						"soajs.service.type": "database",
+						"soajs.service.type": "cluster",
+						"soajs.service.subtype": "elasticsearch",
 						"soajs.service.name": "soajs-analytics-elasticsearch",
-						"soajs.service.group": "elk",
+						"soajs.service.group": "soajs-analytics",
 						"soajs.service.label": "soajs-analytics-elasticsearch",
 						"soajs.service.mode": "deployment"
 					},

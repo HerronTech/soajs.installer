@@ -12,11 +12,17 @@ var request = require('request');
 var config = require('./config.js');
 var folder = config.folder;
 delete require.cache[config.profile];
-var profile = require(config.profile);
-var mongo = new soajs.mongo(profile);
+var profile = soajs.utils.cloneObj(require(config.profile));
+var profile2 = JSON.parse(JSON.stringify(profile));
+if(!process.env.MONGO_EXT || process.env.MONGO_EXT === 'false'){
+	profile2.servers[0].port = parseInt(process.env.MONGO_PORT) || 27017;
+}
+
+var mongo = new soajs.mongo(profile2);
 var analyticsCollection = 'analytics';
 var utilLog = require('util');
 var dbConfiguration = require('../../../data/startup/environments/dashboard');
+var esClusterConfiguration = require('../../../data/startup/resources/es');
 var esClient;
 
 var lib = {
@@ -160,7 +166,8 @@ var lib = {
     	delete nginxRecipe.locked;
         nginxRecipe.name = "Dashboard Nginx Recipe";
         nginxRecipe.description = "This is the nginx catalog recipe used to deploy the nginx in the dashboard environment."
-	    nginxRecipe.recipe.deployOptions.image.prefix = config.imagePrefix;
+	    nginxRecipe.recipe.deployOptions.image.prefix = config.images.nginx.prefix;
+	    nginxRecipe.recipe.deployOptions.image.tag = config.images.nginx.tag;
      
 	    nginxRecipe.recipe.deployOptions.ports[0].published = config.nginx.port.http;
 	    nginxRecipe.recipe.deployOptions.ports[1].published = config.nginx.port.https;
@@ -274,7 +281,8 @@ var lib = {
 	    delete serviceRecipe.locked;
         serviceRecipe.name = "Dashboard Service Recipe";
 	    serviceRecipe.description = "This is the service catalog recipe used to deploy the core services in the dashboard environment."
-	    serviceRecipe.recipe.deployOptions.image.prefix = config.imagePrefix;
+	    serviceRecipe.recipe.deployOptions.image.prefix = config.images.soajs.prefix;
+	    serviceRecipe.recipe.deployOptions.image.tag = config.images.soajs.tag;
 	    
 	    if(config.deploy_acc){
 		    serviceRecipe.recipe.buildOptions.env["SOAJS_DEPLOY_ACC"] = {
@@ -347,7 +355,7 @@ var lib = {
     },
 
     importData: function (mongoInfo, cb) {
-        utilLog.log('Importing provision data to:', profile.servers[0].host + ":" + profile.servers[0].port);
+        utilLog.log('Importing provision data to:', profile2.servers[0].host + ":" + profile2.servers[0].port);
         var dataImportFile = __dirname + "/../dataImport/";
         const importFiles = spawn(process.env.NODE_PATH, [ 'index.js' ], { stdio: 'inherit', cwd: dataImportFile });
         importFiles.on('data', (data) => {
@@ -394,7 +402,7 @@ var lib = {
                 return cb(null, true);
 
             else{
-                utilLog.log('Importing certifictes to:', profile.servers[0].host + ":" + profile.servers[0].port);
+                utilLog.log('Importing certifictes to:', profile2.servers[0].host + ":" + profile2.servers[0].port);
                 copyCACertificate(function(caErr){
                     if(caErr){
                         utilLog.log("Error while copying the certificate of type CA");
@@ -419,7 +427,7 @@ var lib = {
 
             function getDb() {
                 profile.name = "core_provision";
-                mongo = new soajs.mongo(profile);
+                mongo = new soajs.mongo(profile2);
                 return mongo;
             }
 
@@ -656,7 +664,7 @@ var lib = {
                 utilLog.log('ERROR: External Mongo information is missing URL or port, make sure SOAJS_MONGO_EXTERNAL_URL and SOAJS_MONGO_EXTERNAL_PORT are set ...');
                 return cb('ERROR: missing mongo information');
             }
-
+	        
             mongoEnv.push('SOAJS_MONGO_NB=' + profile.servers.length);
             for(var i = 0; i < profile.servers.length; i++){
 	            mongoEnv.push('SOAJS_MONGO_IP_' + (i + 1) + '=' + profile.servers[i].host);
@@ -745,14 +753,14 @@ var lib = {
 				return cb(error);
 			}
 			if (settings && settings.elasticsearch && dbConfiguration.dbs.databases[settings.elasticsearch.db_name]) {
-				var cluster = dbConfiguration.dbs.databases[settings.elasticsearch.db_name].cluster;
+				var cluster = esClusterConfiguration.config;
 				if (!process.env.SOAJS_INSTALL_DEBUG){
-					dbConfiguration.dbs.clusters[cluster].extraParam.log = [{
+					cluster.extraParam.log = [{
 						type: 'stdio',
 						levels: [] // remove the logs
 					}];
 				}
-				esClient = new soajs.es(dbConfiguration.dbs.clusters[cluster]);
+				esClient = new soajs.es(cluster);
 				
 			}
 			else {
@@ -888,13 +896,13 @@ var lib = {
 		
 		if (serviceOptions.Labels) {
 			serviceGroup = serviceOptions.Labels['soajs.service.group'];
-			serviceName = serviceOptions.Labels['soajs.service.repo.name'];
+			serviceName = serviceOptions.Labels['soajs.service.name'];
 			serviceEnv = serviceOptions.Labels['soajs.env.code'];
 		}
 		if (serviceGroup === 'soajs-core-services') {
 			serviceType = (serviceName === 'soajs_controller') ? 'controller' : 'service';
 		}
-		else if (serviceGroup === 'nginx') {
+		else if (serviceGroup === 'soajs-nginx') {
 			serviceType = 'nginx';
 			serviceName = 'nginx';
 		}

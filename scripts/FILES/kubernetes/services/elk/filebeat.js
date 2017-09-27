@@ -14,9 +14,10 @@ var components = {
 			"labels": {
 				"soajs.content": "true",
 				"soajs.env.code": "dashboard",
-				"soajs.service.type": "elk",
+				"soajs.service.type": "system",
+				"soajs.service.subtype": "filebeat",
 				"soajs.service.name": "dashboard-filebeat",
-				"soajs.service.group": "elk",
+				"soajs.service.group": "soajs-analytics",
 				"soajs.service.label": "dashboard-filebeat",
 				"soajs.service.mode": "daemonset"
 			}
@@ -33,9 +34,10 @@ var components = {
 					"labels": {
 						"soajs.content": "true",
 						"soajs.env.code": "dashboard",
-						"soajs.service.type": "elk",
+						"soajs.service.type": "system",
+						"soajs.service.subtype": "filebeat",
 						"soajs.service.name": "dashboard-filebeat",
-						"soajs.service.group": "elk",
+						"soajs.service.group": "soajs-analytics",
 						"soajs.service.label": "dashboard-filebeat",
 						"soajs.service.mode": "daemonset"
 					}
@@ -44,7 +46,7 @@ var components = {
 					"containers": [
 						{
 							"name": "dashboard-filebeat",
-							"image": gConfig.imagePrefix + "/filebeat",
+							"image": "soajsorg/filebeat",
 							"imagePullPolicy": gConfig.imagePullPolicy,
 							"command": [
 								"/usr/share/filebeat/bin/filebeat",  "-e",  "-c", "/etc/filebeat/filebeat.yml"
