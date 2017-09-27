@@ -21,6 +21,7 @@ if(!process.env.MONGO_EXT || process.env.MONGO_EXT === 'false'){
 var mongo = new soajs.mongo(profile2);
 var analyticsCollection = 'analytics';
 var dbConfiguration = require('../../../data/startup/environments/dashboard');
+var esClusterConfiguration = require('../../../data/startup/resources/es');
 var esClient;
 var utilLog = require('util');
 
@@ -71,13 +72,51 @@ var lib = {
             strictSSL: false
         };
 
-        deployerConfig.version = 'v1beta1';
-        deployer.extensions = new K8Api.Extensions(deployerConfig);
+		lib.getServerVersion(deployerConfig, function (error, version) {
+			if(error) return cb(error);
 
-        deployerConfig.version = 'v1';
-        deployer.core = new K8Api.Core(deployerConfig);
+			if(version && version.major && version.minor) {
+				utilLog.log('Kubernetes server version is: ' + version.major + '.' + version.minor);
+			}
 
-        return cb(null, deployer);
+			deployerConfig.version = 'v1beta1';
+	        deployer.extensions = new K8Api.Extensions(deployerConfig);
+
+	        deployerConfig.version = 'v1';
+	        deployer.core = new K8Api.Core(deployerConfig);
+
+			if(version.minor === '6') {
+				deployerConfig.version = 'v2alpha1';
+				deployer.autoscaling = new K8Api.Autoscaling(deployerConfig);
+            }
+            else if (version.minor === '7') {
+				deployerConfig.version = 'v1';
+				deployer.autoscaling = new K8Api.Autoscaling(deployerConfig);
+            }
+
+	        return cb(null, deployer);
+		});
+    },
+
+	getServerVersion: function (deployerConfig, cb) {
+        var requestOptions = {
+            uri: deployerConfig.url + '/version',
+            auth: {
+                bearer: ''
+            },
+            strictSSL: false,
+            json: true
+        };
+
+        if (deployerConfig.auth && deployerConfig.auth.bearer) {
+            requestOptions.auth.bearer = deployerConfig.auth.bearer;
+        }
+
+        request.get(requestOptions, function (error, response, body) {
+            if(error) return cb(error);
+
+        	return cb(null, body);
+        });
     },
 
     getContent: function (type, group, cb) {
@@ -123,21 +162,44 @@ var lib = {
 		    return cb(null, true);
 	    }
         async.eachSeries(services, function (oneService, callback) {
-            if(type === "core"){
-                oneService.service.metadata.labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
-                oneService.deployment.metadata.labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
-                oneService.deployment.spec.template.metadata.labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
-	            oneService.deployment.spec.template.metadata.labels["soajs.catalog.v"] = "1";
-	            oneService.deployment.spec.template.metadata.labels["service.image.ts"] = new Date().getTime().toString();
-            }
-            else if (type === "nginx"){
-                oneService.service.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
-                oneService.deployment.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
-                oneService.deployment.spec.template.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
-	            oneService.deployment.spec.template.metadata.labels["soajs.catalog.v"] = "1";
-	            oneService.deployment.spec.template.metadata.labels["service.image.ts"] = new Date().getTime().toString();
-            }
-            lib.deployService(deployer, oneService, callback);
+			if(type === 'plugins') {
+				lib.checkIfDeployed(deployer, oneService, function(error, updatedService) {
+					if(error) return cb(error);
+
+					lib.deployService(deployer, updatedService, callback);
+				});
+			}
+			else {
+				let imgTs = new Date().getTime().toString();
+				if(type === "core"){
+	                oneService.service.metadata.labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
+	                oneService.deployment.metadata.labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
+	                oneService.deployment.spec.template.metadata.labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
+		            
+	                oneService.service.metadata.labels["soajs.catalog.v"] = "1";
+	                oneService.deployment.metadata.labels["soajs.catalog.v"] = "1";
+	                oneService.deployment.spec.template.metadata.labels["soajs.catalog.v"] = "1";
+		            
+		            oneService.service.metadata.labels["service.image.ts"] = imgTs;
+		            oneService.deployment.metadata.labels["service.image.ts"] = imgTs;
+	                oneService.deployment.spec.template.metadata.labels["service.image.ts"] = imgTs;
+	            }
+	            else if (type === "nginx"){
+	                oneService.service.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
+	                oneService.deployment.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
+	                oneService.deployment.spec.template.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
+		            
+	                oneService.service.metadata.labels["soajs.catalog.v"] = "1";
+	                oneService.deployment.metadata.labels["soajs.catalog.v"] = "1";
+	                oneService.deployment.spec.template.metadata.labels["soajs.catalog.v"] = "1";
+		            
+		            oneService.service.metadata.labels["service.image.ts"] = imgTs;
+		            oneService.deployment.metadata.labels["service.image.ts"] = imgTs;
+	                oneService.deployment.spec.template.metadata.labels["service.image.ts"] = imgTs;
+	            }
+
+	            lib.deployService(deployer, oneService, callback);
+			}
         }, cb);
     },
 
@@ -151,7 +213,9 @@ var lib = {
     	delete nginxRecipe.locked;
         nginxRecipe.name = "Dashboard Nginx Recipe";
         nginxRecipe.description = "This is the nginx catalog recipe used to deploy the nginx in the dashboard environment."
-	    nginxRecipe.recipe.deployOptions.image.prefix = config.imagePrefix;
+	    nginxRecipe.recipe.deployOptions.image.prefix = config.images.nginx.prefix;
+	    nginxRecipe.recipe.deployOptions.image.tag = config.images.nginx.tag;
+        
         if (process.env.SOAJS_IMAGE_PULL_POLICY) {
             nginxRecipe.recipe.deployOptions.image.pullPolicy = process.env.SOAJS_IMAGE_PULL_POLICY;
         }
@@ -215,7 +279,7 @@ var lib = {
                     "label": "Git Token"
 			    };
 		    }
-		
+
 		    if (config.customUISrc.path) {
 			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_PATH"] = {
 				    "type": "userInput",
@@ -306,7 +370,9 @@ var lib = {
     	delete serviceRecipe.locked;
         serviceRecipe.name = "Dashboard Service Recipe";
 	    serviceRecipe.description = "This is the service catalog recipe used to deploy the core services in the dashboard environment."
-        serviceRecipe.recipe.deployOptions.image.prefix = config.imagePrefix;
+        serviceRecipe.recipe.deployOptions.image.prefix = config.images.soajs.prefix;
+        serviceRecipe.recipe.deployOptions.image.tag = config.images.soajs.tag;
+        
         if (process.env.SOAJS_IMAGE_PULL_POLICY) {
             serviceRecipe.recipe.deployOptions.image.pullPolicy = process.env.SOAJS_IMAGE_PULL_POLICY;
         }
@@ -443,54 +509,69 @@ var lib = {
     },
 
     deployService: function (deployer, options, cb) {
-        var namespace = config.kubernetes.config.namespaces.default, serviceName;
-        if (config.kubernetes.config.namespaces.perService) {
-            serviceName = options.deployment.metadata.labels['soajs.service.label'];
-            namespace += '-' + serviceName;
-        }
+		var namespace;
 
-        lib.initNamespace(deployer, {namespace: namespace}, function (error) {
-            if (error) return cb(error);
+		async.series([
+			function(callback) { initNamespace(callback); },
+			function(callback) { createServiceAccount(callback); },
+			function(callback) { createService(callback); },
+			function(callback) { createDeployment(callback); },
+			function(callback) { configureELK(callback); }
+		], cb);
 
-            if (options.service) {
+		function initNamespace(cb) {
+			if(options.customNamespace) return cb(null, true);
 
-                //if deploying NGINX, modify the spec object according to deployType
-                if(config.nginx.deployType === 'LoadBalancer') {
-                    if (options.service.metadata.labels['soajs.service.type'] === 'nginx') {
-                        options.service.spec.type = 'LoadBalancer';
-                        if (options.service.spec.ports[0]) {
-                            delete options.service.spec.ports[0].nodePort;
-                        }
-                        if (options.service.spec.ports[1]) {
-                            delete options.service.spec.ports[1].nodePort;
-                        }
-                    }
-                }
+			var serviceName;
+			namespace = config.kubernetes.config.namespaces.default;
+	        if (config.kubernetes.config.namespaces.perService) {
+	            serviceName = options.deployment.metadata.labels['soajs.service.label'];
+	            namespace += '-' + serviceName;
+	        }
 
-                deployer.core.namespaces(namespace).services.post({body: options.service}, function (error) {
-                    if (error) return cb(error);
-	                createDeployment(function () {
-		                if (config.analytics === "true") {
-			                //check if elasticsearch
-			                if (options.deployment.metadata.name === "soajs-analytics-elasticsearch") {
-				                lib.configureElastic(deployer, options, cb);
-			                }
-			                else {
-				                lib.configureKibana(deployer, options, cb);
-			                }
-		                }
-		                else {
-			                return cb(null, true);
-		                }
-	                });
-                });
-            }
-            else {
-                createDeployment(cb);
-            }
-        });
+	        return lib.initNamespace(deployer, {namespace: namespace}, cb);
+		}
 
-        function createDeployment(cb1) {
+		function createService(cb) {
+			if(!options.service || Object.keys(options.service).length === 0) return cb(null, true);
+
+			//if deploying NGINX, modify the spec object according to deployType
+			if(config.nginx.deployType === 'LoadBalancer') {
+				if (options.service.metadata.labels['soajs.service.type'] === 'nginx') {
+					options.service.spec.type = 'LoadBalancer';
+					if (options.service.spec.ports[0]) {
+						delete options.service.spec.ports[0].nodePort;
+					}
+					if (options.service.spec.ports[1]) {
+						delete options.service.spec.ports[1].nodePort;
+					}
+				}
+			}
+
+			if(!namespace) namespace = 'default';
+
+			if(options.customNamespace && options.service.metadata && options.service.metadata.namespace) {
+				namespace = options.service.metadata.namespace;
+			}
+
+			return deployer.core.namespaces(namespace).services.post({ body: options.service }, cb);
+		}
+
+		function createServiceAccount(cb) {
+			if(!options.serviceAccount || Object.keys(options.serviceAccount).length === 0) return cb(null, true);
+
+			if(!namespace) namespace = 'default';
+
+			if(options.customNamespace && options.serviceAccount.metadata && options.serviceAccount.metadata.namespace) {
+				namespace = options.serviceAccount.metadata.namespace;
+			}
+
+			return deployer.core.namespaces(namespace).serviceaccounts.post({ body: options.serviceAccount }, cb);
+		}
+
+        function createDeployment(cb) {
+			if(!options.deployment || Object.keys(options.deployment).length === 0) return cb(null, true);
+
 	        //support daemonsets
 	        var deploytype;
 	        if (options.deployment.kind === "DaemonSet") {
@@ -499,9 +580,94 @@ var lib = {
 	        else if (options.deployment.kind === "Deployment") {
 		        deploytype = "deployments";
 	        }
-            deployer.extensions.namespaces(namespace)[deploytype].post({body: options.deployment}, cb1);
+
+			if(!namespace) namespace = 'default';
+
+			if(options.customNamespace && options.deployment.metadata && options.deployment.metadata.namespace) {
+				namespace = options.deployment.metadata.namespace;
+			}
+
+            return deployer.extensions.namespaces(namespace)[deploytype].post({ body: options.deployment }, cb);
         }
+
+		function configureELK(cb) {
+			if (!config.analytics || config.analytics !== 'true') return cb(null, true);
+			if (options && options.deployment
+				&& options.deployment.metadata
+				&& options.deployment.metadata.name) {
+				if (options.deployment.metadata.name === "soajs-analytics-elasticsearch") {
+					return lib.configureElastic(deployer, options, cb);
+				}
+				else {
+					return lib.configureKibana(deployer, options, cb);
+				}
+			}
+			else {
+				return cb(null, true);
+			}
+		}
     },
+
+	checkIfDeployed: function (deployer, options, cb) {
+
+		async.series({
+			// deployment: function (callback) { getResource('deployment', 'extensions', callback); },
+			service: function (callback) { getResource('service', 'core', callback); },
+			// serviceAccount: function (callback) { getResource('serviceAccount', 'core', callback); }
+		}, function(error, result) {
+			if(error) return cb(error);
+
+			/*
+				result.* =
+					object: required and deployed, delete it from main object
+					false: required and not deployed, keep it in main object, do nothing
+					null: not required, do nothing
+			 */
+			 //NOTE: if a resource is deployed, delete it and return the object, this way it will not be deployed
+			 //NOTE: Only plugin for now is heapster, we check the service only
+			 if(result.service && Object.keys(result.service).length > 0) {
+				 options = {};
+			 }
+
+			//  if(result.deployment) delete options.deployment;
+			//  if(result.service) delete options.service;
+			//  if(result.serviceAccount) delete options.serviceAccount;
+
+			 return cb(null, options);
+		});
+
+		function getResource(type, apiGroup, cb) {
+			var info = getResourceInfo(options, type);
+
+			if(!info.name) return cb(); //this means that the plugin does not have a resource, ignore
+
+			type = type.toLowerCase();
+			deployer[apiGroup].namespaces(info.namespace)[type].get({ name: info.name }, function(error, resource) {
+				if(error) {
+					if(error.code === 404) return cb(null, false);
+
+					return cb(error);
+				}
+
+				return cb(null, resource);
+			});
+		}
+
+		function getResourceInfo(options, resource) {
+			var serviceName, namespace = 'default';
+
+			if(options[resource] && options[resource].metadata) {
+				if(options[resource].metadata.name) {
+					serviceName = options[resource].metadata.name;
+				}
+				if(options[resource].metadata.namespace) {
+					namespace = options[resource].metadata.namespace;
+				}
+			}
+
+			return { name: serviceName, namespace: namespace };
+		}
+	},
 
     deleteDeployments: function (deployer, options, cb) {
         var filter = { labelSelector: 'soajs.content=true' };
@@ -516,7 +682,19 @@ var lib = {
                     if (error) return callback(error);
 
                     setTimeout(function () {
-                        deployer.extensions.namespaces(oneDeployment.metadata.namespace).deployments.delete({ name: oneDeployment.metadata.name, qs: params }, callback);
+                        deployer.extensions.namespaces(oneDeployment.metadata.namespace).deployments.delete({ name: oneDeployment.metadata.name, qs: params }, function (error) {
+							if(error) return callback(error);
+
+							//hpa objects have the same naming as their deployments
+							deployer.autoscaling.namespaces(oneDeployment.metadata.namespace).hpa.delete({ name: oneDeployment.metadata.name }, function (error) {
+								if(error) {
+									if(error.code === 404) return callback();
+									else return callback(error);
+								}
+
+								return callback();
+							});
+						});
                     }, 5000);
                 });
             }, cb);
@@ -731,24 +909,23 @@ var lib = {
 
         return cb(null, services);
     },
-
-
+	
 	configureElastic: function (deployer, serviceOptions, cb) {
 		mongo.findOne('analytics', {_type: 'settings'}, function (error, settings) {
 			if (error) {
 				return cb(error);
 			}
 			if (settings && settings.elasticsearch && dbConfiguration.dbs.databases[settings.elasticsearch.db_name]) {
-				var cluster = dbConfiguration.dbs.databases[settings.elasticsearch.db_name].cluster;
+				var cluster = esClusterConfiguration.config;
 				//change to exposed port
-				dbConfiguration.dbs.clusters[cluster].servers[0].port = 30920;
+				cluster.servers[0].port = 30920;
 				if (!process.env.SOAJS_INSTALL_DEBUG){
-					dbConfiguration.dbs.clusters[cluster].extraParam.log = [{
+					cluster.extraParam.log = [{
 						type: 'stdio',
 						levels: [] // remove the logs
 					}];
 				}
-				esClient = new soajs.es(dbConfiguration.dbs.clusters[cluster]);
+				esClient = new soajs.es(cluster);
 			}
 			else {
 				throw new Error("No Elastic db name found!");
@@ -886,13 +1063,13 @@ var lib = {
 
 		if (serviceOptions.deployment.metadata.labels) {
 			serviceGroup = serviceOptions.deployment.metadata.labels['soajs.service.group'];
-			serviceName = serviceOptions.deployment.metadata.labels['soajs.service.repo.name'];
+			serviceName = serviceOptions.deployment.metadata.labels['soajs.service.name'];
 			serviceEnv = serviceOptions.deployment.metadata.labels['soajs.env.code'];
 		}
 		if (serviceGroup === 'soajs-core-services') {
 			serviceType = (serviceName === 'soajs_controller') ? 'controller' : 'service';
 		}
-		else if (serviceGroup === 'nginx') {
+		else if (serviceGroup === 'soajs-nginx') {
 			serviceType = 'nginx';
 			serviceName = 'nginx';
 		}
@@ -975,6 +1152,19 @@ var lib = {
 
 							analyticsArray = analyticsArray.concat(
 								[
+									{
+										index: {
+											_index: '.kibana',
+											_type: 'index-pattern',
+											_id: 'filebeat-*'
+										}
+									},
+									{
+										title: 'filebeat-*',
+										timeFieldName: '@timestamp',
+										fields: filebeatIndex.fields,
+										fieldFormatMap: filebeatIndex.fieldFormatMap
+									},
 									{
 										index: {
 											_index: '.kibana',
@@ -1216,7 +1406,7 @@ var lib = {
 			index: ".kibana",
 			type: 'config',
 			body: {
-				doc: {"defaultIndex": "metricbeat-*"}
+				doc: {"defaultIndex": "filebeat-*"}
 			}
 		};
 		var condition = {
@@ -1259,9 +1449,6 @@ var lib = {
 											"dashboard": {
 												"status": "deployed"
 											}
-										},
-										"metricbeat": {
-											"status": "deployed"
 										}
 									}
 								};

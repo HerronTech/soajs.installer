@@ -18,8 +18,9 @@ var components = {
 				"soajs.env.code": "dashboard",
 
                 "soajs.service.name": "nginx",
-                "soajs.service.group": "nginx",
-				"soajs.service.type": "nginx",
+                "soajs.service.group": "soajs-nginx",
+				"soajs.service.type": "server",
+				"soajs.service.subtype": "nginx",
 				"soajs.service.label": "dashboard-nginx",
 				"soajs.service.mode": "deployment"
 			}
@@ -57,8 +58,9 @@ var components = {
 				"soajs.env.code": "dashboard",
 
                 "soajs.service.name": "nginx",
-                "soajs.service.group": "nginx",
-				"soajs.service.type": "nginx",
+				"soajs.service.group": "soajs-nginx",
+				"soajs.service.type": "server",
+				"soajs.service.subtype": "nginx",
 				"soajs.service.label": "dashboard-nginx",
 				"soajs.service.mode": "deployment"
 			}
@@ -78,8 +80,9 @@ var components = {
 						"soajs.env.code": "dashboard",
 
 		                "soajs.service.name": "nginx",
-		                "soajs.service.group": "nginx",
-						"soajs.service.type": "nginx",
+						"soajs.service.group": "soajs-nginx",
+						"soajs.service.type": "server",
+						"soajs.service.subtype": "nginx",
 						"soajs.service.label": "dashboard-nginx",
 						"soajs.service.mode": "deployment"
 					}
@@ -88,7 +91,7 @@ var components = {
 					"containers": [
 						{
 							"name": "dashboard-nginx",
-							"image": gConfig.imagePrefix + "/nginx",
+							"image": gConfig.images.nginx.prefix + "/nginx:" + gConfig.images.nginx.tag,
 							"imagePullPolicy": gConfig.imagePullPolicy,
 							"workingDir": "/opt/soajs/deployer/",
 							"command": ["node"],

@@ -32,8 +32,9 @@ var config = {
     ],
 
     image: {
-        prefix: gConfig.imagePrefix,
-        name: 'nginx'
+        prefix: gConfig.images.nginx.prefix,
+        name: 'nginx',
+        tag: gConfig.images.nginx.tag
     },
     env: [
         'SOAJS_ENV=dashboard',
@@ -64,9 +65,10 @@ var config = {
     labels: {
         "soajs.content": "true",
         "soajs.env.code": "dashboard",
-        "soajs.service.type": "nginx",
+        "soajs.service.type": "server",
+        "soajs.service.subtype": "nginx",
         "soajs.service.name": "nginx",
-        "soajs.service.group": "nginx",
+        "soajs.service.group": "soajs-nginx",
         "soajs.service.label": "dashboard_nginx",
         "soajs.service.mode": "replicated"
     },
@@ -126,7 +128,7 @@ module.exports = {
     "Name": config.servName,
     "TaskTemplate": {
         "ContainerSpec": {
-            "Image": config.image.prefix + '/' + config.image.name,
+            "Image": config.image.prefix + '/' + config.image.name + ":" + config.image.tag,
             "Env": config.env,
             "Dir": config.workingDir,
             "Command": [config.command[0]],

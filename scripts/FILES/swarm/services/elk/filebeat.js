@@ -10,7 +10,7 @@ var config = {
 	servNetwork: [{Target: gConfig.docker.network}],
 	
 	image: {
-		prefix: gConfig.imagePrefix,
+		prefix: 'soajsorg',
 		name: 'filebeat'
 	},
 	env: [
@@ -21,9 +21,10 @@ var config = {
 	labels: {
 		"soajs.content": "true",
 		"soajs.env.code": "dashboard",
-		"soajs.service.type": "elk",
+		"soajs.service.type": "system",
+		"soajs.service.subtype": "filebeat",
 		"soajs.service.name": "dashboard-filebeat",
-		"soajs.service.group": "elk",
+		"soajs.service.group": "soajs-analytics",
 		"soajs.service.label": "dashboard-filebeat",
 		"soajs.service.mode": "global"
 	},

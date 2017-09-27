@@ -13,6 +13,9 @@ module.exports = {
 	requestTimeoutRenewal: 5,
 	servicePort: 1337,
 	extKeyRequired: false,
+	docker:{
+		url: "https://hub.docker.com/v2/repositories/%organization%/%imagename%/tags/"
+	},
 	"errors": {},
 	"schema": {
 		'get': {
@@ -41,6 +44,11 @@ module.exports = {
 					"l": "Load Deployment Information"
 				}
 			},
+			'/installer/confirmation' :{
+				"_apiInfo":{
+					"l": "Reload Deployment Information"
+				}
+			},
 			'/installer/go' :{
 				"_apiInfo":{
 					"l": "Proceed with Installing SOAJS"
@@ -54,6 +62,34 @@ module.exports = {
 			'/progress' :{
 				"_apiInfo":{
 					"l": "Return Installation Progress"
+				}
+			},
+			'/soajs/versions':{
+				"_apiInfo":{
+					"l": "Get Latest SOAJS Docker Image Versions"
+				},
+				'prefix':{
+					'source': ['query.prefix'],
+					'required': false,
+					'default': 'soajsorg',
+					'validation':{
+						'type': 'string'
+					}
+				},
+				'name':{
+					'source': ['query.name'],
+					'required': false,
+					'default': 'soajs',
+					'validation':{
+						'type': 'string'
+					}
+				},
+				'tag':{
+					'source': ['query.tag'],
+					'required': false,
+					'validation':{
+						'type': 'string'
+					}
 				}
 			}
 		},
@@ -167,6 +203,17 @@ module.exports = {
 						},
 						"additionalProperties": false
 					}
+				},
+				"deployment": {
+					"source": ["body.deployment"],
+					"required": false,
+					"validation":{
+						"type":"object",
+						"properties":{
+							"deployType" : {"type": "string", "required": true, "enum": ["manual", "container"]},
+							"mongoExposedPort": {"type": "number", "required": false}
+						}
+					}
 				}
 			},
 			'/installer/esClusters' :{
@@ -234,11 +281,17 @@ module.exports = {
                             "gitToken": {"type": "string", "required": false},
                             "gitPath": {"type": "string", "required": false},
 
-                            "imagePrefix": {"type": "string", "required": false},
+                            "soajsImagePrefix": {"type": "string", "required": false},
+                            "nginxImagePrefix": {"type": "string", "required": false},
+							
+							"soajsImageTag": {"type": "string", "required": false},
+							"nginxImageTag": {"type": "string", "required": false},
+							
                             "nginxPort": {"type": "number", "required": false},
                             "nginxSecurePort": {"type": "number", "required": false},
                             "mongoExposedPort": {"type": "number", "required": false},
                             "nginxSsl": {"type": "boolean", "required": false},
+							"mongoExt": {"type": "boolean", "required": false},
                             "generateSsc": {"type": "boolean", "required": false},
 							"nginxKubeSecret": {"type": "string", "required": false},
 							"nginxDeployType": {"type": "string", "required": false, "enum": ["NodePort", "LoadBalancer"]},

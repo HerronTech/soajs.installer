@@ -12,7 +12,7 @@ securityApp.controller('securityCtrl', ['$scope', 'ngDataApi', '$modal', functio
 	};
 	
 	$scope.skip = function(){
-		$scope.$parent.go("#/clusters");
+		$scope.$parent.go("#/resources");
 	};
 	
 	$scope.fillSecurity = function(){
@@ -42,13 +42,13 @@ securityApp.controller('securityCtrl', ['$scope', 'ngDataApi', '$modal', functio
 						$scope.newExtKey = response.extKey;
 						$scope.proceedToClusters = function () {
 							keyModal.close();
-							currentScope.$parent.go("#/clusters");
+							currentScope.$parent.go("#/resources");
 						};
 					}
 				});
 			}
 			else{
-				$scope.$parent.go("#/clusters");
+				$scope.$parent.go("#/resources");
 			}
 		});
 	};

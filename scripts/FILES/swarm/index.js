@@ -22,6 +22,7 @@ var mongo = new soajs.mongo(profile2);
 var analyticsCollection = 'analytics';
 var utilLog = require('util');
 var dbConfiguration = require('../../../data/startup/environments/dashboard');
+var esClusterConfiguration = require('../../../data/startup/resources/es');
 var esClient;
 
 var lib = {
@@ -165,7 +166,8 @@ var lib = {
     	delete nginxRecipe.locked;
         nginxRecipe.name = "Dashboard Nginx Recipe";
         nginxRecipe.description = "This is the nginx catalog recipe used to deploy the nginx in the dashboard environment."
-	    nginxRecipe.recipe.deployOptions.image.prefix = config.imagePrefix;
+	    nginxRecipe.recipe.deployOptions.image.prefix = config.images.nginx.prefix;
+	    nginxRecipe.recipe.deployOptions.image.tag = config.images.nginx.tag;
      
 	    nginxRecipe.recipe.deployOptions.ports[0].published = config.nginx.port.http;
 	    nginxRecipe.recipe.deployOptions.ports[1].published = config.nginx.port.https;
@@ -279,7 +281,8 @@ var lib = {
 	    delete serviceRecipe.locked;
         serviceRecipe.name = "Dashboard Service Recipe";
 	    serviceRecipe.description = "This is the service catalog recipe used to deploy the core services in the dashboard environment."
-	    serviceRecipe.recipe.deployOptions.image.prefix = config.imagePrefix;
+	    serviceRecipe.recipe.deployOptions.image.prefix = config.images.soajs.prefix;
+	    serviceRecipe.recipe.deployOptions.image.tag = config.images.soajs.tag;
 	    
 	    if(config.deploy_acc){
 		    serviceRecipe.recipe.buildOptions.env["SOAJS_DEPLOY_ACC"] = {
@@ -750,14 +753,14 @@ var lib = {
 				return cb(error);
 			}
 			if (settings && settings.elasticsearch && dbConfiguration.dbs.databases[settings.elasticsearch.db_name]) {
-				var cluster = dbConfiguration.dbs.databases[settings.elasticsearch.db_name].cluster;
+				var cluster = esClusterConfiguration.config;
 				if (!process.env.SOAJS_INSTALL_DEBUG){
-					dbConfiguration.dbs.clusters[cluster].extraParam.log = [{
+					cluster.extraParam.log = [{
 						type: 'stdio',
 						levels: [] // remove the logs
 					}];
 				}
-				esClient = new soajs.es(dbConfiguration.dbs.clusters[cluster]);
+				esClient = new soajs.es(cluster);
 				
 			}
 			else {
@@ -893,13 +896,13 @@ var lib = {
 		
 		if (serviceOptions.Labels) {
 			serviceGroup = serviceOptions.Labels['soajs.service.group'];
-			serviceName = serviceOptions.Labels['soajs.service.repo.name'];
+			serviceName = serviceOptions.Labels['soajs.service.name'];
 			serviceEnv = serviceOptions.Labels['soajs.env.code'];
 		}
 		if (serviceGroup === 'soajs-core-services') {
 			serviceType = (serviceName === 'soajs_controller') ? 'controller' : 'service';
 		}
-		else if (serviceGroup === 'nginx') {
+		else if (serviceGroup === 'soajs-nginx') {
 			serviceType = 'nginx';
 			serviceName = 'nginx';
 		}

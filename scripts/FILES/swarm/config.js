@@ -49,7 +49,16 @@ var lib= {
 		},
 		"ssl": (process.env.SOAJS_NX_SSL === "true") || false
 	},
-	"imagePrefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
+	"images":{
+		"soajs": {
+			"prefix": process.env.SOAJS_IMAGE_PREFIX || 'soajsorg',
+			"tag": process.env.SOAJS_IMAGE_TAG || 'latest'
+		},
+		"nginx": {
+			"prefix": process.env.SOAJS_NX_IMAGE_PREFIX || 'soajsorg',
+			"tag": process.env.SOAJS_NX_IMAGE_TAG || 'latest'
+		}
+	},
 	"docker":{
 		"mongoCollection": 'docker',
 		"replicas": parseInt(process.env.SOAJS_DOCKER_REPLICA) || 1,
