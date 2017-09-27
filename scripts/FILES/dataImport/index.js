@@ -57,9 +57,26 @@ const lib = {
 	 Environments
 	 */
 	"addEnvs": function (cb) {
-		var record = require(dataFolder + "environments/dashboard.js");
-		record._id = mongo.ObjectId(record._id);
-		mongo.insert("environment", record, cb);
+		async.parallel({
+			"env": function(mCb){
+				var record = require(dataFolder + "environments/dashboard.js");
+				record._id = mongo.ObjectId(record._id);
+				mongo.insert("environment", record, mCb);
+			},
+			"mongo": function(mCb){
+				var record = require(dataFolder + "resources/mongo.js");
+				record._id = mongo.ObjectId(record._id);
+				mongo.insert("resources", record, mCb);
+			},
+			"es": function(mCb){
+				var record = require(dataFolder + "resources/es.js");
+				if(Object.keys(record).length === 0){
+					return mCb();
+				}
+				record._id = mongo.ObjectId(record._id);
+				mongo.insert("resources", record, mCb);
+			}
+		}, cb);
 	},
 
 	/*

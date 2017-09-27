@@ -3,6 +3,7 @@ var os = require("os");
 var path = require("path");
 
 var utils = require("./utils");
+let config = require("../config");
 
 //configuration file
 var dataDir = __dirname + "/../data/";
@@ -209,7 +210,9 @@ var routes = {
                 else
                     return res.json(req.soajs.buildResponse({code: 601, msg: "Invalid machine IP address: " + error + ". Provide the machine's external IP address."}));
             }
-            utils.updateCustomData(req, res, req.soajs.inputmaskData.clusters, "clusters");
+            utils.updateCustomData(req, res, req.soajs.inputmaskData.clusters, "clusters", function(){
+	            utils.updateCustomData(req, res, req.soajs.inputmaskData.deployment, "deployment");
+            });
         });
     },
 	"postEsClusters": function (req, res) {
@@ -275,6 +278,19 @@ var routes = {
             });
         });
     },
+	
+	"reconfirmDeployment": function(req, res){
+		utils.loadCustomData(null, function(data){
+			if(data.security){
+				delete data.security.extKey1;
+				delete data.security.extKey2;
+			}
+			if(data.gi){
+				data.gi.password = "******";
+			}
+			return res.json(req.soajs.buildResponse(null, data));
+		});
+	},
 
     "installSOAJS": function (req, res) {
         var folder = dataDir + "startup/";
@@ -387,7 +403,16 @@ var routes = {
             });
         });
 
-    }
+    },
+	
+	"versions": function(req, res){
+		utils.versions(config, req, function(error, response){
+			if(error){
+				return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message }));
+			}
+			return res.json(req.soajs.buildResponse(null, response));
+		})
+	}
 };
 
 module.exports = routes;

@@ -41,21 +41,18 @@ var dashboard = {
     },
     "description": "this is the Dashboard environment",
     "dbs": {
-        "clusters": {
-            "dash_cluster": "%clusters%",
-	        "%es_analytics_cluster_name%": "%es_analytics_cluster%",
-        },
         "config": {
-            "prefix": "%clusterPrefix%",
-            "session": {
-                "cluster": "dash_cluster",
-                "name": "core_session",
-                'store': {},
-                "collection": "sessions",
-                'stringify': false,
-                'expireAfter': 1000 * 60 * 60 * 24 * 14 // 2 weeks
-            }
+            "prefix": "%clusterPrefix%"
         },
+	    "session": {
+		    "cluster": "dash_cluster",
+		    "tenantSpecific": false,
+		    "name": "core_session",
+		    'store': {},
+		    "collection": "sessions",
+		    'stringify': false,
+		    'expireAfter': 1000 * 60 * 60 * 24 * 14 // 2 weeks
+	    },
         "databases": {
 	        "%es_database_name%": "%databases_value%",
             "urac": {
