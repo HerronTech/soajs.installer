@@ -481,13 +481,15 @@ var catalogs = [
                         "name": "http",
                         "target": 80,
                         "isPublished": true,
-                        "published": 81
+                        "published": 81,
+                        "preserveClientIP": true
                     },
                     {
                         "name": "https",
                         "target": 443,
                         "isPublished": true,
-                        "published": 444
+                        "published": 444,
+                        "preserveClientIP": true
                     }
                 ]
             },

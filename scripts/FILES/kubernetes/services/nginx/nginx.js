@@ -22,11 +22,12 @@ var components = {
 				"soajs.service.type": "server",
 				"soajs.service.subtype": "nginx",
 				"soajs.service.label": "dashboard-nginx",
-				"soajs.service.mode": "deployment"
+				"soajs.service.mode": "daemonset"
 			}
 		},
 		"spec": {
 			"type": "NodePort",
+			"externalTrafficPolicy": "Local",
 			"selector": {
 				"soajs.service.label": "dashboard-nginx"
 			},
@@ -50,7 +51,7 @@ var components = {
 	},
 	deployment: {
 		"apiVersion": "extensions/v1beta1",
-		"kind": "Deployment",
+		"kind": "DaemonSet",
 		"metadata": {
 			"name": "dashboard-nginx",
 			"labels": {

@@ -168,35 +168,35 @@ var lib = {
         nginxRecipe.description = "This is the nginx catalog recipe used to deploy the nginx in the dashboard environment."
 	    nginxRecipe.recipe.deployOptions.image.prefix = config.images.nginx.prefix;
 	    nginxRecipe.recipe.deployOptions.image.tag = config.images.nginx.tag;
-     
+
 	    nginxRecipe.recipe.deployOptions.ports[0].published = config.nginx.port.http;
 	    nginxRecipe.recipe.deployOptions.ports[1].published = config.nginx.port.https;
-        
+
         if(process.env.SOAJS_NX_SSL === 'true'){
             process.env['SOAJS_NX_API_HTTPS']=1;
             process.env['SOAJS_NX_API_HTTP_REDIRECT']=1;
             process.env['SOAJS_NX_SITE_HTTPS']=1;
             process.env['SOAJS_NX_SITE_HTTP_REDIRECT']=1;
         }
-	
+
 	    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_DASHBOARD_BRANCH"] = {
 		    "type": "static",
 		    "value": config.dashUISrc.branch
 	    };
-     
+
 	    if (config.customUISrc.repo && config.customUISrc.owner) {
 		    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_REPO"] = {
 			    "type": "userInput",
 			    "default": config.customUISrc.repo,
                 "label": "Git Repo"
 		    };
-		
+
 		    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_OWNER"] = {
 			    "type": "userInput",
 			    "default": config.customUISrc.owner,
                 "label": "Git Repo"
 		    };
-		
+
 		    if (config.customUISrc.branch) {
 			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_BRANCH"] = {
 				    "type": "userInput",
@@ -204,7 +204,7 @@ var lib = {
                     "label": "Git Branch"
 			    };
 		    }
-		
+
 		    if (config.customUISrc.provider) {
 			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_PROVIDER"] = {
 				    "type": "userInput",
@@ -212,7 +212,7 @@ var lib = {
                     "label": "Git Provider"
 			    };
 		    }
-		
+
 		    if (config.customUISrc.domain) {
 			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_DOMAIN"] = {
 				    "type": "userInput",
@@ -220,7 +220,7 @@ var lib = {
                     "label": "Git Provider"
 			    };
 		    }
-		
+
 		    if (config.customUISrc.token) {
 			    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_TOKEN"] = {
 				    "type": "userInput",
@@ -236,7 +236,7 @@ var lib = {
 			    };
 		    }
 	    }
-	    
+
         //Add every environment variable that is added by the installer.
         //Add environment variables related to SSL
         if(process.env.SOAJS_NX_API_HTTPS){
@@ -283,74 +283,74 @@ var lib = {
 	    serviceRecipe.description = "This is the service catalog recipe used to deploy the core services in the dashboard environment."
 	    serviceRecipe.recipe.deployOptions.image.prefix = config.images.soajs.prefix;
 	    serviceRecipe.recipe.deployOptions.image.tag = config.images.soajs.tag;
-	    
+
 	    if(config.deploy_acc){
 		    serviceRecipe.recipe.buildOptions.env["SOAJS_DEPLOY_ACC"] = {
 			    "type": "static",
 			    "value": "true"
 		    };
 	    }
-	    
+
         //Add environment variables containing mongo information
         if(profile.servers && profile.servers.length > 0){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_NB"] = {
                 "type": "computed",
                 "value": "$SOAJS_MONGO_NB"
             };
-	
+
 	        serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_IP"] = {
 		        "type": "computed",
 		        "value": "$SOAJS_MONGO_IP_N"
 	        };
-	
+
 	        serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_PORT"] = {
 		        "type": "computed",
 		        "value": "$SOAJS_MONGO_PORT_N"
 	        };
         }
-        
+
         if(profile.prefix && profile.prefix !== ''){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_PREFIX"] = {
                 "type": "computed",
                 "value": "$SOAJS_MONGO_PREFIX"
             };
         }
-        
+
         if(profile.URLParam.replicaSet){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_RSNAME"] = {
                 "type": "computed",
                 "value": "$SOAJS_MONGO_RSNAME"
             };
         }
-        
+
         if(profile.URLParam.authSource){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_AUTH_DB"] = {
                 "type": "computed",
                 "value": "$SOAJS_MONGO_AUTH_DB"
             };
         }
-        
+
         if(profile.URLParam.ssl){
             serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_SSL"] = {
                 "type": "computed",
                 "value": "$SOAJS_MONGO_SSL"
             };
         }
-	
+
 	    if(profile.credentials.username){
 		    serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_USERNAME"] = {
 			    "type": "computed",
 			    "value": "$SOAJS_MONGO_USERNAME"
 		    };
 	    }
-	
+
 	    if(profile.credentials.password){
 		    serviceRecipe.recipe.buildOptions.env["SOAJS_MONGO_PASSWORD"] = {
 			    "type": "computed",
 			    "value": "$SOAJS_MONGO_PASSWORD"
 		    };
 	    }
-	    
+
         return serviceRecipe;
     },
 
@@ -524,9 +524,10 @@ var lib = {
 
         });
     },
-	
+
 	deployService: function (deployer, options, cb) {
-		deployer.createService(options, function () {
+		deployer.createService(options, function (error) {
+			if(error) throw new Error(error);
 			//check if service name elasticsearch to configure it
 			if (config.analytics === "true") {
 				if (options.Name === 'soajs-analytics-elasticsearch') {
@@ -575,7 +576,7 @@ var lib = {
             });
         });
     },
-	
+
 	getServiceNames: function (serviceName, deployer, replicaCount, counter, cb) {
 		if (typeof (counter) === 'function') {
 			cb = counter; //counter wasn't passed as param
@@ -589,10 +590,10 @@ var lib = {
 		};
 		deployer.listContainers(params, function (err, result) {
 			if (err) return cb(err);
-			
+
 			var oneContainer = [];
 			for (var cid in result) {
-				
+
 				oneContainer.push({
 					name: result[cid].Labels['com.docker.swarm.task.name'].replace('.' + result[cid].Labels['com.docker.swarm.task.id'], '')
 				});
@@ -605,13 +606,13 @@ var lib = {
 				}, 1000);
 			}
 			else {
-				
+
 				utilLog.log(""); //intentional, to force writting a new line.
 				return cb(null, oneContainer);
 			}
 		});
 	},
-	
+
     getServiceIPs: function (serviceName, deployer, replicaCount, counter, cb) {
         if (typeof (counter) === 'function') {
             cb = counter; //counter wasn't passed as param
@@ -653,18 +654,18 @@ var lib = {
         if(config.mongo.prefix && config.mongo.prefix !== ""){
 	        mongoEnv.push('SOAJS_MONGO_PREFIX=' + config.mongo.prefix);
         }
-        
+
         if (config.mongo.external) {
 	        if(config.mongo.rsName && config.mongo.rsName !== ""){
 		        mongoEnv.push('SOAJS_MONGO_RSNAME=' + config.mongo.rsName);
 	        }
-	        
+
             // if (!config.dataLayer.mongo.url || !config.dataLayer.mongo.port) {
             if (!profile.servers[0].host || !profile.servers[0].port) {
                 utilLog.log('ERROR: External Mongo information is missing URL or port, make sure SOAJS_MONGO_EXTERNAL_URL and SOAJS_MONGO_EXTERNAL_PORT are set ...');
                 return cb('ERROR: missing mongo information');
             }
-	        
+
             mongoEnv.push('SOAJS_MONGO_NB=' + profile.servers.length);
             for(var i = 0; i < profile.servers.length; i++){
 	            mongoEnv.push('SOAJS_MONGO_IP_' + (i + 1) + '=' + profile.servers[i].host);
@@ -745,8 +746,8 @@ var lib = {
             }
         });
     },
-	
-	
+
+
 	configureElastic: function (deployer, serviceOptions, cb) {
 		mongo.findOne('analytics', {_type: 'settings'}, function (error, settings) {
 			if (error) {
@@ -761,7 +762,7 @@ var lib = {
 					}];
 				}
 				esClient = new soajs.es(cluster);
-				
+
 			}
 			else {
 				return cb(new Error("No Elastic db name found!"));
@@ -784,7 +785,7 @@ var lib = {
 				});
 			});
 		});
-		
+
 		function pingElastic(cb) {
 			esClient.ping(function (error) {
 				if (error) {
@@ -811,7 +812,7 @@ var lib = {
 				}
 			});
 		}
-		
+
 		function infoElastic(cb) {
 			esClient.db.info(function (error, response) {
 				if (error) {
@@ -825,7 +826,7 @@ var lib = {
 				}
 			});
 		}
-		
+
 		function putTemplate(cb) {
 			mongo.find('analytics', {_type: 'template'}, function (error, templates) {
 				if (error) return cb(error);
@@ -848,7 +849,7 @@ var lib = {
 				}, cb);
 			});
 		}
-		
+
 		function putMapping(cb) {
 			mongo.findOne('analytics', {_type: 'mapping'}, function (error, mapping) {
 				if (error) return cb(error);
@@ -873,7 +874,7 @@ var lib = {
 				});
 			});
 		}
-		
+
 		function putSettings(esResponse, settings, cb) {
 			settings.env = {
 				"dashboard": true
@@ -887,13 +888,13 @@ var lib = {
 				return cb(null, true)
 			});
 		}
-		
+
 	},
-	
+
 	configureKibana: function (deployer, serviceOptions, cb) {
 		var dockerServiceName = serviceOptions.Name;
 		var serviceGroup, serviceName, serviceEnv, serviceType;
-		
+
 		if (serviceOptions.Labels) {
 			serviceGroup = serviceOptions.Labels['soajs.service.group'];
 			serviceName = serviceOptions.Labels['soajs.service.name'];
@@ -928,13 +929,13 @@ var lib = {
 								"_service": serviceType
 							}
 						]
-						
+
 					};
-					
+
 					//insert index-patterns to kibana
 					serviceIPs.forEach(function (task_Name, key) {
 						task_Name.name = task_Name.name.replace(/[\/*?"<>|,.-]/g, "_");
-						
+
 						//filebeat-service-environment-taskname-*
 						var filebeatIndex = require("../analytics/indexes/filebeat-index");
 						// var allIndex = require("../analytics/indexes/all-index");
@@ -955,7 +956,7 @@ var lib = {
 						// 		}
 						// 	]
 						// );
-						
+
 						// analyticsArray = analyticsArray.concat(
 						// 	[
 						// 		{
@@ -973,11 +974,11 @@ var lib = {
 						// 		}
 						// 	]
 						// );
-						
-						
+
+
 						if (key == 0) {
 							//filebeat-service-environment-*
-							
+
 							analyticsArray = analyticsArray.concat(
 								[
 									{
@@ -995,8 +996,8 @@ var lib = {
 									}
 								]
 							);
-							
-							
+
+
 							// analyticsArray = analyticsArray.concat(
 							// 	[
 							// 		{
@@ -1014,10 +1015,10 @@ var lib = {
 							// 		}
 							// 	]
 							// );
-							
+
 							//filebeat-service-environment-*
-							
-							
+
+
 							// analyticsArray = analyticsArray.concat(
 							// 	[
 							// 		{
@@ -1035,7 +1036,7 @@ var lib = {
 							// 		}
 							// 	]
 							// );
-							
+
 							// analyticsArray = analyticsArray.concat(
 							// 	[
 							// 		{
@@ -1055,7 +1056,7 @@ var lib = {
 							// );
 						}
 					});
-					
+
 					//insert visualization, search and dashboard records per service to kibana
 					mongo.find(analyticsCollection, options, function (error, records) {
 						if (error) {
@@ -1078,7 +1079,7 @@ var lib = {
 											serviceIndex = serviceIndex + serviceEnv + "-" + task_Name.name + "-" + "*";
 										}
 									}
-									
+
 									var injector;
 									if (oneRecord._injector === 'service') {
 										injector = serviceName + "-" + serviceEnv;
@@ -1133,7 +1134,7 @@ var lib = {
 						}
 					]
 				);
-				
+
 				analyticsArray = analyticsArray.concat(
 					[
 						{
@@ -1172,10 +1173,10 @@ var lib = {
 							};
 							analyticsArray = analyticsArray.concat([recordIndex, onRecord._source]);
 						});
-						
+
 					}
 					return callback(null, true);
-					
+
 				});
 			}
 		}, function (err) {
@@ -1190,7 +1191,7 @@ var lib = {
 					return cb(null, response);
 				});
 			}
-			
+
 			if (analyticsArray.length !== 0) {
 				esClient.checkIndex('.kibana', function (error, response) {
 					if (error) {
@@ -1214,7 +1215,7 @@ var lib = {
 			}
 		});
 	},
-	
+
 	setDefaultIndex: function (cb) {
 		var index = {
 			index: ".kibana",
@@ -1238,7 +1239,7 @@ var lib = {
 					}
 					if (result && result.env && result.env.dashboard) {
 						index.id = res.hits.hits[0]._id;
-						
+
 						async.parallel({
 							"updateES": function (call) {
 								esClient.db.update(index, call);
@@ -1290,9 +1291,9 @@ var lib = {
 				}, 1000);
 			}
 		});
-		
+
 	},
-	
+
 	closeDbCon: function (cb) {
 		mongo.closeDb();
 		if (esClient) {
