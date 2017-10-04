@@ -43,7 +43,7 @@ var config = {
         'SOAJS_HA_NAME={{.Task.Name}}',
 
 	    'SOAJS_EXTKEY=' + gConfig.extKey1,
-	
+
         'SOAJS_GIT_DASHBOARD_BRANCH=' + dashUISrc.branch,
         'SOAJS_NX_DOMAIN=' + masterDomain,
         'SOAJS_NX_API_DOMAIN=' + gConfig.apiPrefix + '.' + masterDomain,
@@ -70,7 +70,7 @@ var config = {
         "soajs.service.name": "nginx",
         "soajs.service.group": "soajs-nginx",
         "soajs.service.label": "dashboard_nginx",
-        "soajs.service.mode": "replicated"
+        "soajs.service.mode": "global"
     },
     workingDir: '/opt/soajs/deployer/',
     command: [
@@ -82,12 +82,14 @@ var config = {
         {
             "Protocol": "tcp",
             "PublishedPort": gConfig.nginx.port.http,
-            "TargetPort": 80
+            "TargetPort": 80,
+			"PublishMode": "host"
         },
         {
             "Protocol": "tcp",
             "PublishedPort": gConfig.nginx.port.https,
-            "TargetPort": 443
+            "TargetPort": 443,
+			"PublishMode": "host"
         }
     ]
 };
@@ -142,9 +144,7 @@ module.exports = {
         }
     },
     "Mode": {
-        "Replicated": {
-            "Replicas": config.servReplica
-        }
+		"Global": {}
     },
     "UpdateConfig": {
         "Delay": 500.0,

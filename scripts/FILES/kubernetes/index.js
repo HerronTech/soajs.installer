@@ -175,11 +175,11 @@ var lib = {
 	                oneService.service.metadata.labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
 	                oneService.deployment.metadata.labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
 	                oneService.deployment.spec.template.metadata.labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
-		            
+
 	                oneService.service.metadata.labels["soajs.catalog.v"] = "1";
 	                oneService.deployment.metadata.labels["soajs.catalog.v"] = "1";
 	                oneService.deployment.spec.template.metadata.labels["soajs.catalog.v"] = "1";
-		            
+
 		            oneService.service.metadata.labels["service.image.ts"] = imgTs;
 		            oneService.deployment.metadata.labels["service.image.ts"] = imgTs;
 	                oneService.deployment.spec.template.metadata.labels["service.image.ts"] = imgTs;
@@ -188,11 +188,11 @@ var lib = {
 	                oneService.service.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
 	                oneService.deployment.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
 	                oneService.deployment.spec.template.metadata.labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
-		            
+
 	                oneService.service.metadata.labels["soajs.catalog.v"] = "1";
 	                oneService.deployment.metadata.labels["soajs.catalog.v"] = "1";
 	                oneService.deployment.spec.template.metadata.labels["soajs.catalog.v"] = "1";
-		            
+
 		            oneService.service.metadata.labels["service.image.ts"] = imgTs;
 		            oneService.deployment.metadata.labels["service.image.ts"] = imgTs;
 	                oneService.deployment.spec.template.metadata.labels["service.image.ts"] = imgTs;
@@ -215,7 +215,7 @@ var lib = {
         nginxRecipe.description = "This is the nginx catalog recipe used to deploy the nginx in the dashboard environment."
 	    nginxRecipe.recipe.deployOptions.image.prefix = config.images.nginx.prefix;
 	    nginxRecipe.recipe.deployOptions.image.tag = config.images.nginx.tag;
-        
+
         if (process.env.SOAJS_IMAGE_PULL_POLICY) {
             nginxRecipe.recipe.deployOptions.image.pullPolicy = process.env.SOAJS_IMAGE_PULL_POLICY;
         }
@@ -372,7 +372,7 @@ var lib = {
 	    serviceRecipe.description = "This is the service catalog recipe used to deploy the core services in the dashboard environment."
         serviceRecipe.recipe.deployOptions.image.prefix = config.images.soajs.prefix;
         serviceRecipe.recipe.deployOptions.image.tag = config.images.soajs.tag;
-        
+
         if (process.env.SOAJS_IMAGE_PULL_POLICY) {
             serviceRecipe.recipe.deployOptions.image.pullPolicy = process.env.SOAJS_IMAGE_PULL_POLICY;
         }
@@ -701,6 +701,18 @@ var lib = {
         });
     },
 
+	deleteDaemonsets: function(deployer, options, cb) {
+		var filter = { labelSelector: 'soajs.content=true' };
+		deployer.extensions.daemonsets.get({qs: filter}, function(error, daemonsetList) {
+			if(error) return cb(error);
+
+			if (!daemonsetList || !daemonsetList.items || daemonsetList.items.length === 0) return cb();
+			async.each(daemonsetList.items, function(oneDaemonset, callback) {
+				deployer.extensions.namespaces(oneDaemonset.metadata.namespace).daemonsets.delete({ name: oneDaemonset.metadata.name }, callback);
+			}, cb);
+		});
+	},
+
     deleteKubeServices: function (deployer, options, cb) {
         var filter = { labelSelector: 'soajs.content=true', gracePeriodSeconds: 0  };
         deployer.core.services.get({qs: filter}, function (error, serviceList) {
@@ -797,23 +809,27 @@ var lib = {
         lib.deleteDeployments(deployer, {}, function (error) {
             if (error) return cb(error);
 
-            lib.deleteReplicaSets(deployer, {}, function (error) {
-                if (error) return cb(error);
+			lib.deleteDaemonsets(deployer, {}, function(error) {
+				if(error) return cb(error);
 
-                lib.deleteKubeServices(deployer, {}, function (error) {
-                    if (error) return cb(error);
+				lib.deleteReplicaSets(deployer, {}, function (error) {
+	                if (error) return cb(error);
 
-                    lib.deletePods(deployer, {}, function (error) {
-                        if (error) return cb(error);
+	                lib.deleteKubeServices(deployer, {}, function (error) {
+	                    if (error) return cb(error);
 
-                        lib.ensurePods(deployer, {}, function (error) {
-                            if (error) return cb(error);
+	                    lib.deletePods(deployer, {}, function (error) {
+	                        if (error) return cb(error);
 
-                            return cb();
-                        });
-                    });
-                });
-            });
+	                        lib.ensurePods(deployer, {}, function (error) {
+	                            if (error) return cb(error);
+
+	                            return cb();
+	                        });
+	                    });
+	                });
+	            });
+			});
         });
     },
 
@@ -909,7 +925,7 @@ var lib = {
 
         return cb(null, services);
     },
-	
+
 	configureElastic: function (deployer, serviceOptions, cb) {
 		mongo.findOne('analytics', {_type: 'settings'}, function (error, settings) {
 			if (error) {
