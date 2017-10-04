@@ -32,7 +32,7 @@ var soajs_account = {
 		{
 			"name": "soajs/soajs.gcs",
 			"serviceName": "gcs",
-			"type": "service"
+			"type": "component"
 		}
 	]
 };
