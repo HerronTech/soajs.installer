@@ -63,7 +63,7 @@ var components = {
 				"soajs.service.type": "server",
 				"soajs.service.subtype": "nginx",
 				"soajs.service.label": "dashboard-nginx",
-				"soajs.service.mode": "deployment"
+				"soajs.service.mode": "daemonset"
 			}
 		},
 		"spec": {
@@ -85,7 +85,7 @@ var components = {
 						"soajs.service.type": "server",
 						"soajs.service.subtype": "nginx",
 						"soajs.service.label": "dashboard-nginx",
-						"soajs.service.mode": "deployment"
+						"soajs.service.mode": "daemonset"
 					}
 				},
 				"spec": {
