@@ -129,7 +129,7 @@ var components = {
 								},
 								{
 									"name": "SOAJS_GIT_DASHBOARD_BRANCH",
-									"value": gConfig.git.branch
+									"value": gConfig.dashUISrc.branch
 								},
 								{
 									"name": "SOAJS_NX_DOMAIN",
