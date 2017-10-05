@@ -1076,7 +1076,8 @@ var lib = {
 	configureKibana: function (deployer, serviceOptions, cb) {
 		var dockerServiceName = serviceOptions.deployment.metadata.name;
 		var serviceGroup, serviceName, serviceEnv, serviceType;
-
+		
+		var replicaCount;
 		if (serviceOptions.deployment.metadata.labels) {
 			serviceGroup = serviceOptions.deployment.metadata.labels['soajs.service.group'];
 			serviceName = serviceOptions.deployment.metadata.labels['soajs.service.name'];
@@ -1084,15 +1085,17 @@ var lib = {
 		}
 		if (serviceGroup === 'soajs-core-services') {
 			serviceType = (serviceName === 'soajs_controller') ? 'controller' : 'service';
+			replicaCount = serviceOptions.deployment.spec.replicas;
 		}
 		else if (serviceGroup === 'soajs-nginx') {
 			serviceType = 'nginx';
 			serviceName = 'nginx';
+			replicaCount = 1;
 		}
 		else {
 			return cb(null, true);
 		}
-		var replicaCount = serviceOptions.deployment.spec.replicas;
+		
 		utilLog.log('Fetching analytics for ' + serviceName);
 		var analyticsArray = [];
 		async.parallel({
@@ -1505,4 +1508,3 @@ var lib = {
 };
 
 module.exports = lib;
-//

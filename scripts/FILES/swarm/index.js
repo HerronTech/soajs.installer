@@ -894,7 +894,8 @@ var lib = {
 	configureKibana: function (deployer, serviceOptions, cb) {
 		var dockerServiceName = serviceOptions.Name;
 		var serviceGroup, serviceName, serviceEnv, serviceType;
-
+		
+		var replicaCount;
 		if (serviceOptions.Labels) {
 			serviceGroup = serviceOptions.Labels['soajs.service.group'];
 			serviceName = serviceOptions.Labels['soajs.service.name'];
@@ -902,16 +903,18 @@ var lib = {
 		}
 		if (serviceGroup === 'soajs-core-services') {
 			serviceType = (serviceName === 'soajs_controller') ? 'controller' : 'service';
+			replicaCount = serviceOptions.Mode.Replicated.Replicas;
 		}
 		else if (serviceGroup === 'soajs-nginx') {
 			serviceType = 'nginx';
 			serviceName = 'nginx';
+			replicaCount = 1;
 		}
 		else {
 			return cb(null, true);
 		}
 		serviceEnv.replace(/[\/*?"<>|,.-]/g, "_");
-		var replicaCount = serviceOptions.Mode.Replicated.Replicas;
+		
 		utilLog.log('Fetching analytics for ' + serviceName);
 		var analyticsArray = [];
 		async.parallel({
