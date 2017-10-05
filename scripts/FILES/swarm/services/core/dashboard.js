@@ -3,7 +3,7 @@ var gConfig = require("../../config.js");
 var src = {
 	owner: 'soajs',
 	repo: 'soajs.dashboard',
-	branch: gConfig.git.branch
+	branch: 'feature/portal'//gConfig.git.branch
 };
 
 var config = {

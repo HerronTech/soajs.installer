@@ -435,7 +435,8 @@ module.exports = {
                         return cb(null, {
                             "hosts": {
                                 "api": "127.0.0.1 " + body.gi.api + "." + body.gi.domain,
-                                "site": "127.0.0.1 " + body.gi.site + "." + body.gi.domain
+                                "site": "127.0.0.1 " + body.gi.site + "." + body.gi.domain,
+                                "portal": "127.0.0.1 " + body.gi.portal + "." + body.gi.domain
                             },
                             "ui": "http://" + body.gi.site + "." + body.gi.domain,
                             "cmd": "sudo " + path.normalize(__dirname + "/../scripts/manual-deploy.sh")
@@ -751,7 +752,8 @@ module.exports = {
             return cb(null, {
                 "hosts": {
                     "api": "127.0.0.1 " + body.gi.api + "." + body.gi.domain,
-                    "site": "127.0.0.1 " + body.gi.site + "." + body.gi.domain
+                    "site": "127.0.0.1 " + body.gi.site + "." + body.gi.domain,
+                    "portal": "127.0.0.1 " + body.gi.portal + "." + body.gi.domain
                 },
                 "ui": "http://" + body.gi.site + "." + body.gi.domain,
                 "cmd": "sudo " + path.normalize(__dirname + "/../scripts/manual-deploy.sh")
@@ -767,7 +769,8 @@ module.exports = {
             var obj = {
                 "hosts": {
                     "api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
-                    "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
+                    "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain,
+                    "portal": body.deployment.containerHost + " " + body.gi.portal + "." + body.gi.domain
                 },
                 "ui": "http://" + body.gi.site + "." + body.gi.domain,
                 "cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
@@ -781,7 +784,8 @@ module.exports = {
                 obj = {
                     "hosts": {
                         "api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
-                        "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
+                        "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain,
+                        "portal": body.deployment.containerHost + " " + body.gi.portal + "." + body.gi.domain
                     },
                     "ui": "http://" + body.gi.site + "." + body.gi.domain + ":" + body.deployment.nginxPort,
                     "cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
