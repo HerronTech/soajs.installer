@@ -261,6 +261,7 @@ var catalogs = [
                     "tag": "latest",
                     "pullPolicy": "IfNotPresent"
                 },
+                "specifyGitConfiguration": true,
                 "readinessProbe": {
                     "httpGet": {
                         "path": "/",
@@ -291,6 +292,26 @@ var catalogs = [
                         "type": "static",
                         "value":"production"
                     },
+                    "SOAJS_GIT_OWNER": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_OWNER"
+                    },
+                    "SOAJS_GIT_BRANCH": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_BRANCH"
+                    },
+                    "SOAJS_GIT_COMMIT": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_COMMIT"
+                    },
+                    "SOAJS_GIT_REPO": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_REPO"
+                    },
+                    "SOAJS_GIT_TOKEN": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_TOKEN"
+                    }
                 },
                 "cmd": {
                     "deploy": {
