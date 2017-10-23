@@ -4,11 +4,9 @@ var profile = require(process.env.SOAJS_PROFILE);
 var mongoHostname = profile.servers[0].host;
 var lib= {
 	"extKey1": process.env.SOAJS_EXTKEY,
-	"analytics": process.env.SOAJS_DEPLOY_ANALYTICS,
 	"masterDomain": process.env.MASTER_DOMAIN || 'soajs.org',
 	"apiPrefix": process.env.API_PREFIX || "dashboard-api",
 	"sitePrefix": process.env.SITE_PREFIX || "dashboard",
-	"portalPrefix": process.env.PORTAL_PREFIX || "portal",
 	"folder": process.env.SOAJS_DATA_FOLDER || "/opt/soajs/node_modules/soajs.installer/data/startup/",
 	"profile": process.env.SOAJS_PROFILE || "/opt/soajs/node_modules/soajs.installer/data/startup/profile.js",
 	"deploy_acc": process.env.SOAJS_DEPLOY_ACC || true,
@@ -19,15 +17,6 @@ var lib= {
 	},
 	"dashUISrc": {
 		"branch": process.env.SOAJS_GIT_DASHBOARD_BRANCH || 'develop'
-	},
-	"customUISrc":{
-		"owner": process.env.SOAJS_GIT_OWNER || null,
-		"repo": process.env.SOAJS_GIT_REPO || null,
-		"branch": process.env.SOAJS_GIT_CUSTOM_UI_BRANCH || null,
-		"token": process.env.SOAJS_GIT_TOKEN || null,
-		"provider": process.env.SOAJS_GIT_SOURCE || null,
-		"domain": process.env.SOAJS_GIT_PROVIDER || null,
-		"path": process.env.SOAJS_GIT_PATH || null
 	},
 	"mongo":{
 		"prefix": profile.prefix,
@@ -88,7 +77,7 @@ var lib= {
 			}
 		}
 	},
-	"deployGroups": ['db', 'elk', 'core', 'nginx'],
+	"deployGroups": ['db', 'core', 'nginx'],
 	"services":{
 		"path": {
 			"dir": __dirname + '/services/',

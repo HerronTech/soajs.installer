@@ -34,7 +34,6 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 		gi: true,
 		security: false,
 		clusters: false,
-		es_clusters: false,
 		deployment: false
 	};
 	
@@ -162,7 +161,6 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				"gi": (response.gi) ? response.gi : {},
 				"security": (response.security) ? response.security : {},
 				"clusters": (response.clusters) ? response.clusters : {},
-				"es_clusters": (response.es_clusters && Object.keys(response.es_clusters).length > 0) ? response.es_clusters : false,
 				"deployment": (response.deployment) ? response.deployment : {}
 			};
 			$timeout(function () {
@@ -217,16 +215,8 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			$scope.deployment = {
 				"deployType": (response && response.deployType) ? response.deployType : "manual",
 				"deployDriver": (response && response.deployDriver) ? response.deployDriver : "manual",
-				"deployAnalytics": (response && response.deployAnalytics) ? response.deployAnalytics : false,
 				"deployDockerNodes": (response && response.deployDockerNodes) ? response.deployDockerNodes : ['127.0.0.1'],
 				"containerHost": (response && response.containerHost) ? response.containerHost : "127.0.0.1",
-				"gitSource": (response && response.gitSource) ? response.gitSource : null,
-				"gitProvider": (response && response.gitProvider) ? response.gitProvider : null,
-				"gitOwner": (response && response.gitOwner) ? response.gitOwner : null,
-				"gitRepo": (response && response.gitRepo) ? response.gitRepo : null,
-				"gitBranch": (response && response.gitBranch) ? response.gitBranch : "master",
-				"gitToken": (response && response.gitToken) ? response.gitToken : null,
-				"gitPath": (response && response.gitPath) ? response.gitPath : null,
 				"soajsImagePrefix": (response && response.soajsImagePrefix) ? response.soajsImagePrefix : "soajsorg",
 				"nginxImagePrefix": (response && response.nginxImagePrefix) ? response.nginxImagePrefix : "soajsorg",
 				

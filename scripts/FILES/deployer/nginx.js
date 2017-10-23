@@ -8,11 +8,6 @@ var nxApiPort = process.env.SOAJS_NX_API_PORT || "80";
 var nxSiteDomain = process.env.SOAJS_NX_SITE_DOMAIN;
 var nxSitePort = process.env.SOAJS_NX_SITE_PORT || "80";
 var nxSitePath = process.env.SOAJS_NX_SITE_PATH || "/opt/soajs/site";
-
-var nxPortalDomain = process.env.SOAJS_NX_PORTAL_DOMAIN;
-var nxPortalPort = process.env.SOAJS_NX_SITE_PORT || "80";
-var nxPortalPath = process.env.SOAJS_NX_PORTAL_PATH || "/opt/soajs/site";
-
 var nxOs = process.env.SOAJS_NX_OS || "ubuntu";
 var nxLocation = process.env.SOAJS_NX_LOC || "/etc/nginx";
 
@@ -66,22 +61,6 @@ var lib = {
 		wstream.write("}\n");
 		wstream.end();
 		return cb(null);
-	},
-	"writePortalConf": function (param, cb) {
-		utilLog.log("writing portal conf in " + param.loc + " " + param.confFileName);
-		var wstream = fs.createWriteStream(param.loc + param.confFileName);
-		wstream.write("server {\n");
-		wstream.write("  listen       " + param.port + ";\n");
-		wstream.write("  server_name  " + param.domain + ";\n");
-		wstream.write("  client_max_body_size 100m;\n");
-		wstream.write("  location / {\n");
-		wstream.write("    root  " + param.path + ";\n");
-		wstream.write("    sendfile       off;\n");
-		wstream.write("    index  index.html index.htm;\n");
-		wstream.write("  }\n");
-		wstream.write("}\n");
-		wstream.end();
-		return cb(null);
 	}
 };
 
@@ -114,17 +93,5 @@ if (nxSiteDomain) {
 		"path": nxSitePath
 	}, function (err) {
 		utilLog.log("NGINX DASH CONF DONE.");
-	});
-}
-
-if (nxPortalDomain) {
-	lib.writeSiteConf({
-		"loc": nxLocation + ((nxOs === 'mac') ? "/servers/" : ( nxOs === 'ubuntu') ? "/sites-enabled/" : "/nginx/"),
-		"confFileName": "portal.conf",
-		"domain": nxPortalDomain,
-		"port": nxPortalPort,
-		"path": nxPortalPath
-	}, function (err) {
-		utilLog.log("NGINX PORTAL CONF DONE.");
 	});
 }

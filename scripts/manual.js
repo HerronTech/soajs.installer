@@ -24,17 +24,14 @@ process.env.SOAJS_SRVIP = process.env.SOAJS_SRVIP || "127.0.0.1";
 
 process.env.API_PREFIX = process.env.API_PREFIX || "dashboard-api";
 process.env.SITE_PREFIX = process.env.SITE_PREFIX || "dashboard";
-process.env.PORTAL_PREFIX = process.env.PORTAL_PREFIX || "portal";
 process.env.MASTER_DOMAIN = process.env.MASTER_DOMAIN || "soajs.org";
 
 process.env.SOAJS_NX_API_DOMAIN = process.env.API_PREFIX + "." + process.env.MASTER_DOMAIN;
 process.env.SOAJS_NX_SITE_DOMAIN = process.env.SITE_PREFIX + "." + process.env.MASTER_DOMAIN;
-process.env.SOAJS_NX_PORTAL_DOMAIN = process.env.PORTAL_PREFIX + "." + process.env.MASTER_DOMAIN;
 
 process.env.SOAJS_NX_CONTROLLER_NB = 1;
 process.env.SOAJS_NX_CONTROLLER_IP_1 = process.env.SOAJS_SRVIP;
 process.env.SOAJS_NX_SITE_PATH = WRK_DIR + "/soajs.dashboard.ui";
-process.env.SOAJS_NX_PORTAL_PATH = WRK_DIR + "/soajs.portal.ui";
 
 var NGINX_DEST = (process.platform === 'linux') ? "/etc/nginx/" : "/usr/local/etc/nginx/servers/";
 
@@ -68,10 +65,6 @@ function setupNginx(cb) {
 						{
 							's': path.normalize(WRK_DIR + "/../nginx/site.conf"),
 							'd': NGINX_DEST + "sites-enabled/site.conf"
-						},
-						{
-							's': path.normalize(WRK_DIR + "/../nginx/portal.conf"),
-							'd': NGINX_DEST + "sites-enabled/portal.conf"
 						}
 					];
 					async.each(files, copyConf, cb);
@@ -89,10 +82,6 @@ function setupNginx(cb) {
 						{
 							's': path.normalize(WRK_DIR + "/../nginx/site.conf"),
 							'd': NGINX_DEST + "site.conf"
-						},
-						{
-							's': path.normalize(WRK_DIR + "/../nginx/portal.conf"),
-							'd': NGINX_DEST + "portal.conf"
 						}
 					];
 					async.each(files, copyConf, cb);
@@ -273,9 +262,6 @@ function install(cb) {
 				cloneInstallRepo("soajs.dashboard.ui", true, mcb);
 			},
 			function (mcb) {
-				cloneInstallRepo("soajs.portal.ui", true, mcb);
-			},
-			function (mcb) {
 				cloneInstallRepo("soajs.gcs", true, mcb);
 			},
 			function (mcb) {
@@ -291,7 +277,7 @@ function install(cb) {
 				utilLog.log("\ninstalling soajs.controller soajs.urac soajs.dashboard soajs.gcs ...");
 				npm.load({prefix: WRK_DIR + "/../"}, function (err) {
 					if (err) return mcb(err);
-					npm.commands.install(["soajs.urac", "soajs.dashboard", "soajs.dashboard.ui", "soajs.portal.ui", "soajs.gcs", "soajs.oauth", "soajs.prx"], function (error) {
+					npm.commands.install(["soajs.urac", "soajs.dashboard", "soajs.dashboard.ui", "soajs.gcs", "soajs.oauth", "soajs.prx"], function (error) {
 						if (error) {
 							utilLog.log('error', error);
 						}

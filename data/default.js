@@ -4,7 +4,6 @@ module.exports = {
 		"domain": "soajs.org",
 		"api": "dashboard-api",
 		"site": "dashboard",
-		"portal": "portal",
 		"wrkDir": "/opt",
 		"email": "me@localhost.com",
 		"username": "owner",

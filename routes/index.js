@@ -1,5 +1,4 @@
 "use strict";
-var os = require("os");
 var path = require("path");
 
 var utils = require("./utils");
@@ -80,8 +79,7 @@ var routes = {
                 data.deployer = {
                     deployType: customData.deployType,
                     deployDriver: customData.deployDriver,
-                    os : osName,
-	                deployAnalytics: customData.deployAnalytics ? customData.deployAnalytics : false
+                    os : osName
                 };
 	            data.remoteProvider= customData.remoteProvider;
             }
@@ -215,17 +213,6 @@ var routes = {
             });
         });
     },
-	"postEsClusters": function (req, res) {
-		utils.verifyEsIP(req,res, function(error){
-			if(error){
-				if(error === "noIP")
-					return res.json(req.soajs.buildResponse({code: 601, msg: "You have added a host with no hostname. Please provide a valid hostname."}));
-				else
-					return res.json(req.soajs.buildResponse({code: 601, msg: "Invalid machine IP address: " + error + ". Provide the machine's external IP address."}));
-			}
-			utils.updateCustomData(req, res, req.soajs.inputmaskData.es_clusters, "es_clusters");
-		});
-	},
     "getDeployment": function (req, res) {
         utils.loadCustomData('deployment', function (customData) {
 	        utils.loadCustomData('clusters', function (customData2) {

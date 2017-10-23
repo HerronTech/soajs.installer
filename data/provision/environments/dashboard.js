@@ -5,7 +5,6 @@ var dashboard = {
     "domain": "%domain%",
     "sitePrefix": "%site%",
     "apiPrefix": "%api%",
-    "portalPrefix": "%portal%",
     "locked": true,
     "port": 80,
     "profile": "%wrkDir%/soajs/FILES/profiles/profile.js",
@@ -54,7 +53,6 @@ var dashboard = {
 		    'expireAfter': 1000 * 60 * 60 * 24 * 14 // 2 weeks
 	    },
         "databases": {
-	        "%es_database_name%": "%databases_value%",
             "urac": {
                 "cluster": "dash_cluster",
                 "tenantSpecific": true

@@ -69,14 +69,6 @@
 								</tr>
 								<tr>
 									<td colspan="2">
-										<br>
-										<p>
-											<input type="checkbox" name="localButtons" ng-model="analytics.local" ng-value="analytics.local"/>&nbsp;i would also like to <b>Activate Analytics</b> with the deployment.
-										</p>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2">
 										<pre ng-show="docker && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
 {{style.docker.local.v}}</code></pre>
 										<pre ng-show="docker && local && osName==='mac'" class="bash"><code># Click on this link to download Docker for Mac:
@@ -105,14 +97,6 @@
 									</td>
 									<td width="50%">
 										<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.local'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.local')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2">
-										<br>
-										<p>
-											<input type="checkbox" name="localButtons" ng-model="analytics.local" ng-value="analytics.local"/>&nbsp;i would also like to <b>Activate Analytics</b> with the deployment.
-										</p>
 									</td>
 								</tr>
 							</table>
@@ -169,16 +153,6 @@
 <a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697794/AWS+Kubernetes" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697794/AWS+Kubernetes</a></code></pre>
 										</td>
 									</tr>
-									<tr>
-										<td colspan="2">
-											<br>
-											<p>
-												<b>3- Activate Analytics: </b>
-												<input type="checkbox" name="localButtons" ng-model="analytics.remote" ng-value="analytics.remote"/><br />
-												<span class="fieldMsg">i would also like to <b>Activate Analytics</b> with this deployment.</span>
-											</p>
-										</td>
-									</tr>
 								</table>
 							</tab>
 							<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
@@ -198,16 +172,6 @@
 										</td>
 										<td width="50%">
 											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-										</td>
-									</tr>
-									<tr>
-										<td colspan="2">
-											<br>
-											<p>
-												<b>3- Activate Analytics: </b>
-												<input type="checkbox" name="localButtons" ng-model="analytics.remote" ng-value="analytics.remote"/><br />
-												<span class="fieldMsg">i would also like to <b>Activate Analytics</b> with this deployment.</span>
-											</p>
 										</td>
 									</tr>
 								</table>
@@ -244,16 +208,6 @@
 <a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698935/Rackspace+Kubernetes" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698935/Rackspace+Kubernetes</a></code></pre>
 										</td>
 									</tr>
-									<tr>
-										<td colspan="2">
-											<br>
-											<p>
-												<b>3- Activate Analytics: </b>
-												<input type="checkbox" name="localButtons" ng-model="analytics.remote" ng-value="analytics.remote"/><br />
-												<span class="fieldMsg">i would also like to <b>Activate Analytics</b> with this deployment.</span>
-											</p>
-										</td>
-									</tr>
 								</table>
 							</tab>
 							<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
@@ -273,16 +227,6 @@
 										</td>
 										<td width="50%">
 											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-										</td>
-									</tr>
-									<tr>
-										<td colspan="2">
-											<br>
-											<p>
-												<b>3- Activate Analytics: </b>
-												<input type="checkbox" name="localButtons" ng-model="analytics.remote" ng-value="analytics.remote"/><br />
-												<span class="fieldMsg">i would also like to <b>Activate Analytics</b> with this deployment.</span>
-											</p>
 										</td>
 									</tr>
 								</table>
@@ -319,16 +263,6 @@
 <a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698553/Google+Kubernetes" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698553/Google+Kubernetes</a></code></pre>
 										</td>
 									</tr>
-									<tr>
-										<td colspan="2">
-											<br>
-											<p>
-												<b>3- Activate Analytics: </b>
-												<input type="checkbox" name="localButtons" ng-model="analytics.remote" ng-value="analytics.remote"/><br />
-												<span class="fieldMsg">i would also like to <b>Activate Analytics</b> with this deployment.</span>
-											</p>
-										</td>
-									</tr>
 								</table>
 							</tab>
 							<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
@@ -348,16 +282,6 @@
 										</td>
 										<td width="50%">
 											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-										</td>
-									</tr>
-									<tr>
-										<td colspan="2">
-											<br>
-											<p>
-												<b>3- Activate Analytics: </b>
-												<input type="checkbox" name="localButtons" ng-model="analytics.remote" ng-value="analytics.remote"/><br />
-												<span class="fieldMsg">i would also like to <b>Activate Analytics</b> with this deployment.</span>
-											</p>
 										</td>
 									</tr>
 								</table>
@@ -394,16 +318,6 @@
 <a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64293936/Azure+Kubernetes" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64293936/Azure+Kubernetes</a></code></pre>
 										</td>
 									</tr>
-									<tr>
-										<td colspan="2">
-											<br>
-											<p>
-												<b>3- Activate Analytics: </b>
-												<input type="checkbox" name="localButtons" ng-model="analytics.remote" ng-value="analytics.remote"/><br />
-												<span class="fieldMsg">i would also like to <b>Activate Analytics</b> with this deployment.</span>
-											</p>
-										</td>
-									</tr>
 								</table>
 							</tab>
 							<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
@@ -423,16 +337,6 @@
 										</td>
 										<td width="50%">
 											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-										</td>
-									</tr>
-									<tr>
-										<td colspan="2">
-											<br>
-											<p>
-												<b>3- Activate Analytics: </b>
-												<input type="checkbox" name="localButtons" ng-model="analytics.remote" ng-value="analytics.remote"/><br />
-												<span class="fieldMsg">i would also like to <b>Activate Analytics</b> with this deployment.</span>
-											</p>
 										</td>
 									</tr>
 								</table>
@@ -469,16 +373,6 @@
 <a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294695/Joyent+Triton+Kubernetes" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294695/Joyent+Triton+Kubernetes</a></code></pre>
 										</td>
 									</tr>
-									<tr>
-										<td colspan="2">
-											<br>
-											<p>
-												<b>3- Activate Analytics: </b>
-												<input type="checkbox" name="localButtons" ng-model="analytics.remote" ng-value="analytics.remote"/><br />
-												<span class="fieldMsg">i would also like to <b>Activate Analytics</b> with this deployment.</span>
-											</p>
-										</td>
-									</tr>
 								</table>
 							</tab>
 							<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
@@ -498,16 +392,6 @@
 										</td>
 										<td width="50%">
 											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_on_triton.png" border="0"></a>
-										</td>
-									</tr>
-									<tr>
-										<td colspan="2">
-											<br>
-											<p>
-												<b>3- Activate Analytics: </b>
-												<input type="checkbox" name="localButtons" ng-model="analytics.remote" ng-value="analytics.remote"/><br />
-												<span class="fieldMsg">i would also like to <b>Activate Analytics</b> with this deployment.</span>
-											</p>
 										</td>
 									</tr>
 								</table>
@@ -534,16 +418,6 @@
 										</td>
 										<td width="50%">
 											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-										</td>
-									</tr>
-									<tr>
-										<td colspan="2">
-											<br>
-											<p>
-												<b>3- Activate Analytics: </b>
-												<input type="checkbox" name="localButtons" ng-model="analytics.remote" ng-value="analytics.remote"/><br />
-												<span class="fieldMsg">i would also like to <b>Activate Analytics</b> with this deployment.</span>
-											</p>
 										</td>
 									</tr>
 								</table>
@@ -622,16 +496,6 @@ $ kubectl describe secrets</code></pre>
 										</td>
 										<td width="50%">
 											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-										</td>
-									</tr>
-									<tr>
-										<td colspan="2">
-											<br>
-											<p>
-												<b>3- Activate Analytics: </b>
-												<input type="checkbox" name="localButtons" ng-model="analytics.remote" ng-value="analytics.remote"/><br />
-												<span class="fieldMsg">i would also like to <b>Activate Analytics</b> with this deployment.</span>
-											</p>
 										</td>
 									</tr>
 								</table>

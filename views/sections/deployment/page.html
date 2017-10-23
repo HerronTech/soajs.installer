@@ -333,90 +333,6 @@
 				    </accordion-group>
 			    </accordion>
 		    </tab>
-		    <tab heading="UI Modules" ng-click="tabSwitched()">
-			    <br>
-			    <accordion>
-				    <accordion-group is-open="accordion1.ui">
-					    <accordion-heading>Custom UI Modules</accordion-heading>
-					    <table width="100%" cellspacing="0" cellpadding="0" border="0">
-						    <tbody>
-							    <tr class="form-group tr-code-wrapper">
-								    <td class="form-select">
-									    <div id="gitSource-wrapper">
-										    <label>Provider</label>
-										    <select name="gitSource" id="gitSource" class="form-control" ng-model="deployment.gitSource">
-											    <option value="github">Github</option>
-											    <option value="bitbucket">Bitbucket</option>
-										    </select>
-										    <div class="fieldMsg hint">Select the custom UI Source.</div>
-									    </div>
-								    </td>
-							    </tr>
-							    <tr class="form-group tr-code-wrapper">
-								    <td class="form-select">
-									    <div id="gitProvider-wrapper">
-										    <label>Git Domain</label>
-										    <input type="text" ng-required="false" class="form-control" name="gitprovider" id="gitprovider"
-										           ng-model="deployment.gitProvider" placeholder="github.com"/>
-										    <div class="fieldMsg hint">Specify the domain of the custom UI repo.</div>
-									    </div>
-								    </td>
-							    </tr>
-							    <tr class="form-group tr-code-wrapper">
-								    <td class="form-select">
-									    <div id="gitOwner-wrapper">
-										    <label>Git Owner</label>
-										    <input type="text" ng-required="false" class="form-control" name="gitOwner" id="gitOwner"
-										           ng-model="deployment.gitOwner" placeholder="soajs"/>
-										    <div class="fieldMsg hint">Specify the owner of the git repository.</div>
-									    </div>
-								    </td>
-							    </tr>
-							    <tr class="form-group tr-code-wrapper">
-								    <td class="form-select">
-									    <div id="gitRepo-wrapper">
-										    <label>Git Repository</label>
-										    <input type="text" ng-required="false" class="form-control" name="gitRepo" id="gitRepo"
-										           ng-model="deployment.gitRepo" placeholder="customUI"/>
-										    <div class="fieldMsg hint">Specify the name of the git repository.</div>
-									    </div>
-								    </td>
-							    </tr>
-							    <tr class="form-group tr-code-wrapper">
-								    <td class="form-select">
-									    <div id="gitBranch-wrapper">
-										    <label>Git Branch</label>
-										    <input type="text" ng-required="false" class="form-control" name="gitBranch" id="gitBranch"
-										           ng-model="deployment.gitBranch" placeholder="master"/>
-										    <div class="fieldMsg hint">Specify the branch to use.</div>
-									    </div>
-								    </td>
-							    </tr>
-							    <tr class="form-group tr-code-wrapper">
-								    <td class="form-select">
-									    <div id="gitToken-wrapper">
-										    <label>Git Token</label>
-										    <input type="text" ng-required="false" class="form-control" name="gitToken" id="gitToken"
-										           ng-model="deployment.gitToken" placeholder="Token ID"/>
-										    <div class="fieldMsg hint">Specify the token of the git repository.</div>
-									    </div>
-								    </td>
-							    </tr>
-							    <tr class="form-group tr-code-wrapper">
-								    <td class="form-select">
-									    <div id="gitPath-wrapper">
-										    <label>Git Path</label>
-										    <input type="text" ng-required="false" class="form-control" name="gitPath" id="gitPath"
-										           ng-model="deployment.gitPath" placeholder="/"/>
-										    <div class="fieldMsg hint">Specify the path of the git repository.</div>
-									    </div>
-								    </td>
-							    </tr>
-						    </tbody>
-					    </table>
-				    </accordion-group>
-			    </accordion>
-		    </tab>
 		    <tab heading="Nginx">
 			    <br>
 			    <accordion>
@@ -522,11 +438,6 @@
 		    <accordion-group ng-show="data.clusters" is-open="accordion2.clusters">
 			    <accordion-heading><span ng-click="tabSwitched()">MongoDB</span></accordion-heading>
 			    <div ng-bind-html="data.clusters|myObject"></div>
-		    </accordion-group>
-		
-		    <accordion-group ng-show="data.es_clusters" is-open="accordion2.es_clusters">
-			    <accordion-heading><span ng-click="tabSwitched()">Elasticsearch</span></accordion-heading>
-			    <div ng-bind-html="data.es_clusters|myObject"></div>
 		    </accordion-group>
 		
 		    <accordion-group ng-show="data.deployment" is-open="accordion2.deployment">

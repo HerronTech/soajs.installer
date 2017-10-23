@@ -2,8 +2,6 @@
 var os = require("os");
 var fs = require("fs");
 var path = require("path");
-var exec = require("child_process").exec;
-var uuid = require('uuid');
 var soajs = require("soajs");
 var request = require("request");
 
@@ -15,7 +13,6 @@ var rimraf = require("rimraf");
 var async = require("async");
 
 var dataDir = __dirname + "/../data/";
-var dataImportDir = __dirname + "/../scripts/FILES/dataImport/";
 module.exports = {
     "updateCustomData": function (req, res, body, section, cb) {
         fs.exists(dataDir + "custom.js", function (exists) {
@@ -134,14 +131,7 @@ module.exports = {
         var clusters = JSON.parse(JSON.stringify(body.clusters));
         var deployment = JSON.parse(JSON.stringify (body.deployment));
 	    delete clusters.prefix;
-
-	    //add elastic cluster if available
-	    var es_clusters;
-	    if (body.es_clusters) {
-		    es_clusters = JSON.parse(JSON.stringify(body.es_clusters));
-	    }
-
-
+	    
         //fix clusters credentials
         if (clusters.credentials.username === "") {
             clusters.credentials = {};
@@ -193,36 +183,8 @@ module.exports = {
                 ];
             }
         }
-        //add elasticsearch cluster
-	    if (es_clusters) {
-		    var es_Ext = es_clusters.es_Ext;
-		    if (!es_Ext) {
-			    if (body.deployment.deployDriver.indexOf("container.docker") !== -1) {
-				    es_clusters.servers = [
-					    {
-						    host: "soajs-analytics-elasticsearch",
-						    port: 9200
-					    }
-				    ];
-			    }
-			    if (body.deployment.deployDriver.indexOf("container.kubernetes") !== -1) {
-				    //build elasticsearch service with based on namespace
-				    var namespace = (deployment && deployment.namespaces && deployment.namespaces.default) ? deployment.namespaces.default : 'default';
-				    if (deployment && deployment.namespaces && deployment.namespaces.perService) {
-					    namespace += '-soajs-analytics-elasticsearch-service';
-				    }
-				    es_clusters.servers = [
-					    {
-						    host: "soajs-analytics-elasticsearch-service." + namespace,
-						    port: 9200
-					    }
-				    ];
-			    }
-		    }
-	    }
         delete clusters.replicaSet;
         delete clusters.mongoExt;
-	    delete clusters.es_Ext;
         profileData += 'module.exports = ' + JSON.stringify(clusters, null, 2) + ';';
         fs.writeFileSync(folder + "profile.js", profileData, "utf8");
 
@@ -253,11 +215,8 @@ module.exports = {
 
         //modify environments file
         var envData = fs.readFileSync(folder + "environments/dashboard.js", "utf8");
-
-	    //modify analytics file
-	    var settings = fs.readFileSync(folder + "analytics/settings.js", "utf8");
+	    
         envData = envData.replace(/%domain%/g, body.gi.domain);
-        envData = envData.replace(/%portal%/g, body.gi.portal);
         envData = envData.replace(/%site%/g, body.gi.site);
         envData = envData.replace(/%api%/g, body.gi.api);
         if(body.deployment.deployType === 'manual'){
@@ -274,27 +233,6 @@ module.exports = {
         var mongoCluster = fs.readFileSync(folder + "resources/mongo.js", "utf8");
 	    mongoCluster = mongoCluster.replace(/"%clusters%"/g, JSON.stringify(clusters, null, 2));
 		fs.writeFile(folder + "resources/mongo.js", mongoCluster, "utf8");
-		   
-	    var uid = uuid.v4();
-	    var esCluster = fs.readFileSync(folder + "resources/es.js", "utf8");
-	    if (es_clusters) {
-		    esCluster = esCluster.replace(/"%es_analytics_cluster%"/g, JSON.stringify(es_clusters, null, 2));
-		    esCluster = esCluster.replace(/"%es_analytics_cluster_name%"/g, JSON.stringify("es_analytics_cluster_" + uid), null ,2);
-		    envData = envData.replace(/%es_database_name%/g, "es_analytics_db_" + uid);
-		    envData = envData.replace(/"%databases_value%"/g, JSON.stringify({
-			    "cluster": "es_analytics_cluster_" + uid,
-			    "tenantSpecific": false
-		    }, null, 2));
-		    settings = settings.replace(/"%db_name%"/g, JSON.stringify("es_analytics_db_" + uid), null ,2);
-	    }
-	    else {
-		    esCluster = "'use strict';" + os.EOL + os.EOL + "module.exports =" + JSON.stringify({}) + ";";
-		    envData = envData.replace(/"%es_database_name%": "%databases_value%",/g, '');
-		    settings = settings.replace(/"db_name": "%db_name%"/g, '');
-	    }
-	    fs.writeFile(folder + "resources/es.js", esCluster, "utf8");
-	    fs.writeFile(folder + "analytics/settings.js", settings, "utf8");
-	    
 	    
         envData = envData.replace(/%keySecret%/g, body.security.key);
         envData = envData.replace(/%sessionSecret%/g, body.security.session);
@@ -359,15 +297,6 @@ module.exports = {
                 def.clusters[j] = over.clusters[j];
             }
         }
-
-	    if (over.es_clusters) {
-		    for (var j in over.es_clusters) {
-			    if (!def.es_clusters) {
-				    def.es_clusters = {};
-			    }
-			    def.es_clusters[j] = over.es_clusters[j];
-		    }
-	    }
         return def;
     },
 
@@ -398,7 +327,6 @@ module.exports = {
                     "API_PREFIX": body.gi.api,
 	                "SOAJS_EXTKEY" : body.security.extKey1,
                     "SITE_PREFIX": body.gi.site,
-                    "PORTAL_PREFIX": body.gi.portal,
                     "MASTER_DOMAIN": body.gi.domain
                 };
                 if (body.clusters.replicaSet) {
@@ -435,8 +363,7 @@ module.exports = {
                         return cb(null, {
                             "hosts": {
                                 "api": "127.0.0.1 " + body.gi.api + "." + body.gi.domain,
-                                "site": "127.0.0.1 " + body.gi.site + "." + body.gi.domain,
-                                "portal": "127.0.0.1 " + body.gi.portal + "." + body.gi.domain
+                                "site": "127.0.0.1 " + body.gi.site + "." + body.gi.domain
                             },
                             "ui": "http://" + body.gi.site + "." + body.gi.domain,
                             "cmd": "sudo " + path.normalize(__dirname + "/../scripts/manual-deploy.sh")
@@ -466,27 +393,6 @@ module.exports = {
         return cb(null, true);
     },
 
-	"verifyEsIP": function (req, res, cb) {
-		var tempData = req.soajs.inputmaskData.es_clusters;
-		if (tempData) {
-			if (tempData.es_Ext) {
-				for (var i = 0; i < tempData.servers.length; i++) {
-					if (!tempData.servers[i].host)
-						return cb("noIP");
-					if (tempData.servers[i].host === "127.0.0.1")
-						return cb(tempData.servers[i].host)
-				}
-			}
-			else {
-				req.soajs.inputmaskData.es_clusters.servers = [{"host": "127.0.0.1", "port": 9200}];
-			}
-		}
-		else {
-			req.soajs.inputmaskData.es_clusters =null;
-		}
-		return cb(null, true);
-	},
-
     "deployContainer": function (body, driver, loc, cb) {
         whereis('node', function (err, nodePath) {
             if (err) {
@@ -507,17 +413,10 @@ module.exports = {
 	                "SOAJS_EXTKEY" : body.security.extKey1,
                     "API_PREFIX": body.gi.api,
                     "SITE_PREFIX": body.gi.site,
-	                "PORTAL_PREFIX": body.gi.portal,
                     "MASTER_DOMAIN": body.gi.domain,
 
                     "MONGO_EXT": body.clusters.mongoExt,
-
-                    "SOAJS_GIT_OWNER": body.deployment.gitOwner,
-                    "SOAJS_GIT_REPO": body.deployment.gitRepo,
-                    "SOAJS_GIT_TOKEN": body.deployment.gitToken,
-                    "SOAJS_GIT_PATH": body.deployment.gitPath,
-                    "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
-
+	                
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
 
                     "SOAJS_IMAGE_PREFIX": body.deployment.soajsImagePrefix,
@@ -559,17 +458,7 @@ module.exports = {
                     envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder + "/";
                 }
 
-	            envs['SOAJS_DEPLOY_ANALYTICS'] = body.deployment.deployAnalytics ? true : false;
-
-	            if (body.es_clusters && Object.keys(body.es_clusters).length > 0) {
-		            envs['SOAJS_ELASTIC_EXTERNAL'] = body.clusters.es_Ext || false;
-		            envs['SOAJS_ELASTIC_EXTERNAL_SERVERS'] = JSON.stringify(body.es_clusters.servers);
-		            envs['SOAJS_ELASTIC_EXTERNAL_URLPARAM'] = JSON.stringify(body.es_clusters.URLParam);
-		            envs['SOAJS_ELASTIC_EXTERNAL_EXTRAPARAM'] = JSON.stringify(body.es_clusters.extraParam);
-	            }
-	            else {
-		            envs['SOAJS_ELASTIC_EXTERNAL'] = false
-	            }
+	            
                 //add readiness probes environment variables
                if(body.deployment.readinessProbe){
                    envs["KUBE_INITIAL_DELAY"] = body.deployment.readinessProbe.initialDelaySeconds;
@@ -619,16 +508,9 @@ module.exports = {
 	                "SOAJS_EXTKEY" : body.security.extKey1,
                     "API_PREFIX": body.gi.api,
                     "SITE_PREFIX": body.gi.site,
-	                "PORTAL_PREFIX": body.gi.portal,
                     "MASTER_DOMAIN": body.gi.domain,
 
                     "MONGO_EXT": body.clusters.mongoExt,
-
-                    "SOAJS_GIT_OWNER": body.deployment.gitOwner,
-                    "SOAJS_GIT_REPO": body.deployment.gitRepo,
-                    "SOAJS_GIT_TOKEN": body.deployment.gitToken,
-                    "SOAJS_GIT_PATH": body.deployment.gitPath,
-                    "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
 
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
 	
@@ -673,18 +555,6 @@ module.exports = {
 		            body.deployment.docker.certificatesFolder.pop();
 		            body.deployment.docker.certificatesFolder = body.deployment.docker.certificatesFolder.join("/");
 		            envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder + "/";
-	            }
-	            
-	            envs['SOAJS_DEPLOY_ANALYTICS'] = body.deployment.deployAnalytics ? true : false;
-
-	            if (body.es_clusters && Object.keys(body.es_clusters).length > 0) {
-		            envs['SOAJS_ELASTIC_EXTERNAL'] = body.es_clusters.es_Ext || false;
-		            envs['SOAJS_ELASTIC_EXTERNAL_SERVERS'] = JSON.stringify(body.es_clusters.servers);
-		            envs['SOAJS_ELASTIC_EXTERNAL_URLPARAM'] = JSON.stringify(body.es_clusters.URLParam);
-		            envs['SOAJS_ELASTIC_EXTERNAL_EXTRAPARAM'] = JSON.stringify(body.es_clusters.extraParam);
-	            }
-	            else {
-		            envs['SOAJS_ELASTIC_EXTERNAL'] = false
 	            }
                 //add readiness probes environment variables
                if(body.deployment.readinessProbe){
@@ -752,8 +622,7 @@ module.exports = {
             return cb(null, {
                 "hosts": {
                     "api": "127.0.0.1 " + body.gi.api + "." + body.gi.domain,
-                    "site": "127.0.0.1 " + body.gi.site + "." + body.gi.domain,
-                    "portal": "127.0.0.1 " + body.gi.portal + "." + body.gi.domain
+                    "site": "127.0.0.1 " + body.gi.site + "." + body.gi.domain
                 },
                 "ui": "http://" + body.gi.site + "." + body.gi.domain,
                 "cmd": "sudo " + path.normalize(__dirname + "/../scripts/manual-deploy.sh")
@@ -769,8 +638,7 @@ module.exports = {
             var obj = {
                 "hosts": {
                     "api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
-                    "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain,
-                    "portal": body.deployment.containerHost + " " + body.gi.portal + "." + body.gi.domain
+                    "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
                 },
                 "ui": "http://" + body.gi.site + "." + body.gi.domain,
                 "cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
@@ -784,8 +652,7 @@ module.exports = {
                 obj = {
                     "hosts": {
                         "api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
-                        "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain,
-                        "portal": body.deployment.containerHost + " " + body.gi.portal + "." + body.gi.domain
+                        "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
                     },
                     "ui": "http://" + body.gi.site + "." + body.gi.domain + ":" + body.deployment.nginxPort,
                     "cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
@@ -806,18 +673,6 @@ module.exports = {
             }
             else {
                 obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard-soajsdata";
-            }
-            if (body.es_clusters && body.es_clusters.servers){
-	            if(type === 'kubernetes'){
-		            var namespace = body.deployment.namespaces.default;
-		            if (body.deployment.namespaces.perService) {
-			            namespace += '-soajs-analytics-elasticsearch-service';
-		            }
-		            obj['hosts'].elasticsearch =  body.deployment.containerHost + " soajs-analytics-elasticsearch-service." + namespace;
-	            }
-	            else {
-		            obj['hosts'].elasticsearch = body.es_clusters.servers[0].host + " soajs-analytics-elasticsearch";
-	            }
             }
             return cb(null, obj);
         }
@@ -931,11 +786,6 @@ module.exports = {
                 // docker
                 var services = ["dashboard-soajsdata", "dashboard_soajs_oauth", "dashboard_soajs_urac", "dashboard_soajs_dashboard", "dashboard-controller", "dashboard_nginx"];
 
-                if(body.deployment.deployAnalytics){
-                	var analyticsContaiers = ["kibana", "dashboard-filebeat", "soajs-analytics-elasticsearch", "soajs-metricbeat", "dashboard-logstash"];
-	                services = services.concat(analyticsContaiers);
-                }
-
                 var Docker = require('dockerode');
                 var deployerConfig = {
                     "host": body.deployment.containerHost,
@@ -997,11 +847,6 @@ module.exports = {
             else {
                 // kubernetes
                 var services = ["dashboard-soajsdata", "dashboard-oauth-v1", "dashboard-urac-v2", "dashboard-dashboard-v1", "dashboard-controller-v1", "dashboard-nginx"];
-
-	            if(body.deployment.deployAnalytics){
-		            var analyticsContaiers = ["kibana", "soajs-analytics-elasticsearch", "dashboard-logstash"];
-		            services = services.concat(analyticsContaiers);
-	            }
 
                 var K8Api = require('kubernetes-client');
 

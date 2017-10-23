@@ -536,11 +536,6 @@ var catalogs = [
                         "type": "computed",
                         "value": "$SOAJS_NX_SITE_DOMAIN"
                     },
-	                "SOAJS_NX_PORTAL_DOMAIN": {
-                        "type": "computed",
-                        "value": "$SOAJS_NX_PORTAL_DOMAIN"
-                    },
-
                     "SOAJS_NX_CONTROLLER_NB": {
                         "type": "computed",
                         "value": "$SOAJS_NX_CONTROLLER_NB"

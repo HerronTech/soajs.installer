@@ -144,10 +144,6 @@ var components = {
 									"value": gConfig.sitePrefix + "." + gConfig.masterDomain
 								},
 								{
-									"name": "SOAJS_NX_PORTAL_DOMAIN",
-									"value": gConfig.portalPrefix + "." + gConfig.masterDomain
-								},
-								{
 									"name": "SOAJS_NX_CONTROLLER_NB",
 									"value": "" + gConfig.kubernetes.replicas
 								},
@@ -201,31 +197,6 @@ var components = {
 		}
 	}
 };
-
-if (gConfig.customUISrc.repo && gConfig.customUISrc.owner) {
-	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_REPO", "value": gConfig.customUISrc.repo});
-	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_OWNER", "value": gConfig.customUISrc.owner});
-
-	if(gConfig.customUISrc.branch){
-		components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_BRANCH", "value": gConfig.customUISrc.branch});
-	}
-}
-
-if(gConfig.customUISrc.provider){
-	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_PROVIDER", "value": gConfig.customUISrc.provider});
-}
-
-if(gConfig.customUISrc.domain){
-	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_DOMAIN", "value": gConfig.customUISrc.domain});
-}
-
-if (gConfig.customUISrc.token) {
-	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_TOKEN", "value": gConfig.customUISrc.token});
-}
-
-if (gConfig.customUISrc.path) {
-	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_PATH", "value": gConfig.customUISrc.path});
-}
 
 if (gConfig.nginx.ssl) {
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_API_HTTPS", "value": "1"});
