@@ -19,12 +19,12 @@ var routes = {
         if(platform === 'linux'){
             osName = 'linux';
             data.manual = {
-                "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-linux.sh <%Your_Domain%>"),
+                "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-linux.sh"),
                 "t": "sh"
             };
             data.docker = {
                 local: {
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh <%Your_Domain%>"),
+                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
                     "t": "sh"
                 },
                 remote:{
@@ -35,11 +35,11 @@ var routes = {
 
             data.kubernetes = {
                 local: {
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh <%Your_Domain%>"),
+                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
                     "l": "sh"
                 },
                 remote: {
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh <%Your_Domain%>"),
+                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
                     "l": "sh"
                 }
             };
@@ -47,7 +47,7 @@ var routes = {
         else if(platform === 'darwin'){
             osName = 'mac';
             data.manual = {
-                "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-mac.sh <%Your_Domain%>"),
+                "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-mac.sh"),
                 "t": "sh"
             };
 
@@ -57,18 +57,18 @@ var routes = {
                     "t": "link"
                 },
                 remote:{
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh <%Your_Domain%>"),
+                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
                     "t": "sh"
                 }
             };
 
             data.kubernetes = {
                 local: {
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-mac.sh <%Your_Domain%>"),
+                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-mac.sh"),
                     "l": "sh"
                 },
                 remote: {
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh <%Your_Domain%>"),
+                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
                     "l": "sh"
                 }
             };

@@ -234,14 +234,6 @@ module.exports = {
 							"containerHost": {"type": "string", "required": false},
 							"deployDockerNodes": {"type": "array", "required": false, "items": {"type": "string"}},
 
-                            "gitSource": {"type": "string", "required": false, "enum": ['github','bitbucket']},
-                            "gitProvider": {"type": "string", "required": false},
-                            "gitOwner": {"type": "string", "required": false},
-                            "gitRepo": {"type": "string", "required": false},
-                            "gitBranch": {"type": "string", "required": false},
-                            "gitToken": {"type": "string", "required": false},
-                            "gitPath": {"type": "string", "required": false},
-
                             "soajsImagePrefix": {"type": "string", "required": false},
                             "nginxImagePrefix": {"type": "string", "required": false},
 							

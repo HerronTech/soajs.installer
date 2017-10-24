@@ -16,7 +16,6 @@ if(!process.env.MONGO_EXT || process.env.MONGO_EXT === 'false'){
 }
 
 var mongo = new soajs.mongo(profile);
-var fs= require("fs");
 
 mongo.dropDatabase(function () {
 	lib.addEnvs(function () {
