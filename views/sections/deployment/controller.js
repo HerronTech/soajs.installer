@@ -244,7 +244,14 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				//if remote docker save certs files
 				if ($scope.deployment.deployDriver.indexOf("remote") !== -1) {
 					$scope.deployment.certsRequired = true;
+					//get certificate information
 					$scope.deployment.certificates = {};
+					//CA certificate
+					$scope.deployment.certificates.caCertificate = (response && response.certificates && response.certificates.caCertificate) ? response.certificates.caCertificate : "";
+					//Cert certificate
+					$scope.deployment.certificates.certCertificate = (response && response.certificates && response.certificates.certCertificate) ? response.certificates.certCertificate : "";
+					//CA certificate
+					$scope.deployment.certificates.keyCertificate = (response && response.certificates && response.certificates.keyCertificate) ? response.certificates.keyCertificate : "";
 				}
 				else if ($scope.deployment.deployDriver.indexOf("local") !== -1) {
 					$scope.deployment.certsRequired = false;
@@ -255,15 +262,6 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				$scope.deployment.certsRequired = false;
 				$scope.deployment.containerDir = (response && response.kubernetes && response.kubernetes.containerDir) ? response.kubernetes.containerDir : "/opt/soajs/deployer";
 				$scope.deployment.kubeContainerPort = (response && response.kubernetes && response.kubernetes.containerPort) ? response.kubernetes.containerPort : 8443;
-				
-				//get certificate information
-				$scope.deployment.certificates = {};
-				//CA certificate
-				$scope.deployment.certificates.caCertificate = (response && response.certificates && response.certificates.caCertificate) ? response.certificates.caCertificate : "";
-				//Cert certificate
-				$scope.deployment.certificates.certCertificate = (response && response.certificates && response.certificates.certCertificate) ? response.certificates.certCertificate : "";
-				//CA certificate
-				$scope.deployment.certificates.keyCertificate = (response && response.certificates && response.certificates.keyCertificate) ? response.certificates.keyCertificate : "";
 				
 				//get readiness Probes information
 				$scope.deployment.readinessProbe = {};

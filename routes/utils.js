@@ -451,13 +451,16 @@ module.exports = {
                     envs['SOAJS_MONGO_RSNAME'] = body.clusters.replicaSet;
                 }
                 
-                if (body.deployment.certificates) {
-                	body.deployment.docker.certificatesFolder = body.deployment.certificates.caCertificate.split("/");
-	                body.deployment.docker.certificatesFolder.pop();
-	                body.deployment.docker.certificatesFolder = body.deployment.docker.certificatesFolder.join("/");
-                    envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder + "/";
+                if (body.deployment.certificates && body.deployment.certificates.caCertificate
+	                && body.deployment.certificates.certCertificate && body.deployment.certificates.keyCertificate) {
+                	
+                	body.deployment.docker.caCertificate = body.deployment.certificates.caCertificate;
+                	body.deployment.docker.certCertificate = body.deployment.certificates.certCertificate;
+                	body.deployment.docker.keyCertificate = body.deployment.certificates.keyCertificate;
+                    envs["SOAJS_DOCKER_CA_CERTS_PATH"] = body.deployment.docker.caCertificate;
+                    envs["SOAJS_DOCKER_CERT_CERTS_PATH"] = body.deployment.docker.certCertificate;
+                    envs["SOAJS_DOCKER_KEY_CERTS_PATH"] = body.deployment.docker.keyCertificate;
                 }
-
 	            
                 //add readiness probes environment variables
                if(body.deployment.readinessProbe){
@@ -549,13 +552,6 @@ module.exports = {
                 if (body.clusters.replicaSet) {
                     envs['SOAJS_MONGO_RSNAME'] = body.clusters.replicaSet;
                 }
-	
-	            if (body.deployment.certificates) {
-		            body.deployment.docker.certificatesFolder = body.deployment.certificates.caCertificate.split("/");
-		            body.deployment.docker.certificatesFolder.pop();
-		            body.deployment.docker.certificatesFolder = body.deployment.docker.certificatesFolder.join("/");
-		            envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder + "/";
-	            }
                 //add readiness probes environment variables
                if(body.deployment.readinessProbe){
                    envs["KUBE_INITIAL_DELAY"] = body.deployment.readinessProbe.initialDelaySeconds;
@@ -797,12 +793,12 @@ module.exports = {
                     };
                 }
                 else {
-                    if (!body.deployment.docker.certsPath) {
+                    if (!body.deployment.certificates.caCertificate || !body.deployment.certificates.keyCertificate || !body.deployment.certificates.certCertificate ){
                         return cb(new Error('No certificates found for remote machine.'));
                     }
-                    deployerConfig.ca = fs.readFileSync(body.deployment.docker.certsPath + '/ca.pem');
-                    deployerConfig.cert = fs.readFileSync(body.deployment.docker.certsPath + '/cert.pem');
-                    deployerConfig.key = fs.readFileSync(body.deployment.docker.certsPath + '/key.pem');
+                    deployerConfig.ca = fs.readFileSync(body.deployment.certificates.caCertificate);
+                    deployerConfig.cert = fs.readFileSync(body.deployment.certificates.certCertificate);
+                    deployerConfig.key = fs.readFileSync(body.deployment.certificates.keyCertificate);
                 }
                 var deployer = new Docker(deployerConfig);
                 deployer.listContainers({}, function (error, containers) {
@@ -880,43 +876,54 @@ module.exports = {
 	            var defaultNamespace = body.deployment.namespaces.default;
 
 	            //get all services regardless of their namespace value
-                deployer.deployments.get({}, function (error, deploymentList) {
-                    if (error) return cb(error);
-
-                    async.map(deploymentList.items, function (oneService, mcb) {
-
-                    	var serviceName = oneService.metadata.name, namespace;
-	                    if (body.deployment.namespaces.perService) {
-		                    namespace = defaultNamespace + '-' + oneService.metadata.labels['soajs.service.label'];
-	                    }
-                        else {
-                            namespace = defaultNamespace;
-                        }
-
-                        if (services.indexOf(serviceName) !== -1 && oneService.metadata.namespace === namespace) {
-                            return mcb(null, (oneService.status.availableReplicas === body.deployment.dockerReplica));
-                        }
-                        else return mcb(null, null);
-                    }, function (error, response) {
-                        if (error) return cb(error);
-
-                        var bar = 0;
-                        for (var i = response.length - 1; i >= 0; i--) {
-                            if (response[i]) {
-                                bar++;
-                            }
-                        }
-
-                        //the only thing remaining now in the array are 1s and 0s which represent the repos installed
-                        return cb(null, {
-                            deployType: 'kubernetes',
-                            download: {
-                                count: bar,
-                                total: services.length
-                            }
-                        });
-                    });
-                });
+	            async.parallel({
+		            deployments: function (callback) {
+			            deployer.deployments.get({}, callback);
+		            },
+		            daemonsets: function (callback) {
+			            deployer.daemonsets.get({}, callback);
+		            }
+	            }, function (err, results) {
+		            var items = results.deployments.items.concat(results.daemonsets.items);
+		            async.map(items, function (oneService, mcb) {
+			            var serviceName = oneService.metadata.name, namespace;
+			
+			            if (body.deployment.namespaces.perService) {
+				            namespace = defaultNamespace + '-' + oneService.metadata.labels['soajs.service.label'];
+			            }
+			            else {
+				            namespace = defaultNamespace;
+			            }
+			           
+			            if (services.indexOf(serviceName) !== -1 && oneService.metadata.namespace === namespace) {
+				            if (oneService.metadata.labels["soajs.service.mode"] === "daemonset"){
+					            return mcb(null, (oneService.status.numberReady === 1));
+				            }
+				            else {
+					            return mcb(null, (oneService.status.availableReplicas === body.deployment.dockerReplica));
+				            }
+			            }
+			            else return mcb(null, null);
+		            }, function (error, response) {
+			            if (error) return cb(error);
+			
+			            var bar = 0;
+			            for (var i = response.length - 1; i >= 0; i--) {
+				            if (response[i]) {
+					            bar++;
+				            }
+			            }
+			
+			            //the only thing remaining now in the array are 1s and 0s which represent the repos installed
+			            return cb(null, {
+				            deployType: 'kubernetes',
+				            download: {
+					            count: bar,
+					            total: services.length
+				            }
+			            });
+		            });
+	            });
             }
         }
 

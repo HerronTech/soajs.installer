@@ -18,7 +18,6 @@ if(!process.env.MONGO_EXT || process.env.MONGO_EXT === 'false'){
 
 var mongo = new soajs.mongo(profile2);
 var utilLog = require('util');
-var dbConfiguration = require('../../../data/startup/environments/dashboard');
 
 var lib = {
 
@@ -81,12 +80,12 @@ var lib = {
             return cb(null, new Docker({socketPath: config.docker.socketPath}));
         }
         else {
-        	if(!config.docker.certsPath){
+	        if(!config.docker.caCertificate || !config.docker.caCertificate || !config.docker.caCertificate){
         		return cb(new Error('No certificates found for remote machine.'));
 	        }
-            deployerConfig.ca = fs.readFileSync(config.docker.certsPath + '/ca.pem');
-            deployerConfig.cert = fs.readFileSync(config.docker.certsPath + '/cert.pem');
-            deployerConfig.key = fs.readFileSync(config.docker.certsPath + '/key.pem');
+            deployerConfig.ca = fs.readFileSync(config.docker.caCertificate);
+            deployerConfig.cert = fs.readFileSync(config.docker.certCertificate);
+            deployerConfig.key = fs.readFileSync(config.docker.keyCertificate);
 
             return cb(null, new Docker(deployerConfig));
         }

@@ -53,7 +53,9 @@ var lib= {
 		"replicas": parseInt(process.env.SOAJS_DOCKER_REPLICA) || 1,
 		"machineIP": process.env.CONTAINER_HOST || "127.0.0.1",
 		"machinePort": parseInt(process.env.CONTAINER_PORT) || 2376,
-		"certsPath": process.env.SOAJS_DOCKER_CERTS_PATH || process.env.HOME + '/.docker',
+		"caCertificate": process.env.SOAJS_DOCKER_CA_CERTS_PATH,
+		"certCertificate": process.env.SOAJS_DOCKER_CERT_CERTS_PATH,
+		"keyCertificate": process.env.SOAJS_DOCKER_KEY_CERTS_PATH,
 		"socketPath": process.env.SOAJS_DOCKER_SOCKET || '/var/run/docker.sock',
 		"network": process.env.DOCKER_NETWORK ||  'soajsnet',
 		"options": {

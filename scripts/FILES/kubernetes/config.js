@@ -66,7 +66,6 @@ var lib  = {
 		"replicas": parseInt(process.env.SOAJS_DOCKER_REPLICA) || 1,
 		"machineIP": process.env.CONTAINER_HOST || "127.0.0.1",
 		"machinePort": parseInt(process.env.CONTAINER_PORT) || 8443,
-		"certsPath": process.env.SOAJS_DOCKER_CERTS_PATH || process.env.HOME + '/.minikube',
 		"network": process.env.DOCKER_NETWORK ||  'soajsnet',
 		"swarmConfig": {
 			"tokens": {}

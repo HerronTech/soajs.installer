@@ -9,8 +9,16 @@ var utilLog = require('util');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; //to avoid self signed certificates error
 
 utilLog.log ('SOAJS High Availability Deployer');
-utilLog.log ('Current configuration: Machine IP/URL: ' + config.docker.machineIP + ' | Certificates Local Path: ' + config.docker.certsPath);
-utilLog.log ('You can change this configuration by setting CONTAINER_HOST & SOAJS_DOCKER_CERTS_PATH environment variables\n');
+utilLog.log ('Current configuration: Machine IP/URL: ' + config.docker.machineIP);
+utilLog.log ('You can change this configuration by setting CONTAINER_HOST');
+if (config.docker.caCertificate && config.docker.certCertificate && config.docker.keyCertificate){
+	utilLog.log ('CA Certificate Local Path: ' + config.docker.caCertificate);
+	utilLog.log ('Cert Certificate Local Path: ' + config.docker.certCertificate);
+	utilLog.log ('Key Certificate Local Path: ' + config.docker.keyCertificate);
+	utilLog.log ('You can change this configuration by setting SOAJS_DOCKER_CA_CERTS_PATH, SOAJS_DOCKER_CERT_CERTS_PATH,' +
+		' & SOAJS_DOCKER_KEY_CERTS_PATH environment variables\n');
+}
+
 
 lib.getDeployer(config.docker, function (error, deployer) {
 	if(error){ throw new Error(error); }

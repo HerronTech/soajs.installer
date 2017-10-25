@@ -69,12 +69,10 @@ module.exports = {
 			"networkName": "soajsnet",
 			"dockerSocket": "/var/run/docker.sock",
 			"containerPort": 2376,
-			"dockerInternalPort": 2377,
-			"certificatesFolder": process.env.HOME + '/.docker'
+			"dockerInternalPort": 2377
 		},
 		"kubernetes":{
-			"containerPort": 8443,
-			"certificatesFolder": process.env.HOME + '/.kubernetes'
+			"containerPort": 8443
 		}
 	}
 };
