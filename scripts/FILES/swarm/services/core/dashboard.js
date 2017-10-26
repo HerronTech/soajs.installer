@@ -30,11 +30,6 @@ var config = {
 		'SOAJS_PROFILE=/opt/soajs/FILES/profiles/profile.js',
 		'SOAJS_SRV_AUTOREGISTERHOST=true',
 		'SOAJS_MONGO_PREFIX=' + gConfig.mongo.prefix,
-		'SOAJS_GIT_OWNER=' + src.owner,
-		'SOAJS_GIT_REPO=' + src.repo,
-		'SOAJS_GIT_BRANCH=' + src.branch,
-        'SOAJS_GIT_PROVIDER=' + gConfig.git.provider,
-        'SOAJS_GIT_DOMAIN=' + gConfig.git.domain,
         'SOAJS_DEPLOY_ACC=' + gConfig.deploy_acc,
 
 		'NODE_TLS_REJECT_UNAUTHORIZED=0' //TODO: check whether this should be kept for testing purposes
