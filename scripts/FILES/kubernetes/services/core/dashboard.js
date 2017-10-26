@@ -140,6 +140,26 @@ var components = {
                                     "value": "true"
                                 },
                                 {
+	                                "name": "SOAJS_GIT_OWNER",
+	                                "value": "soajs"
+                                },
+	                            {
+		                            "name": "SOAJS_GIT_BRANCH",
+		                            "value": gConfig.git.branch
+	                            },
+	                            {
+		                            "name": "SOAJS_GIT_REPO",
+		                            "value": "soajs.dashboard"
+	                            },
+	                            {
+		                            "name": "SOAJS_GIT_PROVIDER",
+		                            "value": gConfig.git.provider
+	                            },
+	                            {
+		                            "name": "SOAJS_GIT_DOMAIN",
+		                            "value": gConfig.git.domain
+	                            },
+	                            {
                                     "name": "SOAJS_DEPLOY_ACC",
                                     "value": gConfig.deploy_acc
                                 },
