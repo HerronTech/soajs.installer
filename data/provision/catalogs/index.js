@@ -171,6 +171,35 @@ var catalogs = [
                         "type": "computed",
                         "value": "$SOAJS_GC_VERSION"
                     },
+	                "SOAJS_GIT_PROVIDER": {
+		                "type": "computed",
+		                "value": "$SOAJS_GIT_PROVIDER"
+	                },
+	                "SOAJS_GIT_DOMAIN": {
+		                "type": "computed",
+		                "value": "$SOAJS_GIT_DOMAIN"
+	                },
+                    "SOAJS_GIT_OWNER": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_OWNER"
+                    },
+                    "SOAJS_GIT_BRANCH": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_BRANCH"
+                    },
+                    "SOAJS_GIT_COMMIT": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_COMMIT"
+                    },
+                    "SOAJS_GIT_REPO": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_REPO"
+                    },
+                    "SOAJS_GIT_TOKEN": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_TOKEN"
+                    },
+
                     "SOAJS_DEPLOY_HA": {
                         "type": "computed",
                         "value": "$SOAJS_DEPLOY_HA"
