@@ -7,6 +7,7 @@ var dashboard = {
     "apiPrefix": "%api%",
     "locked": true,
     "port": 80,
+	"protocol": "http",
     "profile": "%wrkDir%/soajs/FILES/profiles/profile.js",
     "deployer": {
 	    "type": "%deployType%",

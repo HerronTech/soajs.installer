@@ -395,22 +395,60 @@ var lib = {
             }
             setTimeout(function () {
                 const dataFolder = process.env.SOAJS_DATA_FOLDER;
+                var fields;
                 //require the default nginx and service catalog recipes
                 var catalogDefaulEntries = require(dataFolder + "catalogs/index.js");
                 var dashboardCatalogEntries = [catalogDefaulEntries[0], catalogDefaulEntries[3]];
                 //update the catalog recipes to include data used for dashboard environment deployment
                 dashboardCatalogEntries[0] = lib.updateServiceRecipe(dashboardCatalogEntries[0]);
                 dashboardCatalogEntries[1] = lib.updateNginxRecipe(dashboardCatalogEntries[1]);
-                //add catalogs to the database
-                mongo.insert("catalogs", dashboardCatalogEntries, true, (error, catalogEntries) => {
-                    if(error){
-                        return cb(error);
-                    }
-	                utilLog.log("Dashboard Catalog Recipes updated.");
-                    process.env.DASH_SRV_ID = catalogEntries[0]._id.toString();
-                    process.env.DASH_NGINX_ID = catalogEntries[1]._id.toString();
-                    return cb();
-                });
+	            if(process.env.SOAJS_NX_SSL === 'true'){
+		            fields = {
+			            "$set": {
+				            protocol: "https",
+				            port: dashboardCatalogEntries[1].recipe.deployOptions.ports[1].published
+			            }
+		            };
+	            }
+	            else {
+		            fields = {
+			            "$set": {
+				            port: dashboardCatalogEntries[1].recipe.deployOptions.ports[0].published
+			            }
+		            };
+	            }
+	            var options = {
+		            "safe": true,
+		            "upsert": false,
+		            "multi": false
+	            };
+	            var condition = {
+		            "code": "DASHBOARD"
+	            };
+	            async.parallel({
+		            insertCatalogs: function (callback) {
+			            //add catalogs to the database
+			            mongo.insert("catalogs", dashboardCatalogEntries, true, (error, catalogEntries) => {
+				            if(error){
+					            return callback(error);
+				            }
+				            utilLog.log("Dashboard Catalog Recipes updated.");
+				            process.env.DASH_SRV_ID = catalogEntries[0]._id.toString();
+				            process.env.DASH_NGINX_ID = catalogEntries[1]._id.toString();
+				            return callback();
+			            });
+		            },
+		            updateDashboard: function (callback) {
+			            //update Dashboard Environment
+			            mongo.update("environment", condition, fields, options, (error) => {
+				            if(error){
+					            return callback(error);
+				            }
+				            utilLog.log("Dashboard Environment updated.");
+				            return callback();
+			            });
+		            }
+	            }, cb);
             }, 5000);
         });
     },
