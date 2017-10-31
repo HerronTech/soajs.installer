@@ -187,7 +187,7 @@
 								    <td class="form-select">
 									    <div id="containerPort-wrapper">
 										    <label>Docker Container Port Number</label>
-										    <input type="number" ng-required="false" class="form-control" name="containerPort" ng-model="deployment.containerPort"
+										    <input type="number" ng-required="true" class="form-control" name="containerPort" ng-model="deployment.containerPort"
 										           id="containerPort" placeholder="deployment.containerPort" min="1"/>
 										    <div class="fieldMsg hint">Specify the docker container port number.</div>
 									    </div>
@@ -323,7 +323,7 @@
 							    <td class="form-select">
 								    <div id="kubeContainerPort-wrapper">
 									    <label>Kubernetes Container Port Number</label>
-									    <input type="number" ng-required="false" class="form-control" name="kubeContainerPort" ng-model="deployment.kubeContainerPort"
+									    <input type="number" ng-required="true" class="form-control" name="kubeContainerPort" ng-model="deployment.kubeContainerPort"
 									           id="kubeContainerPort" placeholder="deployment.kubeContainerPort" min="1"/>
 									    <div class="fieldMsg hint">Specify the kubernetes container port number.</div>
 								    </div>

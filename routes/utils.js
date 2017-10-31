@@ -221,6 +221,10 @@ module.exports = {
         envData = envData.replace(/%api%/g, body.gi.api);
         if(body.deployment.deployType === 'manual'){
             envData = envData.replace(/%wrkDir%/g, body.gi.wrkDir);
+	        envData = envData.replace(/"apiPort": "%dockerLocalPort%",/g,'');
+	        envData = envData.replace(/"apiPort": "%dockerRemotePort%",/g,'');
+	        envData = envData.replace(/"apiPort": "%kubernetesLocalPort%",/g,'');
+	        envData = envData.replace(/"apiPort": "%kubernetesRemotePort%",/g,'');
         }
         else{
             envData = envData.replace(/%wrkDir%/g, "/opt");
@@ -241,11 +245,36 @@ module.exports = {
             envData = envData.replace(/%nginxDeployType%/g, body.deployment.nginxDeployType);
             envData = envData.replace(/"%namespace%"/g, JSON.stringify (body.deployment.namespaces, null, 2));
             envData = envData.replace(/%token%/g, body.deployment.authentication.accessToken);
+	        if (body.deployment.deployDriver.split('.')[2] === 'local'){
+		        envData = envData.replace(/"apiPort": "%dockerLocalPort%",/g, '');
+		        envData = envData.replace(/"apiPort": "%dockerRemotePort%",/g,'');
+		        envData = envData.replace(/"%kubernetesLocalPort%"/g, body.deployment.kubernetes.containerPort);
+		        envData = envData.replace(/"apiPort": "%kubernetesRemotePort%",/g,'');
+	        }
+	        else {
+		        envData = envData.replace(/"apiPort": "%dockerLocalPort%",/g, '');
+		        envData = envData.replace(/"apiPort": "%dockerRemotePort%",/g,'');
+		        envData = envData.replace(/"apiPort": "%kubernetesLocalPort%",/g, '');
+		        envData = envData.replace(/"%kubernetesRemotePort%"/g, body.deployment.kubernetes.containerPort);
+	        }
         }
         else {
             envData = envData.replace(/%nginxDeployType%/g, '');
             envData = envData.replace(/"%namespace%"/g, JSON.stringify ({}, null, 2));
             envData = envData.replace(/%token%/g, '');
+	       
+	        if (body.deployment.deployDriver.split('.')[2] === 'local'){
+		        envData = envData.replace(/"%dockerLocalPort%"/g, body.deployment.docker.containerPort);
+		        envData = envData.replace(/"apiPort": "%dockerRemotePort%",/g,'');
+		        envData = envData.replace(/"apiPort": "%kubernetesLocalPort%",/g,'');
+		        envData = envData.replace(/"apiPort": "%kubernetesRemotePort%",/g,'');
+	        }
+	        else {
+		        envData = envData.replace(/"apiPort": "%dockerLocalPort%",/g, '');
+		        envData = envData.replace(/"%dockerRemotePort%"/g, body.deployment.docker.containerPort);
+		        envData = envData.replace(/"apiPort": "%kubernetesLocalPort%",/g,'');
+		        envData = envData.replace(/"apiPort": "%kubernetesRemotePort%",/g,'');
+	        }
         }
         fs.writeFile(folder + "environments/dashboard.js", envData, "utf8");
 

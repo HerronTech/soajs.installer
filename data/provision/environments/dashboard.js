@@ -15,14 +15,17 @@ var dashboard = {
 	    "container": {
 		    "docker": {
 			    "local": {
+				    "apiPort": "%dockerLocalPort%",
 				    "socketPath": "/var/run/docker.sock"
 			    },
 			    "remote": {
+				    "apiPort": "%dockerRemotePort%",
 				    "nodes": "%deployDockerNodes%"
 			    }
 		    },
 		    "kubernetes":{
 			    "local":{
+				    "apiPort": "%kubernetesLocalPort%",
 			        "nginxDeployType": "%nginxDeployType%",
 				    "namespace": "%namespace%",
                     "auth": {
@@ -30,6 +33,7 @@ var dashboard = {
                     }
 			    },
 			    "remote":{
+				    "apiPort": "%kubernetesRemotePort%",
                     "nginxDeployType": "%nginxDeployType%",
 				    "namespace": "%namespace%",
                     "auth": {
