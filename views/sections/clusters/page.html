@@ -13,7 +13,7 @@
 			<legend>MongoDB</legend>
 			<br /><br />
 			<accordion close-others="false">
-				<accordion-group is-open="local">
+				<accordion-group is-open="local" ng-show="containerDeployment">
 					<accordion-heading>
 						<span ng-click="doMongoExt(false)">
 							<input type="radio" ng-checked="local" value="true" name="mongo_cluster"/>&nbsp;
