@@ -238,13 +238,13 @@ function install(cb) {
 				cloneInstallRepo("soajs.urac.driver", false, mcb);
 			},
 			function (mcb) {
-				cloneInstallRepo("soajs.core.drivers", 'master', false, mcb);
+				cloneInstallRepo("soajs.core.drivers", false, mcb);
 			},
 			function (mcb) {
-				cloneInstallRepo("soajs.core.libs", 'develop', false, mcb);
+				cloneInstallRepo("soajs.core.libs", false, mcb);
 			},
 			function (mcb) {
-				cloneInstallRepo("soajs.core.modules", 'develop', false, mcb);
+				cloneInstallRepo("soajs.core.modules", false, mcb);
 			},
 			function (mcb) {
 				cloneInstallRepo("soajs", true, mcb);

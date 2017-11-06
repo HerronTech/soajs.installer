@@ -23,7 +23,15 @@ var techop = {
 			"keys": [
 				{
 					"key": "f485d5dc9ac1d0da8962e4121b3e58a9",
-					"extKeys": [],
+					"extKeys": [
+						{
+							"extKey": "%extKey3%",
+							"device": null,
+							"geo": null,
+							"env": "DASHBOARD",
+							"dashboardAccess": true
+						}
+					],
 					"config": {
 						"dashboard": {
 							"oauth": {

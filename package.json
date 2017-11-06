@@ -22,11 +22,11 @@
     "node": "*"
   },
   "dependencies": {
-    "async": "*",
+    "async": "2.1.4",
     "clone": "*",
-    "dockerode": "*",
-    "gridfs-stream": "*",
-    "kubernetes-client": "aff04/kubernetes-client.git",
+    "dockerode": "2.5.3",
+    "gridfs-stream": "1.1.1",
+    "kubernetes-client": "soajs/kubernetes-client.git",
     "mkdirp": "*",
     "ncp": "*",
     "npm": "*",

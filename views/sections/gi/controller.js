@@ -29,7 +29,7 @@ giApp.controller('giCtrl', ['$scope', 'ngDataApi', function($scope, ngDataApi) {
 			}
 		};
 		
-		ngDataApi.post($scope, options, function(erro){
+		ngDataApi.post($scope, options, function(error){
 			if(error){
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
 				return false;
