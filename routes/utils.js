@@ -212,6 +212,10 @@ module.exports = {
         if (body.deployment.deployType === 'manual' || body.deployment.deployDriver.indexOf("local") !== -1) {
             body.deployment.deployDockerNodes = [];
         }
+        
+        if(body.deployment.deployType === 'container'){
+        	body.gi.wrkDir = "/opt";
+        }
 
         //modify environments file
         var envData = fs.readFileSync(folder + "environments/dashboard.js", "utf8");
@@ -279,9 +283,14 @@ module.exports = {
         fs.writeFile(folder + "environments/dashboard.js", envData, "utf8");
 
         //modify tenants file
-	    //todo: make the below variables dynamic
 	    let protocol = "http";
-	    let port = "30080";
+	    let port = body.deployment.nginxPort;
+	    
+	    if(body.deployment.nginxSsl){
+	    	protocol = "https";
+	    	port = body.deployment.nginxSecurePort;
+	    }
+	    
         var tntData = fs.readFileSync(folder + "tenants/owner.js", "utf8");
         tntData = tntData.replace(/%protocol%/g, protocol);
         tntData = tntData.replace(/%port%/g, port);
