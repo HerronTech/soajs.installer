@@ -181,9 +181,27 @@ var routes = {
                     req.soajs.inputmaskData.security.extKey2 = opts2.extKey;
 
                     utils.updateCustomData(req, res, req.soajs.inputmaskData.security, "security", function () {
-                        return res.json(req.soajs.buildResponse(null, {
-                            "extKey": req.soajs.inputmaskData.security.extKey1
-                        }));
+	                    
+	                    //generate extKey for Techop
+	                    var opts3 = {
+		                    "tenantId": defaultTenant._id,
+		                    "secret": req.soajs.inputmaskData.security.key,
+		                    "package": defaultTenant.applications[2].package,
+		                    "key": defaultTenant.applications[2].key
+	                    };
+	                    utils.generateExtKeys(opts3, function (error) {
+		                    if (error) {
+			                    return res.json(req.soajs.buildResponse({"code": 400, "msg": error.message}));
+		                    }
+		
+		                    req.soajs.inputmaskData.security.extKey3 = opts3.extKey;
+		
+		                    utils.updateCustomData(req, res, req.soajs.inputmaskData.security, "security", function () {
+			                    return res.json(req.soajs.buildResponse(null, {
+				                    "extKey": req.soajs.inputmaskData.security.extKey1
+			                    }));
+		                    });
+	                    });
                     });
                 });
             });

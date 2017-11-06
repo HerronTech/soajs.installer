@@ -8,6 +8,10 @@ module.exports = {
 		{
 			"package": "DSBRD_OWNER",
 			"key": "9ccfb3cdaf5f61cf0cff5c78215b2292"
+		},
+		{
+			"package": "DSBRD_TECOP",
+			"key": "f485d5dc9ac1d0da8962e4121b3e58a9"
 		}
 	]
 };

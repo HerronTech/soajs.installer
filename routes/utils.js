@@ -309,8 +309,7 @@ module.exports = {
 	    tntData = tntData.replace(/%site%/g, body.gi.site);
 	    tntData = tntData.replace(/%domain%/g, body.gi.domain);
 	    tntData = tntData.replace(/%wrkDir%/g, body.gi.wrkDir);
-	    tntData = tntData.replace(/%extKey1%/g, body.security.extKey1);
-	    tntData = tntData.replace(/%extKey2%/g, body.security.extKey2);
+	    tntData = tntData.replace(/%extKey3%/g, body.security.extKey3);
 	    fs.writeFile(folder + "tenants/techop.js", tntData, "utf8");
 
         //remove unneeded file
