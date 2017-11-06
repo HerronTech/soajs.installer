@@ -7,18 +7,66 @@ mkdir -p ${HOME}/certs
 CERTS_PATH=${HOME}/certs
 
 #Need machine IP address or domain name pointing to it in order to generate certificates properly
-DOMAIN_NAME=${1}
-if [ -z ${DOMAIN_NAME} ]; then
-    echo "You need to specify the domain name as first argument, example: ./init.sh soajs.org"
-    echo "Exiting ..."
-    exit 1
-fi
+INIT_SWARM="false"
+DOMAIN_NAME=""
+CERTS_PASSWORD=""
+SWARM_ADVERTISE_ADDR=""
+SWARM_INTERNAL_PORT="2377"
+SWARM_NETWORK_NAME="soajsnet"
 
 #Need to be run as root in order to install Docker
 if [ $(whoami) != 'root' ]; then
     echo "Please run this script as root, exiting ..."
     exit 1
 fi
+
+function generatePass(){
+    if [ -z ${CERTS_PASSWORD} ]; then
+        CERTS_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+        echo "Generated certs password: ${CERTS_PASSWORD}"
+    fi
+}
+
+function checkRequiredFields(){
+    if [ -z ${DOMAIN_NAME} ]; then
+        echo "You need to specify the machine domain name in order to generate certificates properly"
+        echo "Using flag: -d mydomain.com     Exiting ..."
+        exit 1
+    fi
+
+    if [ -z ${SWARM_ADVERTISE_ADDR} ]; then
+        echo "You need to specify the swarm node advertise IP address or interface to use using flag: -a"
+        echo "Exiting ..."
+        exit 1
+    fi
+}
+
+function printHelp(){
+    echo
+    echo "Usage:"
+    echo " > -h  Print help"
+    echo " > -a  [required] Set the node advertise IP address"
+    echo " > -d  [required] Set the domain name of the machine in order to generate certificates"
+    echo " > -p  [optional] Set a password for the certificates. Default: auto-generated"
+    echo " > -n  [optional] Set the name of the swarm overlay network. Default: soajsnet"
+    echo " > -i  [optional] Set a custom cluster management communications port. More information at: https://docs.docker.com/engine/swarm/swarm-tutorial/#open-protocols-and-ports-between-the-hosts"
+    echo " > -s  [optional] Initialize a new swarm on the node. Only use when preparing the first master node. Default: false"
+    echo
+
+    exit
+}
+
+function printConfig(){
+    echo
+    echo "Your configuration:"
+    echo " > Initialize a new swarm: ${INIT_SWARM}"
+    echo " > Domain name: ${DOMAIN_NAME}"
+    echo " > Node advertise address: ${SWARM_ADVERTISE_ADDR}"
+    echo " > Node internal port: ${SWARM_INTERNAL_PORT}"
+    echo " > Swarm overlay network name: ${SWARM_NETWORK_NAME}"
+    echo " > Certificates password: ${CERTS_PASSWORD}"
+    echo
+}
 
 function installDocker(){
     local IS_DOCKER_INSTALLED=$(command -v docker)
@@ -79,7 +127,7 @@ function checkIfExists() {
 
 function generateCertificates(){
     #Reference: https://docs.docker.com/engine/security/https/
-    local PASSWORD='r7YxGGBhCfY6XYTdd4XGU2qv'
+    local PASSWORD=${CERTS_PASSWORD}
     local HOST_NAME=${DOMAIN_NAME}
 
     echo "Generating Docker TLS Certificates ..."
@@ -152,10 +200,53 @@ function reloadDocker(){
     dockerd --tlsverify --tlscacert=${CA_PATH} --tlscert=${SERVER_CERT_PATH} --tlskey=${SERVER_KEY_PATH} -H unix:///var/run/docker.sock -H=0.0.0.0:2376 &
 }
 
+function initSwarm(){
+    if [ ${INIT_SWARM} == "true" ]; then
+        echo "Initializing swarm ..."
+
+        sleep 5
+        docker swarm init --advertise-addr ${SWARM_ADVERTISE_ADDR}":"${SWARM_INTERNAL_PORT}
+
+        #Verify that docker is in swarm mode
+        while [ -z $(docker info --format {{.Swarm.NodeID}}) ]; do
+            echo "Waiting for swarm mode to become active ..."
+            sleep 1;
+        done
+
+        docker network create --driver overlay ${SWARM_NETWORK_NAME}
+    fi
+}
+
+while getopts :hp:n:i:a:d:s OPT; do
+    case $OPT in
+        h)
+            printHelp ;;
+        p)
+            CERTS_PASSWORD=$OPTARG ;;
+        n)
+            SWARM_NETWORK_NAME=$OPTARG ;;
+        i)
+            SWARM_INTERNAL_PORT=$OPTARG ;;
+        a)
+            SWARM_ADVERTISE_ADDR=${OPTARG} ;;
+        d)
+            DOMAIN_NAME=${OPTARG} ;;
+        s)
+            INIT_SWARM="true" ;;
+        \?)
+            echo "Wrong input!"
+            printHelp ;;
+    esac
+done
+
 #Start here########
+checkRequiredFields
+generatePass
+printConfig
 installTools
 installDocker
 checkCertificates
 enableCLIAccess
 reloadDocker
+initSwarm
 ###################
