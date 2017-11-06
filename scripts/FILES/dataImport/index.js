@@ -86,14 +86,28 @@ const lib = {
 	 Tenants
 	 */
 	"addTenants": function (cb) {
-		var record = require(dataFolder + "tenants/owner.js");
-
-		record._id = mongo.ObjectId(record._id);
-		record.applications.forEach(function (oneApp) {
-			oneApp.appId = mongo.ObjectId(oneApp.appId);
-		});
-
-		mongo.insert("tenants", record, cb);
+		async.series([
+			function(mCb){
+				var record = require(dataFolder + "tenants/owner.js");
+				
+				record._id = mongo.ObjectId(record._id);
+				record.applications.forEach(function (oneApp) {
+					oneApp.appId = mongo.ObjectId(oneApp.appId);
+				});
+				
+				mongo.insert("tenants", record, mCb);
+			},
+			function(mCb){
+				var record = require(dataFolder + "tenants/techop.js");
+				
+				record._id = mongo.ObjectId(record._id);
+				record.applications.forEach(function (oneApp) {
+					oneApp.appId = mongo.ObjectId(oneApp.appId);
+				});
+				
+				mongo.insert("tenants", record, mCb);
+			},
+		], cb);
 	},
 
 	/*

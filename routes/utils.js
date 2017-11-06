@@ -279,7 +279,12 @@ module.exports = {
         fs.writeFile(folder + "environments/dashboard.js", envData, "utf8");
 
         //modify tenants file
+	    //todo: make the below variables dynamic
+	    let protocol = "http";
+	    let port = "30080";
         var tntData = fs.readFileSync(folder + "tenants/owner.js", "utf8");
+        tntData = tntData.replace(/%protocol%/g, protocol);
+        tntData = tntData.replace(/%port%/g, port);
         tntData = tntData.replace(/%email%/g, body.gi.email);
         tntData = tntData.replace(/%site%/g, body.gi.site);
         tntData = tntData.replace(/%domain%/g, body.gi.domain);
@@ -287,6 +292,17 @@ module.exports = {
         tntData = tntData.replace(/%extKey1%/g, body.security.extKey1);
         tntData = tntData.replace(/%extKey2%/g, body.security.extKey2);
         fs.writeFile(folder + "tenants/owner.js", tntData, "utf8");
+	
+	    var tntData = fs.readFileSync(folder + "tenants/techop.js", "utf8");
+	    tntData = tntData.replace(/%protocol%/g, protocol);
+	    tntData = tntData.replace(/%port%/g, port);
+	    tntData = tntData.replace(/%email%/g, body.gi.email);
+	    tntData = tntData.replace(/%site%/g, body.gi.site);
+	    tntData = tntData.replace(/%domain%/g, body.gi.domain);
+	    tntData = tntData.replace(/%wrkDir%/g, body.gi.wrkDir);
+	    tntData = tntData.replace(/%extKey1%/g, body.security.extKey1);
+	    tntData = tntData.replace(/%extKey2%/g, body.security.extKey2);
+	    fs.writeFile(folder + "tenants/techop.js", tntData, "utf8");
 
         //remove unneeded file
         fs.unlinkSync(folder + "tenants/info.js");
