@@ -659,18 +659,20 @@ module.exports = {
 
         function generateResponse(type) {
             fs.chmodSync(path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh"), "0755");
-
+	        var protocol = body.deployment.nginxSsl ? "https" : "http";
+	        var port = body.deployment.nginxSsl ? body.deployment.nginxSecurePort : body.deployment.nginxPort;
+	        
             var obj = {
                 "hosts": {
                     "api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
                     "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
                 },
-                "ui": "http://" + body.gi.site + "." + body.gi.domain,
+                "ui": protocol + "://" + body.gi.site + "." + body.gi.domain,
                 "cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
             };
 
-            if(body.deployment.nginxPort !== 80){
-	        	obj["ui"] = "http://" + body.gi.site + "." + body.gi.domain + ":" + body.deployment.nginxPort;
+            if(port !== 80){
+	        	obj["ui"] = protocol + "://" + body.gi.site + "." + body.gi.domain + ":" + port;
 	        }
 
             if(type === 'kubernetes'){
@@ -679,7 +681,7 @@ module.exports = {
                         "api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
                         "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
                     },
-                    "ui": "http://" + body.gi.site + "." + body.gi.domain + ":" + body.deployment.nginxPort,
+                    "ui": protocol + "://" + body.gi.site + "." + body.gi.domain + ":" + port,
                     "cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
                 };
             }
