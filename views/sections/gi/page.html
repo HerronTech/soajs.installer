@@ -16,7 +16,7 @@
 						<td class="form-select">
 							<div id="domain-wrapper">
 								<label>Domain Name</label>
-								<input class="form-control" id="domain" name="domain" ng-model="gi.domain" value="{{gi.domain}}" placeholder="{{gi.domain}}" tooltip="Enter the Domain name of your application" ng-required="true" type="text" />
+								<input class="form-control" id="domain" name="domain" ng-pattern="domainRegex" ng-model="gi.domain" value="{{gi.domain}}" placeholder="{{gi.domain}}" tooltip="Enter the Domain name of your application" ng-required="true" type="text" />
 								<div class="fieldMsg hint">Provide a domain name for your application and SOAJS will use it in the last step for deployment.</div>
 							</div>
 						</td>
