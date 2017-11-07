@@ -262,17 +262,7 @@ var catalogs = [
                     "pullPolicy": "IfNotPresent"
                 },
                 "specifyGitConfiguration": true,
-                "readinessProbe": {
-                    "httpGet": {
-                        "path": "/",
-                        "port": ""
-                    },
-                    "initialDelaySeconds": 5,
-                    "timeoutSeconds": 2,
-                    "periodSeconds": 5,
-                    "successThreshold": 1,
-                    "failureThreshold": 3
-                },
+                "readinessProbe": {},
                 "restartPolicy": restartPolicy,
                 "container": {
                     "network": network, //container network for docker
