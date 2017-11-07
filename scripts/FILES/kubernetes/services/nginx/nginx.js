@@ -73,6 +73,9 @@ var components = {
 					"soajs.service.label": "dashboard-nginx"
 				}
 			},
+			"updateStrategy": {
+				"type": "RollingUpdate"
+			},
 			"template": {
 				"metadata": {
 					"name": "dashboard-nginx",
