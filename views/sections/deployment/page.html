@@ -373,7 +373,7 @@
 									    </div>
 								    </td>
 							    </tr>
-							    <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'">
+							    <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType ==='NodePort' && deployment.deployDriver !== 'container.kubernetes.local' && deployment.deployDriver !== 'container.docker.local'">
 								    <td class="form-select">
 									    <div id="nginxSsl-wrapper">
 										    <input class="f-left form-control" id="nginxSsl" name="nginxSsl" ng-model="deployment.nginxSsl" style="width: 20px; box-shadow: none;"
@@ -383,7 +383,7 @@
 									    </div>
 								    </td>
 							    </tr>
-							    <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'&&kubernetes&&deployment.nginxSsl">
+							    <tr class="form-group tr-code-wrapper" ng-show="deployment.nginxDeployType==='NodePort'&& kubernetes && deployment.nginxSsl && deployment.deployDriver !== 'container.kubernetes.local' && deployment.deployDriver !== 'container.docker.local'">
 								    <td class="form-select">
 									    <div id="nginxSsl-ssc">
 										    <input class="f-left form-control" id="nginxSslCertGen" name="nginxSslCertGen" ng-model="deployment.generateSsc"
