@@ -250,6 +250,72 @@ var dsbrdProduct = {
 							}
 						}
 					}
+				},
+				"portal": {
+					"urac": {
+						"access" : true,
+						"apisPermission" : "restricted",
+						"get" : {
+							"apis" : {
+								"/owner/admin/users/count" : {
+								
+								},
+								"/owner/admin/listUsers" : {
+								
+								},
+								"/owner/admin/changeUserStatus" : {
+								
+								},
+								"/owner/admin/getUser" : {
+								
+								},
+								"/owner/admin/group/list" : {
+								
+								},
+								"/owner/admin/tokens/list" : {
+								
+								},
+								"/tenant/list" : {
+								
+								},
+								"/tenant/getUserAclInfo" : {
+								
+								}
+							}
+						},
+						"post" : {
+							"apis" : {
+								"/owner/admin/addUser" : {
+								
+								},
+								"/owner/admin/editUser" : {
+								
+								},
+								"/owner/admin/editUserConfig" : {
+								
+								},
+								"/owner/admin/group/add" : {
+								
+								},
+								"/owner/admin/group/edit" : {
+								
+								},
+								"/owner/admin/group/addUsers" : {
+								
+								}
+							}
+						},
+						"delete" : {
+							"apis" : {
+								"/owner/admin/group/delete" : {
+								
+								},
+								"/owner/admin/tokens/delete" : {
+								
+								}
+							}
+						}
+					}
 				}
 			},
 			"_TTL": 7 * 24 * 3600 * 1000 // 7 days hours
@@ -390,6 +456,72 @@ var dsbrdProduct = {
 							"apis" : {
 								"/cd/deploy" : {
 									"access" : false
+								}
+							}
+						}
+					},
+					"portal": {
+						"urac": {
+							"access" : true,
+							"apisPermission" : "restricted",
+							"get" : {
+								"apis" : {
+									"/owner/admin/users/count" : {
+									
+									},
+									"/owner/admin/listUsers" : {
+									
+									},
+									"/owner/admin/changeUserStatus" : {
+									
+									},
+									"/owner/admin/getUser" : {
+									
+									},
+									"/owner/admin/group/list" : {
+									
+									},
+									"/owner/admin/tokens/list" : {
+									
+									},
+									"/tenant/list" : {
+									
+									},
+									"/tenant/getUserAclInfo" : {
+									
+									}
+								}
+							},
+							"post" : {
+								"apis" : {
+									"/owner/admin/addUser" : {
+									
+									},
+									"/owner/admin/editUser" : {
+									
+									},
+									"/owner/admin/editUserConfig" : {
+									
+									},
+									"/owner/admin/group/add" : {
+									
+									},
+									"/owner/admin/group/edit" : {
+									
+									},
+									"/owner/admin/group/addUsers" : {
+									
+									}
+								}
+							},
+							"delete" : {
+								"apis" : {
+									"/owner/admin/group/delete" : {
+									
+									},
+									"/owner/admin/tokens/delete" : {
+									
+									}
 								}
 							}
 						}
