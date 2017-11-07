@@ -402,7 +402,7 @@ module.exports = {
                     output += "sudo service nginx start" + os.EOL;
                 }
 
-                output += os.EOL + "ps aux | grep node" + os.EOL;
+                output += os.EOL + "ps aux | grep soajs" + os.EOL;
                 output += "ps aux | grep nginx" + os.EOL;
 
                 fs.writeFile(filename, output, function(err){
