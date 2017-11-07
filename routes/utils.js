@@ -674,7 +674,7 @@ module.exports = {
                     "site": "127.0.0.1 " + body.gi.site + "." + body.gi.domain
                 },
                 "ui": "http://" + body.gi.site + "." + body.gi.domain,
-                "cmd": "sudo " + path.normalize(__dirname + "/../scripts/manual-deploy.sh")
+                "cmd": path.normalize(__dirname + "/../scripts/manual-deploy.sh")
             });
         }
         else{
@@ -692,7 +692,7 @@ module.exports = {
                     "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
                 },
                 "ui": protocol + "://" + body.gi.site + "." + body.gi.domain,
-                "cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
+                "cmd": path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
             };
 
             if(port !== 80){
@@ -706,7 +706,7 @@ module.exports = {
                         "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
                     },
                     "ui": protocol + "://" + body.gi.site + "." + body.gi.domain + ":" + port,
-                    "cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
+                    "cmd": path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
                 };
             }
 
