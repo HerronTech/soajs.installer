@@ -1,4 +1,4 @@
-<div class="area" ng-controller="deploymentCtrl">
+<div class="area" ng-controller="deploymentCtrl" style="overflow: auto; white-space: nowrap;">
     <div ng-show="alerts && alerts.length > 0">
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
             {{alert.msg}}
