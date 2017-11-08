@@ -22,21 +22,21 @@ if (config.docker.caCertificate && config.docker.certCertificate && config.docke
 
 lib.getDeployer(config.docker, function (error, deployer) {
 	if(error){ throw new Error(error); }
-	
+
 	lib.ifSwarmExists(deployer, function (error, exists) {
 		if (error) throw new Error(error);
-		
+
 		if (exists) {
 			utilLog.log ("Swarm exists, inspecting ...");
 			lib.inspectSwarm(deployer, function (error, swarmInfo) {
 				if (error) throw new Error(error);
-				
+
 				lib.saveSwarmTokens(swarmInfo);
-				
+
 				utilLog.log('Cleaning previous docker services ...');
 				lib.deletePreviousServices(deployer, function (error, result) {
 					if (error) throw new Error(error);
-					
+
 					utilLog.log ('Deploying SOAJS ...');
 					deploySOAJS(deployer);
 				});
@@ -52,15 +52,15 @@ lib.getDeployer(config.docker, function (error, deployer) {
 function initSwarm(deployer) {
 	deployer.swarmInit(config.docker.options, function (error) {
 		if (error) throw new Error(error);
-		
+
 		lib.inspectSwarm(deployer, function (error, swarmInfo) {
 			if (error) throw new Error(error);
-			
+
 			lib.saveSwarmTokens(swarmInfo);
-			
+
 			utilLog.log ('New swarm initialized ...');
 			utilLog.log ('Deploying SOAJS ...');
-			
+
 			setTimeout(function () {
 				deploySOAJS(deployer);
 			}, 1000);
@@ -75,7 +75,7 @@ function deploySOAJS(deployer) {
 			deploy(oneGroup, deployer, function (error, result) {
 				if (error) return callback(error);
 				return callback(null, true);
-				
+
 			});
 		}, function (error, result) {
 			if (error) throw new Error (error);
@@ -83,7 +83,7 @@ function deploySOAJS(deployer) {
 				utilLog.log('SOAJS Has been deployed.');
 				process.exit();
 			});
-			
+
 		});
 	});
 }
@@ -91,7 +91,7 @@ function deploySOAJS(deployer) {
 function deploy (group, deployer, cb) {
 	lib.getContent('services', group, function (error, services) {
 		if (error) return cb(error);
-		
+
 		if (group === 'core') {
 			lib.addMongoInfo(services, config.mongo.services, function (error) {
 				if (error) return cb(error);
@@ -101,7 +101,7 @@ function deploy (group, deployer, cb) {
 		else {
 			lib.deployGroup(group, services, deployer, function (error) {
 				if (error) return cb(error);
-				
+
 				if (group === 'db') {
 					if (config.mongo.external) {
 						utilLog.log ('External Mongo deployment detected, will not create a container for mongo.');
@@ -124,7 +124,7 @@ function deploy (group, deployer, cb) {
 function importProvisionData (dbServices, deployer, cb) {
 	utilLog.log ("Fetching data containers' IP addresses ... ");
 	utilLog.log ('This step might take some time if docker is currently pulling the containers\' image ...');
-	lib.getServiceNames(config.mongo.services.dashboard.name, deployer, 1, function (error) {
+	lib.getServiceInstances(config.mongo.services.dashboard.name, deployer, 1, function (error) {
 		if (error) return cb(error);
 		setTimeout(function () {
             lib.importData(config.mongo.services, function(){

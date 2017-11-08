@@ -360,7 +360,7 @@ var lib = {
 			                });
 		                }
 	                }, cb);
-                 
+
                 }, 5000);
             }
             else {
@@ -544,38 +544,31 @@ var lib = {
         });
     },
 
-	getServiceNames: function (serviceName, deployer, replicaCount, counter, cb) {
+	getServiceInstances: function (serviceName, deployer, replicaCount, counter, cb) {
 		if (typeof (counter) === 'function') {
 			cb = counter; //counter wasn't passed as param
 			counter = 0;
 		}
-		var params = {
-			filters: {
-				label: ['com.docker.swarm.service.name=' + serviceName],
-				status: ['running']
-			}
-		};
-		deployer.listContainers(params, function (err, result) {
-			if (err) return cb(err);
 
-			var oneContainer = [];
-			for (var cid in result) {
+		deployer.listTasks({ service: serviceName }, function(error, tasks) {
+			if(error) throw new Error(error);
 
-				oneContainer.push({
-					name: result[cid].Labels['com.docker.swarm.task.name'].replace('.' + result[cid].Labels['com.docker.swarm.task.id'], '')
-				});
-			}
-			if (oneContainer.length !== replicaCount) {
-				//Containers may not have been attached to network yet
-				lib.printProgress('Waiting for ' + serviceName + ' containers to become available', counter++);
-				setTimeout(function () {
-					return lib.getServiceNames(serviceName, deployer, replicaCount, counter, cb);
+			var readyTasks = [];
+			tasks.forEach(function(oneTask) {
+				if(oneTask && oneTask.Status && oneTask.Status.State === 'running' && oneTask.DesiredState === 'running') {
+					readyTasks.push({ name: oneTask })
+				}
+			});
+
+			if(readyTasks.length !== replicaCount) {
+				lib.printProgress('Waiting for ' + serviceName + ' instances to become available', counter++);
+				setTimeout(function() {
+					return lib.getServiceInstances(serviceName, deployer, replicaCount, counter, cb);
 				}, 1000);
 			}
 			else {
-
-				utilLog.log(""); //intentional, to force writting a new line.
-				return cb(null, oneContainer);
+				utilLog.log();
+				return cb(null, readyTasks);
 			}
 		});
 	},
