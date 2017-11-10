@@ -126,6 +126,13 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 				"deployType": "container"
 			};
 		}
+		//if docker remote is selected
+		else if (!$scope.manual && $scope.local && !$scope.remote && !$scope.docker && $scope.kubernetes) {
+			return false;
+		}
+		else if (!$scope.manual && !$scope.local && $scope.remote && !$scope.docker && $scope.kubernetes) {
+			return false;
+		}
 		
 		output.remoteProvider = $scope.remoteProvider;
 		

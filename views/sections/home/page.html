@@ -24,7 +24,11 @@
 			</p>
 			<br/>
 			<accordion close-others="true">
-				<accordion-group heading="Manual Deployment" ng-click="selectLocation('manual')" is-open="manual">
+				
+				<accordion-group ng-click="selectLocation('manual')" is-open="manual">
+					<accordion-heading>
+					<input type="radio" ng-checked="manual" value="true" name="local" disabled/>&nbsp;Manual Deployment
+					</accordion-heading>
 					<p>
 						<b>Overview:</b><br/>
 						This deployment will perform an NPM install of all SOAJS ready made services on your local
@@ -42,7 +46,10 @@
 					</p>
 				</accordion-group>
 				
-				<accordion-group heading="Local Cloud Deployment" is-open="local" ng-click="selectLocation('local')">
+				<accordion-group  is-open="local" ng-click="selectLocation('local')">
+					<accordion-heading>
+						 <input type="radio" ng-checked="local" value="true" name="local" disabled/>&nbsp;Local Cloud Deployment
+					</accordion-heading>
 					<p>
 						<b>Overview:</b><br/>
 						Deploy SOAJS cloud on your local machine.<br/>
@@ -105,6 +112,9 @@
 				</accordion-group>
 				
 				<accordion-group heading="Remote Cloud Deployment" is-open="remote" ng-click="selectLocation('remote')">
+					<accordion-heading>
+						<input type="radio" ng-checked="remote" value="true" name="local" disabled/>&nbsp;Remote Cloud Deployment
+					</accordion-heading>
 					<p>
 						<b>Overview:</b><br/>
 						Deploy SOAJS cloud on a remote machine.<br/>
