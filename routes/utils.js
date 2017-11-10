@@ -835,7 +835,10 @@ module.exports = {
              */
             if (body.deployment.deployDriver.indexOf("docker") !== -1) {
                 // docker
-                var services = ["dashboard-soajsdata", "dashboard_soajs_oauth", "dashboard_soajs_urac", "dashboard_soajs_dashboard", "dashboard-controller", "dashboard_nginx"];
+	            var services = ["dashboard_soajs_oauth", "dashboard_soajs_urac", "dashboard_soajs_dashboard", "dashboard-controller", "dashboard_nginx"];
+	            if(body.clusters.mongoExt){
+		            services.push("dashboard-soajsdata");
+	            }
 
                 var Docker = require('dockerode');
                 var deployerConfig = {
@@ -897,7 +900,10 @@ module.exports = {
             }
             else {
                 // kubernetes
-                var services = ["dashboard-soajsdata", "dashboard-oauth-v1", "dashboard-urac-v2", "dashboard-dashboard-v1", "dashboard-controller-v1", "dashboard-nginx"];
+	            var services = ["dashboard-oauth-v1", "dashboard-urac-v2", "dashboard-dashboard-v1", "dashboard-controller-v1", "dashboard-nginx"];
+	            if(body.clusters.mongoExt){
+		            services.push("dashboard-soajsdata");
+	            }
 
                 var K8Api = require('kubernetes-client');
 
