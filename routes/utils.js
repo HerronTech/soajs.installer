@@ -836,11 +836,11 @@ module.exports = {
             if (body.deployment.deployDriver.indexOf("docker") !== -1) {
                 // docker
 	            var services = ["dashboard_soajs_oauth", "dashboard_soajs_urac", "dashboard_soajs_dashboard", "dashboard-controller", "dashboard_nginx"];
-	            if(body.clusters.mongoExt){
+	            if (!body.clusters.mongoExt) {
 		            services.push("dashboard-soajsdata");
 	            }
-
-                var Docker = require('dockerode');
+	
+	            var Docker = require('dockerode');
                 var deployerConfig = {
                     "host": body.deployment.containerHost,
                     "port": body.deployment.docker.containerPort
@@ -901,11 +901,11 @@ module.exports = {
             else {
                 // kubernetes
 	            var services = ["dashboard-oauth-v1", "dashboard-urac-v2", "dashboard-dashboard-v1", "dashboard-controller-v1", "dashboard-nginx"];
-	            if(body.clusters.mongoExt){
+	            if (!body.clusters.mongoExt) {
 		            services.push("dashboard-soajsdata");
 	            }
-
-                var K8Api = require('kubernetes-client');
+	
+	            var K8Api = require('kubernetes-client');
 
                 if (!body.deployment.authentication || !body.deployment.authentication.accessToken) {
                     return cb(new Error('No access token found.'));
