@@ -445,8 +445,10 @@
 			    <div ng-bind-html="data.deployment|myObject"></div>
 		    </accordion-group>
 	    </accordion>
-        <input value="Go Back" class="btn btn-sm btn-danger f-left" type="button" ng-click="removeConfirmation()"/>
-        <input type="button" value="Install / Re-Install SOAJS" class="btn btn-success f-right"
-               ng-click="installSOAJS()"/>
+	    <div style="max-width: 980px;">
+		    <input value="Go Back" class="btn btn-sm btn-danger f-left" type="button" ng-click="removeConfirmation()"/>
+		    <input type="button" value="Install / Re-Install SOAJS" class="btn btn-success f-right"
+		           ng-click="installSOAJS()"/>
+	    </div>
     </div>
 </div>
