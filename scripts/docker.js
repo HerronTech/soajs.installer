@@ -106,7 +106,8 @@ function deploy (group, deployer, cb) {
 					if (config.mongo.external) {
 						utilLog.log ('External Mongo deployment detected, will not create a container for mongo.');
 						lib.importData(config.mongo.services, function(error){
-							return cb(error, true);
+							if(error){ return cb(error); }
+							lib.importCertificates(cb);
 						});
 					}
 					else{

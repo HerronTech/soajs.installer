@@ -375,7 +375,7 @@ var lib = {
 
     importCertificates: function (cb) {
         lib.loadCustomData(function(customFile) {
-            if(!customFile.deployment.certsRequired)
+            if(!customFile.deployment.certificates || Object.keys(customFile.deployment.certificates).length === 0)
                 return cb(null, true);
 
             else{
