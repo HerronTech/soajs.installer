@@ -26,7 +26,6 @@ var config = {
 
 		'SOAJS_DEPLOY_HA=swarm',
 		'SOAJS_HA_NAME={{.Task.Name}}',
-
 		'SOAJS_PROFILE=/opt/soajs/FILES/profiles/profile.js',
 		'SOAJS_SRV_AUTOREGISTERHOST=true',
 		'SOAJS_MONGO_PREFIX=' + gConfig.mongo.prefix,
