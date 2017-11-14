@@ -233,28 +233,28 @@ var lib = {
         //Add environment variables related to SSL
         if(process.env.SOAJS_NX_API_HTTPS){
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_API_HTTPS"] = {
-                "type": "userInput",
+                "type": "static",
                 "default": process.env.SOAJS_NX_API_HTTPS,
                 "label": "API HTTPS"
             };
         }
         if(process.env.SOAJS_NX_API_HTTP_REDIRECT){
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_API_HTTP_REDIRECT"] = {
-                "type": "userInput",
+                "type": "static",
                 "default": process.env.SOAJS_NX_API_HTTP_REDIRECT,
                 "label": "API HTTP Redirect"
             };
         }
         if(process.env.SOAJS_NX_SITE_HTTPS){
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_SITE_HTTPS"] = {
-                "type": "userInput",
+                "type": "static",
                 "default": process.env.SOAJS_NX_SITE_HTTPS,
                 "label": "Site HTTPS"
             };
         }
         if(process.env.SOAJS_NX_SITE_HTTP_REDIRECT){
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_SITE_HTTP_REDIRECT"] = {
-                "type": "userInput",
+                "type": "static",
                 "default": process.env.SOAJS_NX_SITE_HTTP_REDIRECT,
                 "label": "Site HTTP Redirect"
             };
@@ -263,19 +263,19 @@ var lib = {
         if(process.env.SOAJS_NX_SSL_SECRET){
             //Add environment variable containing the value of the SSL secret
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_SSL_SECRET"] = {
-                "type": "userInput",
+                "type": "static",
                 "default": process.env.SOAJS_NX_SSL_SECRET,
                 "label": "Nginx SSL Secret"
             };
             //Add environment variable related to custom SSL
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_CUSTOM_SSL"] = {
-                "type": "userInput",
+                "type": "static",
                 "default": "1",
                 "label": "Enable Custom SSL"
             };
             //Add environment variable containing the location of the certificates
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_SSL_CERTS_LOCATION"] = {
-                "type": "userInput",
+                "type": "static",
                 "default": "/etc/soajs/ssl",
                 "label": "Certificates Location"
             };

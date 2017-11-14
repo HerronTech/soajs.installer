@@ -179,28 +179,28 @@ var lib = {
         //Add environment variables related to SSL
         if(process.env.SOAJS_NX_API_HTTPS){
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_API_HTTPS"] = {
-                "type": "userInput",
+                "type": "static",
                 "default": process.env.SOAJS_NX_API_HTTPS,
                 "label": "API HTTPS"
             };
         }
         if(process.env.SOAJS_NX_API_HTTP_REDIRECT){
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_API_HTTP_REDIRECT"] = {
-                "type": "userInput",
+                "type": "static",
                 "default": process.env.SOAJS_NX_API_HTTP_REDIRECT,
                 "label": "API HTTP Redirect"
             };
         }
         if(process.env.SOAJS_NX_SITE_HTTPS){
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_SITE_HTTPS"] = {
-                "type": "userInput",
+                "type": "static",
                 "default": process.env.SOAJS_NX_SITE_HTTPS,
                 "label": "Site HTTPS"
             };
         }
         if(process.env.SOAJS_NX_SITE_HTTP_REDIRECT){
             nginxRecipe.recipe.buildOptions.env["SOAJS_NX_SITE_HTTP_REDIRECT"] = {
-                "type": "userInput",
+                "type": "static",
                 "default": process.env.SOAJS_NX_SITE_HTTP_REDIRECT,
                 "label": "Site HTTP Redirect"
             };
