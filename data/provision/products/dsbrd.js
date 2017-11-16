@@ -222,14 +222,14 @@ var dsbrdProduct = {
 						"get" : {
 							"apis" : {
 								"/authorization" : {
-									"access" : true
+									"access" : false
 								}
 							}
 						},
 						"post" : {
 							"apis" : {
 								"/token" : {
-									"access" : true
+									"access" : false
 								}
 							}
 						},
@@ -448,7 +448,37 @@ var dsbrdProduct = {
 						}
 					},
 					"oauth" : {
-						"access" : true
+						"access" : true,
+						"get" : {
+							"apis" : {
+								"/authorization" : {
+									"access" : false
+								}
+							}
+						},
+						"post" : {
+							"apis" : {
+								"/token" : {
+									"access" : false
+								}
+							}
+						},
+						"delete" : {
+							"apis" : {
+								"/accessToken/:token" : {
+									"access" : true
+								},
+								"/refreshToken/:token" : {
+									"access" : true
+								},
+								"/tokens/user/:userId" : {
+									"access" : true
+								},
+								"/tokens/tenant/:clientId" : {
+									"access" : true
+								}
+							}
+						}
 					},
 					"dashboard" : {
 						"access": true,
