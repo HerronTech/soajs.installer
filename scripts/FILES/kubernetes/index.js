@@ -500,6 +500,8 @@ var lib = {
 		], cb);
 
 		function initNamespace(cb) {
+			if(!options || !options.deployment || !options.deployment.metadata) return cb(null, true);
+			
 			if(options.customNamespace) return cb(null, true);
 
 			var serviceName;
@@ -569,24 +571,24 @@ var lib = {
 
             return deployer.extensions.namespaces(namespace)[deploytype].post({ body: options.deployment }, cb);
         }
-	
+
 	    function createClusterRoleBinding(cb) {
 		    if(!options.clusterRoleBinding || Object.keys(options.clusterRoleBinding).length === 0) return cb(null, true);
 		    return deployer.rbac.clusterrolebinding.post({ body: options.clusterRoleBinding }, cb);
 	    }
-	
+
 	    function createRoleBinding(cb) {
 		    if(!options.roleBinding || Object.keys(options.roleBinding).length === 0) return cb(null, true);
-		
+
 		    if(!namespace) namespace = 'default';
-		
+
 		    if(options.customNamespace && options.roleBinding.metadata && options.roleBinding.metadata.namespace) {
 			    namespace = options.roleBinding.metadata.namespace;
 		    }
-		
+
 		    return deployer.rbac.namespaces(namespace).rolebinding.post({ body: options.roleBinding }, cb);
 	    }
-	    
+
 	    function createApiService(cb) {
 		    if(!options.apiService || Object.keys(options.apiService).length === 0) return cb(null, true);
 		    return deployer.apiregistration.apiservice.post({ body: options.apiService }, cb);
