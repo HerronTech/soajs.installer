@@ -141,6 +141,7 @@ var routes = {
             if(customData){
                 delete customData.extKey1;
                 delete customData.extKey2;
+                delete customData.extKey3;
             }
 
             return res.json(req.soajs.buildResponse(null, customData || null));
