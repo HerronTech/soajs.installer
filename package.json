@@ -32,7 +32,7 @@
     "npm": "*",
     "request": "2.81.0",
     "rimraf": "*",
-    "soajs": "1.0.*",
+    "soajs": "2.0.0",
     "util": "*",
     "whereis": "*"
   }
