@@ -19,7 +19,7 @@ var components = {
                 "soajs.service.label": "dashboard-urac-v2",
                 "soajs.service.mode": "deployment",
 	            "soajs.service.repo.name": "soajs_urac",
-                "service.branch": gConfig.git.branch,
+                "service.branch": gConfig.cleanLabel(gConfig.git.branch),
 	            "service.owner": "soajs",
                 "service.repo": "soajs.urac"
             }
@@ -61,7 +61,7 @@ var components = {
                 "soajs.service.label": "dashboard-urac-v2",
                 "soajs.service.mode": "deployment",
 	            "soajs.service.repo.name": "soajs_urac",
-                "service.branch": gConfig.git.branch,
+                "service.branch": gConfig.cleanLabel(gConfig.git.branch),
 	            "service.owner": "soajs",
                 "service.repo": "soajs.urac"
             }
@@ -87,7 +87,7 @@ var components = {
                         "soajs.service.version": "2",
                         "soajs.service.label": "dashboard-urac-v2",
                         "soajs.service.mode": "deployment",
-                        "service.branch": gConfig.git.branch,
+                        "service.branch": gConfig.cleanLabel(gConfig.git.branch),
 	                    "service.owner": "soajs",
                         "service.repo": "soajs.urac"
                     }
