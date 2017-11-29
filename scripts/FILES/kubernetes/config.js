@@ -91,6 +91,11 @@ var lib  = {
 			"dir": __dirname + '/services/',
 			"fileType": 'js'
 		}
+	},
+	cleanLabel: function(label) {
+		if(!label) return '';
+
+		return label.replace(/\//g, "__");
 	}
 };
 module.exports = lib;

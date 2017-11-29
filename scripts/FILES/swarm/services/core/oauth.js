@@ -15,7 +15,7 @@ var config = {
 		    Target: gConfig.docker.network
     	}
     ],
-	
+
 	image: {
 		prefix: gConfig.images.soajs.prefix,
 		name: 'soajs',
@@ -46,7 +46,7 @@ var config = {
         }
     ],
     labels: {
-	    "service.branch": gConfig.git.branch,
+	    "service.branch": gConfig.cleanLabel(gConfig.git.branch),
 	    "service.owner": "soajs",
 	    "service.repo": "soajs.oauth",
         "soajs.content": "true",

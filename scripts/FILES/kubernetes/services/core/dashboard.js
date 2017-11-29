@@ -19,7 +19,7 @@ var components = {
                 "soajs.service.label": "dashboard-dashboard-v1",
                 "soajs.service.mode": "deployment",
 	            "soajs.service.repo.name": "soajs_dashboard",
-                "service.branch": gConfig.git.branch,
+                "service.branch": gConfig.cleanLabel(gConfig.git.branch),
 	            "service.owner": "soajs",
                 "service.repo": "soajs.dashboard"
             }
@@ -61,7 +61,7 @@ var components = {
                 "soajs.service.label": "dashboard-dashboard-v1",
                 "soajs.service.mode": "deployment",
 	            "soajs.service.repo.name": "soajs_dashboard",
-                "service.branch": gConfig.git.branch,
+                "service.branch": gConfig.cleanLabel(gConfig.git.branch),
 	            "service.owner": "soajs",
                 "service.repo": "soajs.dashboard"
             }
@@ -87,7 +87,7 @@ var components = {
                         "soajs.service.version": "1",
                         "soajs.service.label": "dashboard-dashboard-v1",
                         "soajs.service.mode": "deployment",
-                        "service.branch": gConfig.git.branch,
+                        "service.branch": gConfig.cleanLabel(gConfig.git.branch),
 	                    "service.owner": "soajs",
                         "service.repo": "soajs.dashboard"
                     }

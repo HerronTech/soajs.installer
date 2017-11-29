@@ -52,7 +52,7 @@ var config = {
         }
 	],
 	labels: {
-		"service.branch": gConfig.git.branch,
+		"service.branch": gConfig.cleanLabel(gConfig.git.branch),
 		"service.owner": "soajs",
 		"service.repo": "soajs.controller",
 		"soajs.content": "true",
