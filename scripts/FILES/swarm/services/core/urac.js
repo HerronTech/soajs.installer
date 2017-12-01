@@ -43,7 +43,12 @@ var config = {
             "Type": "volume",
             "Source": gConfig.docker.volumes.log.label,
             "Target": gConfig.docker.volumes.log.path,
-        }
+        },
+	    {
+		    "Type": "volume",
+		    "Source": gConfig.docker.volumes.certs.label,
+		    "Target": gConfig.docker.volumes.certs.path,
+	    }
     ],
     labels: {
 	    "service.branch": gConfig.cleanLabel(gConfig.git.branch),

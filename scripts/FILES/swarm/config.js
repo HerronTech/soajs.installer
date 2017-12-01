@@ -76,6 +76,10 @@ var lib= {
 			"log": {
 				"label": "soajs_log_volume",
 				"path": "/var/log/soajs/"
+			},
+			"certs": {
+				"label": "soajs_certs_volume",
+				"path": "/var/certs/soajs/"
 			}
 		}
 	},
