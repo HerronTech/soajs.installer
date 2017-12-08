@@ -7,6 +7,7 @@ var dashboard = {
     "apiPrefix": "%api%",
     "locked": true,
     "port": 80,
+	"protocol": "http",
     "profile": "%wrkDir%/soajs/FILES/profiles/profile.js",
     "deployer": {
 	    "type": "%deployType%",
@@ -14,14 +15,17 @@ var dashboard = {
 	    "container": {
 		    "docker": {
 			    "local": {
+				    "apiPort": "%dockerLocalPort%",
 				    "socketPath": "/var/run/docker.sock"
 			    },
 			    "remote": {
+				    "apiPort": "%dockerRemotePort%",
 				    "nodes": "%deployDockerNodes%"
 			    }
 		    },
 		    "kubernetes":{
 			    "local":{
+				    "apiPort": "%kubernetesLocalPort%",
 			        "nginxDeployType": "%nginxDeployType%",
 				    "namespace": "%namespace%",
                     "auth": {
@@ -29,6 +33,7 @@ var dashboard = {
                     }
 			    },
 			    "remote":{
+				    "apiPort": "%kubernetesRemotePort%",
                     "nginxDeployType": "%nginxDeployType%",
 				    "namespace": "%namespace%",
                     "auth": {
@@ -53,7 +58,6 @@ var dashboard = {
 		    'expireAfter': 1000 * 60 * 60 * 24 * 14 // 2 weeks
 	    },
         "databases": {
-	        "%es_database_name%": "%databases_value%",
             "urac": {
                 "cluster": "dash_cluster",
                 "tenantSpecific": true
@@ -86,9 +90,9 @@ var dashboard = {
                 "src": true,
                 "level": "debug",
                 "formatter": {
-	                "outputMode": "bunyan",
-	                "levelInString": true
-	                //"outputMode": 'long'
+	                //"outputMode": "bunyan",
+	                "levelInString": true,
+	                "outputMode": 'long'
                 }
             },
             "cors": {

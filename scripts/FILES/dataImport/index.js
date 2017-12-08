@@ -16,7 +16,6 @@ if(!process.env.MONGO_EXT || process.env.MONGO_EXT === 'false'){
 }
 
 var mongo = new soajs.mongo(profile);
-var fs= require("fs");
 
 mongo.dropDatabase(function () {
 	lib.addEnvs(function () {
@@ -24,21 +23,16 @@ mongo.dropDatabase(function () {
 			lib.addServices(function () {
 				lib.addTenants(function () {
 					lib.addGitAccounts(function () {
-						lib.addAnalytics(function (errAnalytics) {
-							if (errAnalytics) {
-								throw new Error("Error while importing analytics \n" + errAnalytics);
-							}
-							lib.addCatalogs(function () {
-								lib.addCiRecipes(function () {
-									mongo.closeDb();
-									profile.name = "DBTN_urac";
-									mongo = new soajs.mongo(profile);
-									mongo.dropDatabase(function () {
-										lib.addUsers(function () {
-											lib.addGroups(function () {
-												lib.uracIndex(function () {
-													mongo.closeDb();
-												});
+						lib.addCatalogs(function () {
+							lib.addCiRecipes(function () {
+								mongo.closeDb();
+								profile.name = "DBTN_urac";
+								mongo = new soajs.mongo(profile);
+								mongo.dropDatabase(function () {
+									lib.addUsers(function () {
+										lib.addGroups(function () {
+											lib.uracIndex(function () {
+												mongo.closeDb();
 											});
 										});
 									});
@@ -67,14 +61,6 @@ const lib = {
 				var record = require(dataFolder + "resources/mongo.js");
 				record._id = mongo.ObjectId(record._id);
 				mongo.insert("resources", record, mCb);
-			},
-			"es": function(mCb){
-				var record = require(dataFolder + "resources/es.js");
-				if(Object.keys(record).length === 0){
-					return mCb();
-				}
-				record._id = mongo.ObjectId(record._id);
-				mongo.insert("resources", record, mCb);
 			}
 		}, cb);
 	},
@@ -100,14 +86,28 @@ const lib = {
 	 Tenants
 	 */
 	"addTenants": function (cb) {
-		var record = require(dataFolder + "tenants/owner.js");
-
-		record._id = mongo.ObjectId(record._id);
-		record.applications.forEach(function (oneApp) {
-			oneApp.appId = mongo.ObjectId(oneApp.appId);
-		});
-
-		mongo.insert("tenants", record, cb);
+		async.series([
+			function(mCb){
+				var record = require(dataFolder + "tenants/owner.js");
+				
+				record._id = mongo.ObjectId(record._id);
+				record.applications.forEach(function (oneApp) {
+					oneApp.appId = mongo.ObjectId(oneApp.appId);
+				});
+				
+				mongo.insert("tenants", record, mCb);
+			},
+			function(mCb){
+				var record = require(dataFolder + "tenants/techop.js");
+				
+				record._id = mongo.ObjectId(record._id);
+				record.applications.forEach(function (oneApp) {
+					oneApp.appId = mongo.ObjectId(oneApp.appId);
+				});
+				
+				mongo.insert("tenants", record, mCb);
+			},
+		], cb);
 	},
 
 	/*
@@ -117,33 +117,6 @@ const lib = {
 		var record = require(dataFolder + "gitAccounts/soajsRepos.js");
 		record._id = mongo.ObjectId(record._id);
 		mongo.insert("git_accounts", record, cb);
-	},
-	
-	/*
-	 Analytics
-	 */
-	"addAnalytics": function (cb) {
-		
-		var records = [];
-		fs.readdir(dataFolder + "analytics", function(err, items) {
-			
-			async.forEachOf(items, function (item, key, callback) {
-				if (key === 0) {
-					records = require(dataFolder + "analytics/" + items[key]);
-				}
-				else {
-					var array = require(dataFolder + "analytics/" + item);
-					if (Array.isArray(array) && array.length > 0){
-						records = records.concat(array);
-					}
-				}
-				callback();
-			}, function () {
-				mongo.insert("analytics", records, cb);
-			});
-		});
-		
-		
 	},
 	
 	/*

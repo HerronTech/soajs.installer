@@ -13,7 +13,7 @@
 			<legend>MongoDB</legend>
 			<br /><br />
 			<accordion close-others="false">
-				<accordion-group is-open="local">
+				<accordion-group is-open="local" ng-show="containerDeployment">
 					<accordion-heading>
 						<span ng-click="doMongoExt(false)">
 							<input type="radio" ng-checked="local" value="true" name="mongo_cluster"/>&nbsp;
@@ -185,23 +185,6 @@
 			</accordion>
 		</fieldset>
 		<br />
-		<fieldset ng-if="analytics">
-			<legend>ElasticSearch</legend>
-			<br /><br />
-			<accordion close-others="false">
-				<accordion-group is-open="analytics" is-disabled="true" >
-					<accordion-heading>
-						<span ng-click="doESExt(false)" disabled>
-							<input type="radio" ng-checked="analytics" value="true" disabled/>&nbsp;
-							I do not have an ElasticSearch Server, i want SOAJS Installer to deploy it for me.
-						</span>
-					</accordion-heading>
-					<p>
-						SOAJS installer will deploy a preconfigured ElasticSearch server for you and use it to activate your analytics.<br />
-					</p>
-				</accordion-group>
-			</accordion>
-		</fieldset>
 		
 		<div class="footer c-both table w-100">
 			<br/>

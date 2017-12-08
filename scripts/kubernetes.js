@@ -1,5 +1,4 @@
 'use strict';
-var fs = require('fs');
 var async = require('async');
 
 var config = require(__dirname + '/FILES/kubernetes/config.js');
@@ -23,30 +22,14 @@ lib.getDeployer(config.kubernetes.config, function (error, deployer) {
             async.eachSeries(config.deployGroups, function (oneGroup, callback) {
                 deploy(oneGroup, deployer, function (error) {
                     if (error) return callback(error);
-	                if (!((!config.analytics || config.analytics === "false") && oneGroup === 'elk')){
-		                utilLog.log(oneGroup + ' services deployed successfully ...');
-	                }
                     return callback(null, true);
                 });
             }, function (error, result) {
 	            if (error) throw new Error(error);
-	            if (config.analytics === "true") {
-		            lib.setDefaultIndex(function (err) {
-			            if (err) {
-				            throw new Error(err)
-			            }
-			            lib.closeDbCon(function () {
-				            utilLog.log('SOAJS Has been deployed.');
-				            process.exit();
-			            });
-		            });
-	            }
-	            else {
-		            lib.closeDbCon(function () {
-			            utilLog.log('SOAJS Has been deployed.');
-			            process.exit();
-		            });
-	            }
+	            lib.closeDbCon(function () {
+		            utilLog.log('SOAJS Has been deployed.');
+		            process.exit();
+	            });
             });
         }, 5000);
     });

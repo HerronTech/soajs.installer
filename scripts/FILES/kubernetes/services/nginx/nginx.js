@@ -22,11 +22,12 @@ var components = {
 				"soajs.service.type": "server",
 				"soajs.service.subtype": "nginx",
 				"soajs.service.label": "dashboard-nginx",
-				"soajs.service.mode": "deployment"
+				"soajs.service.mode": "daemonset"
 			}
 		},
 		"spec": {
 			"type": "NodePort",
+			"externalTrafficPolicy": "Local",
 			"selector": {
 				"soajs.service.label": "dashboard-nginx"
 			},
@@ -50,7 +51,7 @@ var components = {
 	},
 	deployment: {
 		"apiVersion": "extensions/v1beta1",
-		"kind": "Deployment",
+		"kind": "DaemonSet",
 		"metadata": {
 			"name": "dashboard-nginx",
 			"labels": {
@@ -62,7 +63,7 @@ var components = {
 				"soajs.service.type": "server",
 				"soajs.service.subtype": "nginx",
 				"soajs.service.label": "dashboard-nginx",
-				"soajs.service.mode": "deployment"
+				"soajs.service.mode": "daemonset"
 			}
 		},
 		"spec": {
@@ -71,6 +72,9 @@ var components = {
 				"matchLabels": {
 					"soajs.service.label": "dashboard-nginx"
 				}
+			},
+			"updateStrategy": {
+				"type": "RollingUpdate"
 			},
 			"template": {
 				"metadata": {
@@ -84,7 +88,7 @@ var components = {
 						"soajs.service.type": "server",
 						"soajs.service.subtype": "nginx",
 						"soajs.service.label": "dashboard-nginx",
-						"soajs.service.mode": "deployment"
+						"soajs.service.mode": "daemonset"
 					}
 				},
 				"spec": {
@@ -128,7 +132,7 @@ var components = {
 								},
 								{
 									"name": "SOAJS_GIT_DASHBOARD_BRANCH",
-									"value": gConfig.git.branch
+									"value": gConfig.dashUISrc.branch
 								},
 								{
 									"name": "SOAJS_NX_DOMAIN",
@@ -196,31 +200,6 @@ var components = {
 		}
 	}
 };
-
-if (gConfig.customUISrc.repo && gConfig.customUISrc.owner) {
-	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_REPO", "value": gConfig.customUISrc.repo});
-	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_OWNER", "value": gConfig.customUISrc.owner});
-
-	if(gConfig.customUISrc.branch){
-		components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_BRANCH", "value": gConfig.customUISrc.branch});
-	}
-}
-
-if(gConfig.customUISrc.provider){
-	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_PROVIDER", "value": gConfig.customUISrc.provider});
-}
-
-if(gConfig.customUISrc.domain){
-	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_DOMAIN", "value": gConfig.customUISrc.domain});
-}
-
-if (gConfig.customUISrc.token) {
-	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_TOKEN", "value": gConfig.customUISrc.token});
-}
-
-if (gConfig.customUISrc.path) {
-	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_GIT_PATH", "value": gConfig.customUISrc.path});
-}
 
 if (gConfig.nginx.ssl) {
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_API_HTTPS", "value": "1"});

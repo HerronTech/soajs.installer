@@ -8,7 +8,7 @@ var dsbrd = {
 	"description": "this is the main dashboard tenant",
 	"oauth": {
 		"secret": "soajs beaver",
-		"redirectURI": "http://domain.com",
+		"redirectURI": "%protocol%://domain.com",
 		"grants": [
 			"password",
 			"refresh_token"
@@ -50,10 +50,10 @@ var dsbrd = {
                                 "hashIterations": 1024,
                                 "seedLength": 32,
                                 "link": {
-	                                "addUser": "http://%site%.%domain%/#/setNewPassword",
-	                                "changeEmail": "http://%site%.%domain%/#/changeEmail/validate",
-	                                "forgotPassword": "http://%site%.%domain%/#/resetPassword",
-	                                "join": "http://%site%.%domain%/#/join/validate"
+	                                "addUser": "%protocol%://%site%.%domain%:%port%/#/setNewPassword",
+	                                "changeEmail": "%protocol%://%site%.%domain%:%port%/#/changeEmail/validate",
+	                                "forgotPassword": "%protocol%://%site%.%domain%:%port%/#/resetPassword",
+	                                "join": "%protocol%://%site%.%domain%:%port%/#/join/validate"
                                 },
                                 "tokenExpiryTTL": 2 * 24 * 3600 * 1000,
                                 "validateJoin": true,
@@ -122,10 +122,10 @@ var dsbrd = {
                                 "hashIterations": 1024,
                                 "seedLength": 32,
                                 "link": {
-                                    "addUser": "http://%site%.%domain%/#/setNewPassword",
-                                    "changeEmail": "http://%site%.%domain%/#/changeEmail/validate",
-                                    "forgotPassword": "http://%site%.%domain%/#/resetPassword",
-                                    "join": "http://%site%.%domain%/#/join/validate"
+                                    "addUser": "%protocol%://%site%.%domain%:%port%/#/setNewPassword",
+                                    "changeEmail": "%protocol%://%site%.%domain%:%port%/#/changeEmail/validate",
+                                    "forgotPassword": "%protocol%://%site%.%domain%:%port%/#/resetPassword",
+                                    "join": "%protocol%://%site%.%domain%:%port%/#/join/validate"
                                 },
                                 "tokenExpiryTTL": 2 * 24 * 3600 * 1000,
                                 "validateJoin": true,

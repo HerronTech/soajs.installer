@@ -4,7 +4,6 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 	$scope.alerts = [];
 	
 	$scope.mongo = true;
-	$scope.es = true;
 	
 	$scope.local = true;
 	$scope.external = false;
@@ -29,26 +28,10 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 		}, 100);
 	};
 	
-	$scope.AddEsNewServer = function () {
-		$scope.es_clusters.servers.push({"host": "", "port": ""});
-		
-		$timeout(function () {
-			resizeContent();
-		}, 100);
-	};
-	
 	$scope.removeServer = function (index) {
 		$scope.clusters.servers.splice(index, 1);
 		
 		$timeout(function(){
-			resizeContent();
-		}, 100);
-	};
-	
-	$scope.removeEsServer = function (index) {
-		$scope.es_clusters.servers.splice(index, 1);
-		
-		$timeout(function () {
 			resizeContent();
 		}, 100);
 	};
@@ -88,17 +71,8 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 			}
 			$scope.uncheckReplica();
 			resizeContent();
-			
-			console.log($scope.accordion);
 		}, 10);
 	}
-	
-	$scope.doESExt = function(optValue){
-		$scope.analytics = true;
-		$timeout(function(){
-			$scope.analytics = true;
-		}, 100);
-	};
 	
 	$scope.uncheckReplica = function() {
 		if(!$scope.clusters.mongoExt) {
@@ -122,7 +96,6 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 
 	$scope.fillClusters = function () {
 		var data = angular.copy($scope.clusters);
-		var es_data = angular.copy($scope.es_clusters);
 		
 		try {
 			data.URLParam = JSON.parse(data.URLParam);
@@ -139,30 +112,6 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 			alert("Streaming should be a JSON object!");
 			return false;
 		}
-		if ($scope.analytics) {
-			try {
-				es_data.URLParam = JSON.parse(es_data.URLParam);
-			}
-			catch (e) {
-				alert("ElasticSearch URL Parameters should be a JSON object!");
-				return false;
-			}
-			try {
-				es_data.extraParam = JSON.parse(es_data.extraParam);
-			}
-			catch (e) {
-				alert("ElasticSearch Extra Parameters should be a JSON object!");
-				return false;
-			}
-			
-		}
-		var es_options = {
-			url: appConfig.url + "/installer/esClusters",
-			method: "post",
-			data: {
-				"es_clusters": es_data
-			}
-		};
 		
 		var options = {
 			url: appConfig.url + "/installer/clusters",
@@ -178,14 +127,7 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
 				return false;
 			}
-			
-			ngDataApi.post($scope, es_options, function (error) {
-				if (error) {
-					$scope.alerts.push({'type': 'danger', 'msg': error.message});
-					return false;
-				}
-				$scope.$parent.go("#/deployment");
-			});
+			$scope.$parent.go("#/deployment");
 		});
 	};
 
@@ -201,14 +143,13 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 				return false;
 			}
 			
-			$scope.deployAnalytics = (response && response.deployment.deployAnalytics) ? response.deployment.deployAnalytics : false;
 			
 			$scope.deployment = response.deployment;
 			$scope.deployment.deployType = (response && response.deployment.deployType) ? response.deployment.deployType : "manual";
 			$scope.deployment.mongoExposedPort = (response && response.deployment.mongoExposedPort) ? response.deployment.mongoExposedPort : 32017;
 
 			$scope.containerDeployment = $scope.deployment.deployType === "container";
-
+			
 			$scope.clusters = {
 				"prefix": (response && response.clusters && response.clusters.prefix) ? response.clusters.prefix : "",
                 "mongoExt": (response && response.clusters && response.clusters.mongoExt) ? response.clusters.mongoExt : false,
@@ -225,33 +166,9 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 				}, null, 2),
 				"streaming": (response && response.clusters && response.clusters.streaming) ? JSON.stringify(response.clusters.streaming, null, 2) : JSON.stringify({})
 			};
-			if ($scope.deployAnalytics) {
-				$scope.es_clusters = {
-					"es_Ext": (response && response.es_clusters && response.es_clusters.es_Ext) ? response.es_clusters.es_Ext : false,
-					"servers": (response && response.es_clusters && response.es_clusters.servers) ? response.es_clusters.servers : [{
-						"host": "127.0.0.1",
-						"port": 9200
-					}],
-					"credentials": (response && response.es_clusters && response.es_clusters.credentials) ? response.es_clusters.credentials : {
-						"username": "",
-						"password": ""
-					},
-					"URLParam": (response && response.es_clusters && response.es_clusters.URLParam) ? JSON.stringify(response.es_clusters.URLParam, null, 2) : JSON.stringify({
-						"protocol": "http"
-					}, null, 2),
-					"extraParam": (response && response.es_clusters && response.es_clusters.extraParam) ? JSON.stringify(response.es_clusters.extraParam, null, 2) : JSON.stringify({
-						"requestTimeout": 30000,
-						"keepAlive": true,
-						"maxSockets": 30,
-						"number_of_shards": 5,
-						"number_of_replicas": 1,
-						"apiVersion": "5.x"
-					}, null, 2)
-				};
-				$scope.analytics = true;
-			}
-			else {
-				$scope.analytics = false;
+			
+			if(!$scope.containerDeployment){
+				$scope.clusters.mongoExt = true;
 			}
 			
 			renderAccordion();

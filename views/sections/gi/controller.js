@@ -15,6 +15,10 @@ giApp.controller('giCtrl', ['$scope', 'ngDataApi', function($scope, ngDataApi) {
 		$scope.$parent.go("#/");
 	};
 	
+	//Check whether each part of the domain is not longer than 63 characters,
+	//Allow internationalized domain names
+	$scope.domainRegex= '^((?=[a-zA-Z0-9-]{1,63}\\.)(xn--)?[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*\\.)+[a-zA-Z]{2,63}$';
+	
 	$scope.fillBI = function(){
 		var data = angular.copy($scope.gi);
 		var options = {
@@ -25,7 +29,7 @@ giApp.controller('giCtrl', ['$scope', 'ngDataApi', function($scope, ngDataApi) {
 			}
 		};
 		
-		ngDataApi.post($scope, options, function(error, response){
+		ngDataApi.post($scope, options, function(error){
 			if(error){
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
 				return false;

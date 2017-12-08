@@ -15,7 +15,7 @@ var config = {
 		    Target: gConfig.docker.network
     	}
     ],
-	
+
 	image: {
 		prefix: gConfig.images.soajs.prefix,
 		name: 'soajs',
@@ -27,15 +27,15 @@ var config = {
 
         'SOAJS_DEPLOY_HA=swarm',
         'SOAJS_HA_NAME={{.Task.Name}}',
-
+	    'NODE_TLS_REJECT_UNAUTHORIZED=0',
         'SOAJS_PROFILE=/opt/soajs/FILES/profiles/profile.js',
         'SOAJS_SRV_AUTOREGISTERHOST=true',
 	    'SOAJS_MONGO_PREFIX=' + gConfig.mongo.prefix,
-        'SOAJS_GIT_OWNER=' + src.owner,
-        'SOAJS_GIT_REPO=' + src.repo,
-        'SOAJS_GIT_BRANCH=' + src.branch,
-        'SOAJS_GIT_PROVIDER=' + gConfig.git.provider,
-        'SOAJS_GIT_DOMAIN=' + gConfig.git.domain,
+	    'SOAJS_GIT_OWNER=' + src.owner,
+	    'SOAJS_GIT_REPO=' + src.repo,
+	    'SOAJS_GIT_BRANCH=' + src.branch,
+	    'SOAJS_GIT_PROVIDER=' + gConfig.git.provider,
+	    'SOAJS_GIT_DOMAIN=' + gConfig.git.domain,
         'SOAJS_DEPLOY_ACC=' + gConfig.deploy_acc
     ],
     mounts: [
@@ -46,7 +46,7 @@ var config = {
         }
     ],
     labels: {
-	    "service.branch": gConfig.git.branch,
+	    "service.branch": gConfig.cleanLabel(gConfig.git.branch),
 	    "service.owner": "soajs",
 	    "service.repo": "soajs.urac",
         "soajs.content": "true",

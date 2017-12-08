@@ -261,17 +261,8 @@ var catalogs = [
                     "tag": "latest",
                     "pullPolicy": "IfNotPresent"
                 },
-                "readinessProbe": {
-                    "httpGet": {
-                        "path": "/",
-                        "port": ""
-                    },
-                    "initialDelaySeconds": 5,
-                    "timeoutSeconds": 2,
-                    "periodSeconds": 5,
-                    "successThreshold": 1,
-                    "failureThreshold": 3
-                },
+                "specifyGitConfiguration": true,
+                "readinessProbe": {},
                 "restartPolicy": restartPolicy,
                 "container": {
                     "network": network, //container network for docker
@@ -291,6 +282,26 @@ var catalogs = [
                         "type": "static",
                         "value":"production"
                     },
+                    "SOAJS_GIT_OWNER": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_OWNER"
+                    },
+                    "SOAJS_GIT_BRANCH": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_BRANCH"
+                    },
+                    "SOAJS_GIT_COMMIT": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_COMMIT"
+                    },
+                    "SOAJS_GIT_REPO": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_REPO"
+                    },
+                    "SOAJS_GIT_TOKEN": {
+                        "type": "computed",
+                        "value": "$SOAJS_GIT_TOKEN"
+                    }
                 },
                 "cmd": {
                     "deploy": {
@@ -481,13 +492,15 @@ var catalogs = [
                         "name": "http",
                         "target": 80,
                         "isPublished": true,
-                        "published": 81
+                        "published": 81,
+                        "preserveClientIP": true
                     },
                     {
                         "name": "https",
                         "target": 443,
                         "isPublished": true,
-                        "published": 444
+                        "published": 444,
+                        "preserveClientIP": true
                     }
                 ]
             },
@@ -513,7 +526,6 @@ var catalogs = [
                         "type": "computed",
                         "value": "$SOAJS_NX_SITE_DOMAIN"
                     },
-
                     "SOAJS_NX_CONTROLLER_NB": {
                         "type": "computed",
                         "value": "$SOAJS_NX_CONTROLLER_NB"

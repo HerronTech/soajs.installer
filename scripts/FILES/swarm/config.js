@@ -4,7 +4,6 @@ var profile = require(process.env.SOAJS_PROFILE);
 var mongoHostname = profile.servers[0].host;
 var lib= {
 	"extKey1": process.env.SOAJS_EXTKEY,
-	"analytics": process.env.SOAJS_DEPLOY_ANALYTICS,
 	"masterDomain": process.env.MASTER_DOMAIN || 'soajs.org',
 	"apiPrefix": process.env.API_PREFIX || "dashboard-api",
 	"sitePrefix": process.env.SITE_PREFIX || "dashboard",
@@ -18,15 +17,6 @@ var lib= {
 	},
 	"dashUISrc": {
 		"branch": process.env.SOAJS_GIT_DASHBOARD_BRANCH || 'develop'
-	},
-	"customUISrc":{
-		"owner": process.env.SOAJS_GIT_OWNER || null,
-		"repo": process.env.SOAJS_GIT_REPO || null,
-		"branch": process.env.SOAJS_GIT_CUSTOM_UI_BRANCH || null,
-		"token": process.env.SOAJS_GIT_TOKEN || null,
-		"provider": process.env.SOAJS_GIT_SOURCE || null,
-		"domain": process.env.SOAJS_GIT_PROVIDER || null,
-		"path": process.env.SOAJS_GIT_PATH || null
 	},
 	"mongo":{
 		"prefix": profile.prefix,
@@ -63,7 +53,9 @@ var lib= {
 		"replicas": parseInt(process.env.SOAJS_DOCKER_REPLICA) || 1,
 		"machineIP": process.env.CONTAINER_HOST || "127.0.0.1",
 		"machinePort": parseInt(process.env.CONTAINER_PORT) || 2376,
-		"certsPath": process.env.SOAJS_DOCKER_CERTS_PATH || process.env.HOME + '/.docker',
+		"caCertificate": process.env.SOAJS_DOCKER_CA_CERTS_PATH,
+		"certCertificate": process.env.SOAJS_DOCKER_CERT_CERTS_PATH,
+		"keyCertificate": process.env.SOAJS_DOCKER_KEY_CERTS_PATH,
 		"socketPath": process.env.SOAJS_DOCKER_SOCKET || '/var/run/docker.sock',
 		"network": process.env.DOCKER_NETWORK ||  'soajsnet',
 		"options": {
@@ -87,12 +79,17 @@ var lib= {
 			}
 		}
 	},
-	"deployGroups": ['db', 'elk', 'core', 'nginx'],
+	"deployGroups": ['db', 'core', 'nginx'],
 	"services":{
 		"path": {
 			"dir": __dirname + '/services/',
 			"fileType": 'js'
 		}
+	},
+	cleanLabel: function(label) {
+		if(!label) return '';
+
+		return label.replace(/\//g, "__");
 	}
 };
 module.exports = lib;

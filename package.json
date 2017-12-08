@@ -1,7 +1,7 @@
 {
   "name": "soajs.installer",
   "description": "soajs installer to install soajs dashboard",
-  "version": "1.1.22",
+  "version": "2.0.3",
   "author": {
     "name": "soajs team",
     "email": "team@soajs.org"
@@ -9,8 +9,6 @@
   "keywords": [
     "soajs",
     "api",
-    "portal",
-    "analytics",
     "visualizations",
     "dashboards",
     "dashboarding"
@@ -24,17 +22,17 @@
     "node": "*"
   },
   "dependencies": {
-    "async": "*",
+    "async": "2.1.4",
     "clone": "*",
-    "dockerode": "*",
-    "gridfs-stream": "*",
-    "kubernetes-client": "aff04/kubernetes-client.git#v3.10.1",
+    "dockerode": "2.5.3",
+    "gridfs-stream": "1.1.1",
+    "kubernetes-client": "soajs/kubernetes-client.git",
     "mkdirp": "*",
     "ncp": "*",
     "npm": "*",
     "request": "2.81.0",
     "rimraf": "*",
-    "soajs": "1.0.*",
+    "soajs": "2.0.1",
     "util": "*",
     "whereis": "*"
   }

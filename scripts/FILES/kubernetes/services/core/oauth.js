@@ -19,7 +19,7 @@ var components = {
                 "soajs.service.label": "dashboard-oauth-v1",
                 "soajs.service.mode": "deployment",
 	            "soajs.service.repo.name": "soajs_oauth",
-                "service.branch": gConfig.git.branch,
+                "service.branch": gConfig.cleanLabel(gConfig.git.branch),
 	            "service.owner": "soajs",
                 "service.repo": "soajs.oauth"
             }
@@ -61,7 +61,7 @@ var components = {
                 "soajs.service.label": "dashboard-oauth-v1",
                 "soajs.service.mode": "deployment",
 	            "soajs.service.repo.name": "soajs_oauth",
-                "service.branch": gConfig.git.branch,
+                "service.branch": gConfig.cleanLabel(gConfig.git.branch),
 	            "service.owner": "soajs",
                 "service.repo": "soajs.oauth"
             }
@@ -87,7 +87,7 @@ var components = {
                         "soajs.service.version": "1",
                         "soajs.service.label": "dashboard-oauth-v1",
                         "soajs.service.mode": "deployment",
-                        "service.branch": gConfig.git.branch,
+                        "service.branch": gConfig.cleanLabel(gConfig.git.branch),
 	                    "service.owner": "soajs",
                         "service.repo": "soajs.oauth"
                     }
@@ -140,26 +140,26 @@ var components = {
                                     "value": "true"
                                 },
                                 {
-                                    "name": "SOAJS_GIT_OWNER",
-                                    "value": "soajs"
+	                                "name": "SOAJS_GIT_OWNER",
+	                                "value": "soajs"
                                 },
-                                {
-                                    "name": "SOAJS_GIT_BRANCH",
-                                    "value": gConfig.git.branch
-                                },
-                                {
-                                    "name": "SOAJS_GIT_REPO",
-                                    "value": "soajs.oauth"
-                                },
-                                {
-                                    "name": "SOAJS_GIT_PROVIDER",
-                                    "value": gConfig.git.provider
-                                },
-                                {
-                                    "name": "SOAJS_GIT_DOMAIN",
-                                    "value": gConfig.git.domain
-                                },
-                                {
+	                            {
+		                            "name": "SOAJS_GIT_BRANCH",
+		                            "value": gConfig.git.branch
+	                            },
+	                            {
+		                            "name": "SOAJS_GIT_REPO",
+		                            "value": "soajs.oauth"
+	                            },
+	                            {
+		                            "name": "SOAJS_GIT_PROVIDER",
+		                            "value": gConfig.git.provider
+	                            },
+	                            {
+		                            "name": "SOAJS_GIT_DOMAIN",
+		                            "value": gConfig.git.domain
+	                            },
+	                            {
                                     "name": "SOAJS_DEPLOY_ACC",
                                     "value": gConfig.deploy_acc
                                 },

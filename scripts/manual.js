@@ -28,9 +28,11 @@ process.env.MASTER_DOMAIN = process.env.MASTER_DOMAIN || "soajs.org";
 
 process.env.SOAJS_NX_API_DOMAIN = process.env.API_PREFIX + "." + process.env.MASTER_DOMAIN;
 process.env.SOAJS_NX_SITE_DOMAIN = process.env.SITE_PREFIX + "." + process.env.MASTER_DOMAIN;
+
 process.env.SOAJS_NX_CONTROLLER_NB = 1;
 process.env.SOAJS_NX_CONTROLLER_IP_1 = process.env.SOAJS_SRVIP;
-process.env.SOAJS_NX_SITE_PATH = WRK_DIR + "/soajs.dashboard/ui";
+process.env.SOAJS_NX_SITE_PATH = WRK_DIR + "/soajs.dashboard.ui";
+
 var NGINX_DEST = (process.platform === 'linux') ? "/etc/nginx/" : "/usr/local/etc/nginx/servers/";
 
 function setupNginx(cb) {
@@ -102,7 +104,14 @@ function setupNginx(cb) {
 			key: process.env.SOAJS_EXTKEY
 		};
 		customSettings = "var customSettings = " + JSON.stringify(customSettings, null, 2) + ";";
-		fs.writeFile(WRK_DIR + "/soajs.dashboard/ui/settings.js", customSettings, {}, cb);
+		async.series([
+			function(sCb){
+				fs.writeFile(WRK_DIR + "/soajs.dashboard.ui/settings.js", customSettings, {}, sCb);
+			},
+			function(sCb){
+				fs.writeFile(WRK_DIR + "/soajs.dashboard.ui/settings.js", customSettings, {}, sCb);
+			}
+		], cb);
 	}
 }
 
@@ -120,9 +129,6 @@ function startDashboard(cb) {
 			},
 			function (mcb) {
 				launchService('oauth', mcb);
-			},
-			function (mcb) {
-				launchService('prx', mcb);
 			},
 			function (mcb) {
 				launchService('dashboard', mcb);
@@ -154,6 +160,11 @@ function startDashboard(cb) {
 }
 
 function loadDependencies(location, skip) {
+	var stats = fs.existsSync(location);
+	if(!stats){
+		return null;
+	}
+	
 	var jsonPackage = fs.readFileSync(location);
 	jsonPackage = JSON.parse(jsonPackage);
 
@@ -199,7 +210,7 @@ function cloneInstallRepo() {
 
 		utilLog.log("installing dependencies ...");
 		var modules = loadDependencies(WRK_DIR + "/" + repoName + "/package.json", noCore);
-		if (modules.length === 0) {
+		if (!modules || modules.length === 0) {
 			return cb();
 		}
 		utilLog.log(">>> ", NPM + " install " + modules.join(" "));
@@ -227,13 +238,13 @@ function install(cb) {
 				cloneInstallRepo("soajs.urac.driver", false, mcb);
 			},
 			function (mcb) {
-				cloneInstallRepo("soajs.core.drivers", 'master', false, mcb);
+				cloneInstallRepo("soajs.core.drivers", false, mcb);
 			},
 			function (mcb) {
-				cloneInstallRepo("soajs.core.libs", 'develop', false, mcb);
+				cloneInstallRepo("soajs.core.libs", false, mcb);
 			},
 			function (mcb) {
-				cloneInstallRepo("soajs.core.modules", 'develop', false, mcb);
+				cloneInstallRepo("soajs.core.modules", false, mcb);
 			},
 			function (mcb) {
 				cloneInstallRepo("soajs", true, mcb);
@@ -248,13 +259,13 @@ function install(cb) {
 				cloneInstallRepo("soajs.dashboard", true, mcb);
 			},
 			function (mcb) {
+				cloneInstallRepo("soajs.dashboard.ui", true, mcb);
+			},
+			function (mcb) {
 				cloneInstallRepo("soajs.gcs", true, mcb);
 			},
 			function (mcb) {
 				cloneInstallRepo("soajs.oauth", true, mcb);
-			},
-			function (mcb) {
-				cloneInstallRepo("soajs.prx", true, mcb);
 			},
 			startDashboard
 		], cb);
@@ -266,7 +277,7 @@ function install(cb) {
 				utilLog.log("\ninstalling soajs.controller soajs.urac soajs.dashboard soajs.gcs ...");
 				npm.load({prefix: WRK_DIR + "/../"}, function (err) {
 					if (err) return mcb(err);
-					npm.commands.install(["soajs.urac", "soajs.dashboard", "soajs.gcs", "soajs.oauth", "soajs.prx"], function (error) {
+					npm.commands.install(["soajs.urac", "soajs.dashboard", "soajs.dashboard.ui", "soajs.gcs", "soajs.oauth", "soajs.prx"], function (error) {
 						if (error) {
 							utilLog.log('error', error);
 						}

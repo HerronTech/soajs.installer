@@ -5,15 +5,6 @@ var dashUISrc = {
 	branch: gConfig.dashUISrc.branch
 };
 
-var customUISrc = {
-    owner: gConfig.customUISrc.owner,
-    repo: gConfig.customUISrc.repo,
-    branch: gConfig.customUISrc.branch,
-    token: gConfig.customUISrc.token,
-	provider: gConfig.customUISrc.provider,
-	domain: gConfig.customUISrc.domain,
-	path: gConfig.customUISrc.path
-};
 
 var ssl = gConfig.nginx.ssl;
 
@@ -43,7 +34,7 @@ var config = {
         'SOAJS_HA_NAME={{.Task.Name}}',
 
 	    'SOAJS_EXTKEY=' + gConfig.extKey1,
-	
+
         'SOAJS_GIT_DASHBOARD_BRANCH=' + dashUISrc.branch,
         'SOAJS_NX_DOMAIN=' + masterDomain,
         'SOAJS_NX_API_DOMAIN=' + gConfig.apiPrefix + '.' + masterDomain,
@@ -69,7 +60,7 @@ var config = {
         "soajs.service.name": "nginx",
         "soajs.service.group": "soajs-nginx",
         "soajs.service.label": "dashboard_nginx",
-        "soajs.service.mode": "replicated"
+        "soajs.service.mode": "global"
     },
     workingDir: '/opt/soajs/deployer/',
     command: [
@@ -81,12 +72,14 @@ var config = {
         {
             "Protocol": "tcp",
             "PublishedPort": gConfig.nginx.port.http,
-            "TargetPort": 80
+            "TargetPort": 80,
+			"PublishMode": "host"
         },
         {
             "Protocol": "tcp",
             "PublishedPort": gConfig.nginx.port.https,
-            "TargetPort": 443
+            "TargetPort": 443,
+			"PublishMode": "host"
         }
     ]
 };
@@ -96,31 +89,6 @@ if (ssl) {
     config.env.push('SOAJS_NX_API_HTTP_REDIRECT=1');
     config.env.push('SOAJS_NX_SITE_HTTPS=1');
     config.env.push('SOAJS_NX_SITE_HTTP_REDIRECT=1');
-}
-
-if (customUISrc.repo && customUISrc.owner) {
-    config.env.push('SOAJS_GIT_REPO=' + customUISrc.repo);
-    config.env.push('SOAJS_GIT_OWNER=' + customUISrc.owner);
-
-    if (customUISrc.branch) {
-        config.env.push('SOAJS_GIT_BRANCH=' + customUISrc.branch || "develop");
-    }
-
-	if (customUISrc.provider) {
-		config.env.push('SOAJS_GIT_PROVIDER=' + customUISrc.provider);
-	}
-
-	if (customUISrc.domain) {
-		config.env.push('SOAJS_GIT_DOMAIN=' + customUISrc.domain);
-	}
-
-    if (customUISrc.token) {
-        config.env.push('SOAJS_GIT_TOKEN=' + customUISrc.token);
-    }
-
-	if (customUISrc.path) {
-		config.env.push('SOAJS_GIT_PATH=' + customUISrc.path);
-	}
 }
 
 module.exports = {
@@ -141,9 +109,7 @@ module.exports = {
         }
     },
     "Mode": {
-        "Replicated": {
-            "Replicas": config.servReplica
-        }
+		"Global": {}
     },
     "UpdateConfig": {
         "Delay": 500.0,

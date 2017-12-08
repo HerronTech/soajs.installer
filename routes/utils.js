@@ -2,8 +2,6 @@
 var os = require("os");
 var fs = require("fs");
 var path = require("path");
-var exec = require("child_process").exec;
-var uuid = require('uuid');
 var soajs = require("soajs");
 var request = require("request");
 
@@ -15,8 +13,7 @@ var rimraf = require("rimraf");
 var async = require("async");
 
 var dataDir = __dirname + "/../data/";
-var dataImportDir = __dirname + "/../scripts/FILES/dataImport/";
-module.exports = {
+var lib = {
     "updateCustomData": function (req, res, body, section, cb) {
         fs.exists(dataDir + "custom.js", function (exists) {
             if (exists) {
@@ -134,14 +131,7 @@ module.exports = {
         var clusters = JSON.parse(JSON.stringify(body.clusters));
         var deployment = JSON.parse(JSON.stringify (body.deployment));
 	    delete clusters.prefix;
-
-	    //add elastic cluster if available
-	    var es_clusters;
-	    if (body.es_clusters) {
-		    es_clusters = JSON.parse(JSON.stringify(body.es_clusters));
-	    }
-
-
+	    
         //fix clusters credentials
         if (clusters.credentials.username === "") {
             clusters.credentials = {};
@@ -193,36 +183,8 @@ module.exports = {
                 ];
             }
         }
-        //add elasticsearch cluster
-	    if (es_clusters) {
-		    var es_Ext = es_clusters.es_Ext;
-		    if (!es_Ext) {
-			    if (body.deployment.deployDriver.indexOf("container.docker") !== -1) {
-				    es_clusters.servers = [
-					    {
-						    host: "soajs-analytics-elasticsearch",
-						    port: 9200
-					    }
-				    ];
-			    }
-			    if (body.deployment.deployDriver.indexOf("container.kubernetes") !== -1) {
-				    //build elasticsearch service with based on namespace
-				    var namespace = (deployment && deployment.namespaces && deployment.namespaces.default) ? deployment.namespaces.default : 'default';
-				    if (deployment && deployment.namespaces && deployment.namespaces.perService) {
-					    namespace += '-soajs-analytics-elasticsearch-service';
-				    }
-				    es_clusters.servers = [
-					    {
-						    host: "soajs-analytics-elasticsearch-service." + namespace,
-						    port: 9200
-					    }
-				    ];
-			    }
-		    }
-	    }
         delete clusters.replicaSet;
         delete clusters.mongoExt;
-	    delete clusters.es_Ext;
         profileData += 'module.exports = ' + JSON.stringify(clusters, null, 2) + ';';
         fs.writeFileSync(folder + "profile.js", profileData, "utf8");
 
@@ -250,17 +212,23 @@ module.exports = {
         if (body.deployment.deployType === 'manual' || body.deployment.deployDriver.indexOf("local") !== -1) {
             body.deployment.deployDockerNodes = [];
         }
+        
+        if(body.deployment.deployType === 'container'){
+        	body.gi.wrkDir = "/opt";
+        }
 
         //modify environments file
         var envData = fs.readFileSync(folder + "environments/dashboard.js", "utf8");
-
-	    //modify analytics file
-	    var settings = fs.readFileSync(folder + "analytics/settings.js", "utf8");
+	    
         envData = envData.replace(/%domain%/g, body.gi.domain);
         envData = envData.replace(/%site%/g, body.gi.site);
         envData = envData.replace(/%api%/g, body.gi.api);
         if(body.deployment.deployType === 'manual'){
             envData = envData.replace(/%wrkDir%/g, body.gi.wrkDir);
+	        envData = envData.replace(/"apiPort": "%dockerLocalPort%",/g,'');
+	        envData = envData.replace(/"apiPort": "%dockerRemotePort%",/g,'');
+	        envData = envData.replace(/"apiPort": "%kubernetesLocalPort%",/g,'');
+	        envData = envData.replace(/"apiPort": "%kubernetesRemotePort%",/g,'');
         }
         else{
             envData = envData.replace(/%wrkDir%/g, "/opt");
@@ -273,27 +241,6 @@ module.exports = {
         var mongoCluster = fs.readFileSync(folder + "resources/mongo.js", "utf8");
 	    mongoCluster = mongoCluster.replace(/"%clusters%"/g, JSON.stringify(clusters, null, 2));
 		fs.writeFile(folder + "resources/mongo.js", mongoCluster, "utf8");
-		   
-	    var uid = uuid.v4();
-	    var esCluster = fs.readFileSync(folder + "resources/es.js", "utf8");
-	    if (es_clusters) {
-		    esCluster = esCluster.replace(/"%es_analytics_cluster%"/g, JSON.stringify(es_clusters, null, 2));
-		    esCluster = esCluster.replace(/"%es_analytics_cluster_name%"/g, JSON.stringify("es_analytics_cluster_" + uid), null ,2);
-		    envData = envData.replace(/%es_database_name%/g, "es_analytics_db_" + uid);
-		    envData = envData.replace(/"%databases_value%"/g, JSON.stringify({
-			    "cluster": "es_analytics_cluster_" + uid,
-			    "tenantSpecific": false
-		    }, null, 2));
-		    settings = settings.replace(/"%db_name%"/g, JSON.stringify("es_analytics_db_" + uid), null ,2);
-	    }
-	    else {
-		    esCluster = "'use strict';" + os.EOL + os.EOL + "module.exports =" + JSON.stringify({}) + ";";
-		    envData = envData.replace(/"%es_database_name%": "%databases_value%",/g, '');
-		    settings = settings.replace(/"db_name": "%db_name%"/g, '');
-	    }
-	    fs.writeFile(folder + "resources/es.js", esCluster, "utf8");
-	    fs.writeFile(folder + "analytics/settings.js", settings, "utf8");
-	    
 	    
         envData = envData.replace(/%keySecret%/g, body.security.key);
         envData = envData.replace(/%sessionSecret%/g, body.security.session);
@@ -302,16 +249,51 @@ module.exports = {
             envData = envData.replace(/%nginxDeployType%/g, body.deployment.nginxDeployType);
             envData = envData.replace(/"%namespace%"/g, JSON.stringify (body.deployment.namespaces, null, 2));
             envData = envData.replace(/%token%/g, body.deployment.authentication.accessToken);
+	        if (body.deployment.deployDriver.split('.')[2] === 'local'){
+		        envData = envData.replace(/"apiPort": "%dockerLocalPort%",/g, '');
+		        envData = envData.replace(/"apiPort": "%dockerRemotePort%",/g,'');
+		        envData = envData.replace(/"%kubernetesLocalPort%"/g, body.deployment.kubernetes.containerPort);
+		        envData = envData.replace(/"apiPort": "%kubernetesRemotePort%",/g,'');
+	        }
+	        else {
+		        envData = envData.replace(/"apiPort": "%dockerLocalPort%",/g, '');
+		        envData = envData.replace(/"apiPort": "%dockerRemotePort%",/g,'');
+		        envData = envData.replace(/"apiPort": "%kubernetesLocalPort%",/g, '');
+		        envData = envData.replace(/"%kubernetesRemotePort%"/g, body.deployment.kubernetes.containerPort);
+	        }
         }
         else {
             envData = envData.replace(/%nginxDeployType%/g, '');
             envData = envData.replace(/"%namespace%"/g, JSON.stringify ({}, null, 2));
             envData = envData.replace(/%token%/g, '');
+	       
+	        if (body.deployment.deployDriver.split('.')[2] === 'local'){
+		        envData = envData.replace(/"%dockerLocalPort%"/g, body.deployment.docker.containerPort);
+		        envData = envData.replace(/"apiPort": "%dockerRemotePort%",/g,'');
+		        envData = envData.replace(/"apiPort": "%kubernetesLocalPort%",/g,'');
+		        envData = envData.replace(/"apiPort": "%kubernetesRemotePort%",/g,'');
+	        }
+	        else {
+		        envData = envData.replace(/"apiPort": "%dockerLocalPort%",/g, '');
+		        envData = envData.replace(/"%dockerRemotePort%"/g, body.deployment.docker.containerPort);
+		        envData = envData.replace(/"apiPort": "%kubernetesLocalPort%",/g,'');
+		        envData = envData.replace(/"apiPort": "%kubernetesRemotePort%",/g,'');
+	        }
         }
         fs.writeFile(folder + "environments/dashboard.js", envData, "utf8");
 
         //modify tenants file
+	    let protocol = "http";
+	    let port = body.deployment.nginxPort;
+	    
+	    if(body.deployment.nginxSsl){
+	    	protocol = "https";
+	    	port = body.deployment.nginxSecurePort;
+	    }
+	    
         var tntData = fs.readFileSync(folder + "tenants/owner.js", "utf8");
+        tntData = tntData.replace(/%protocol%/g, protocol);
+        tntData = tntData.replace(/%port%/g, port);
         tntData = tntData.replace(/%email%/g, body.gi.email);
         tntData = tntData.replace(/%site%/g, body.gi.site);
         tntData = tntData.replace(/%domain%/g, body.gi.domain);
@@ -319,6 +301,16 @@ module.exports = {
         tntData = tntData.replace(/%extKey1%/g, body.security.extKey1);
         tntData = tntData.replace(/%extKey2%/g, body.security.extKey2);
         fs.writeFile(folder + "tenants/owner.js", tntData, "utf8");
+	
+	    var tntData = fs.readFileSync(folder + "tenants/techop.js", "utf8");
+	    tntData = tntData.replace(/%protocol%/g, protocol);
+	    tntData = tntData.replace(/%port%/g, port);
+	    tntData = tntData.replace(/%email%/g, body.gi.email);
+	    tntData = tntData.replace(/%site%/g, body.gi.site);
+	    tntData = tntData.replace(/%domain%/g, body.gi.domain);
+	    tntData = tntData.replace(/%wrkDir%/g, body.gi.wrkDir);
+	    tntData = tntData.replace(/%extKey3%/g, body.security.extKey3);
+	    fs.writeFile(folder + "tenants/techop.js", tntData, "utf8");
 
         //remove unneeded file
         fs.unlinkSync(folder + "tenants/info.js");
@@ -358,15 +350,6 @@ module.exports = {
                 def.clusters[j] = over.clusters[j];
             }
         }
-
-	    if (over.es_clusters) {
-		    for (var j in over.es_clusters) {
-			    if (!def.es_clusters) {
-				    def.es_clusters = {};
-			    }
-			    def.es_clusters[j] = over.es_clusters[j];
-		    }
-	    }
         return def;
     },
 
@@ -419,7 +402,7 @@ module.exports = {
                     output += "sudo service nginx start" + os.EOL;
                 }
 
-                output += os.EOL + "ps aux | grep node" + os.EOL;
+                output += os.EOL + "ps aux | grep soajs" + os.EOL;
                 output += "ps aux | grep nginx" + os.EOL;
 
                 fs.writeFile(filename, output, function(err){
@@ -463,27 +446,6 @@ module.exports = {
         return cb(null, true);
     },
 
-	"verifyEsIP": function (req, res, cb) {
-		var tempData = req.soajs.inputmaskData.es_clusters;
-		if (tempData) {
-			if (tempData.es_Ext) {
-				for (var i = 0; i < tempData.servers.length; i++) {
-					if (!tempData.servers[i].host)
-						return cb("noIP");
-					if (tempData.servers[i].host === "127.0.0.1")
-						return cb(tempData.servers[i].host)
-				}
-			}
-			else {
-				req.soajs.inputmaskData.es_clusters.servers = [{"host": "127.0.0.1", "port": 9200}];
-			}
-		}
-		else {
-			req.soajs.inputmaskData.es_clusters =null;
-		}
-		return cb(null, true);
-	},
-
     "deployContainer": function (body, driver, loc, cb) {
         whereis('node', function (err, nodePath) {
             if (err) {
@@ -507,13 +469,7 @@ module.exports = {
                     "MASTER_DOMAIN": body.gi.domain,
 
                     "MONGO_EXT": body.clusters.mongoExt,
-
-                    "SOAJS_GIT_OWNER": body.deployment.gitOwner,
-                    "SOAJS_GIT_REPO": body.deployment.gitRepo,
-                    "SOAJS_GIT_TOKEN": body.deployment.gitToken,
-                    "SOAJS_GIT_PATH": body.deployment.gitPath,
-                    "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
-
+	                
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
 
                     "SOAJS_IMAGE_PREFIX": body.deployment.soajsImagePrefix,
@@ -548,24 +504,17 @@ module.exports = {
                     envs['SOAJS_MONGO_RSNAME'] = body.clusters.replicaSet;
                 }
                 
-                if (body.deployment.certificates) {
-                	body.deployment.docker.certificatesFolder = body.deployment.certificates.caCertificate.split("/");
-	                body.deployment.docker.certificatesFolder.pop();
-	                body.deployment.docker.certificatesFolder = body.deployment.docker.certificatesFolder.join("/");
-                    envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder + "/";
+                if (body.deployment.certificates && body.deployment.certificates.caCertificate
+	                && body.deployment.certificates.certCertificate && body.deployment.certificates.keyCertificate) {
+                	
+                	body.deployment.docker.caCertificate = body.deployment.certificates.caCertificate;
+                	body.deployment.docker.certCertificate = body.deployment.certificates.certCertificate;
+                	body.deployment.docker.keyCertificate = body.deployment.certificates.keyCertificate;
+                    envs["SOAJS_DOCKER_CA_CERTS_PATH"] = body.deployment.docker.caCertificate;
+                    envs["SOAJS_DOCKER_CERT_CERTS_PATH"] = body.deployment.docker.certCertificate;
+                    envs["SOAJS_DOCKER_KEY_CERTS_PATH"] = body.deployment.docker.keyCertificate;
                 }
-
-	            envs['SOAJS_DEPLOY_ANALYTICS'] = body.deployment.deployAnalytics ? true : false;
-
-	            if (body.es_clusters && Object.keys(body.es_clusters).length > 0) {
-		            envs['SOAJS_ELASTIC_EXTERNAL'] = body.clusters.es_Ext || false;
-		            envs['SOAJS_ELASTIC_EXTERNAL_SERVERS'] = JSON.stringify(body.es_clusters.servers);
-		            envs['SOAJS_ELASTIC_EXTERNAL_URLPARAM'] = JSON.stringify(body.es_clusters.URLParam);
-		            envs['SOAJS_ELASTIC_EXTERNAL_EXTRAPARAM'] = JSON.stringify(body.es_clusters.extraParam);
-	            }
-	            else {
-		            envs['SOAJS_ELASTIC_EXTERNAL'] = false
-	            }
+	            
                 //add readiness probes environment variables
                if(body.deployment.readinessProbe){
                    envs["KUBE_INITIAL_DELAY"] = body.deployment.readinessProbe.initialDelaySeconds;
@@ -596,7 +545,7 @@ module.exports = {
                         if(chmodErr){
                             return cb(chmodErr);
                         }
-                        generateResponse("swarm");
+                       lib.generateResponse("swarm", body, cb);
                     });
                 });
             }
@@ -618,12 +567,6 @@ module.exports = {
                     "MASTER_DOMAIN": body.gi.domain,
 
                     "MONGO_EXT": body.clusters.mongoExt,
-
-                    "SOAJS_GIT_OWNER": body.deployment.gitOwner,
-                    "SOAJS_GIT_REPO": body.deployment.gitRepo,
-                    "SOAJS_GIT_TOKEN": body.deployment.gitToken,
-                    "SOAJS_GIT_PATH": body.deployment.gitPath,
-                    "SOAJS_GIT_CUSTOM_UI_BRANCH" : body.deployment.gitBranch,
 
                     "SOAJS_DATA_FOLDER": path.normalize(dataDir + "startup/"),
 	
@@ -662,25 +605,6 @@ module.exports = {
                 if (body.clusters.replicaSet) {
                     envs['SOAJS_MONGO_RSNAME'] = body.clusters.replicaSet;
                 }
-	
-	            if (body.deployment.certificates) {
-		            body.deployment.docker.certificatesFolder = body.deployment.certificates.caCertificate.split("/");
-		            body.deployment.docker.certificatesFolder.pop();
-		            body.deployment.docker.certificatesFolder = body.deployment.docker.certificatesFolder.join("/");
-		            envs["SOAJS_DOCKER_CERTS_PATH"] = body.deployment.docker.containerDir || body.deployment.docker.certificatesFolder + "/";
-	            }
-	            
-	            envs['SOAJS_DEPLOY_ANALYTICS'] = body.deployment.deployAnalytics ? true : false;
-
-	            if (body.es_clusters && Object.keys(body.es_clusters).length > 0) {
-		            envs['SOAJS_ELASTIC_EXTERNAL'] = body.es_clusters.es_Ext || false;
-		            envs['SOAJS_ELASTIC_EXTERNAL_SERVERS'] = JSON.stringify(body.es_clusters.servers);
-		            envs['SOAJS_ELASTIC_EXTERNAL_URLPARAM'] = JSON.stringify(body.es_clusters.URLParam);
-		            envs['SOAJS_ELASTIC_EXTERNAL_EXTRAPARAM'] = JSON.stringify(body.es_clusters.extraParam);
-	            }
-	            else {
-		            envs['SOAJS_ELASTIC_EXTERNAL'] = false
-	            }
                 //add readiness probes environment variables
                if(body.deployment.readinessProbe){
                    envs["KUBE_INITIAL_DELAY"] = body.deployment.readinessProbe.initialDelaySeconds;
@@ -712,7 +636,7 @@ module.exports = {
                         if(chmodErr){
                             return cb(chmodErr);
                         }
-                        generateResponse("kubernetes");
+                        lib.generateResponse("kubernetes", body, cb);
                     });
                 });
             }
@@ -720,26 +644,6 @@ module.exports = {
                 return cb(new Error("Invalid Deployment Strategy Requested: " + driver));
             }
         });
-
-        function generateResponse(type) {
-            var obj = {
-                "hosts": {
-                    "api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
-                    "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
-                },
-                "ui": "http://" + body.gi.site + "." + body.gi.domain,
-                "cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
-            };
-
-            if (!body.clusters.mongoExt) {
-                obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata";
-            }
-            else {
-                obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard-soajsdata";
-            }
-
-            return cb(null, obj);
-        }
     },
 
     "regenerateInfo": function(type, body, cb){
@@ -750,71 +654,61 @@ module.exports = {
                     "site": "127.0.0.1 " + body.gi.site + "." + body.gi.domain
                 },
                 "ui": "http://" + body.gi.site + "." + body.gi.domain,
-                "cmd": "sudo " + path.normalize(__dirname + "/../scripts/manual-deploy.sh")
+                "cmd": path.normalize(__dirname + "/../scripts/manual-deploy.sh")
             });
         }
         else{
-            generateResponse(type);
-        }
-
-        function generateResponse(type) {
-            fs.chmodSync(path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh"), "0755");
-
-            var obj = {
-                "hosts": {
-                    "api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
-                    "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
-                },
-                "ui": "http://" + body.gi.site + "." + body.gi.domain,
-                "cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
-            };
-
-            if(body.deployment.nginxPort !== 80){
-	        	obj["ui"] = "http://" + body.gi.site + "." + body.gi.domain + ":" + body.deployment.nginxPort;
-	        }
-
-            if(type === 'kubernetes'){
-                obj = {
-                    "hosts": {
-                        "api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
-                        "site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
-                    },
-                    "ui": "http://" + body.gi.site + "." + body.gi.domain + ":" + body.deployment.nginxPort,
-                    "cmd": "sudo " + path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
-                };
-            }
-
-            if (!body.clusters || !body.clusters.mongoExt) {
-                if(type === 'kubernetes'){
-                    var namespace = body.deployment.namespaces.default;
-                    if (body.deployment.namespaces.perService) {
-                        namespace += '-dashboard-soajsdata';
-                    }
-                    obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata." + namespace;
-                }
-                else{
-                    obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata";
-                }
-            }
-            else {
-                obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard-soajsdata";
-            }
-            if (body.es_clusters && body.es_clusters.servers){
-	            if(type === 'kubernetes'){
-		            var namespace = body.deployment.namespaces.default;
-		            if (body.deployment.namespaces.perService) {
-			            namespace += '-soajs-analytics-elasticsearch-service';
-		            }
-		            obj['hosts'].elasticsearch =  body.deployment.containerHost + " soajs-analytics-elasticsearch-service." + namespace;
-	            }
-	            else {
-		            obj['hosts'].elasticsearch = body.es_clusters.servers[0].host + " soajs-analytics-elasticsearch";
-	            }
-            }
-            return cb(null, obj);
+            lib.generateResponse(type, body, cb);
         }
     },
-
+	
+	"generateResponse": function (type, body, cb) {
+		fs.chmodSync(path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh"), "0755");
+		var protocol = body.deployment.nginxSsl ? "https" : "http";
+		var port = body.deployment.nginxSsl ? body.deployment.nginxSecurePort : body.deployment.nginxPort;
+		
+		var obj = {
+			"hosts": {
+				"api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
+				"site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
+			},
+			"ui": protocol + "://" + body.gi.site + "." + body.gi.domain,
+			"cmd": path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
+		};
+		
+		if(port !== 80){
+			obj["ui"] = protocol + "://" + body.gi.site + "." + body.gi.domain + ":" + port;
+		}
+		
+		if(type === 'kubernetes'){
+			obj = {
+				"hosts": {
+					"api": body.deployment.containerHost + " " + body.gi.api + "." + body.gi.domain,
+					"site": body.deployment.containerHost + " " + body.gi.site + "." + body.gi.domain
+				},
+				"ui": protocol + "://" + body.gi.site + "." + body.gi.domain + ":" + port,
+				"cmd": path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh")
+			};
+		}
+		
+		if (!body.clusters || !body.clusters.mongoExt) {
+			if(type === 'kubernetes'){
+				var namespace = body.deployment.namespaces.default;
+				if (body.deployment.namespaces.perService) {
+					namespace += '-dashboard-soajsdata';
+				}
+				obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata." + namespace;
+			}
+			else{
+				obj['hosts'].mongo = body.deployment.containerHost + " dashboard-soajsdata";
+			}
+		}
+		else {
+			obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard-soajsdata";
+		}
+		return cb(null, obj);
+	},
+	
     "returnInstallProgress": function (body, cb) {
         if (body.deployment.deployType === 'manual') {
             var repos = ["soajs.controller", "soajs.urac", "soajs.dashboard", "soajs.gcs", "soajs.oauth", "soajs"];
@@ -921,14 +815,12 @@ module.exports = {
              */
             if (body.deployment.deployDriver.indexOf("docker") !== -1) {
                 // docker
-                var services = ["dashboard-soajsdata", "dashboard_soajs_oauth", "dashboard_soajs_urac", "dashboard_soajs_dashboard", "dashboard-controller", "dashboard_nginx"];
-
-                if(body.deployment.deployAnalytics){
-                	var analyticsContaiers = ["kibana", "dashboard-filebeat", "soajs-analytics-elasticsearch", "soajs-metricbeat", "dashboard-logstash"];
-	                services = services.concat(analyticsContaiers);
-                }
-
-                var Docker = require('dockerode');
+	            var services = ["dashboard_soajs_oauth", "dashboard_soajs_urac", "dashboard_soajs_dashboard", "dashboard-controller", "dashboard_nginx"];
+	            if (!body.clusters.mongoExt) {
+		            services.push("dashboard-soajsdata");
+	            }
+	
+	            var Docker = require('dockerode');
                 var deployerConfig = {
                     "host": body.deployment.containerHost,
                     "port": body.deployment.docker.containerPort
@@ -939,12 +831,12 @@ module.exports = {
                     };
                 }
                 else {
-                    if (!body.deployment.docker.certsPath) {
+                    if (!body.deployment.certificates || !body.deployment.certificates.caCertificate || !body.deployment.certificates.keyCertificate || !body.deployment.certificates.certCertificate ){
                         return cb(new Error('No certificates found for remote machine.'));
                     }
-                    deployerConfig.ca = fs.readFileSync(body.deployment.docker.certsPath + '/ca.pem');
-                    deployerConfig.cert = fs.readFileSync(body.deployment.docker.certsPath + '/cert.pem');
-                    deployerConfig.key = fs.readFileSync(body.deployment.docker.certsPath + '/key.pem');
+                    deployerConfig.ca = fs.readFileSync(body.deployment.certificates.caCertificate);
+                    deployerConfig.cert = fs.readFileSync(body.deployment.certificates.certCertificate);
+                    deployerConfig.key = fs.readFileSync(body.deployment.certificates.keyCertificate);
                 }
                 var deployer = new Docker(deployerConfig);
                 deployer.listContainers({}, function (error, containers) {
@@ -988,14 +880,12 @@ module.exports = {
             }
             else {
                 // kubernetes
-                var services = ["dashboard-soajsdata", "dashboard-oauth-v1", "dashboard-urac-v2", "dashboard-dashboard-v1", "dashboard-controller-v1", "dashboard-nginx"];
-
-	            if(body.deployment.deployAnalytics){
-		            var analyticsContaiers = ["kibana", "soajs-analytics-elasticsearch", "dashboard-logstash"];
-		            services = services.concat(analyticsContaiers);
+	            var services = ["dashboard-oauth-v1", "dashboard-urac-v2", "dashboard-dashboard-v1", "dashboard-controller-v1", "dashboard-nginx"];
+	            if (!body.clusters.mongoExt) {
+		            services.push("dashboard-soajsdata");
 	            }
-
-                var K8Api = require('kubernetes-client');
+	
+	            var K8Api = require('kubernetes-client');
 
                 if (!body.deployment.authentication || !body.deployment.authentication.accessToken) {
                     return cb(new Error('No access token found.'));
@@ -1027,43 +917,69 @@ module.exports = {
 	            var defaultNamespace = body.deployment.namespaces.default;
 
 	            //get all services regardless of their namespace value
-                deployer.deployments.get({}, function (error, deploymentList) {
-                    if (error) return cb(error);
-
-                    async.map(deploymentList.items, function (oneService, mcb) {
-
-                    	var serviceName = oneService.metadata.name, namespace;
-	                    if (body.deployment.namespaces.perService) {
-		                    namespace = defaultNamespace + '-' + oneService.metadata.labels['soajs.service.label'];
-	                    }
-                        else {
-                            namespace = defaultNamespace;
-                        }
-
-                        if (services.indexOf(serviceName) !== -1 && oneService.metadata.namespace === namespace) {
-                            return mcb(null, (oneService.status.availableReplicas === body.deployment.dockerReplica));
-                        }
-                        else return mcb(null, null);
-                    }, function (error, response) {
-                        if (error) return cb(error);
-
-                        var bar = 0;
-                        for (var i = response.length - 1; i >= 0; i--) {
-                            if (response[i]) {
-                                bar++;
-                            }
-                        }
-
-                        //the only thing remaining now in the array are 1s and 0s which represent the repos installed
-                        return cb(null, {
-                            deployType: 'kubernetes',
-                            download: {
-                                count: bar,
-                                total: services.length
-                            }
-                        });
-                    });
-                });
+	            async.parallel({
+		            deployments: function (callback) {
+			            deployer.deployments.get({}, callback);
+		            },
+		            daemonsets: function (callback) {
+			            deployer.daemonsets.get({}, callback);
+		            }
+	            }, function (err, results) {
+	            	if (err){
+			            return cb(err);
+		            }
+		            if (!results || !results.deployments || !results.deployments.items || results.deployments.items.length ===0 ){
+			            return cb(null, {
+				            deployType: 'kubernetes',
+				            download: {
+					            count: 0,
+					            total: 0
+				            }
+			            });
+		            }
+		            var items = results.deployments.items;
+		            if (results.daemonsets.items && results.daemonsets.items.length > 0) {
+			            items = results.deployments.items.concat(results.daemonsets.items);
+		            }
+		            async.map(items, function (oneService, mcb) {
+			            var serviceName = oneService.metadata.name, namespace;
+			
+			            if (body.deployment.namespaces.perService) {
+				            namespace = defaultNamespace + '-' + oneService.metadata.labels['soajs.service.label'];
+			            }
+			            else {
+				            namespace = defaultNamespace;
+			            }
+			           
+			            if (services.indexOf(serviceName) !== -1 && oneService.metadata.namespace === namespace) {
+				            if (oneService.metadata.labels["soajs.service.mode"] === "daemonset"){
+					            return mcb(null, (oneService.status.numberReady === 1));
+				            }
+				            else {
+					            return mcb(null, (oneService.status.availableReplicas === body.deployment.dockerReplica));
+				            }
+			            }
+			            else return mcb(null, null);
+		            }, function (error, response) {
+			            if (error) return cb(error);
+			
+			            var bar = 0;
+			            for (var i = response.length - 1; i >= 0; i--) {
+				            if (response[i]) {
+					            bar++;
+				            }
+			            }
+			
+			            //the only thing remaining now in the array are 1s and 0s which represent the repos installed
+			            return cb(null, {
+				            deployType: 'kubernetes',
+				            download: {
+					            count: bar,
+					            total: services.length
+				            }
+			            });
+		            });
+	            });
             }
         }
 
@@ -1151,3 +1067,4 @@ module.exports = {
 		});
 	}
 };
+module.exports = lib;
