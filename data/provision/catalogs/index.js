@@ -9,6 +9,11 @@ if (process.env.SOAJS_DEPLOY_HA === 'docker') {
                 "Source": "soajs_log_volume",
                 "Target": "/var/log/soajs/"
             },
+	        {
+		        "Type": "volume",
+		        "Source": "soajs_certs_volume",
+		        "Target": "/var/certs/soajs/"
+	        },
             //NOTE: Voluming the unix socket is only required for the controller
             //NOTE: It is not required for any other service and can be removed
             {

@@ -26,7 +26,8 @@ var config = {
     },
     command: [
         'mongod',
-        '--smallfiles'
+        '--smallfiles',
+	    '--bind_ip_all'
     ],
     mounts: [
         {
