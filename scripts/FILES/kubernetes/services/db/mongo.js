@@ -77,9 +77,9 @@ var components = {
                     "containers": [
                         {
                             "name": "dashboard-soajsdata",
-                            "image": "mongo",
+                            "image": "mongo:3.4.10",
                             "imagePullPolicy": gConfig.imagePullPolicy,
-                            "command": ["mongod", "--smallfiles", '--bind_ip_all'],
+                            "command": [ "mongod", "--smallfiles" ],
                             "ports": [
                                 {
                                     "name": "mongoport",
