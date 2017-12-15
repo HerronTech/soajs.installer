@@ -16,6 +16,8 @@ if(!process.env.MONGO_EXT || process.env.MONGO_EXT === 'false'){
 	profile2.servers[0].port = parseInt(process.env.MONGO_PORT) || 27017;
 }
 
+var remoteDeployment = false;
+
 var mongo = new soajs.mongo(profile2);
 var utilLog = require('util');
 
@@ -87,6 +89,7 @@ var lib = {
             deployerConfig.cert = fs.readFileSync(config.docker.certCertificate);
             deployerConfig.key = fs.readFileSync(config.docker.keyCertificate);
 
+			remoteDeployment = true;
             return cb(null, new Docker(deployerConfig));
         }
     },
@@ -135,6 +138,13 @@ var lib = {
                 oneService.Labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
                 oneService.Labels["soajs.catalog.v"] = "1";
 	            oneService.Labels["service.image.ts"] = new Date().getTime().toString();
+
+				if(oneService.name === 'dashboard-controller' && remoteDeployment) {
+					if(oneService.TaskTemplate && oneService.TaskTemplate.Placement) {
+						//if remote deployment, controller does not need to be on master nodes only
+						delete oneService.TaskTemplate.Placement;
+					}
+				}
             }
             else if (type === "nginx"){
                 oneService.Labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;

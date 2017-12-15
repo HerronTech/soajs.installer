@@ -501,7 +501,7 @@ var lib = {
 
 		function initNamespace(cb) {
 			if(!options || !options.deployment || !options.deployment.metadata) return cb(null, true);
-			
+
 			if(options.customNamespace) return cb(null, true);
 
 			var serviceName;
@@ -519,7 +519,7 @@ var lib = {
 
 			//if deploying NGINX, modify the spec object according to deployType
 			if(config.nginx.deployType === 'LoadBalancer') {
-				if (options.service.metadata.labels['soajs.service.type'] === 'nginx') {
+				if (options.service.metadata.labels['soajs.service.name'] === 'nginx') {
 					options.service.spec.type = 'LoadBalancer';
 					if (options.service.spec.ports[0]) {
 						delete options.service.spec.ports[0].nodePort;
@@ -897,7 +897,7 @@ var lib = {
             }
 
             if(profile.URLParam.ssl){
-                mongoEnv.push({ name: 'SOAJS_MONGO_SSL', value: profile.URLParam.ssl });
+                mongoEnv.push({ name: 'SOAJS_MONGO_SSL', value: "" + profile.URLParam.ssl });
             }
         }
         else {
