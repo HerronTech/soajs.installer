@@ -705,6 +705,7 @@ var lib = {
                     Name: netName,
                     Driver: 'overlay',
                     Internal: false,
+					Attachable: true,
                     CheckDuplicate: true,
                     EnableIPv6: false,
                     IPAM: {
