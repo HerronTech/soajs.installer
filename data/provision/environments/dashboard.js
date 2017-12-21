@@ -12,6 +12,9 @@ var dashboard = {
     "deployer": {
 	    "type": "%deployType%",
 	    "selected": "%deployDriver%",
+	    "manual": {
+	    	"nodes": "%containerNode%",
+	    },
 	    "container": {
 		    "docker": {
 			    "local": {
