@@ -2,7 +2,7 @@
 
 module.exports = [
 	{
-		"type": "BLANK",
+		"type": "_BLANK",
 		"gi": {
 			"code": "BLANK",
 			"deployPortal": true
@@ -13,7 +13,7 @@ module.exports = [
 		}
 	},
 	{
-		"type": "SOAJS",
+		"type": "_SOAJS",
 		"gi": {
 			"code": "SOAJS",
 			"deployPortal": true
@@ -26,7 +26,7 @@ module.exports = [
 		"nginx": {}
 	},
 	{
-		"type": "PORTAL",
+		"type": "_PORTAL",
 		"gi": {
 			"code": "PORTAL",
 			"deployPortal": true
