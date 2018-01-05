@@ -35,12 +35,12 @@ module.exports = [
 			"deployment": {},
 			"selectedDriver": ""
 		},
+		"productize": {},
 		"cluster": {},
 		"controller": {},
 		"urac": {},
 		"oauth": {},
 		"nginx": {},
-		"productize": {},
 		"user": {}
 	}
 ];
