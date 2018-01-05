@@ -61,6 +61,10 @@ const lib = {
 				var record = require(dataFolder + "resources/mongo.js");
 				record._id = mongo.ObjectId(record._id);
 				mongo.insert("resources", record, mCb);
+			},
+			"templates": function(mCb){
+				var templates = require(dataFolder + "environments/templates.js");
+				mongo.insert("templates", templates, mCb);
 			}
 		}, cb);
 	},
