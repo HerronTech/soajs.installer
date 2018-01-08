@@ -637,7 +637,7 @@ var catalogs = [
                 "image": {
                     "prefix": "",
                     "name": "mongo",
-                    "tag": "latest",
+                    "tag": "3.4.10",
                     "pullPolicy": "IfNotPresent"
                 },
                 "readinessProbe": {
