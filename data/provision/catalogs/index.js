@@ -907,6 +907,226 @@ var catalogs = [
 	},
 	
 	{
+		"name": "Portal Nginx Recipe - Docker",
+		"type": "server",
+		"subtype": "nginx",
+		"description": "This recipe allows you to deploy the portal nginx server that upstreams traffic to soajs in docker",
+		"locked": true,
+		"recipe": {
+			"deployOptions": {
+				"image": {
+					"prefix": "soajsorg",
+					"name": "nginx",
+					"tag": "latest",
+					"pullPolicy": "IfNotPresent"
+				},
+				"readinessProbe": {
+					"httpGet": {
+						"path": "/",
+						"port": "http"
+					},
+					"initialDelaySeconds": 5,
+					"timeoutSeconds": 2,
+					"periodSeconds": 5,
+					"successThreshold": 1,
+					"failureThreshold": 3
+				},
+				"restartPolicy": dockerRestartPolicy,
+				"container": {
+					"network": dockerNetwork, //container network for docker
+					"workingDir": "/opt/soajs/deployer/" //container working directory
+				},
+				"voluming": JSON.parse(JSON.stringify(dockerDefaultVoluming)),
+				"ports": [
+					{
+						"name": "http",
+						"target": 80,
+						"isPublished": true,
+						"published": 81,
+						"preserveClientIP": true
+					},
+					{
+						"name": "https",
+						"target": 443,
+						"isPublished": true,
+						"published": 444,
+						"preserveClientIP": true
+					}
+				]
+			},
+			"buildOptions": {
+				"env": {
+					"SOAJS_ENV": {
+						"type": "computed",
+						"value": "$SOAJS_ENV"
+					},
+					"SOAJS_EXTKEY": {
+						"type": "computed",
+						"value": "$SOAJS_EXTKEY"
+					},
+					"SOAJS_NX_DOMAIN": {
+						"type": "computed",
+						"value": "$SOAJS_NX_DOMAIN"
+					},
+					"SOAJS_NX_API_DOMAIN": {
+						"type": "computed",
+						"value": "$SOAJS_NX_API_DOMAIN"
+					},
+					"SOAJS_NX_SITE_DOMAIN": {
+						"type": "computed",
+						"value": "$SOAJS_NX_SITE_DOMAIN"
+					},
+					"SOAJS_NX_CONTROLLER_NB": {
+						"type": "computed",
+						"value": "$SOAJS_NX_CONTROLLER_NB"
+					},
+					"SOAJS_NX_CONTROLLER_IP": {
+						"type": "computed",
+						"value": "$SOAJS_NX_CONTROLLER_IP_N"
+					},
+					"SOAJS_NX_CONTROLLER_PORT": {
+						"type": "computed",
+						"value": "$SOAJS_NX_CONTROLLER_PORT"
+					},
+					"SOAJS_NX_REAL_IP": {
+						"type": "static",
+						"value": "true"
+					},
+					
+					"SOAJS_DEPLOY_HA": {
+						"type": "computed",
+						"value": "$SOAJS_DEPLOY_HA"
+					},
+					"SOAJS_HA_NAME": {
+						"type": "computed",
+						"value": "$SOAJS_HA_NAME"
+					}
+					"SOAJS_GIT_PORTAL_BRANCH": {
+						"type": "static",
+						"value": "master"
+					}
+				},
+				"cmd": {
+					"deploy": {
+						"command": ["bash"],
+						"args": ["-c", "node index.js -T nginx"]
+					}
+				}
+			}
+		}
+	},
+	
+	{
+		"name": "Portal Nginx Recipe - Kubernetes",
+		"type": "server",
+		"subtype": "nginx",
+		"description": "This recipe allows you to deploy the portal nginx server that upstreams traffic to soajs in kubernetes",
+		"locked": true,
+		"recipe": {
+			"deployOptions": {
+				"image": {
+					"prefix": "soajsorg",
+					"name": "nginx",
+					"tag": "latest",
+					"pullPolicy": "IfNotPresent"
+				},
+				"readinessProbe": {
+					"httpGet": {
+						"path": "/",
+						"port": "http"
+					},
+					"initialDelaySeconds": 5,
+					"timeoutSeconds": 2,
+					"periodSeconds": 5,
+					"successThreshold": 1,
+					"failureThreshold": 3
+				},
+				"restartPolicy": {},
+				"container": {
+					"network": '', //container network for docker
+					"workingDir": "/opt/soajs/deployer/" //container working directory
+				},
+				"voluming": JSON.parse(JSON.stringify(kubernetesDefaultVoluming)),
+				"ports": [
+					{
+						"name": "http",
+						"target": 80,
+						"isPublished": true,
+						"published": 81,
+						"preserveClientIP": true
+					},
+					{
+						"name": "https",
+						"target": 443,
+						"isPublished": true,
+						"published": 444,
+						"preserveClientIP": true
+					}
+				]
+			},
+			"buildOptions": {
+				"env": {
+					"SOAJS_ENV": {
+						"type": "computed",
+						"value": "$SOAJS_ENV"
+					},
+					"SOAJS_EXTKEY": {
+						"type": "computed",
+						"value": "$SOAJS_EXTKEY"
+					},
+					"SOAJS_NX_DOMAIN": {
+						"type": "computed",
+						"value": "$SOAJS_NX_DOMAIN"
+					},
+					"SOAJS_NX_API_DOMAIN": {
+						"type": "computed",
+						"value": "$SOAJS_NX_API_DOMAIN"
+					},
+					"SOAJS_NX_SITE_DOMAIN": {
+						"type": "computed",
+						"value": "$SOAJS_NX_SITE_DOMAIN"
+					},
+					"SOAJS_NX_CONTROLLER_NB": {
+						"type": "computed",
+						"value": "$SOAJS_NX_CONTROLLER_NB"
+					},
+					"SOAJS_NX_CONTROLLER_IP": {
+						"type": "computed",
+						"value": "$SOAJS_NX_CONTROLLER_IP_N"
+					},
+					"SOAJS_NX_CONTROLLER_PORT": {
+						"type": "computed",
+						"value": "$SOAJS_NX_CONTROLLER_PORT"
+					},
+					"SOAJS_NX_REAL_IP": {
+						"type": "static",
+						"value": "true"
+					},
+					
+					"SOAJS_DEPLOY_HA": {
+						"type": "computed",
+						"value": "$SOAJS_DEPLOY_HA"
+					},
+					"SOAJS_HA_NAME": {
+						"type": "computed",
+						"value": "$SOAJS_HA_NAME"
+					},
+					"SOAJS_GIT_PORTAL_BRANCH": {
+						"type": "static",
+						"value": "master"
+					}
+				},
+				"cmd": {
+					"deploy": {
+						"command": ["bash"],
+						"args": ["-c", "node index.js -T nginx"]
+					}
+				}
+			}
+		}
+	},
+	
+	{
 		"name": "Nginx Recipe - Docker",
 		"type": "server",
 		"subtype": "nginx",
