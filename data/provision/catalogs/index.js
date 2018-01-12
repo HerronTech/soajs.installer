@@ -1000,7 +1000,7 @@ var catalogs = [
 					"SOAJS_HA_NAME": {
 						"type": "computed",
 						"value": "$SOAJS_HA_NAME"
-					}
+					},
 					"SOAJS_GIT_PORTAL_BRANCH": {
 						"type": "static",
 						"value": "master"
