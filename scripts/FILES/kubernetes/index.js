@@ -400,7 +400,16 @@ var lib = {
                 var fields;
                 //require the default nginx and service catalog recipes
                 var catalogDefaulEntries = require(dataFolder + "catalogs/index.js");
-                var dashboardCatalogEntries = [catalogDefaulEntries[0], catalogDefaulEntries[3]];
+                var dashboardCatalogEntries = [];
+	            catalogDefaulEntries.forEach((oneRecipe) => {
+		            if(oneRecipe.name === 'SOAJS Controller Recipe - Kubernetes'){
+			            dashboardCatalogEntries.push(oneRecipe);
+		            }
+		            if(oneRecipe.name === 'Nginx Recipe - Kubernetes'){
+			            dashboardCatalogEntries.push(oneRecipe);
+		            }
+	            });
+                
                 //update the catalog recipes to include data used for dashboard environment deployment
                 dashboardCatalogEntries[0] = lib.updateServiceRecipe(dashboardCatalogEntries[0]);
                 dashboardCatalogEntries[1] = lib.updateNginxRecipe(dashboardCatalogEntries[1]);
