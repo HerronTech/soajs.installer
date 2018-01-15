@@ -368,6 +368,10 @@ var catalogs = [
 					"accelerateDeployment": true
 				},
 				"env": {
+					"NODE_TLS_REJECT_UNAUTHORIZED": {
+						"type": "static",
+						"value": "0"
+					},
 					"NODE_ENV": {
 						"type": "static",
 						"value": "production"
@@ -513,6 +517,10 @@ var catalogs = [
 					"accelerateDeployment": true
 				},
 				"env": {
+					"NODE_TLS_REJECT_UNAUTHORIZED": {
+						"type": "static",
+						"value": "0"
+					},
 					"NODE_ENV": {
 						"type": "static",
 						"value": "production"
@@ -658,6 +666,10 @@ var catalogs = [
 					"accelerateDeployment": true
 				},
 				"env": {
+					"NODE_TLS_REJECT_UNAUTHORIZED": {
+						"type": "static",
+						"value": "0"
+					},
 					"NODE_ENV": {
 						"type": "static",
 						"value": "production"
@@ -801,6 +813,10 @@ var catalogs = [
 					"accelerateDeployment": true
 				},
 				"env": {
+					"NODE_TLS_REJECT_UNAUTHORIZED": {
+						"type": "static",
+						"value": "0"
+					},
 					"NODE_ENV": {
 						"type": "static",
 						"value": "production"
