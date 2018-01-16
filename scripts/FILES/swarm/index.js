@@ -16,6 +16,8 @@ if(!process.env.MONGO_EXT || process.env.MONGO_EXT === 'false'){
 	profile2.servers[0].port = parseInt(process.env.MONGO_PORT) || 27017;
 }
 
+var remoteDeployment = false;
+
 var mongo = new soajs.mongo(profile2);
 var utilLog = require('util');
 
@@ -87,6 +89,7 @@ var lib = {
             deployerConfig.cert = fs.readFileSync(config.docker.certCertificate);
             deployerConfig.key = fs.readFileSync(config.docker.keyCertificate);
 
+			remoteDeployment = true;
             return cb(null, new Docker(deployerConfig));
         }
     },
@@ -135,6 +138,13 @@ var lib = {
                 oneService.Labels["soajs.catalog.id"] = process.env.DASH_SRV_ID;
                 oneService.Labels["soajs.catalog.v"] = "1";
 	            oneService.Labels["service.image.ts"] = new Date().getTime().toString();
+
+				if(oneService.name === 'dashboard-controller' && remoteDeployment) {
+					if(oneService.TaskTemplate && oneService.TaskTemplate.Placement) {
+						//if remote deployment, controller does not need to be on master nodes only
+						delete oneService.TaskTemplate.Placement;
+					}
+				}
             }
             else if (type === "nginx"){
                 oneService.Labels["soajs.catalog.id"] = process.env.DASH_NGINX_ID;
@@ -309,7 +319,17 @@ var lib = {
                     var fields;
                     //require service and nginx catalog recipes
                     var catalogDefaulEntries = require(dataFolder + "catalogs/index.js");
-                    var dashboardCatalogEntries = [catalogDefaulEntries[0], catalogDefaulEntries[3]];
+                    //catalogDefaulEntries[0], catalogDefaulEntries[3]
+                    var dashboardCatalogEntries = [];
+                    catalogDefaulEntries.forEach((oneRecipe) => {
+	                    if(oneRecipe.name === 'SOAJS Controller Recipe - Docker'){
+		                    dashboardCatalogEntries.push(oneRecipe);
+	                    }
+	                    if(oneRecipe.name === 'Nginx Recipe - Docker'){
+		                    dashboardCatalogEntries.push(oneRecipe);
+	                    }
+                    });
+                    
                     //update the catalog recipes to include data used for dashboard environment deployment
                     dashboardCatalogEntries[0] = lib.updateServiceRecipe(dashboardCatalogEntries[0]);
                     dashboardCatalogEntries[1] = lib.updateNginxRecipe(dashboardCatalogEntries[1]);
@@ -695,6 +715,7 @@ var lib = {
                     Name: netName,
                     Driver: 'overlay',
                     Internal: false,
+					Attachable: true,
                     CheckDuplicate: true,
                     EnableIPv6: false,
                     IPAM: {

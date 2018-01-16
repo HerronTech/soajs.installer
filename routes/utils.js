@@ -235,7 +235,8 @@ var lib = {
         }
         envData = envData.replace(/%deployType%/g, body.deployment.deployType);
         envData = envData.replace(/%deployDriver%/g, body.deployment.deployDriver);
-        envData = envData.replace(/%deployDockerNodes%/g, body.deployment.deployDockerNodes);
+        envData = envData.replace(/%deployDockerNodes%/g, body.deployment.containerHost);
+        envData = envData.replace(/%containerNode%/g, body.deployment.containerHost);
         envData = envData.replace(/%clusterPrefix%/g, body.clusters.prefix);
         
         var mongoCluster = fs.readFileSync(folder + "resources/mongo.js", "utf8");

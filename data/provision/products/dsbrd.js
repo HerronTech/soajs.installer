@@ -120,6 +120,17 @@ var dsbrdProduct = {
 								}
 							}
 						}
+					},
+					"dashboard" : {
+						"access" : true,
+						"apisPermission" : "restricted",
+						"post" : {
+							"apis" : {
+								"/tenant/acl/get" : {
+								
+								}
+							}
+						}
 					}
 				}
 			},

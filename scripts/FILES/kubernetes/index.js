@@ -400,7 +400,16 @@ var lib = {
                 var fields;
                 //require the default nginx and service catalog recipes
                 var catalogDefaulEntries = require(dataFolder + "catalogs/index.js");
-                var dashboardCatalogEntries = [catalogDefaulEntries[0], catalogDefaulEntries[3]];
+                var dashboardCatalogEntries = [];
+	            catalogDefaulEntries.forEach((oneRecipe) => {
+		            if(oneRecipe.name === 'SOAJS Controller Recipe - Kubernetes'){
+			            dashboardCatalogEntries.push(oneRecipe);
+		            }
+		            if(oneRecipe.name === 'Nginx Recipe - Kubernetes'){
+			            dashboardCatalogEntries.push(oneRecipe);
+		            }
+	            });
+                
                 //update the catalog recipes to include data used for dashboard environment deployment
                 dashboardCatalogEntries[0] = lib.updateServiceRecipe(dashboardCatalogEntries[0]);
                 dashboardCatalogEntries[1] = lib.updateNginxRecipe(dashboardCatalogEntries[1]);
@@ -501,7 +510,7 @@ var lib = {
 
 		function initNamespace(cb) {
 			if(!options || !options.deployment || !options.deployment.metadata) return cb(null, true);
-			
+
 			if(options.customNamespace) return cb(null, true);
 
 			var serviceName;
@@ -519,7 +528,7 @@ var lib = {
 
 			//if deploying NGINX, modify the spec object according to deployType
 			if(config.nginx.deployType === 'LoadBalancer') {
-				if (options.service.metadata.labels['soajs.service.type'] === 'nginx') {
+				if (options.service.metadata.labels['soajs.service.name'] === 'nginx') {
 					options.service.spec.type = 'LoadBalancer';
 					if (options.service.spec.ports[0]) {
 						delete options.service.spec.ports[0].nodePort;
@@ -898,7 +907,7 @@ var lib = {
             }
 
             if(profile.URLParam.ssl){
-                mongoEnv.push({ name: 'SOAJS_MONGO_SSL', value: profile.URLParam.ssl });
+                mongoEnv.push({ name: 'SOAJS_MONGO_SSL', value: "" + profile.URLParam.ssl });
             }
         }
         else {

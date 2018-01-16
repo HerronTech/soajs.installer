@@ -12,6 +12,9 @@ var dashboard = {
     "deployer": {
 	    "type": "%deployType%",
 	    "selected": "%deployDriver%",
+	    "manual": {
+	    	"nodes": "%containerNode%",
+	    },
 	    "container": {
 		    "docker": {
 			    "local": {
@@ -24,6 +27,7 @@ var dashboard = {
 			    }
 		    },
 		    "kubernetes":{
+			    "nodes": "%containerNode%",
 			    "local":{
 				    "apiPort": "%kubernetesLocalPort%",
 			        "nginxDeployType": "%nginxDeployType%",
@@ -33,6 +37,7 @@ var dashboard = {
                     }
 			    },
 			    "remote":{
+				    "nodes": "%containerNode%",
 				    "apiPort": "%kubernetesRemotePort%",
                     "nginxDeployType": "%nginxDeployType%",
 				    "namespace": "%namespace%",

@@ -12,7 +12,7 @@ var config = {
 
     image: {
         prefix: '',
-        name: 'mongo'
+        name: 'mongo:3.4.10'
     },
     labels: {
         "soajs.content": "true",
