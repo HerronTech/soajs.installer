@@ -1,18 +1,23 @@
 'use strict';
 
 var components = {
-	
+
 	customNamespace: true,
-	
+
 	serviceAccount: {
 		"apiVersion": "v1",
 		"kind": "ServiceAccount",
 		"metadata": {
 			"name": "metrics-server",
-			"namespace": "kube-system"
+			"namespace": "kube-system",
+			"labels": {
+				"k8s-app": "metrics-server",
+				"soajs.service.type": "system",
+	            "soajs.service.subtype": "other",
+			}
 		}
 	},
-	
+
 	service: {
 		"apiVersion": "v1",
 		"kind": "Service",
@@ -20,12 +25,17 @@ var components = {
 			"name": "metrics-server",
 			"namespace": "kube-system",
 			"labels": {
-				"kubernetes.io/name": "Metrics-server"
+				"kubernetes.io/name": "Metrics-server",
+				"k8s-app": "metrics-server",
+				"soajs.service.type": "system",
+	            "soajs.service.subtype": "other"
 			}
 		},
 		"spec": {
 			"selector": {
-				"k8s-app": "metrics-server"
+				"k8s-app": "metrics-server",
+				"soajs.service.type": "system",
+	            "soajs.service.subtype": "other"
 			},
 			"ports": [
 				{
@@ -36,7 +46,7 @@ var components = {
 			]
 		}
 	},
-	
+
 	deployment: {
 		"apiVersion": "extensions/v1beta1",
 		"kind": "Deployment",
@@ -44,20 +54,26 @@ var components = {
 			"name": "metrics-server",
 			"namespace": "kube-system",
 			"labels": {
-				"k8s-app": "metrics-server"
+				"k8s-app": "metrics-server",
+				"soajs.service.type": "system",
+	            "soajs.service.subtype": "other",
 			}
 		},
 		"spec": {
 			"selector": {
 				"matchLabels": {
-					"k8s-app": "metrics-server"
+					"k8s-app": "metrics-server",
+					"soajs.service.type": "system",
+		            "soajs.service.subtype": "other",
 				}
 			},
 			"template": {
 				"metadata": {
 					"name": "metrics-server",
 					"labels": {
-						"k8s-app": "metrics-server"
+						"k8s-app": "metrics-server",
+						"soajs.service.type": "system",
+			            "soajs.service.subtype": "other",
 					}
 				},
 				"spec": {
@@ -77,12 +93,17 @@ var components = {
 			}
 		}
 	},
-	
+
 	apiService: {
 		"apiVersion": "apiregistration.k8s.io/v1beta1",
 		"kind": "APIService",
 		"metadata": {
 			"name": "v1alpha1.metrics",
+			"labels": {
+				"k8s-app": "metrics-server",
+				"soajs.service.type": "system",
+				"soajs.service.subtype": "other",
+			}
 		},
 		"spec": {
 			"service": {
@@ -96,13 +117,18 @@ var components = {
 			"versionPriority": 100
 		}
 	},
-	
+
 	roleBinding: {
 		"apiVersion": "rbac.authorization.k8s.io/v1beta1",
 		"kind": "RoleBinding",
 		"metadata": {
 			"name": "metrics-server-auth-reader",
-			"namespace": "kube-system"
+			"namespace": "kube-system",
+			"labels": {
+				"k8s-app": "metrics-server",
+				"soajs.service.type": "system",
+				"soajs.service.subtype": "other",
+			}
 		},
 		"roleRef": {
 			"apiGroup": "rbac.authorization.k8s.io",
@@ -117,12 +143,17 @@ var components = {
 			}
 		]
 	},
-	
+
 	clusterRoleBinding: {
 		"apiVersion": "rbac.authorization.k8s.io/v1beta1",
 		"kind": "ClusterRoleBinding",
 		"metadata": {
 			"name": "metrics-server:system:auth-delegator",
+			"labels": {
+				"k8s-app": "metrics-server",
+				"soajs.service.type": "system",
+				"soajs.service.subtype": "other",
+			}
 		},
 		"roleRef": {
 			"apiGroup": "rbac.authorization.k8s.io",
@@ -137,7 +168,7 @@ var components = {
 			}
 		]
 	}
-	
+
 };
 
 module.exports = components;
