@@ -1546,17 +1546,7 @@ var catalogs = [
 					"pullPolicy": "IfNotPresent"
 				},
 				"specifyGitConfiguration": true,
-				"readinessProbe": {
-					"httpGet": {
-						"path": "/heartbeat",
-						"port": "maintenance"
-					},
-					"initialDelaySeconds": 5,
-					"timeoutSeconds": 2,
-					"periodSeconds": 5,
-					"successThreshold": 1,
-					"failureThreshold": 3
-				},
+				"readinessProbe": {},
 				"restartPolicy": {},
 				"container": {
 					"network": '', //container network for docker
@@ -1686,17 +1676,8 @@ var catalogs = [
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
 				},
-				"readinessProbe": {
-					"httpGet": {
-						"path": "/heartbeat",
-						"port": "maintenance"
-					},
-					"initialDelaySeconds": 5,
-					"timeoutSeconds": 2,
-					"periodSeconds": 5,
-					"successThreshold": 1,
-					"failureThreshold": 3
-				},
+				"specifyGitConfiguration": true,
+				"readinessProbe": {},
 				"restartPolicy": {},
 				"container": {
 					"network": '', //container network for docker
