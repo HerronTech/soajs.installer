@@ -1763,7 +1763,7 @@ var catalogs = [
 					{
 						"name": "es",
 						"target": 9200,
-						"isPublished": true
+						"isPublished": false
 					}
 				]
 			},
@@ -1771,8 +1771,13 @@ var catalogs = [
 				"env": {},
 				"cmd": {
 					"deploy": {
-						"command": [],
-						"args": []
+						"command": [
+							"bash"
+						],
+						"args": [
+							"-c",
+							"su -s /bin/bash elasticsearch -c '/usr/share/elasticsearch/bin/elasticsearch'"
+						]
 					}
 				}
 			}
@@ -1829,7 +1834,7 @@ var catalogs = [
 					{
 						"name": "es",
 						"target": 9200,
-						"isPublished": true
+						"isPublished": false
 					}
 				]
 			},
@@ -1837,8 +1842,13 @@ var catalogs = [
 				"env": {},
 				"cmd": {
 					"deploy": {
-						"command": [],
-						"args": []
+						"command": [
+							"bash"
+						],
+						"args": [
+							"-c",
+							"su -s /bin/bash elasticsearch -c '/usr/share/elasticsearch/bin/elasticsearch'"
+						]
 					}
 				}
 			}
