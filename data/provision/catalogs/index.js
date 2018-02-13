@@ -735,7 +735,14 @@ var catalogs = [
 						"type": "computed",
 						"value": "$SOAJS_HA_NAME"
 					},
-					
+					"SOAJS_MONGO_USERNAME": {
+						"type": "computed",
+						"value": "$SOAJS_MONGO_USERNAME"
+					},
+					"SOAJS_MONGO_PASSWORD": {
+						"type": "computed",
+						"value": "$SOAJS_MONGO_PASSWORD"
+					},
 					"SOAJS_MONGO_NB": {
 						"type": "computed",
 						"value": "$SOAJS_MONGO_NB"
@@ -882,7 +889,14 @@ var catalogs = [
 						"type": "computed",
 						"value": "$SOAJS_HA_NAME"
 					},
-					
+					"SOAJS_MONGO_USERNAME": {
+						"type": "computed",
+						"value": "$SOAJS_MONGO_USERNAME"
+					},
+					"SOAJS_MONGO_PASSWORD": {
+						"type": "computed",
+						"value": "$SOAJS_MONGO_PASSWORD"
+					},
 					"SOAJS_MONGO_NB": {
 						"type": "computed",
 						"value": "$SOAJS_MONGO_NB"
