@@ -735,7 +735,14 @@ var catalogs = [
 						"type": "computed",
 						"value": "$SOAJS_HA_NAME"
 					},
-					
+					"SOAJS_MONGO_USERNAME": {
+						"type": "computed",
+						"value": "$SOAJS_MONGO_USERNAME"
+					},
+					"SOAJS_MONGO_PASSWORD": {
+						"type": "computed",
+						"value": "$SOAJS_MONGO_PASSWORD"
+					},
 					"SOAJS_MONGO_NB": {
 						"type": "computed",
 						"value": "$SOAJS_MONGO_NB"
@@ -882,7 +889,14 @@ var catalogs = [
 						"type": "computed",
 						"value": "$SOAJS_HA_NAME"
 					},
-					
+					"SOAJS_MONGO_USERNAME": {
+						"type": "computed",
+						"value": "$SOAJS_MONGO_USERNAME"
+					},
+					"SOAJS_MONGO_PASSWORD": {
+						"type": "computed",
+						"value": "$SOAJS_MONGO_PASSWORD"
+					},
 					"SOAJS_MONGO_NB": {
 						"type": "computed",
 						"value": "$SOAJS_MONGO_NB"
@@ -1763,7 +1777,7 @@ var catalogs = [
 					{
 						"name": "es",
 						"target": 9200,
-						"isPublished": true
+						"isPublished": false
 					}
 				]
 			},
@@ -1771,74 +1785,13 @@ var catalogs = [
 				"env": {},
 				"cmd": {
 					"deploy": {
-						"command": [],
-						"args": []
-					}
-				}
-			}
-		}
-	},
-	
-	{
-		"name": "Elasticsearch Recipe - Kubernetes",
-		"type": "cluster",
-		"subtype": "elasticsearch",
-		"description": "This recipe allows you to deploy ElasticSearch in Kubernetes",
-		"locked": true,
-		"recipe": {
-			"deployOptions": {
-				"image": {
-					"prefix": "",
-					"name": "elasticsearch",
-					"tag": "latest",
-					"pullPolicy": "IfNotPresent"
-				},
-				"readinessProbe": {
-					"httpGet": {
-						"path": "/heartbeat",
-						"port": "maintenance"
-					},
-					"initialDelaySeconds": 5,
-					"timeoutSeconds": 2,
-					"periodSeconds": 5,
-					"successThreshold": 1,
-					"failureThreshold": 3
-				},
-				"restartPolicy": {},
-				"container": {
-					"network": '', //container network for docker
-					"workingDir": "/opt/soajs/deployer/" //container working directory
-				},
-				"voluming": {
-					"volumes": [
-						{
-							"name": "custom-es-volume",
-							"hostPath": {
-								"path": "/usr/share/elasticsearch/custom/data/"
-							}
-						}
-					],
-					"volumeMounts": [
-						{
-							"mountPath": "/usr/share/elasticsearch/data/",
-							"name": "custom-es-volume"
-						}
-					]
-				},
-				"ports": [
-					{
-						"name": "es",
-						"target": 9200,
-						"isPublished": true
-					}
-				]
-			},
-			"buildOptions": {
-				"env": {},
-				"cmd": {
-					"deploy": {
-						"command": [],
-						"args": []
+						"command": [
+							"bash"
+						],
+						"args": [
+							"-c",
+							"su -s /bin/bash elasticsearch -c '/usr/share/elasticsearch/bin/elasticsearch'"
+						]
 					}
 				}
 			}
