@@ -27,8 +27,8 @@ var dashboard = {
 			    }
 		    },
 		    "kubernetes":{
-			    "nodes": "%containerNode%",
 			    "local":{
+				    "nodes": "%containerNode%",
 				    "apiPort": "%kubernetesLocalPort%",
 			        "nginxDeployType": "%nginxDeployType%",
 				    "namespace": "%namespace%",
