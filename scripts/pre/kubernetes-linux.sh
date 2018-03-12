@@ -12,6 +12,9 @@ fi
 function installTools(){
     installOneTool "curl"
     installOneTool "openssl"
+    installOneTool "ca-certificates"
+    installOneTool "apt-transport-https"
+    installOneTool "software-properties-common"
 }
 
 function installOneTool(){
@@ -35,23 +38,28 @@ function installKubernetes(){
     apt-get update
 
     echo "Installing Docker ..."
-    apt-get install -y docker.io
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+
+    # Set up the stable repository:
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
+    apt-get update
+    apt-get install -y docker-ce
 
     echo "Docker sucessfully installed"
     echo "Installing Kubelet ..."
-    apt-get install -y kubelet
+    apt-get install -y kubelet=1.7.11-00
 
     echo "Kubelet successfully intstalled"
     echo "Installing KubeAdm ..."
-    apt-get install -y kubeadm
+    apt-get install -y kubeadm=1.7.11-00
 
     echo "Kubeadm successfully installed"
     echo "Installing kubectl ..."
-    apt-get install -y kubectl
+    apt-get install -y kubectl=1.7.11-00
 
     echo "Kubectl successfully installed"
     echo "Instsalling Kubernetes-cni ..."
-    apt-get install -y kubernetes-cni
+    apt-get install -y kubernetes-cni=1.7.11-00
 
     echo "Kubernetes-cni successfully installed"
 
