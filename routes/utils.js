@@ -247,7 +247,6 @@ var lib = {
         envData = envData.replace(/%sessionSecret%/g, body.security.session);
         envData = envData.replace(/%cookieSecret%/g, body.security.cookie);
         if (body.deployment.deployDriver.split('.')[1] === 'kubernetes') {
-            envData = envData.replace(/%nginxDeployType%/g, body.deployment.nginxDeployType);
             envData = envData.replace(/"%namespace%"/g, JSON.stringify (body.deployment.namespaces, null, 2));
             envData = envData.replace(/%token%/g, body.deployment.authentication.accessToken);
 	        if (body.deployment.deployDriver.split('.')[2] === 'local'){
@@ -264,7 +263,6 @@ var lib = {
 	        }
         }
         else {
-            envData = envData.replace(/%nginxDeployType%/g, '');
             envData = envData.replace(/"%namespace%"/g, JSON.stringify ({}, null, 2));
             envData = envData.replace(/%token%/g, '');
 	       
@@ -589,6 +587,11 @@ var lib = {
 
                     "NGINX_DEPLOY_TYPE": body.deployment.nginxDeployType
                 };
+                
+                if(body.deployment.nginxDeployType === 'LoadBalancer'){
+                	delete envs['NGINX_HTTP_PORT'];
+                	delete envs['NGINX_HTTPS_PORT'];
+                }
 	
 	            if(!body.clusters.mongoExt){
 		            envs["MONGO_PORT"] = body.deployment.mongoExposedPort;
