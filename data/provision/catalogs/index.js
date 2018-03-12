@@ -83,7 +83,12 @@ var catalogs = [
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
 				},
-				"specifyGitConfiguration": true,
+				"sourceCode": {
+					"config": {
+						"label": "Custom Configuration",
+						"required": false
+					}
+				},
 				"readinessProbe": {
 					"httpGet": {
 						"path": "/heartbeat",
@@ -135,34 +140,8 @@ var catalogs = [
 						"type": "computed",
 						"value": "$SOAJS_SRV_MAIN"
 					},
-					"SOAJS_GIT_PROVIDER": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_PROVIDER"
-					},
-					"SOAJS_GIT_DOMAIN": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_DOMAIN"
-					},
-					"SOAJS_GIT_OWNER": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_OWNER"
-					},
-					"SOAJS_GIT_BRANCH": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_BRANCH"
-					},
-					"SOAJS_GIT_COMMIT": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_COMMIT"
-					},
-					"SOAJS_GIT_REPO": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_REPO"
-					},
-					"SOAJS_GIT_TOKEN": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_TOKEN"
-					},
+
+
 					"SOAJS_DEPLOY_HA": {
 						"type": "computed",
 						"value": "$SOAJS_DEPLOY_HA"
@@ -198,7 +177,7 @@ var catalogs = [
 			}
 		}
 	},
-	
+
 	{
 		"name": "SOAJS Service Recipe - Kubernetes",
 		"type": "service",
@@ -213,7 +192,12 @@ var catalogs = [
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
 				},
-				"specifyGitConfiguration": true,
+				"sourceCode": {
+					"config": {
+						"label": "Custom Configuration",
+						"required": false
+					}
+				},
 				"readinessProbe": {
 					"httpGet": {
 						"path": "/heartbeat",
@@ -265,34 +249,6 @@ var catalogs = [
 						"type": "computed",
 						"value": "$SOAJS_SRV_MAIN"
 					},
-					"SOAJS_GIT_PROVIDER": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_PROVIDER"
-					},
-					"SOAJS_GIT_DOMAIN": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_DOMAIN"
-					},
-					"SOAJS_GIT_OWNER": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_OWNER"
-					},
-					"SOAJS_GIT_BRANCH": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_BRANCH"
-					},
-					"SOAJS_GIT_COMMIT": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_COMMIT"
-					},
-					"SOAJS_GIT_REPO": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_REPO"
-					},
-					"SOAJS_GIT_TOKEN": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_TOKEN"
-					},
 					"SOAJS_DEPLOY_HA": {
 						"type": "computed",
 						"value": "$SOAJS_DEPLOY_HA"
@@ -313,7 +269,7 @@ var catalogs = [
 						"type" : "computed",
 						"value" : "$SOAJS_NX_CONTROLLER_PORT"
 					}
-					
+
 				},
 				"cmd": {
 					"deploy": {
@@ -329,7 +285,7 @@ var catalogs = [
 			}
 		}
 	},
-	
+
 	{
 		"name": "SOAJS Controller Recipe - Docker",
 		"type": "service",
@@ -344,7 +300,12 @@ var catalogs = [
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
 				},
-				"specifyGitConfiguration": true,
+				"sourceCode": {
+					"config": {
+						"label": "Custom Configuration",
+						"required": false
+					}
+				},
 				"readinessProbe": {
 					"httpGet": {
 						"path": "/heartbeat",
@@ -396,34 +357,6 @@ var catalogs = [
 						"type": "computed",
 						"value": "$SOAJS_SRV_MAIN"
 					},
-					"SOAJS_GIT_PROVIDER": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_PROVIDER"
-					},
-					"SOAJS_GIT_DOMAIN": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_DOMAIN"
-					},
-					"SOAJS_GIT_OWNER": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_OWNER"
-					},
-					"SOAJS_GIT_BRANCH": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_BRANCH"
-					},
-					"SOAJS_GIT_COMMIT": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_COMMIT"
-					},
-					"SOAJS_GIT_REPO": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_REPO"
-					},
-					"SOAJS_GIT_TOKEN": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_TOKEN"
-					},
 					"SOAJS_DEPLOY_HA": {
 						"type": "computed",
 						"value": "$SOAJS_DEPLOY_HA"
@@ -478,7 +411,7 @@ var catalogs = [
 			}
 		}
 	},
-	
+
 	{
 		"name": "SOAJS Controller Recipe - Kubernetes",
 		"type": "service",
@@ -493,7 +426,12 @@ var catalogs = [
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
 				},
-				"specifyGitConfiguration": true,
+				"sourceCode": {
+					"config": {
+						"label": "Custom Configuration",
+						"required": false
+					}
+				},
 				"readinessProbe": {
 					"httpGet": {
 						"path": "/heartbeat",
@@ -545,34 +483,6 @@ var catalogs = [
 						"type": "computed",
 						"value": "$SOAJS_SRV_MAIN"
 					},
-					"SOAJS_GIT_PROVIDER": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_PROVIDER"
-					},
-					"SOAJS_GIT_DOMAIN": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_DOMAIN"
-					},
-					"SOAJS_GIT_OWNER": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_OWNER"
-					},
-					"SOAJS_GIT_BRANCH": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_BRANCH"
-					},
-					"SOAJS_GIT_COMMIT": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_COMMIT"
-					},
-					"SOAJS_GIT_REPO": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_REPO"
-					},
-					"SOAJS_GIT_TOKEN": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_TOKEN"
-					},
 					"SOAJS_DEPLOY_HA": {
 						"type": "computed",
 						"value": "$SOAJS_DEPLOY_HA"
@@ -627,7 +537,7 @@ var catalogs = [
 			}
 		}
 	},
-	
+
 	{
 		"name": "SOAJS Daemon Recipe - Docker",
 		"type": "daemon",
@@ -642,7 +552,17 @@ var catalogs = [
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
 				},
-				"specifyGitConfiguration": true,
+				"sourceCode": {
+					"config": {
+						"label": "Custom Configuration",
+						"required": false
+					},
+					"custom": {
+						"label": "Custom UI",
+						"type": "static",
+						"required": false
+					}
+				},
 				"readinessProbe": {
 					"httpGet": {
 						"path": "/heartbeat",
@@ -698,35 +618,7 @@ var catalogs = [
 						"type": "computed",
 						"value": "$SOAJS_DAEMON_GRP_CONF"
 					},
-					"SOAJS_GIT_PROVIDER": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_PROVIDER"
-					},
-					"SOAJS_GIT_DOMAIN": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_DOMAIN"
-					},
-					"SOAJS_GIT_OWNER": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_OWNER"
-					},
-					"SOAJS_GIT_BRANCH": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_BRANCH"
-					},
-					"SOAJS_GIT_COMMIT": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_COMMIT"
-					},
-					"SOAJS_GIT_REPO": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_REPO"
-					},
-					"SOAJS_GIT_TOKEN": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_TOKEN"
-					},
-					
+
 					"SOAJS_DEPLOY_HA": {
 						"type": "computed",
 						"value": "$SOAJS_DEPLOY_HA"
@@ -781,7 +673,7 @@ var catalogs = [
 			}
 		}
 	},
-	
+
 	{
 		"name": "SOAJS Daemon Recipe - Kubernetes",
 		"type": "daemon",
@@ -880,7 +772,7 @@ var catalogs = [
 						"type": "computed",
 						"value": "$SOAJS_GIT_TOKEN"
 					},
-					
+
 					"SOAJS_DEPLOY_HA": {
 						"type": "computed",
 						"value": "$SOAJS_DEPLOY_HA"
@@ -935,7 +827,7 @@ var catalogs = [
 			}
 		}
 	},
-	
+
 	{
 		"name": "Portal Nginx Recipe - Docker",
 		"type": "server",
@@ -1022,7 +914,7 @@ var catalogs = [
 						"type": "static",
 						"value": "true"
 					},
-					
+
 					"SOAJS_DEPLOY_HA": {
 						"type": "computed",
 						"value": "$SOAJS_DEPLOY_HA"
@@ -1045,7 +937,7 @@ var catalogs = [
 			}
 		}
 	},
-	
+
 	{
 		"name": "Portal Nginx Recipe - Kubernetes",
 		"type": "server",
@@ -1132,7 +1024,7 @@ var catalogs = [
 						"type": "static",
 						"value": "true"
 					},
-					
+
 					"SOAJS_DEPLOY_HA": {
 						"type": "computed",
 						"value": "$SOAJS_DEPLOY_HA"
@@ -1155,7 +1047,7 @@ var catalogs = [
 			}
 		}
 	},
-	
+
 	{
 		"name": "Nginx Recipe - Docker",
 		"type": "server",
@@ -1169,6 +1061,17 @@ var catalogs = [
 					"name": "nginx",
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
+				},
+				"sourceCode": {
+					"config": {
+						"label": "Custom Configuration",
+						"required": false
+					},
+					"custom": {
+						"label": "Custom UI",
+						"type": "static",
+						"required": false
+					}
 				},
 				"readinessProbe": {
 					"httpGet": {
@@ -1242,7 +1145,7 @@ var catalogs = [
 						"type": "static",
 						"value": "true"
 					},
-					
+
 					"SOAJS_DEPLOY_HA": {
 						"type": "computed",
 						"value": "$SOAJS_DEPLOY_HA"
@@ -1261,7 +1164,7 @@ var catalogs = [
 			}
 		}
 	},
-	
+
 	{
 		"name": "Nginx Recipe - Kubernetes",
 		"type": "server",
@@ -1275,6 +1178,17 @@ var catalogs = [
 					"name": "nginx",
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
+				},
+				"sourceCode": {
+					"config": {
+						"label": "Custom Configuration",
+						"required": false
+					},
+					"custom": {
+						"label": "Custom UI",
+						"type": "static",
+						"required": false
+					}
 				},
 				"readinessProbe": {
 					"httpGet": {
@@ -1348,7 +1262,7 @@ var catalogs = [
 						"type": "static",
 						"value": "true"
 					},
-					
+
 					"SOAJS_DEPLOY_HA": {
 						"type": "computed",
 						"value": "$SOAJS_DEPLOY_HA"
@@ -1367,7 +1281,7 @@ var catalogs = [
 			}
 		}
 	},
-	
+
 	{
 		"name" : "Mongo Recipe - Docker",
 		"type" : "cluster",
@@ -1381,6 +1295,12 @@ var catalogs = [
 					"name" : "mongo",
 					"tag" : "3.4.10",
 					"pullPolicy" : "IfNotPresent"
+				},
+				"sourceCode": {
+					"config": {
+						"label": "Custom Configuration",
+						"required": false
+					}
 				},
 				"readinessProbe" : {
 					"httpGet" : {
@@ -1409,7 +1329,7 @@ var catalogs = [
 			},
 			"buildOptions" : {
 				"env" : {
-				
+
 				},
 				"cmd" : {
 					"deploy" : {
@@ -1424,7 +1344,7 @@ var catalogs = [
 			}
 		}
 	},
-	
+
 	{
 		"name" : "Mongo Recipe - Kubernetes",
 		"type" : "cluster",
@@ -1438,6 +1358,12 @@ var catalogs = [
 					"name" : "mongo",
 					"tag" : "3.4.10",
 					"pullPolicy" : "IfNotPresent"
+				},
+				"sourceCode": {
+					"config": {
+						"label": "Custom Configuration",
+						"required": false
+					}
 				},
 				"readinessProbe" : {
 					"httpGet" : {
@@ -1466,7 +1392,7 @@ var catalogs = [
 			},
 			"buildOptions" : {
 				"env" : {
-				
+
 				},
 				"cmd" : {
 					"deploy" : {
@@ -1481,7 +1407,7 @@ var catalogs = [
 			}
 		}
 	},
-	
+
 	{
 		"name": "Nodejs Recipe - Docker",
 		"type": "service",
@@ -1496,7 +1422,12 @@ var catalogs = [
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
 				},
-				"specifyGitConfiguration": true,
+				"sourceCode": {
+					"config": {
+						"label": "Custom Configuration",
+						"required": false
+					}
+				},
 				"readinessProbe": {},
 				"restartPolicy": dockerRestartPolicy,
 				"container": {
@@ -1513,26 +1444,6 @@ var catalogs = [
 					"NODE_ENV": {
 						"type": "static",
 						"value":"production"
-					},
-					"SOAJS_GIT_OWNER": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_OWNER"
-					},
-					"SOAJS_GIT_BRANCH": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_BRANCH"
-					},
-					"SOAJS_GIT_COMMIT": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_COMMIT"
-					},
-					"SOAJS_GIT_REPO": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_REPO"
-					},
-					"SOAJS_GIT_TOKEN": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_TOKEN"
 					}
 				},
 				"cmd": {
@@ -1544,7 +1455,7 @@ var catalogs = [
 			}
 		}
 	},
-	
+
 	{
 		"name": "Nodejs Recipe - Kubernetes",
 		"type": "service",
@@ -1559,7 +1470,12 @@ var catalogs = [
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
 				},
-				"specifyGitConfiguration": true,
+				"sourceCode": {
+					"config": {
+						"label": "Custom Configuration",
+						"required": false
+					}
+				},
 				"readinessProbe": {},
 				"restartPolicy": {},
 				"container": {
@@ -1576,26 +1492,6 @@ var catalogs = [
 					"NODE_ENV": {
 						"type": "static",
 						"value":"production"
-					},
-					"SOAJS_GIT_OWNER": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_OWNER"
-					},
-					"SOAJS_GIT_BRANCH": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_BRANCH"
-					},
-					"SOAJS_GIT_COMMIT": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_COMMIT"
-					},
-					"SOAJS_GIT_REPO": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_REPO"
-					},
-					"SOAJS_GIT_TOKEN": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_TOKEN"
 					}
 				},
 				"cmd": {
@@ -1607,7 +1503,7 @@ var catalogs = [
 			}
 		}
 	},
-	
+
 	{
 		"name": "Java Recipe - Docker",
 		"type": "service",
@@ -1675,7 +1571,7 @@ var catalogs = [
 			}
 		}
 	},
-	
+
 	{
 		"name": "Java Recipe - Kubernetes",
 		"type": "service",
@@ -1690,7 +1586,12 @@ var catalogs = [
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
 				},
-				"specifyGitConfiguration": true,
+				"sourceCode": {
+					"config": {
+						"label": "Custom Configuration",
+						"required": false
+					}
+				},
 				"readinessProbe": {},
 				"restartPolicy": {},
 				"container": {
@@ -1704,26 +1605,6 @@ var catalogs = [
 			},
 			"buildOptions": {
 				"env": {
-					"SOAJS_GIT_OWNER": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_OWNER"
-					},
-					"SOAJS_GIT_BRANCH": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_BRANCH"
-					},
-					"SOAJS_GIT_COMMIT": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_COMMIT"
-					},
-					"SOAJS_GIT_REPO": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_REPO"
-					},
-					"SOAJS_GIT_TOKEN": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_TOKEN"
-					},
 					"SOAJS_JAVA_APP_PORT": {
 						"type": "computed",
 						"value": "$SOAJS_SRV_PORT"
@@ -1743,7 +1624,7 @@ var catalogs = [
 			}
 		}
 	},
-	
+
 	{
 		"name": "Elasticsearch Recipe - Docker",
 		"type": "cluster",
@@ -1757,6 +1638,13 @@ var catalogs = [
 					"name": "elasticsearch",
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
+				},
+
+				"sourceCode": {
+					"config": {
+						"label": "Custom Configuration",
+						"required": false
+					}
 				},
 				"readinessProbe": {},
 				"restartPolicy": dockerRestartPolicy,
