@@ -220,9 +220,11 @@ var lib = {
             process.env['SOAJS_NX_SITE_HTTPS']=1;
             process.env['SOAJS_NX_SITE_HTTP_REDIRECT']=1;
         }
-
-	    nginxRecipe.recipe.deployOptions.ports[0].published = config.nginx.port.http;
-	    nginxRecipe.recipe.deployOptions.ports[1].published = config.nginx.port.https;
+	
+	    if(config.nginx.deployType !== 'LoadBalancer') {
+		    nginxRecipe.recipe.deployOptions.ports[0].published = config.nginx.port.http;
+		    nginxRecipe.recipe.deployOptions.ports[1].published = config.nginx.port.https;
+	    }
 
 	    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_DASHBOARD_BRANCH"] = {
 		    "type": "static",

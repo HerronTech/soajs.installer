@@ -201,6 +201,12 @@ var components = {
 	}
 };
 
+if(gConfig.nginx.deployType === 'LoadBalancer'){
+	components.service.spec.ports.forEach((onePort) => {
+		delete onePort.nodePort;
+	});
+}
+
 if (gConfig.nginx.ssl) {
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_API_HTTPS", "value": "1"});
 	components.deployment.spec.template.spec.containers[0].env.push({"name": "SOAJS_NX_API_HTTP_REDIRECT", "value": "1"});
