@@ -27,10 +27,9 @@ var dashboard = {
 			    }
 		    },
 		    "kubernetes":{
-			    "nodes": "%containerNode%",
 			    "local":{
+				    "nodes": "%containerNode%",
 				    "apiPort": "%kubernetesLocalPort%",
-			        "nginxDeployType": "%nginxDeployType%",
 				    "namespace": "%namespace%",
                     "auth": {
 				        "token": "%token%"
@@ -39,7 +38,6 @@ var dashboard = {
 			    "remote":{
 				    "nodes": "%containerNode%",
 				    "apiPort": "%kubernetesRemotePort%",
-                    "nginxDeployType": "%nginxDeployType%",
 				    "namespace": "%namespace%",
                     "auth": {
                         "token": "%token%"
