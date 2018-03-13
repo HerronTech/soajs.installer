@@ -804,6 +804,17 @@ var catalogs = [
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
 				},
+				"sourceCode": {
+					"config": {
+						"label": "Custom Configuration",
+						"required": false
+					},
+					"custom": {
+						"label": "Custom UI",
+						"type": "static",
+						"required": false
+					}
+				},
 				"readinessProbe": {
 					"httpGet": {
 						"path": "/",
@@ -884,10 +895,6 @@ var catalogs = [
 					"SOAJS_HA_NAME": {
 						"type": "computed",
 						"value": "$SOAJS_HA_NAME"
-					},
-					"SOAJS_GIT_PORTAL_BRANCH": {
-						"type": "static",
-						"value": "master"
 					}
 				},
 				"cmd": {
@@ -913,6 +920,17 @@ var catalogs = [
 					"name": "nginx",
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
+				},
+				"sourceCode": {
+					"config": {
+						"label": "Custom Configuration",
+						"required": false
+					},
+					"custom": {
+						"label": "Custom UI",
+						"type": "static",
+						"required": false
+					}
 				},
 				"readinessProbe": {
 					"httpGet": {
