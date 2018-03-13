@@ -552,17 +552,7 @@ var catalogs = [
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
 				},
-				"sourceCode": {
-					"config": {
-						"label": "Custom Configuration",
-						"required": false
-					},
-					"custom": {
-						"label": "Custom UI",
-						"type": "static",
-						"required": false
-					}
-				},
+				"sourceCode": {},
 				"readinessProbe": {
 					"httpGet": {
 						"path": "/heartbeat",
@@ -688,7 +678,7 @@ var catalogs = [
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
 				},
-				"specifyGitConfiguration": true,
+				"sourceCode": {},
 				"readinessProbe": {
 					"httpGet": {
 						"path": "/heartbeat",
@@ -743,34 +733,6 @@ var catalogs = [
 					"SOAJS_DAEMON_GRP_CONF": {
 						"type": "computed",
 						"value": "$SOAJS_DAEMON_GRP_CONF"
-					},
-					"SOAJS_GIT_PROVIDER": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_PROVIDER"
-					},
-					"SOAJS_GIT_DOMAIN": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_DOMAIN"
-					},
-					"SOAJS_GIT_OWNER": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_OWNER"
-					},
-					"SOAJS_GIT_BRANCH": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_BRANCH"
-					},
-					"SOAJS_GIT_COMMIT": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_COMMIT"
-					},
-					"SOAJS_GIT_REPO": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_REPO"
-					},
-					"SOAJS_GIT_TOKEN": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_TOKEN"
 					},
 
 					"SOAJS_DEPLOY_HA": {
@@ -1518,7 +1480,12 @@ var catalogs = [
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
 				},
-				"specifyGitConfiguration": true,
+				"sourceCode": {
+					"config": {
+						"label": "Custom Configuration",
+						"required": false
+					}
+				},
 				"readinessProbe": {},
 				"restartPolicy": dockerRestartPolicy,
 				"container": {
@@ -1532,26 +1499,6 @@ var catalogs = [
 			},
 			"buildOptions": {
 				"env": {
-					"SOAJS_GIT_OWNER": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_OWNER"
-					},
-					"SOAJS_GIT_BRANCH": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_BRANCH"
-					},
-					"SOAJS_GIT_COMMIT": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_COMMIT"
-					},
-					"SOAJS_GIT_REPO": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_REPO"
-					},
-					"SOAJS_GIT_TOKEN": {
-						"type": "computed",
-						"value": "$SOAJS_GIT_TOKEN"
-					},
 					"SOAJS_JAVA_APP_PORT": {
 						"type": "computed",
 						"value": "$SOAJS_SRV_PORT"
