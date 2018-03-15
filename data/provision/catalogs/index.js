@@ -552,7 +552,12 @@ var catalogs = [
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
 				},
-				"sourceCode": {},
+				"sourceCode": {
+					"configuration": {
+						"label": "Custom Configuration",
+						"required": false
+					}
+				},
 				"readinessProbe": {
 					"httpGet": {
 						"path": "/heartbeat",
@@ -678,7 +683,12 @@ var catalogs = [
 					"tag": "latest",
 					"pullPolicy": "IfNotPresent"
 				},
-				"sourceCode": {},
+				"sourceCode": {
+					"configuration": {
+						"label": "Custom Configuration",
+						"required": false
+					}
+				},
 				"readinessProbe": {
 					"httpGet": {
 						"path": "/heartbeat",
