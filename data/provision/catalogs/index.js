@@ -84,7 +84,7 @@ var catalogs = [
 					"pullPolicy": "IfNotPresent"
 				},
 				"sourceCode": {
-					"config": {
+					"configuration": {
 						"label": "Custom Configuration",
 						"required": false
 					}
@@ -193,7 +193,7 @@ var catalogs = [
 					"pullPolicy": "IfNotPresent"
 				},
 				"sourceCode": {
-					"config": {
+					"configuration": {
 						"label": "Custom Configuration",
 						"required": false
 					}
@@ -301,7 +301,7 @@ var catalogs = [
 					"pullPolicy": "IfNotPresent"
 				},
 				"sourceCode": {
-					"config": {
+					"configuration": {
 						"label": "Custom Configuration",
 						"required": false
 					}
@@ -427,7 +427,7 @@ var catalogs = [
 					"pullPolicy": "IfNotPresent"
 				},
 				"sourceCode": {
-					"config": {
+					"configuration": {
 						"label": "Custom Configuration",
 						"required": false
 					}
@@ -805,7 +805,7 @@ var catalogs = [
 					"pullPolicy": "IfNotPresent"
 				},
 				"sourceCode": {
-					"config": {
+					"configuration": {
 						"label": "Custom Configuration",
 						"required": false
 					},
@@ -922,7 +922,7 @@ var catalogs = [
 					"pullPolicy": "IfNotPresent"
 				},
 				"sourceCode": {
-					"config": {
+					"configuration": {
 						"label": "Custom Configuration",
 						"required": false
 					},
@@ -1043,7 +1043,7 @@ var catalogs = [
 					"pullPolicy": "IfNotPresent"
 				},
 				"sourceCode": {
-					"config": {
+					"configuration": {
 						"label": "Custom Configuration",
 						"required": false
 					},
@@ -1160,7 +1160,7 @@ var catalogs = [
 					"pullPolicy": "IfNotPresent"
 				},
 				"sourceCode": {
-					"config": {
+					"configuration": {
 						"label": "Custom Configuration",
 						"required": false
 					},
@@ -1277,7 +1277,7 @@ var catalogs = [
 					"pullPolicy" : "IfNotPresent"
 				},
 				"sourceCode": {
-					"config": {
+					"configuration": {
 						"label": "Custom Configuration",
 						"required": false
 					}
@@ -1340,7 +1340,7 @@ var catalogs = [
 					"pullPolicy" : "IfNotPresent"
 				},
 				"sourceCode": {
-					"config": {
+					"configuration": {
 						"label": "Custom Configuration",
 						"required": false
 					}
@@ -1403,7 +1403,7 @@ var catalogs = [
 					"pullPolicy": "IfNotPresent"
 				},
 				"sourceCode": {
-					"config": {
+					"configuration": {
 						"label": "Custom Configuration",
 						"required": false
 					}
@@ -1451,7 +1451,7 @@ var catalogs = [
 					"pullPolicy": "IfNotPresent"
 				},
 				"sourceCode": {
-					"config": {
+					"configuration": {
 						"label": "Custom Configuration",
 						"required": false
 					}
@@ -1499,7 +1499,7 @@ var catalogs = [
 					"pullPolicy": "IfNotPresent"
 				},
 				"sourceCode": {
-					"config": {
+					"configuration": {
 						"label": "Custom Configuration",
 						"required": false
 					}
@@ -1552,7 +1552,7 @@ var catalogs = [
 					"pullPolicy": "IfNotPresent"
 				},
 				"sourceCode": {
-					"config": {
+					"configuration": {
 						"label": "Custom Configuration",
 						"required": false
 					}
@@ -1606,7 +1606,7 @@ var catalogs = [
 				},
 
 				"sourceCode": {
-					"config": {
+					"configuration": {
 						"label": "Custom Configuration",
 						"required": false
 					}
