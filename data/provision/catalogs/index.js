@@ -86,6 +86,8 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					}
 				},
@@ -195,6 +197,8 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					}
 				},
@@ -303,6 +307,8 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					}
 				},
@@ -429,6 +435,8 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					}
 				},
@@ -555,6 +563,8 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					}
 				},
@@ -686,6 +696,8 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					}
 				},
@@ -817,10 +829,14 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					},
 					"custom": {
-						"label": "Custom UI",
+						"label": "Extra Custom UI",
+						"repo": "",
+						"branch": "",
 						"type": "static",
 						"required": false
 					}
@@ -934,10 +950,14 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					},
 					"custom": {
-						"label": "Custom UI",
+						"label": "Extra Custom UI",
+						"repo": "",
+						"branch": "",
 						"type": "static",
 						"required": false
 					}
@@ -1055,10 +1075,14 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					},
 					"custom": {
-						"label": "Custom UI",
+						"label": "Extra Custom UI",
+						"repo": "",
+						"branch": "",
 						"type": "static",
 						"required": false
 					}
@@ -1172,10 +1196,14 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					},
 					"custom": {
-						"label": "Custom UI",
+						"label": "Extra Custom UI",
+						"repo": "",
+						"branch": "",
 						"type": "static",
 						"required": false
 					}
@@ -1289,6 +1317,8 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					}
 				},
@@ -1352,6 +1382,8 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					}
 				},
@@ -1415,6 +1447,8 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					}
 				},
@@ -1463,6 +1497,8 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					}
 				},
@@ -1511,6 +1547,8 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					}
 				},
@@ -1564,6 +1602,8 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					}
 				},
@@ -1618,6 +1658,8 @@ var catalogs = [
 				"sourceCode": {
 					"configuration": {
 						"label": "Custom Configuration",
+						"repo": "",
+						"branch": "",
 						"required": false
 					}
 				},
