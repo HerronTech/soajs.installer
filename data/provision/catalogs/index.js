@@ -85,7 +85,7 @@ var catalogs = [
 				},
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
@@ -196,7 +196,7 @@ var catalogs = [
 				},
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
@@ -306,7 +306,7 @@ var catalogs = [
 				},
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
@@ -434,7 +434,7 @@ var catalogs = [
 				},
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
@@ -562,7 +562,7 @@ var catalogs = [
 				},
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
@@ -695,7 +695,7 @@ var catalogs = [
 				},
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
@@ -828,13 +828,13 @@ var catalogs = [
 				},
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
 					},
 					"custom": {
-						"label": "Extra Custom UI",
+						"label": "Attach Custom UI",
 						"repo": "",
 						"branch": "",
 						"type": "static",
@@ -949,13 +949,13 @@ var catalogs = [
 				},
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
 					},
 					"custom": {
-						"label": "Extra Custom UI",
+						"label": "Attach Custom UI",
 						"repo": "",
 						"branch": "",
 						"type": "static",
@@ -1074,13 +1074,13 @@ var catalogs = [
 				},
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
 					},
 					"custom": {
-						"label": "Extra Custom UI",
+						"label": "Attach Custom UI",
 						"repo": "",
 						"branch": "",
 						"type": "static",
@@ -1195,13 +1195,13 @@ var catalogs = [
 				},
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
 					},
 					"custom": {
-						"label": "Extra Custom UI",
+						"label": "Attach Custom UI",
 						"repo": "",
 						"branch": "",
 						"type": "static",
@@ -1316,7 +1316,7 @@ var catalogs = [
 				},
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
@@ -1381,7 +1381,7 @@ var catalogs = [
 				},
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
@@ -1446,7 +1446,7 @@ var catalogs = [
 				},
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
@@ -1496,7 +1496,7 @@ var catalogs = [
 				},
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
@@ -1546,7 +1546,7 @@ var catalogs = [
 				},
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
@@ -1601,7 +1601,7 @@ var catalogs = [
 				},
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
@@ -1657,7 +1657,7 @@ var catalogs = [
 
 				"sourceCode": {
 					"configuration": {
-						"label": "Custom Configuration",
+						"label": "Attach Custom Configuration",
 						"repo": "",
 						"branch": "",
 						"required": false
