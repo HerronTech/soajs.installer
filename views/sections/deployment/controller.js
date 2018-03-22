@@ -189,17 +189,16 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			}
 			
 			if(!$scope.deployment.authentication || !$scope.deployment.authentication.accessToken){
-				$scope.alerts.push({'type': 'danger', 'msg': 'Missing required field [kubernetes token]'});
+				$scope.alerts.push({'type': 'danger', 'msg': 'Missing required field [kubernetes authentication token]'});
 				$scope.$valid = false;
 			}
 		}
-		else if($scope.deployment.deployDriver.indexOf("docker.remote") !== -1){
-			if(!$scope.deployment.certificates || Object.keys($scope.deployment.certificates).length === 0){
-				$scope.alerts.push({'type': 'danger', 'msg': 'Missing required fields [certificates]'});
+		else if($scope.deployment.deployDriver.indexOf("docker") !== -1){
+			if(!$scope.deployment.authentication || !$scope.deployment.authentication.accessToken){
+				$scope.alerts.push({'type': 'danger', 'msg': 'Missing required field [docker authentication token]'});
 				$scope.$valid = false;
 			}
-		}
-		else if($scope.deployment.deployDriver.indexOf("docker.local") !== -1){
+			
 			if(!$scope.deployment.dockerSocket){
 				$scope.alerts.push({'type': 'danger', 'msg': 'Missing required fields [Docker Socket Directory]'});
 				$scope.$valid = false;
@@ -269,7 +268,6 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				
 				"soajsImageTag": (response && response.soajsImageTag) ? response.soajsImageTag : "latest",
 				"nginxImageTag": (response && response.nginxImageTag) ? response.nginxImageTag : "latest",
-				"certsRequired": false,
 				
 				"nginxPort": (response && response.nginxPort) ? response.nginxPort : 80,
 				"nginxSecurePort": (response && response.nginxSecurePort) ? response.nginxSecurePort : 443,
@@ -285,31 +283,33 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			
 			if ($scope.deployment.deployDriver.indexOf("docker") !== -1) {
 				$scope.deployment.containerDir = (response && response.docker && response.docker.containerDir) ? response.docker.containerDir : "/opt/soajs/deployer";
-				$scope.deployment.containerPort = (response && response.docker && response.docker.containerPort) ? response.docker.containerPort : 2376;
+				$scope.deployment.containerPort = (response && response.docker && response.docker.containerPort) ? response.docker.containerPort : 443;
 				$scope.deployment.networkName = (response && response.docker && response.docker.networkName) ? response.docker.networkName : "soajsnet";
-				$scope.deployment.dockerInternalPort = (response && response.docker && response.docker.dockerInternalPort) ? response.docker.dockerInternalPort : 2377;
+				$scope.deployment.dockerInternalPort = (response && response.docker && response.docker.dockerInternalPort) ? response.docker.dockerInternalPort : 444;
 				
 				$scope.portsCommandReveal = "docker ps";
 				
 				//if remote docker save certs files
 				if ($scope.deployment.deployDriver.indexOf("remote") !== -1) {
-					$scope.deployment.certsRequired = true;
-					//get certificate information
-					$scope.deployment.certificates = {};
-					//CA certificate
-					$scope.deployment.certificates.caCertificate = (response && response.certificates && response.certificates.caCertificate) ? response.certificates.caCertificate : "";
-					//Cert certificate
-					$scope.deployment.certificates.certCertificate = (response && response.certificates && response.certificates.certCertificate) ? response.certificates.certCertificate : "";
-					//CA certificate
-					$scope.deployment.certificates.keyCertificate = (response && response.certificates && response.certificates.keyCertificate) ? response.certificates.keyCertificate : "";
+					$scope.deployment.dockerSocket = "/var/run/docker.sock";
+					
+					$scope.deployment.authentication = {
+						accessToken: (response.authentication) ? response.authentication.accessToken: '',
+						apiPort: 32376,
+						protocol: 'https'
+					};
 				}
 				else if ($scope.deployment.deployDriver.indexOf("local") !== -1) {
-					$scope.deployment.certsRequired = false;
-					$scope.deployment.dockerSocket = (response && response.docker && response.docker.dockerSocket) ? response.docker.dockerSocket : "/var/run/docker.sock";
+					$scope.deployment.dockerSocket = "/var/run/docker.sock";
+					
+					$scope.deployment.authentication = {
+						accessToken: (response.authentication) ? response.authentication.accessToken: '',
+						apiPort: 32376,
+						protocol: 'https'
+					};
 				}
 			}
 			else if ($scope.deployment.deployDriver.indexOf("kubernetes") !== -1) {
-				$scope.deployment.certsRequired = false;
 				$scope.deployment.containerDir = (response && response.kubernetes && response.kubernetes.containerDir) ? response.kubernetes.containerDir : "/opt/soajs/deployer";
 				$scope.deployment.kubeContainerPort = (response && response.kubernetes && response.kubernetes.containerPort) ? response.kubernetes.containerPort : 8443;
 				

@@ -12,16 +12,6 @@ utilLog.log ('SOAJS High Availability Deployer');
 utilLog.log ('Current configuration: Machine IP/URL: ' + config.docker.machineIP);
 utilLog.log ('You can change this configuration by setting CONTAINER_HOST');
 
-//todo: remove all certificates and replace them with token
-if (config.docker.caCertificate && config.docker.certCertificate && config.docker.keyCertificate){
-	utilLog.log ('CA Certificate Local Path: ' + config.docker.caCertificate);
-	utilLog.log ('Cert Certificate Local Path: ' + config.docker.certCertificate);
-	utilLog.log ('Key Certificate Local Path: ' + config.docker.keyCertificate);
-	utilLog.log ('You can change this configuration by setting SOAJS_DOCKER_CA_CERTS_PATH, SOAJS_DOCKER_CERT_CERTS_PATH,' +
-		' & SOAJS_DOCKER_KEY_CERTS_PATH environment variables\n');
-}
-
-
 lib.getDeployer(config.docker, function (error, deployer) {
 	if(error){ throw new Error(error); }
 
@@ -107,10 +97,7 @@ function deploy (group, deployer, cb) {
 				if (group === 'db') {
 					if (config.mongo.external) {
 						utilLog.log ('External Mongo deployment detected, will not create a container for mongo.');
-						lib.importData(config.mongo.services, function(error){
-							if(error){ return cb(error); }
-							lib.importCertificates(cb);
-						});
+						lib.importData(config.mongo.services, cb);
 					}
 					else{
 						return importProvisionData(services, deployer, cb);
@@ -130,9 +117,7 @@ function importProvisionData (dbServices, deployer, cb) {
 	lib.getServiceInstances(config.mongo.services.dashboard.name, deployer, 1, function (error) {
 		if (error) return cb(error);
 		setTimeout(function () {
-            lib.importData(config.mongo.services, function(){
-                lib.importCertificates(cb);
-            });
+            lib.importData(config.mongo.services, cb);
 		}, 5000);
 	});
 }

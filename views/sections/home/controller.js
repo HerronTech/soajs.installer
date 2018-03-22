@@ -43,42 +43,6 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 		$scope.alerts.splice(i, 1);
 	};
 	$scope.previousCheckComplete = false;
-	/*$scope.deploymentExists = null;
-	$scope.findCustomFile = function (previousDeploymentInfo, deploymentExists, cb) {
-		console.log($scope.alerts)
-		if (deploymentExists) {
-			$scope.deploymentExists = (previousDeploymentInfo !== null && previousDeploymentInfo !== undefined);
-			var output = "<h4>Previous deployment detected</h4><hr />";
-			output += "<table class='bulletin' width='100%' border='0' >";
-			output += "<thead><tr><th>Deployment Type</th><th>Deployment Driver</th><th>Cluster</th></tr></thead><tbody>";
-			
-			output += "<tr>";
-			if (previousDeploymentInfo.deployType === "manual") {
-				output += "<td class='caps'>manual</td>";
-				output += "<td class='caps'>manual</td>";
-			}
-			else if (previousDeploymentInfo.deployType.split(".")[0] === "container") {
-				output += "<td class='caps'>" + previousDeploymentInfo.deployType.split(".")[2] + " cloud deployment</td>";
-				output += "<td class='caps'>" + previousDeploymentInfo.deployType.split(".")[1] + "</td>";
-			}
-			
-			previousDeploymentInfo.servers.forEach(function (server) {
-				output += "<td><span class='caps'><b>Host:</b></span> " + server.host + " / <span class='caps'><b>Port:</b></span> " + server.port;
-				
-				if (previousDeploymentInfo.servers[0].host === "dashboard-soajsdata") {
-					output += "<br /><em>The database cluster is a container withing the same cloud.</em>"
-				}
-				
-				output += "</td>";
-			});
-			
-			output += "</tr>";
-			output += "</tbody></table>";
-			output += "<br /><p>If you decide to proceed with the installation and once you run the generated deployment script in the last step, you will override this deployment with a new one.</p>";
-			$scope.previousDeployment = output;
-			return cb();
-		}
-	};*/
 	
 	$scope.fillOverView = function () {
 		var output = {};
@@ -276,13 +240,6 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
             $timeout(function(){
                 resizeContent();
             }, 500);
-			//check for existing deployments.
-			/*$scope.findCustomFile(response.previousDeploymentInfo, response.previousDeployment, function(){
-				
-				$timeout(function(){
-					resizeContent();
-				}, 500);
-			});*/
 		});
 	};
 	

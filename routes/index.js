@@ -52,10 +52,16 @@ var routes = {
             };
 
             data.docker = {
-                local: {
-                    "v": "https://download.docker.com/mac/stable/Docker.dmg",
-                    "t": "link"
-                },
+                local: [
+	                {
+		                "v": "https://download.docker.com/mac/stable/Docker.dmg",
+		                "t": "link"
+	                },
+	                {
+		                "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-api.sh"),
+		                "t": "sh"
+	                }
+                ],
                 remote:{
                     "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
                     "t": "sh"
@@ -228,15 +234,15 @@ var routes = {
 		    }
 		
 		    if(!req.soajs.inputmaskData.deployment.authentication || !req.soajs.inputmaskData.deployment.authentication.accessToken){
-			    return res.json(req.soajs.buildResponse({code: 173, 'msg': 'Missing required field [kubernetes token]'}));
+			    return res.json(req.soajs.buildResponse({code: 173, 'msg': 'Missing required field [kubernetes authentication token]'}));
 		    }
 	    }
-	    else if(req.soajs.inputmaskData.deployment.deployDriver.indexOf("docker.remote") !== -1){
-		    if(!req.soajs.inputmaskData.deployment.certificates || Object.keys(req.soajs.inputmaskData.deployment.certificates).length === 0){
-			    return res.json(req.soajs.buildResponse({code: 173, 'msg': 'Missing required field [certificates]'}));
+	    else if(req.soajs.inputmaskData.deployment.deployDriver.indexOf("docker") !== -1){
+		    
+	    	if(!req.soajs.inputmaskData.deployment.authentication || !req.soajs.inputmaskData.deployment.authentication.accessToken){
+			    return res.json(req.soajs.buildResponse({code: 173, 'msg': 'Missing required field [docker authentication token]'}));
 		    }
-	    }
-	    else if(req.soajs.inputmaskData.deployment.deployDriver.indexOf("docker.local") !== -1){
+		    
 		    if(!req.soajs.inputmaskData.deployment.dockerSocket){
 			    return res.json(req.soajs.buildResponse({code: 173, 'msg': 'Missing required field [Docker Socket Directory]'}));
 		    }

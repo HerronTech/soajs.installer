@@ -1,4 +1,6 @@
 "use strict";
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 var os = require("os");
 var fs = require("fs");
 var path = require("path");
@@ -252,34 +254,25 @@ var lib = {
             envData = envData.replace(/%token%/g, body.deployment.authentication.accessToken);
 	        
             if (body.deployment.deployDriver.split('.')[2] === 'local'){
-		        envData = envData.replace(/"apiPort": "%dockerLocalPort%",/g, '');
 		        envData = envData.replace(/"apiPort": "%dockerRemotePort%",/g,'');
-		        envData = envData.replace(/"%kubernetesLocalPort%"/g, body.deployment.kubernetes.containerPort);
-		        envData = envData.replace(/"apiPort": "%kubernetesRemotePort%",/g,'');
+	            envData = envData.replace(/"%kubernetesRemotePort%"/g, body.deployment.kubernetes.containerPort);
 	        }
 	        else {
-		        envData = envData.replace(/"apiPort": "%dockerLocalPort%",/g, '');
 		        envData = envData.replace(/"apiPort": "%dockerRemotePort%",/g,'');
-		        envData = envData.replace(/"apiPort": "%kubernetesLocalPort%",/g, '');
 		        envData = envData.replace(/"%kubernetesRemotePort%"/g, body.deployment.kubernetes.containerPort);
 	        }
         }
         else {
             envData = envData.replace(/"%namespace%"/g, JSON.stringify ({}, null, 2));
-	
-	        //todo: change once docker using token too
-            envData = envData.replace(/%token%/g, '');
+	        envData = envData.replace(/%token%/g, body.deployment.authentication.accessToken);
 	       
 	        if (body.deployment.deployDriver.split('.')[2] === 'local'){
-		        envData = envData.replace(/"%dockerLocalPort%"/g, body.deployment.docker.containerPort);
-		        envData = envData.replace(/"apiPort": "%dockerRemotePort%",/g,'');
-		        envData = envData.replace(/"apiPort": "%kubernetesLocalPort%",/g,'');
+		        envData = envData.replace(/"%dockerRemotePort%"/g, body.deployment.docker.containerPort);
 		        envData = envData.replace(/"apiPort": "%kubernetesRemotePort%",/g,'');
 	        }
 	        else {
 		        envData = envData.replace(/"apiPort": "%dockerLocalPort%",/g, '');
 		        envData = envData.replace(/"%dockerRemotePort%"/g, body.deployment.docker.containerPort);
-		        envData = envData.replace(/"apiPort": "%kubernetesLocalPort%",/g,'');
 		        envData = envData.replace(/"apiPort": "%kubernetesRemotePort%",/g,'');
 	        }
         }
@@ -512,15 +505,8 @@ var lib = {
                     envs['SOAJS_MONGO_RSNAME'] = body.clusters.replicaSet;
                 }
                 
-                //todo: remove certificates, not needed anymore, replace with token: new env variable --> KUBE_AUTH_TOKEN
-                if (body.deployment.certificates && body.deployment.certificates.caCertificate && body.deployment.certificates.certCertificate && body.deployment.certificates.keyCertificate) {
-                	
-                	body.deployment.docker.caCertificate = body.deployment.certificates.caCertificate;
-                	body.deployment.docker.certCertificate = body.deployment.certificates.certCertificate;
-                	body.deployment.docker.keyCertificate = body.deployment.certificates.keyCertificate;
-                    envs["SOAJS_DOCKER_CA_CERTS_PATH"] = body.deployment.docker.caCertificate;
-                    envs["SOAJS_DOCKER_CERT_CERTS_PATH"] = body.deployment.docker.certCertificate;
-                    envs["SOAJS_DOCKER_KEY_CERTS_PATH"] = body.deployment.docker.keyCertificate;
+                if(body.deployment.authentication && body.deployment.authentication.accessToken){
+                	envs['SWARM_AUTH_TOKEN'] = body.deployment.authentication.accessToken;
                 }
 	            
                 //add readiness probes environment variables
@@ -840,22 +826,12 @@ var lib = {
 	            var Docker = require('dockerode');
                 var deployerConfig = {
                     "host": body.deployment.containerHost,
-                    "port": body.deployment.docker.containerPort
+                    "port": body.deployment.docker.containerPort,
+	                'protocol': 'https',
+	                'headers':{
+		                'token': body.deployment.authentication.accessToken
+	                }
                 };
-                if (typeof (deployerConfig.host) === 'string' && deployerConfig.host === '127.0.0.1') {
-                    deployerConfig = {
-                        socketPath: body.deployment.docker.dockerSocket
-                    };
-                }
-                else {
-                	//todo: replace certificates with token --> KUBE_AUTH_TOKEN
-                    if (!body.deployment.certificates || !body.deployment.certificates.caCertificate || !body.deployment.certificates.keyCertificate || !body.deployment.certificates.certCertificate ){
-                        return cb(new Error('No certificates found for remote machine.'));
-                    }
-                    deployerConfig.ca = fs.readFileSync(body.deployment.certificates.caCertificate);
-                    deployerConfig.cert = fs.readFileSync(body.deployment.certificates.certCertificate);
-                    deployerConfig.key = fs.readFileSync(body.deployment.certificates.keyCertificate);
-                }
                 var deployer = new Docker(deployerConfig);
                 deployer.listContainers({}, function (error, containers) {
                     if (error) return cb(error);

@@ -79,7 +79,11 @@
 										<pre ng-show="docker && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
 {{style.docker.local.v}}</code></pre>
 										<pre ng-show="docker && local && osName==='mac'" class="bash"><code># Click on this link to download Docker for Mac:
-<a href="{{style.docker.local.v}}" target="_blank">{{style.docker.local.v}}</a></code></pre>
+<a href="{{style.docker.local[0].v}}" target="_blank">{{style.docker.local[0].v}}</a></code></pre>
+										
+										<pre ng-show="docker && local && osName==='mac'" class="bash"><code># Once you install Docker for Mac, execute the command below in your terminal on your local machine:
+{{style.docker.local[1].v}}</code></pre>
+										
 										<pre ng-show="kubernetes && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
 {{style.kubernetes.local.v}}</code></pre>
 										<pre ng-show="kubernetes && local && osName==='mac'" class="bash"><code># Execute the command below in your terminal on your local machine
@@ -99,11 +103,17 @@
 									</td>
 								</tr>
 								<tr>
-									<td width="50%">
+									<td width="50%" valign="top">
 										<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.local'}" href="" ng-click="selectDeployment('docker', 'container.docker.local')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
 									</td>
-									<td width="50%">
+									<td width="50%" valign="top">
 										<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.local'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.local')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+									</td>
+								</tr>
+								<tr ng-show="docker && local && osName==='mac'" >
+									<td colspan="2">
+										<pre class="bash"><code># Execute the command below in your terminal on your local machine:
+{{style.docker.local[1].v}}</code></pre>
 									</td>
 								</tr>
 							</table>
@@ -445,30 +455,8 @@
 									<div>
 										<ol>
 											<li>Create a remote machine with Ubuntu on it.</li>
-											<li>The script above will install the chosen driver, and generate self-signed
-												certificates for you.
-											</li>
-											<li>Copy these certificates to a folder on this machine.</li>
-											<li>Provide the IP address of the remote machine and the certificates location
-												in the last step of this wizard when asked.
-											</li>
-										</ol>
-										<b>Or:</b>
-										<ol>
-											<li>Create a remote machine with Ubuntu on it.</li>
-											<li>Purchase certificates for a third party provider.</li>
-											<li>Copy these certificates to a folder on the remote machine.<br/>
-												<u>ex:</u><br/>
-												- <b>Docker:</b>&nbsp;'~/.docker/'<br>
-												- <b>Kubernetes:</b>&nbsp;'/etc/kubernetes/pki/'
-											</li>
-											<li>The instructions above will guide you to install the chosen driver, and use
-												your certificates.
-											</li>
-											<li>Copy the same certificates to a folder on this machine.</li>
-											<li>Provide the IP address of the remote machine and the certificates location
-												in the last step of this wizard when asked.
-											</li>
+											<li>The script above will install docker on that machine, and generate a token that you can use to connect to docker on that machine.</li>
+											<li>Provide the IP address of the remote machine and the token in the last step of this wizard when asked.</li>
 										</ol>
 									</div>
 								</alert>
@@ -480,7 +468,7 @@
 									<div>
 										<ol>
 											<li>Create a remote machine with Ubuntu on it.</li>
-											<li>The script above will install the chosen driver, and generate self-signed certificates for you.</li>
+											<li>The script above will install kubernetes on that machine.</li>
 											<li>Provide the IP address of the remote machine and the kubernetes token in the last step of this wizard when asked.
 												<pre class="bash"><code># get kubernetes secret token
 $ kubectl describe secrets</code></pre>
@@ -506,6 +494,12 @@ $ kubectl describe secrets</code></pre>
 										</td>
 										<td width="50%">
 											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+										</td>
+									</tr>
+									<tr ng-show="docker && remote && osName==='mac'" >
+										<td colspan="2">
+										<pre class="bash"><code># Execute the command below in your terminal on your remote machine:
+{{style.docker.local[1].v}}</code></pre>
 										</td>
 									</tr>
 								</table>

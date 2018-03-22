@@ -123,37 +123,17 @@
 				<tab ng-if="docker" heading="Docker" ng-click="tabSwitched()">
 					<br>
 					<accordion close-others="false">
-						<accordion-group ng-if="deployment.certsRequired" is-open="accordion1.certificates">
-							<accordion-heading>Certificates</accordion-heading>
+						<accordion-group is-open="accordion1.token">
+							<accordion-heading>Authentication Token</accordion-heading>
 							<table width="100%" cellspacing="0" cellpadding="0" border="0">
 								<tbody>
 									<tr class="form-group tr-code-wrapper">
 										<td class="form-select">
-											<div id="CA-wrapper">
-												<label>CA</label>
-												<input type="text" ng-required="deployment.certsRequired" class="form-control" name="caCertificate" id="caCertificate"
-												       ng-model="deployment.certificates.caCertificate" placeholder="~/certificate.ca"/>
-												<div class="fieldMsg hint">Specify the location of the certificate of type CA.</div>
-											</div>
-										</td>
-									</tr>
-									<tr class="form-group tr-code-wrapper">
-										<td class="form-select">
-											<div id="Cert-wrapper">
-												<label>Cert</label>
-												<input type="text" ng-required="deployment.certsRequired" class="form-control" name="certCertificate" id="certCertificate"
-												       ng-model="deployment.certificates.certCertificate" placeholder="~/certificate.cert"/>
-												<div class="fieldMsg hint">Specify the location of the certificate of type Cert.</div>
-											</div>
-										</td>
-									</tr>
-									<tr class="form-group tr-code-wrapper">
-										<td class="form-select">
-											<div id="Key-wrapper">
-												<label>Key</label>
-												<input type="text" ng-required="deployment.certsRequired" class="form-control" name="keyCertificate" id="keyCertificate"
-												       ng-model="deployment.certificates.keyCertificate" placeholder="~/certificate.key"/>
-												<div class="fieldMsg hint">Specify the location of the certificate of type Key.</div>
+											<div id="authToken-wrapper">
+												<label>Docker Authentication Token</label>
+												<input type="text" ng-required="true" class="form-control" name="DockeAuthToken" id="DockeAuthToken"
+												       ng-model="deployment.authentication.accessToken" placeholder="<Authentication token>"/>
+												<div class="fieldMsg hint">Insert the Docker authentication token</div>
 											</div>
 										</td>
 									</tr>
@@ -167,10 +147,8 @@
 									<tr class="form-group tr-code-wrapper">
 										<td class="form-select">
 											<div id="dockerSocket-wrapper">
-												<label>Docker Socket Directory</label>
-												<input type="text" ng-required="false" class="form-control" name="dockerSocket" id="dockerSocket"
-												       ng-model="deployment.dockerSocket" placeholder="deployment.dockerSocket"/>
-												<div class="fieldMsg hint">Specify the directory of the docker socket.</div>
+												<label>Docker Socket</label>
+												<input type="text" readonly class="form-control" name="dockerSocket" id="dockerSocket" ng-model="deployment.dockerSocket" placeholder="deployment.dockerSocket"/>
 											</div>
 										</td>
 									</tr>
@@ -188,7 +166,7 @@
 										<td class="form-select">
 											<div id="containerPort-wrapper">
 												<label>Docker Container Port Number</label>
-												<input type="number" ng-required="true" class="form-control" name="containerPort" ng-model="deployment.containerPort"
+												<input type="number" readonly ng-required="true" class="form-control" name="containerPort" ng-model="deployment.containerPort"
 												       id="containerPort" placeholder="deployment.containerPort" min="1"/>
 												<div class="fieldMsg hint">Specify the docker container port number.</div>
 											</div>
@@ -198,7 +176,7 @@
 										<td class="form-select">
 											<div id="dockerInternalPort-wrapper">
 												<label>Docker Internal Port Number</label>
-												<input type="number" ng-required="false" class="form-control" name="dockerInternalPort" ng-model="deployment.dockerInternalPort"
+												<input type="number" readonly ng-required="false" class="form-control" name="dockerInternalPort" ng-model="deployment.dockerInternalPort"
 												       id="dockerInternalPort" placeholder="deployment.dockerInternalPort" min="1"/>
 												<div class="fieldMsg hint">Specify the docker internal port number.</div>
 											</div>
