@@ -16,6 +16,10 @@ module.exports = {
 	docker:{
 		url: "https://hub.docker.com/v2/repositories/%organization%/%imagename%/tags/"
 	},
+	"kubernetes": {
+		"minPort": 0,
+		"maxPort": 2767
+	},
 	"errors": {},
 	"schema": {
 		'get': {

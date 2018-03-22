@@ -11,6 +11,8 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; //to avoid self signed certifica
 utilLog.log ('SOAJS High Availability Deployer');
 utilLog.log ('Current configuration: Machine IP/URL: ' + config.docker.machineIP);
 utilLog.log ('You can change this configuration by setting CONTAINER_HOST');
+
+//todo: remove all certificates and replace them with token
 if (config.docker.caCertificate && config.docker.certCertificate && config.docker.keyCertificate){
 	utilLog.log ('CA Certificate Local Path: ' + config.docker.caCertificate);
 	utilLog.log ('Cert Certificate Local Path: ' + config.docker.certCertificate);

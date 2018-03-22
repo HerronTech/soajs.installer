@@ -52,6 +52,7 @@ var components = {
             }
         },
         "spec": {
+	        "revisionHistoryLimit": 2,
             "replicas": 1,
             "selector": {
                 "matchLabels": {

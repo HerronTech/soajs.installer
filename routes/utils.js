@@ -246,10 +246,12 @@ var lib = {
         envData = envData.replace(/%keySecret%/g, body.security.key);
         envData = envData.replace(/%sessionSecret%/g, body.security.session);
         envData = envData.replace(/%cookieSecret%/g, body.security.cookie);
+        
         if (body.deployment.deployDriver.split('.')[1] === 'kubernetes') {
             envData = envData.replace(/"%namespace%"/g, JSON.stringify (body.deployment.namespaces, null, 2));
             envData = envData.replace(/%token%/g, body.deployment.authentication.accessToken);
-	        if (body.deployment.deployDriver.split('.')[2] === 'local'){
+	        
+            if (body.deployment.deployDriver.split('.')[2] === 'local'){
 		        envData = envData.replace(/"apiPort": "%dockerLocalPort%",/g, '');
 		        envData = envData.replace(/"apiPort": "%dockerRemotePort%",/g,'');
 		        envData = envData.replace(/"%kubernetesLocalPort%"/g, body.deployment.kubernetes.containerPort);
@@ -264,6 +266,8 @@ var lib = {
         }
         else {
             envData = envData.replace(/"%namespace%"/g, JSON.stringify ({}, null, 2));
+	
+	        //todo: change once docker using token too
             envData = envData.replace(/%token%/g, '');
 	       
 	        if (body.deployment.deployDriver.split('.')[2] === 'local'){
@@ -477,8 +481,8 @@ var lib = {
 	                "SOAJS_NX_IMAGE_PREFIX": body.deployment.nginxImagePrefix,
 	                "SOAJS_NX_IMAGE_TAG": body.deployment.nginxImageTag,
 	                
-                    "NGINX_HTTP_PORT": body.deployment.nginxPort,
-                    "NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
+                    "NGINX_HTTP_PORT": 30000 + body.deployment.nginxPort,
+                    "NGINX_HTTPS_PORT": 30000 + body.deployment.nginxSecurePort,
                     "SOAJS_NX_SSL": body.deployment.nginxSsl,
 
 
@@ -489,6 +493,11 @@ var lib = {
                     "CONTAINER_PORT": body.deployment.docker.containerPort,
                     "SOAJS_DOCKER_REPLICA": body.deployment.dockerReplica
                 };
+	
+	            if(body.deployment.nginxDeployType === 'LoadBalancer'){
+		            delete envs['NGINX_HTTP_PORT'];
+		            delete envs['NGINX_HTTPS_PORT'];
+	            }
                 
                 if(!body.clusters.mongoExt){
                 	envs["MONGO_PORT"] = body.deployment.mongoExposedPort;
@@ -503,8 +512,8 @@ var lib = {
                     envs['SOAJS_MONGO_RSNAME'] = body.clusters.replicaSet;
                 }
                 
-                if (body.deployment.certificates && body.deployment.certificates.caCertificate
-	                && body.deployment.certificates.certCertificate && body.deployment.certificates.keyCertificate) {
+                //todo: remove certificates, not needed anymore, replace with token: new env variable --> KUBE_AUTH_TOKEN
+                if (body.deployment.certificates && body.deployment.certificates.caCertificate && body.deployment.certificates.certCertificate && body.deployment.certificates.keyCertificate) {
                 	
                 	body.deployment.docker.caCertificate = body.deployment.certificates.caCertificate;
                 	body.deployment.docker.certCertificate = body.deployment.certificates.certCertificate;
@@ -575,8 +584,8 @@ var lib = {
 	                "SOAJS_NX_IMAGE_PREFIX": body.deployment.nginxImagePrefix,
 	                "SOAJS_NX_IMAGE_TAG": body.deployment.nginxImageTag,
 	                
-                    "NGINX_HTTP_PORT": body.deployment.nginxPort,
-                    "NGINX_HTTPS_PORT": body.deployment.nginxSecurePort,
+                    "NGINX_HTTP_PORT": 30000 + body.deployment.nginxPort,
+                    "NGINX_HTTPS_PORT": 30000 + body.deployment.nginxSecurePort,
                     "SOAJS_NX_SSL": body.deployment.nginxSsl,
 
                     "CONTAINER_HOST": body.deployment.containerHost,
@@ -670,6 +679,10 @@ var lib = {
 		fs.chmodSync(path.normalize(__dirname + "/../scripts/" + type + "-deploy.sh"), "0755");
 		var protocol = body.deployment.nginxSsl ? "https" : "http";
 		var port = body.deployment.nginxSsl ? body.deployment.nginxSecurePort : body.deployment.nginxPort;
+		
+		if(body.deployment.nginxDeployType === 'NodePort'){
+			port += 30000;
+		}
 		
 		var obj = {
 			"hosts": {
@@ -835,6 +848,7 @@ var lib = {
                     };
                 }
                 else {
+                	//todo: replace certificates with token --> KUBE_AUTH_TOKEN
                     if (!body.deployment.certificates || !body.deployment.certificates.caCertificate || !body.deployment.certificates.keyCertificate || !body.deployment.certificates.certCertificate ){
                         return cb(new Error('No certificates found for remote machine.'));
                     }

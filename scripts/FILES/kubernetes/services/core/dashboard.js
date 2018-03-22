@@ -67,6 +67,7 @@ var components = {
             }
         },
         "spec": {
+	        "revisionHistoryLimit": 2,
             "replicas": gConfig.kubernetes.replicas,
             "selector": {
                 "matchLabels": {

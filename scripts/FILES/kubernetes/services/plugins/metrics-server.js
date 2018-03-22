@@ -60,6 +60,7 @@ var components = {
 			}
 		},
 		"spec": {
+			"revisionHistoryLimit": 2,
 			"selector": {
 				"matchLabels": {
 					"k8s-app": "metrics-server",

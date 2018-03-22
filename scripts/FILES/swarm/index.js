@@ -82,6 +82,7 @@ var lib = {
             return cb(null, new Docker({socketPath: config.docker.socketPath}));
         }
         else {
+        	//todo: replace certificates with token
 	        if(!config.docker.caCertificate || !config.docker.caCertificate || !config.docker.caCertificate){
         		return cb(new Error('No certificates found for remote machine.'));
 	        }
@@ -155,8 +156,7 @@ var lib = {
             lib.deployService(deployer, oneService, callback);
         }, cb);
     },
-
-
+	
     /**
      * Customizes a new nginx recipe used to deploy the NGINX of the dashboard environment
      * @param nginxRecipe
@@ -166,7 +166,6 @@ var lib = {
     updateNginxRecipe (nginxRecipe) {
     	delete nginxRecipe.locked;
         nginxRecipe.name = "Dashboard Nginx Recipe";
-        nginxRecipe.description = "This is the nginx catalog recipe used to deploy the nginx in the dashboard environment."
 	    nginxRecipe.recipe.deployOptions.image.prefix = config.images.nginx.prefix;
 	    nginxRecipe.recipe.deployOptions.image.tag = config.images.nginx.tag;
 
@@ -228,7 +227,6 @@ var lib = {
     updateServiceRecipe (serviceRecipe) {
 	    delete serviceRecipe.locked;
         serviceRecipe.name = "Dashboard Service Recipe";
-	    serviceRecipe.description = "This is the service catalog recipe used to deploy the core services in the dashboard environment."
 	    serviceRecipe.recipe.deployOptions.image.prefix = config.images.soajs.prefix;
 	    serviceRecipe.recipe.deployOptions.image.tag = config.images.soajs.tag;
 
@@ -322,10 +320,10 @@ var lib = {
                     //catalogDefaulEntries[0], catalogDefaulEntries[3]
                     var dashboardCatalogEntries = [];
                     catalogDefaulEntries.forEach((oneRecipe) => {
-	                    if(oneRecipe.name === 'SOAJS Controller Recipe - Docker'){
+	                    if(oneRecipe.name === 'SOAJS API Gateway Recipe'){
 		                    dashboardCatalogEntries.push(oneRecipe);
 	                    }
-	                    if(oneRecipe.name === 'Nginx Recipe - Docker'){
+	                    if(oneRecipe.name === 'Nginx Recipe'){
 		                    dashboardCatalogEntries.push(oneRecipe);
 	                    }
                     });

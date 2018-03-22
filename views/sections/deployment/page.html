@@ -339,18 +339,74 @@
 					<accordion>
 						<accordion-group is-open="accordion1.nginx">
 							<accordion-heading>Nginx Exposed Ports</accordion-heading>
+							<alert type="info">
+								<h4>Exposed Ports Strategies</h4>
+								<hr>
+								<p>
+									Nginx will be deployed globally and its ports will be exposed so you can access the Dashboard via your browser.<br />
+									There are 2 strategies to expose your Nginx Ports:
+								</p>
+								<br />
+								<table width="100%">
+									<tr ng-show="deployment.nginxDeployType === 'NodePort'">
+										<td align="left" valign="top"><b>Node Port</b></td>
+									</tr>
+									<tr ng-show="deployment.nginxDeployType === 'NodePort'">
+										<td>
+											Exposes the ports directly on all the machines within the network and automatically adds 30000 to the value of the ports you entered<br />
+											Ports values will become:
+											<ul>
+												<li><b>HTTP:</b>&nbsp;{{30000 + deployment.nginxPort}} </li>
+												<li><b>HTTPS:</b>&nbsp;{{30000 + deployment.nginxSecurePort}} </li>
+											</ul>
+										</td>
+									</tr>
+									<tr ng-show="deployment.nginxDeployType === 'LoadBalancer'">
+										<td align="left" valign="top"><b>Load Balancer</b></td>
+									</tr>
+									<tr ng-show="deployment.nginxDeployType === 'LoadBalancer'">
+										<td>
+											<p>
+												Assigns the dynamic ports on all the machines within the network (same dynamic ports on all machines).<br />
+												A Load Balancer must be deployed to map these dynamic ports.
+											</p>
+											<ul>
+												<li>
+													<b>Google Cloud</b><br />
+													<p>
+														If you are using <b>GKE</b> as your infrastructure provider, then <b>GKE</b> will automatically deploy a Load Balancer.<br />
+														The Load Balancer will automatically map the dynamic ports to 80 & 443.
+													</p>
+												</li>
+												<li>
+													<b>Other</b><br />
+													<p>
+														You need to deploy a Load Balancer and map the dynamic ports yourself.<br />
+														You can find the values of the dynamic ports by running this command after you install SOAJS.
+													</p>
+													<pre class="bash"><code>{{portsCommandReveal}}</code></pre>
+												</li>
+											</ul>
+										</td>
+									</tr>
+								</table>
+								<div ng-show="deployment.nginxDeployType === 'NodePort'">
+									<hr />
+									<h5><u>Note:</u></h5>
+									The values you enter for exposed ports can range between 0 and 2767 ONLY!
+								</div>
+							</alert>
 							<table width="100%" cellspacing="0" cellpadding="0" border="0">
 								<tbody>
-									<tr class="form-group tr-code-wrapper" ng-show="kubernetes">
+									<tr class="form-group tr-code-wrapper">
 										<td class="form-select">
 											<div id="nginxDeployType-wrapper">
-												<label>Service Deployment Type</label>
-												<select ng-required="kubernetes" name="nginxDeployType" id="nginxDeployType" ng-model="deployment.nginxDeployType">
+												<label>Service Deployment Strategy</label>
+												<select ng-required="true" name="nginxDeployType" id="nginxDeployType" ng-model="deployment.nginxDeployType" class="form-control">
 													<option value="NodePort">NodePort</option>
 													<option value="LoadBalancer">Load Balancer</option>
 												</select>
-												<div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='LoadBalancer'">Load Balancer option uses automatic public IP / ELB provisioning when running Kubernetes cluster in AWS or GCE.</div>
-												<div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='NodePort'">Current NGINX exposed port: {{deployment.nginxPort}}</div>
+												<div class="fieldMsg hint" ng-show="deployment.nginxDeployType==='LoadBalancer'">Load Balancer option uses automatic public IP / ELB provisioning.</div>
 											</div>
 										</td>
 									</tr>

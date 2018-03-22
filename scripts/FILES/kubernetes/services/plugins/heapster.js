@@ -48,6 +48,7 @@ var components = {
             "namespace": "kube-system"
         },
         "spec": {
+	        "revisionHistoryLimit": 2,
             "replicas": 1,
             "template": {
                 "metadata": {

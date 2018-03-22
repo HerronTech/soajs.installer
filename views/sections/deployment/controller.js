@@ -163,6 +163,12 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				"clusters": (response.clusters) ? response.clusters : {},
 				"deployment": (response.deployment) ? response.deployment : {}
 			};
+			
+			if($scope.data.deployment.nginxDeployType === 'NodePort'){
+				$scope.data.deployment.nginxPort += 30000;
+				$scope.data.deployment.nginxSecurePort += 30000;
+			}
+			
 			$timeout(function () {
 				resizeContent();
 			}, 10);
@@ -170,17 +176,58 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 	};
 	
 	$scope.submit = function (form) {
+		$scope.alerts = [];
+		
 		if ($scope.deployment.deployDriver.indexOf("kubernetes") !== -1) {
 			if (!$scope.deployment.nginxSsl || $scope.deployment.nginxSsl && $scope.deployment.generateSsc) {
 				$scope.deployment.nginxKubeSecret = null;
 			}
+			
+			if(!$scope.deployment.namespaces || !$scope.deployment.namespaces.default){
+				$scope.alerts.push({'type': 'danger', 'msg': 'Missing required field [namespaces]'});
+				$scope.$valid = false;
+			}
+			
+			if(!$scope.deployment.authentication || !$scope.deployment.authentication.accessToken){
+				$scope.alerts.push({'type': 'danger', 'msg': 'Missing required field [kubernetes token]'});
+				$scope.$valid = false;
+			}
 		}
+		else if($scope.deployment.deployDriver.indexOf("docker.remote") !== -1){
+			if(!$scope.deployment.certificates || Object.keys($scope.deployment.certificates).length === 0){
+				$scope.alerts.push({'type': 'danger', 'msg': 'Missing required fields [certificates]'});
+				$scope.$valid = false;
+			}
+		}
+		else if($scope.deployment.deployDriver.indexOf("docker.local") !== -1){
+			if(!$scope.deployment.dockerSocket){
+				$scope.alerts.push({'type': 'danger', 'msg': 'Missing required fields [Docker Socket Directory]'});
+				$scope.$valid = false;
+			}
+		}
+		
+		if($scope.deployment.nginxDeployType === 'LoadBalancer'){
+			$scope.deployment.nginxPort = 80;
+			$scope.deployment.nginxSecurePort = 443;
+		}
+		
+		if($scope.deployment.nginxPort < appConfig.kubernetes.minPort || $scope.deployment.nginxPort > appConfig.kubernetes.maxPort){
+			$scope.alerts.push({'type': 'danger', 'msg': `HTTP Port should be within the range of: ${appConfig.kubernetes.minPort} and ${appConfig.kubernetes.maxPort}`});
+			form.$valid = false;
+		}
+		
+		if($scope.deployment.nginxSecurePort < appConfig.kubernetes.minPort || $scope.deployment.nginxSecurePort > appConfig.kubernetes.maxPort){
+			$scope.alerts.push({'type': 'danger', 'msg': `HTTP Secure Port should be within the range of: ${appConfig.kubernetes.minPort} and ${appConfig.kubernetes.maxPort}`});
+			form.$valid = false;
+		}
+		
+		if($scope.deployment.nginxSecurePort === $scope.deployment.nginxPort){
+			$scope.alerts.push({'type': 'danger', 'msg': `HTTP Port and HTTP Secure Port cannot be the same!`});
+			form.$valid = false;
+		}
+		
 		if (form.$valid) { //submit form if it is valid
 			$scope.fillDeployment();
-		} else if ($scope.kubernetes) {
-			$scope.alerts.push({'type': 'danger', 'msg': 'Missing required fields [access token,  namespaces]'});
-		} else if ($scope.deployment.deployDriver.indexOf("docker.remote") !== -1) {
-			$scope.alerts.push({'type': 'danger', 'msg': 'Missing required fields [certificates]'});
 		}
 	};
 	
@@ -205,7 +252,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 			url: appConfig.url + "/installer/deployment",
 			method: "get"
 		};
-		
+		$scope.portsCommandReveal;
 		ngDataApi.get($scope, options, function (error, response) {
 			if (error) {
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
@@ -224,8 +271,8 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				"nginxImageTag": (response && response.nginxImageTag) ? response.nginxImageTag : "latest",
 				"certsRequired": false,
 				
-				"nginxPort": (response && response.nginxPort) ? response.nginxPort : 30080,
-				"nginxSecurePort": (response && response.nginxSecurePort) ? response.nginxSecurePort : 30443,
+				"nginxPort": (response && response.nginxPort) ? response.nginxPort : 80,
+				"nginxSecurePort": (response && response.nginxSecurePort) ? response.nginxSecurePort : 443,
 				"nginxSsl": (response && response.nginxSsl) ? response.nginxSsl : false,
 				"nginxDeployType": (response && response.nginxDeployType) ? response.nginxDeployType : "NodePort",
 				
@@ -241,6 +288,9 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				$scope.deployment.containerPort = (response && response.docker && response.docker.containerPort) ? response.docker.containerPort : 2376;
 				$scope.deployment.networkName = (response && response.docker && response.docker.networkName) ? response.docker.networkName : "soajsnet";
 				$scope.deployment.dockerInternalPort = (response && response.docker && response.docker.dockerInternalPort) ? response.docker.dockerInternalPort : 2377;
+				
+				$scope.portsCommandReveal = "docker ps";
+				
 				//if remote docker save certs files
 				if ($scope.deployment.deployDriver.indexOf("remote") !== -1) {
 					$scope.deployment.certsRequired = true;
@@ -293,6 +343,8 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 				//NGINX Kubernetes SSL information
 				$scope.deployment.generateSsc = (response && response.generateSsc) ? response.generateSsc : true;
 				$scope.deployment.nginxKubeSecret = (response && response.nginxKubeSecret) ? response.nginxKubeSecret : null;
+				
+				$scope.portsCommandReveal = "kubectl get services -n " + $scope.deployment.namespaces.default;
 			}
 			
 			$scope.evaluateDeploymentChoice();

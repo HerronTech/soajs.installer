@@ -404,10 +404,10 @@ var lib = {
                 var catalogDefaulEntries = require(dataFolder + "catalogs/index.js");
                 var dashboardCatalogEntries = [];
 	            catalogDefaulEntries.forEach((oneRecipe) => {
-		            if(oneRecipe.name === 'SOAJS Controller Recipe - Kubernetes'){
+		            if(oneRecipe.name === 'SOAJS API Gateway Recipe'){
 			            dashboardCatalogEntries.push(oneRecipe);
 		            }
-		            if(oneRecipe.name === 'Nginx Recipe - Kubernetes'){
+		            if(oneRecipe.name === 'Nginx Recipe'){
 			            dashboardCatalogEntries.push(oneRecipe);
 		            }
 	            });

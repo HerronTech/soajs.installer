@@ -88,34 +88,7 @@ var routes = {
                     os : osName
                 };
             }
-            
-            
             return res.json(req.soajs.buildResponse(null, data));
-            /*utils.loadProfile(function (profile) {
-                if(profile){
-                    utils.getDeploymentInfo(profile, function(error, response){
-                        if(error){
-	                        data.previousDeployment = false;
-                        	req.soajs.log.error(error);
-	                        return res.json(req.soajs.buildResponse(null, data));
-                        }
-                        if(!response.deployType){
-                            data.previousDeployment = false;
-                            return res.json(req.soajs.buildResponse(null, data));
-                        }
-
-                        data.previousDeployment = true;
-                        data.previousDeploymentInfo = response;
-                        data.previousDeploymentInfo.servers = profile.servers;
-
-                        return res.json(req.soajs.buildResponse(null, data));
-                    });
-                }
-                else{
-	                data.previousDeployment = false;
-	                return res.json(req.soajs.buildResponse(null, data));
-                }
-            });*/
         });
     },
     "postOverview": function(req, res){
@@ -232,7 +205,8 @@ var routes = {
             });
         });
     },
-    "getDeployment": function (req, res) {
+    
+	"getDeployment": function (req, res) {
         utils.loadCustomData('deployment', function (customData) {
 	        utils.loadCustomData('clusters', function (customData2) {
 	        	if(customData && customData2){
@@ -243,6 +217,48 @@ var routes = {
         });
     },
     "postDeployment": function (req, res) {
+	
+	    if (req.soajs.inputmaskData.deployment.deployDriver.indexOf("kubernetes") !== -1) {
+		    if (!req.soajs.inputmaskData.deployment.nginxSsl || req.soajs.inputmaskData.deployment.nginxSsl && req.soajs.inputmaskData.deployment.generateSsc) {
+			    req.soajs.inputmaskData.deployment.nginxKubeSecret = null;
+		    }
+		
+		    if(!req.soajs.inputmaskData.deployment.namespaces || !req.soajs.inputmaskData.deployment.namespaces.default){
+			    return res.json(req.soajs.buildResponse({code: 173, 'msg': 'Missing required field [namespaces]'}));
+		    }
+		
+		    if(!req.soajs.inputmaskData.deployment.authentication || !req.soajs.inputmaskData.deployment.authentication.accessToken){
+			    return res.json(req.soajs.buildResponse({code: 173, 'msg': 'Missing required field [kubernetes token]'}));
+		    }
+	    }
+	    else if(req.soajs.inputmaskData.deployment.deployDriver.indexOf("docker.remote") !== -1){
+		    if(!req.soajs.inputmaskData.deployment.certificates || Object.keys(req.soajs.inputmaskData.deployment.certificates).length === 0){
+			    return res.json(req.soajs.buildResponse({code: 173, 'msg': 'Missing required field [certificates]'}));
+		    }
+	    }
+	    else if(req.soajs.inputmaskData.deployment.deployDriver.indexOf("docker.local") !== -1){
+		    if(!req.soajs.inputmaskData.deployment.dockerSocket){
+			    return res.json(req.soajs.buildResponse({code: 173, 'msg': 'Missing required field [Docker Socket Directory]'}));
+		    }
+	    }
+	
+	    if(req.soajs.inputmaskData.deployment.nginxDeployType === 'LoadBalancer'){
+		    req.soajs.inputmaskData.deployment.nginxPort = 80;
+		    req.soajs.inputmaskData.deployment.nginxSecurePort = 443;
+	    }
+	
+	    if(req.soajs.inputmaskData.deployment.nginxPort < config.kubernetes.minPort || req.soajs.inputmaskData.deployment.nginxPort > config.kubernetes.maxPort){
+		    return res.json(req.soajs.buildResponse({code: 173, 'msg': `HTTP Port should be within the range of: ${config.kubernetes.minPort} and ${config.kubernetes.maxPort}`}));
+	    }
+	
+	    if(req.soajs.inputmaskData.deployment.nginxSecurePort < config.kubernetes.minPort || req.soajs.inputmaskData.deployment.nginxSecurePort > config.kubernetes.maxPort){
+		    return res.json(req.soajs.buildResponse({code: 173, 'msg': `HTTP Secure Port should be within the range of: ${config.kubernetes.minPort} and ${config.kubernetes.maxPort}`}));
+	    }
+	
+	    if(req.soajs.inputmaskData.deployment.nginxSecurePort === req.soajs.inputmaskData.deployment.nginxPort){
+		   return res.json(req.soajs.buildResponse({code: 173, 'msg': `HTTP Port and HTTP Secure Port can be the same!`}));
+	    }
+	    
         var deployment = JSON.parse(JSON.stringify(req.soajs.inputmaskData.deployment));
         if(deployment.deployDriver.indexOf("docker") !== -1){
             deployment.docker = {
@@ -316,7 +332,7 @@ var routes = {
                 body = utils.unifyData(defaultData, body);
 
                 utils.updateCustomData(req, res, body.gi, "gi", function(){
-
+	                
 	                //fill the files with the user values
 	                utils.fillFiles(folder, body);
 
