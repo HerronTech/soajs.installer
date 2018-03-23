@@ -24,7 +24,7 @@ var dashboard = {
 			    "remote": {
 				    "apiPort": "%dockerRemotePort%",
 				    "nodes": "%deployDockerNodes%",
-				    "protocol": "https",
+				    "apiProtocol": "https",
 				    "auth": {
 					    "token": "%dockertoken%"
 				    }

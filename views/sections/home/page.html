@@ -107,6 +107,12 @@
 										<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.local'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.local')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
 									</td>
 								</tr>
+								<tr ng-show="docker && local && osName==='mac'" >
+									<td colspan="2">
+										<pre class="bash"><code># Execute the command below in your terminal on your local machine:
+{{style.docker.local[1].v}}</code></pre>
+									</td>
+								</tr>
 							</table>
 						</tab>
 					</tabset>
