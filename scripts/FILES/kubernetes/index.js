@@ -222,8 +222,18 @@ var lib = {
         }
 	
 	    if(config.nginx.deployType !== 'LoadBalancer') {
-		    nginxRecipe.recipe.deployOptions.ports[0].published = config.nginx.port.http;
-		    nginxRecipe.recipe.deployOptions.ports[1].published = config.nginx.port.https;
+		    let http = config.nginx.port.http;
+		    let https = config.nginx.port.https;
+		    if(http > 30000){
+			    http = http- 30000;
+		    }
+		
+		    if(https > 30000){
+			    https = https - 30000;
+		    }
+		
+		    nginxRecipe.recipe.deployOptions.ports[0].published = http;
+		    nginxRecipe.recipe.deployOptions.ports[1].published = https;
 	    }
 
 	    nginxRecipe.recipe.buildOptions.env["SOAJS_GIT_DASHBOARD_BRANCH"] = {

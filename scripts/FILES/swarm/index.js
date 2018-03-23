@@ -164,8 +164,18 @@ var lib = {
 	    nginxRecipe.recipe.deployOptions.image.prefix = config.images.nginx.prefix;
 	    nginxRecipe.recipe.deployOptions.image.tag = config.images.nginx.tag;
 
-	    nginxRecipe.recipe.deployOptions.ports[0].published = config.nginx.port.http;
-	    nginxRecipe.recipe.deployOptions.ports[1].published = config.nginx.port.https;
+	    let http = config.nginx.port.http;
+	    let https = config.nginx.port.https;
+	    if(http > 30000){
+		    http = http- 30000;
+	    }
+	
+	    if(https > 30000){
+		    https = https - 30000;
+	    }
+	    
+	    nginxRecipe.recipe.deployOptions.ports[0].published = http;
+	    nginxRecipe.recipe.deployOptions.ports[1].published = https;
 
         if(process.env.SOAJS_NX_SSL === 'true'){
             process.env['SOAJS_NX_API_HTTPS']=1;
