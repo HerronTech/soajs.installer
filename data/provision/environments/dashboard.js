@@ -18,20 +18,15 @@ var dashboard = {
 	    "container": {
 		    "docker": {
 			    "local": {
-				    "apiPort": "%dockerRemotePort%",
 				    "nodes": "%deployDockerNodes%",
 				    "socketPath": "/var/run/docker.sock",
-				    "protocol": "https",
-				    "auth": {
-					    "token": "%token%"
-				    }
 			    },
 			    "remote": {
 				    "apiPort": "%dockerRemotePort%",
 				    "nodes": "%deployDockerNodes%",
 				    "protocol": "https",
 				    "auth": {
-					    "token": "%token%"
+					    "token": "%dockertoken%"
 				    }
 			    }
 		    },
@@ -41,7 +36,7 @@ var dashboard = {
 				    "apiPort": "%kubernetesRemotePort%",
 				    "namespace": "%namespace%",
                     "auth": {
-				        "token": "%token%"
+				        "token": "%kubetoken%"
                     }
 			    },
 			    "remote":{
@@ -49,7 +44,7 @@ var dashboard = {
 				    "apiPort": "%kubernetesRemotePort%",
 				    "namespace": "%namespace%",
                     "auth": {
-                        "token": "%token%"
+                        "token": "%kubetoken%"
                     }
 			    }
 		    }

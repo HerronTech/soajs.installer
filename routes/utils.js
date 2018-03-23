@@ -251,7 +251,7 @@ var lib = {
         
         if (body.deployment.deployDriver.split('.')[1] === 'kubernetes') {
             envData = envData.replace(/"%namespace%"/g, JSON.stringify (body.deployment.namespaces, null, 2));
-            envData = envData.replace(/%token%/g, body.deployment.authentication.accessToken);
+            envData = envData.replace(/%kubetoken%/g, body.deployment.authentication.accessToken);
 	        
             if (body.deployment.deployDriver.split('.')[2] === 'local'){
 		        envData = envData.replace(/"apiPort": "%dockerRemotePort%",/g,'');
@@ -264,7 +264,7 @@ var lib = {
         }
         else {
             envData = envData.replace(/"%namespace%"/g, JSON.stringify ({}, null, 2));
-	        envData = envData.replace(/%token%/g, body.deployment.authentication.accessToken);
+	        envData = envData.replace(/%dockertoken%/g, body.deployment.authentication.accessToken);
 	       
 	        if (body.deployment.deployDriver.split('.')[2] === 'local'){
 		        envData = envData.replace(/"%dockerRemotePort%"/g, body.deployment.docker.containerPort);
