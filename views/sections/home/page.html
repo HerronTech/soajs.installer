@@ -80,7 +80,8 @@
 {{style.docker.local.v}}</code></pre>
 										<pre ng-show="docker && local && osName==='mac'" class="bash"><code># Click on this link to download Docker for Mac:
 <a href="{{style.docker.local[0].v}}" target="_blank">{{style.docker.local[0].v}}</a></code></pre>
-										
+										<pre ng-show="docker && local && osName==='mac'" class="bash"><code># Once you install Docker for Mac, execute the command below in your terminal on your local machine:
+{{style.docker.local[1].v}}</code></pre>
 										<pre ng-show="kubernetes && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
 {{style.kubernetes.local.v}}</code></pre>
 										<pre ng-show="kubernetes && local && osName==='mac'" class="bash"><code># Execute the command below in your terminal on your local machine
@@ -105,6 +106,12 @@
 									</td>
 									<td width="50%" valign="top">
 										<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.local'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.local')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+									</td>
+								</tr>
+								<tr ng-show="docker && local && osName==='mac'" >
+									<td colspan="2">
+										<pre class="bash"><code># Execute the command below in your terminal on your local machine:
+{{style.docker.local[1].v}}</code></pre>
 									</td>
 								</tr>
 							</table>
