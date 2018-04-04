@@ -247,6 +247,10 @@ var routes = {
 			    return res.json(req.soajs.buildResponse({code: 173, 'msg': 'Missing required field [Docker Socket Directory]'}));
 		    }
 	    }
+	    else{
+		    req.soajs.inputmaskData.deployment.nginxPort = 80;
+		    req.soajs.inputmaskData.deployment.nginxSecurePort = 443;
+	    }
 	
 	    if(req.soajs.inputmaskData.deployment.nginxDeployType === 'LoadBalancer'){
 		    req.soajs.inputmaskData.deployment.nginxPort = 80;
@@ -262,7 +266,7 @@ var routes = {
 	    }
 	
 	    if(req.soajs.inputmaskData.deployment.nginxSecurePort === req.soajs.inputmaskData.deployment.nginxPort){
-		   return res.json(req.soajs.buildResponse({code: 173, 'msg': `HTTP Port and HTTP Secure Port can be the same!`}));
+		   return res.json(req.soajs.buildResponse({code: 173, 'msg': `HTTP Port and HTTP Secure Port cannot be the same!`}));
 	    }
 	    
         var deployment = JSON.parse(JSON.stringify(req.soajs.inputmaskData.deployment));
