@@ -13,7 +13,7 @@
 					</div>
 				</form>
 				<alert type="warning">
-					If you have any web server running on port 80 on your local machine, docker, kubernetes or others, please turn it off before you proceed.
+					If you have any web server running on port 80 on your local machine, docker, kubernetes or others, please turn it off before you proceed. <br />
 					Otherwise it will conflict with the NGINX that SOAJS requires.
 				</alert>
 				<p>
@@ -232,7 +232,7 @@
 												<label class="radioLabel">
 													<input type="radio" ng-required="kubernetes" ng-model="deployment.namespaces.perService" name="service" ng-value="true" />&nbsp;Specific Namespace Per Service
 												</label>
-											
+
 											</div>
 										</td>
 									</tr>
@@ -459,23 +459,23 @@
 					<h3>Overview</h3>
 				</div>
 			</form>
-			
+
 			<accordion close-others="false" class="box-content">
 				<accordion-group ng-show="data.gi" is-open="accordion2.gi">
 					<accordion-heading><span ng-click="tabSwitched()">General</span></accordion-heading>
 					<div ng-bind-html="data.gi|myObject"></div>
 				</accordion-group>
-				
+
 				<accordion-group ng-show="data.security" is-open="accordion2.security">
 					<accordion-heading><span ng-click="tabSwitched()">Security</span></accordion-heading>
 					<div ng-bind-html="data.security|myObject"></div>
 				</accordion-group>
-				
+
 				<accordion-group ng-show="data.clusters" is-open="accordion2.clusters">
 					<accordion-heading><span ng-click="tabSwitched()">MongoDB</span></accordion-heading>
 					<div ng-bind-html="data.clusters|myObject"></div>
 				</accordion-group>
-				
+
 				<accordion-group ng-show="data.deployment" is-open="accordion2.deployment">
 					<accordion-heading><span ng-click="tabSwitched()">Deployment</span></accordion-heading>
 					<div ng-bind-html="data.deployment|myObject"></div>
