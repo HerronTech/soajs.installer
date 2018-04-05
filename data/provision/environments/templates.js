@@ -44,7 +44,7 @@ module.exports = [
 			"deployments": {
 				"pre": {},
 				"steps": {
-					"deployments.repo.controller": {}
+					"deployments__dot__repo__dot__controller": {}
 				},
 				"post": {}
 			}
@@ -101,10 +101,10 @@ module.exports = [
 			"deployments": {
 				"pre": {},
 				"steps": {
-					"deployments.repo.controller": {}
+					"deployments__dot__repo__dot__controller": {}
 				},
 				"post": {
-					"deployments.resources.nginx": {}
+					"deployments__dot__resources__dot__nginx": {}
 				}
 			}
 		}
@@ -498,15 +498,15 @@ module.exports = [
 			},
 			"deployments": {
 				"pre": {
-					"deployments.resources.mongo": {}
+					"deployments__dot__resources__dot__mongo": {}
 				},
 				"steps": {
-					"deployments.repo.controller": {},
-					"deployments.repo.urac": {},
-					"deployments.repo.oauth": {}
+					"deployments__dot__repo__dot__controller": {},
+					"deployments__dot__repo__dot__urac": {},
+					"deployments__dot__repo__dot__oauth": {}
 				},
 				"post": {
-					"deployments.resources.nginx": {}
+					"deployments__dot__resources__dot__nginx": {}
 				}
 			}
 		}
