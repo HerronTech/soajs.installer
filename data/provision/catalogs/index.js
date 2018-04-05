@@ -493,7 +493,8 @@ var catalogs = [
 						"isPublished": true,
 						"preserveClientIP": true
 					}
-				]
+				],
+				"certificates": "optional"
 			},
 			"buildOptions": {
 				"env": {
@@ -615,7 +616,8 @@ var catalogs = [
 						"isPublished": true,
 						"preserveClientIP": true
 					}
-				]
+				],
+				"certificates": "optional"
 			},
 			"buildOptions": {
 				"env": {
@@ -719,7 +721,8 @@ var catalogs = [
 						"target" : 27017,
 						"isPublished" : true
 					}
-				]
+				],
+				"certificates": "optional"
 			},
 			"buildOptions" : {
 				"env" : {
