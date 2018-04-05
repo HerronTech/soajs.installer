@@ -39,9 +39,7 @@ module.exports = [
 		"deploy": {
 			"deployments": {
 				"pre": {},
-				"steps": {
-					"deployments.repo.controller": {}
-				},
+				"steps": {},
 				"post": {}
 			}
 		}
@@ -93,10 +91,7 @@ module.exports = [
 		"deploy": {
 			"deployments": {
 				"pre": {},
-				"steps": {
-					"deployments.repo.controller": {},
-					"deployment.resources.nginx": {}
-				},
+				"steps": {},
 				"post": {}
 			}
 		}
@@ -198,10 +193,57 @@ module.exports = [
 						"name": "controller",
 						"type": "service",
 						"category": "soajs",
+						"gitSource": {
+							"provider": "github",
+							"owner": "soajs",
+							"repo": "soajs.controller"
+						},
 						"deploy": {
 							"recipes": {
 								"available": [],
 								"default": "SOAJS Controller Recipe"
+							},
+							"memoryLimit": 500,
+							"mode": "replicated",
+							"replicas": 1,
+							"cpu": 0.5
+						}
+					},
+					"urac": {
+						"label": "SOAJS URAC",
+						"name": "urac",
+						"type": "service",
+						"category": "soajs",
+						"gitSource": {
+							"provider": "github",
+							"owner": "soajs",
+							"repo": "soajs.urac"
+						},
+						"deploy": {
+							"recipes": {
+								"available": [],
+								"default": "SOAJS Service Recipe"
+							},
+							"memoryLimit": 500,
+							"mode": "replicated",
+							"replicas": 1,
+							"cpu": 0.5
+						}
+					},
+					"oauth": {
+						"label": "SOAJS oAuth",
+						"name": "oauth",
+						"type": "service",
+						"category": "soajs",
+						"gitSource": {
+							"provider": "github",
+							"owner": "soajs",
+							"repo": "soajs.oauth"
+						},
+						"deploy": {
+							"recipes": {
+								"available": [],
+								"default": "SOAJS Service Recipe"
 							},
 							"memoryLimit": 500,
 							"mode": "replicated",
@@ -219,19 +261,13 @@ module.exports = [
 						"deploy": {
 							"recipes": {
 								"available": [],
-								"default": "Nginx Recipe Custom SSL"
+								"default": "Nginx Recipe"
 							},
 							"memoryLimit": 500,
 							"mode": "global",
 							"cpu": 0.5,
 							"secrets": ["nginx-certs"]
 						}
-					},
-					"urac": {
-
-					},
-					"oauth": {
-
 					},
 					"mongo": {
 						"label": "Mongo",
@@ -254,19 +290,7 @@ module.exports = [
 		"deploy": {
 			"database": {
 					"pre": {},
-					"steps": {
-						"productization": {
-							"ui": {
-								"readonly": true
-							}
-						},
-						"tenant": {
-							"ui": {
-								"readonly": true
-							}
-						},
-						"resources.deployment."
-					},
+					"steps": {},
 					"post": {}
 			},
 			"deployments": {
