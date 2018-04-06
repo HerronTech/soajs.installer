@@ -10,32 +10,32 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 		{
 			name: 'aws',
 			label: 'Amazon Web Services',
-			url: 'https://amazonwebservices.gallerycdn.vsassets.io/extensions/amazonwebservices/aws-vsts-tools/1.0.21/1521739315168/images/logo.png'
+			url: 'sections/home/images/aws.png'
 		},
 		{
 			name: 'rackspace',
 			label: 'Rackspace',
-			url: 'https://cdn.saaspass.com/a52e2205866340ea/authenticators/rackspace_128.png'
+			url: 'sections/home/images/rackspace.png'
 		},
 		{
 			name: 'google',
 			label: 'Google Cloud',
-			url: 'https://lh3.googleusercontent.com/M7S8kxEh50EDSh3FzoLjuQPp5X3WAoOlfboJVfc6X0IfL8NFjnbkmyqQQKQFLhhScKo=w128'
+			url: 'sections/home/images/google.png'
 		},
 		{
 			name: 'azure',
 			label: 'Microsoft Azure',
-			url: 'https://dtb5pzswcit1e.cloudfront.net/assets/images/product_logos/icon_azure@2x.png'
+			url: 'sections/home/images/azure.png'
 		},
 		{
 			name: 'joyent',
 			label: 'Joyent',
-			url: 'https://cdn1.itcentralstation.com/vendors/logos/original/joyent_avatar_reasonably_small.png?1371107403'
+			url: 'sections/home/images/joyent.png'
 		},
 		{
 			name: 'custom',
 			label: 'custom',
-			url: 'https://assets.ubuntu.com/v1/cb22ba5d-favicon-16x16.png'
+			url: 'sections/home/images/ubuntu.png'
 		}
 	];
 	
