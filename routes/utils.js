@@ -262,7 +262,7 @@ var lib = {
 		        envData = envData.replace(/"%kubernetesRemotePort%"/g, body.deployment.kubernetes.containerPort);
 	        }
         }
-        else {
+        else if(body.deployment.deployDriver.split('.')[1] === 'docker') {
             envData = envData.replace(/"%namespace%"/g, JSON.stringify ({}, null, 2));
 	        envData = envData.replace(/%dockertoken%/g, body.deployment.authentication.accessToken);
 	       

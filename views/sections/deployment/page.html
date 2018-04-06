@@ -13,7 +13,8 @@
 					</div>
 				</form>
 				<alert type="warning">
-					If you have any web server running on port 80 on your local machine, docker, kubernetes or others, please turn it off before you proceed otherwise it will conflict with the NGINX that SOAJS requires.
+					If you have any web server running on port 80 on your local machine, docker, kubernetes or others, please turn it off before you proceed. <br />
+					Otherwise it will conflict with the NGINX that SOAJS requires.
 				</alert>
 				<p>
 					You have selected manual deployment in <b>Overview</b> section.<br />
@@ -231,7 +232,7 @@
 												<label class="radioLabel">
 													<input type="radio" ng-required="kubernetes" ng-model="deployment.namespaces.perService" name="service" ng-value="true" />&nbsp;Specific Namespace Per Service
 												</label>
-											
+
 											</div>
 										</td>
 									</tr>

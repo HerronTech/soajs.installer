@@ -10,7 +10,7 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 		{
 			name: 'aws',
 			label: 'Amazon Web Services',
-			url: 'http://cloudzone.azurewebsites.net/wp-content/uploads/2015/12/amazon-aws-s3-storage-logo.png'
+			url: 'https://amazonwebservices.gallerycdn.vsassets.io/extensions/amazonwebservices/aws-vsts-tools/1.0.21/1521739315168/images/logo.png'
 		},
 		{
 			name: 'rackspace',
@@ -20,7 +20,7 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 		{
 			name: 'google',
 			label: 'Google Cloud',
-			url: 'https://cloud.google.com/_static/images/cloud/cloud_64dp.png'
+			url: 'https://lh3.googleusercontent.com/M7S8kxEh50EDSh3FzoLjuQPp5X3WAoOlfboJVfc6X0IfL8NFjnbkmyqQQKQFLhhScKo=w128'
 		},
 		{
 			name: 'azure',
