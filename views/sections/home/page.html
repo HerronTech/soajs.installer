@@ -31,19 +31,13 @@
 					</accordion-heading>
 					<p>
 						<b>Overview:</b><br/>
-						This deployment will perform an NPM install of all SOAJS ready made services on your local
-						machine.<br/>
-						Once installed, the services will be started and you can interact with them via a User
-						Interface.
-					</p>
-					<pre ng-if="style.manual.t==='sh'" class="bash"><code># Install needed technologies for manual deployment
-{{style.manual.v}}</code></pre>
-					<p>
-						Copy the command line above and run it in your terminal to install both MongoDB and Nginx; both
+						Copy the following command line and run it in your terminal to install both MongoDB and Nginx; both
 						are
 						needed if you wish to proceed.<br/>
 						Once installed, click proceed at the bottom of this page to move on to the next sections.
 					</p>
+					<pre ng-if="style.manual.t==='sh'" class="bash"><code># Install needed technologies for manual deployment
+{{style.manual.v}}</code></pre>
 				</accordion-group>
 				
 				<accordion-group  is-open="local" ng-click="selectLocation('local')">
