@@ -34,10 +34,10 @@ var dsbrdProduct = {
 						"delete" : {
 							"apis" : {
 								"/accessToken/:token" : {
-									"access" : true
+									"access" : false
 								},
 								"/refreshToken/:token" : {
-									"access" : true
+									"access" : false
 								}
 							}
 						}
@@ -247,10 +247,10 @@ var dsbrdProduct = {
 						"delete" : {
 							"apis" : {
 								"/accessToken/:token" : {
-									"access" : true
+									"access" : false
 								},
 								"/refreshToken/:token" : {
-									"access" : true
+									"access" : false
 								},
 								"/tokens/user/:userId" : {
 									"access" : true
