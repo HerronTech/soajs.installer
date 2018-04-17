@@ -57,8 +57,8 @@ var lib= {
 		"socketPath": process.env.SOAJS_DOCKER_SOCKET || '/var/run/docker.sock',
 		"network": process.env.DOCKER_NETWORK ||  'soajsnet',
 		"options": {
-			"ListenAddr": "0.0.0.0:" + (parseInt(process.env.SWARM_INTERNAL_PORT) || 444),
-			"AdvertiseAddr": (process.env.CONTAINER_HOST || "127.0.0.1") + ':' + (parseInt(process.env.SWARM_INTERNAL_PORT) || 444),
+			"ListenAddr": "0.0.0.0:2377",
+			"AdvertiseAddr": (process.env.CONTAINER_HOST || "127.0.0.1") + ':' + '2377',
 			"ForceNewCluster": true,
 			"Spec": {
 				"Orchestration": {},
