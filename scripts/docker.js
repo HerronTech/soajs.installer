@@ -45,7 +45,10 @@ function initSwarm(deployer) {
 	deployer.swarmInit(config.docker.options, function (error) {
 		if (error) throw new Error(error);
 
-		delete deployer.modem.headers['Content-Length'];
+		if (deployer.modem.headers && deployer.modem.headers['Content-Length']) {
+			delete deployer.modem.headers['Content-Length'];
+		}
+		
 		lib.inspectSwarm(deployer, function (error, swarmInfo) {
 			if (error) throw new Error(error);
 
@@ -115,7 +118,9 @@ function deploy (group, deployer, cb) {
 function importProvisionData (dbServices, deployer, cb) {
 	utilLog.log ("Fetching data containers' IP addresses ... ");
 	utilLog.log ('This step might take some time if docker is currently pulling the containers\' image ...');
-	delete deployer.modem.headers['Content-Length'];
+	if (deployer.modem.headers && deployer.modem.headers['Content-Length']) {
+		delete deployer.modem.headers['Content-Length'];
+	}
 
 	lib.getServiceInstances(config.mongo.services.dashboard.name, deployer, 1, function (error) {
 		if (error) return cb(error);
