@@ -391,8 +391,8 @@ var lib = {
                 output += os.EOL + "#Start Nginx ..." + os.EOL;
 
                 if (process.platform === 'darwin') {
-                    output += "nginx -s stop" + os.EOL;
-                    output += "nginx" + os.EOL;
+                    output += "sudo nginx -s stop" + os.EOL;
+                    output += "sudo nginx" + os.EOL;
                 }
                 else {
                     output += "sudo service nginx start" + os.EOL;
@@ -429,6 +429,7 @@ var lib = {
             for(var i = 0; i < tempData.servers.length; i++){
                 if(!tempData.servers[i].host)
                     return cb("noIP");
+                //todo: note need to check this error
                 if(tempData.servers[i].host === "127.0.0.1")
                     return cb(tempData.servers[i].host)
             }
