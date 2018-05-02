@@ -92,6 +92,11 @@ var catalogs = [
 		"subtype": "soajs",
 		"description": "This recipe allows you to deploy a services built using the SOAJS framework",
 		"locked": true,
+        "restriction": {
+            "deployment": [
+                "container"
+            ]
+        },
 		"recipe": {
 			"deployOptions": {
 				"image": {
@@ -194,6 +199,11 @@ var catalogs = [
 		"subtype": "soajs",
 		"description": "This recipe allows you to deploy the SOAJS API Gateway",
 		"locked": true,
+        "restriction": {
+            "deployment": [
+                "container"
+            ]
+        },
 		"recipe": {
 			"deployOptions": {
 				"image": {
@@ -315,6 +325,11 @@ var catalogs = [
 		"subtype": "soajs",
 		"description": "This recipe allows you to deploy a daemons built using the SOAJS framework",
 		"locked": true,
+        "restriction": {
+            "deployment": [
+                "container"
+            ]
+        },
 		"recipe": {
 			"deployOptions": {
 				"image": {
@@ -440,6 +455,11 @@ var catalogs = [
 		"subtype": "nginx",
 		"description": "This recipe allows you to deploy the portal nginx server",
 		"locked": true,
+        "restriction": {
+            "deployment": [
+                "container"
+            ]
+        },
 		"recipe": {
 			"deployOptions": {
 				"image": {
@@ -563,6 +583,11 @@ var catalogs = [
 		"subtype": "nginx",
 		"description": "This recipe allows you to deploy an nginx server",
 		"locked": true,
+        "restriction": {
+            "deployment": [
+                "container"
+            ]
+        },
 		"recipe": {
 			"deployOptions": {
 				"image": {
@@ -682,6 +707,11 @@ var catalogs = [
 		"subtype" : "mongo",
 		"description" : "This recipe allows you to deploy a mongo server",
 		"locked" : true,
+        "restriction": {
+            "deployment": [
+                "container"
+            ]
+        },
 		"recipe" : {
 			"deployOptions" : {
 				"image" : {
@@ -748,6 +778,11 @@ var catalogs = [
 		"subtype": "nodejs",
 		"description": "This recipe allows you to deploy a NodeJS application",
 		"locked": true,
+        "restriction": {
+            "deployment": [
+                "container"
+            ]
+        },
 		"recipe": {
 			"deployOptions": {
 				"image": {
@@ -808,6 +843,11 @@ var catalogs = [
 		"subtype": "java",
 		"description": "This recipe allows you to deploy a Java Application",
 		"locked": true,
+        "restriction": {
+            "deployment": [
+                "container"
+            ]
+        },
 		"recipe": {
 			"deployOptions": {
 				"image": {
@@ -870,6 +910,11 @@ var catalogs = [
 		"subtype": "elasticsearch",
 		"description": "This recipe allows you to deploy ElasticSearch",
 		"locked": true,
+        "restriction": {
+            "deployment": [
+                "container"
+            ]
+        },
 		"recipe": {
 			"deployOptions": {
 				"image": {
@@ -927,7 +972,145 @@ var catalogs = [
 				}
 			}
 		}
-	}
+	},
+
+    {
+        "name": "MemSQL Recipe VM",
+        "description": "MemSQL Recipe description",
+        "type": "cluster",
+        "subtype": "mysql",
+        "restriction": {
+            "deployment": [
+                "vm"
+            ],
+            "driver": [
+                "container.docker"
+            ],
+            "infra": [
+                "azure"
+            ]
+        },
+        "recipe": {
+            "deployOptions": {
+                "image": {
+                    "prefix": "Canonical",
+                    "name": "Ubuntu",
+                    "tag": "16.04-LTS",
+                    "overrCanonicalide": false
+                },
+                "sourceCode": {
+                    "configuration": {
+                        "label": "Attach Custom Configuration",
+                        "repo": "",
+                        "branch": "",
+                        "required": false
+                    }
+                },
+                "readinessProbe": {
+                    "httpGet": {
+                        "path": "/",
+                        "port": 3306
+                    },
+                    "initialDelaySeconds": 5,
+                    "timeoutSeconds": 2,
+                    "periodSeconds": 5,
+                    "successThreshold": 1,
+                    "failureThreshold": 3
+                },
+                "ports": [],
+                "voluming": [],
+                "restartPolicy": {
+                    "condition": "any",
+                    "maxAttempts": 5
+                },
+                "container": {
+                    "network": "soajsnet",
+                    "workingDir": "/"
+                },
+                "certificates": "none"
+            },
+            "buildOptions": {
+                "env": {},
+                "cmd": {
+                    "deploy": {
+                        "command": [],
+                        "args": []
+                    }
+                }
+            }
+        },
+        "v": 1,
+        "ts": 1525106162457
+    },
+
+    {
+        "name": "Mongo Recipe VM",
+        "type": "cluster",
+        "subtype": "mongo",
+        "description": "This recipe allows you to deploy a mongo server in VM",
+        "restriction": {
+            "deployment": [
+                "vm"
+            ],
+            "driver": [
+                "container.docker"
+            ],
+            "infra": [
+                "azure"
+            ]
+        },
+        "recipe": {
+            "deployOptions": {
+                "image": {
+                    "prefix": "Canonical",
+                    "name": "Ubuntu",
+                    "tag": "16.04-LTS",
+                    "pullPolicy": "IfNotPresent"
+                },
+                "sourceCode": {
+                    "configuration": {
+                        "label": "Attach Custom Configuration",
+                        "repo": "",
+                        "branch": "",
+                        "required": false
+                    }
+                },
+                "readinessProbe": {
+                    "httpGet": {
+                        "path": "/",
+                        "port": 27017
+                    },
+                    "initialDelaySeconds": 5,
+                    "timeoutSeconds": 2,
+                    "periodSeconds": 5,
+                    "successThreshold": 1,
+                    "failureThreshold": 3
+                },
+                "restartPolicy": {
+                    "condition": "any",
+                    "maxAttempts": 5
+                },
+                "container": {
+                    "network": "soajsnet",
+                    "workingDir": ""
+                },
+                "voluming": [],
+                "ports": [],
+                "certificates": "none"
+            },
+            "buildOptions": {
+                "env": {},
+                "cmd": {
+                    "deploy": {
+                        "command": [],
+                        "args": []
+                    }
+                }
+            }
+        },
+        "v": 1,
+        "ts": 1525106162462
+    }
 ];
 
 module.exports = catalogs;
