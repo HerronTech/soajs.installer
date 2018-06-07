@@ -715,7 +715,7 @@ var lib = {
 	
     "returnInstallProgress": function (body, cb) {
         if (body.deployment.deployType === 'manual') {
-            var repos = ["soajs.controller", "soajs.urac", "soajs.dashboard", "soajs.gcs", "soajs.oauth", "soajs"];
+            var repos = ["soajs.controller", "soajs.urac", "soajs.dashboard", "soajs.oauth", "soajs"];
 
             /*
              1- check if all files in wrkDir exists
