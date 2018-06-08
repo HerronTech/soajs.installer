@@ -190,6 +190,9 @@ var lib = {
         profileData += 'module.exports = ' + JSON.stringify(clusters, null, 2) + ';';
         fs.writeFileSync(folder + "profile.js", profileData, "utf8");
 
+        if (body.deployment.deployDriver.includes("docker.local")){
+	        body.deployment.deployDriver = "container.docker.remote";
+        }
         if (body.deployment.deployDriver.indexOf("kubernetes") !== -1 && !mongoExt) {
             clusters.servers[0].port = 27017;
         }
