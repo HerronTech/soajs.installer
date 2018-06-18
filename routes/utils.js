@@ -6,7 +6,7 @@ var fs = require("fs");
 var path = require("path");
 var soajs = require("soajs");
 var request = require("request");
-
+var randomString = require("randomstring");
 var whereis = require('whereis');
 
 //external libs
@@ -313,6 +313,66 @@ var lib = {
 
         //remove unneeded file
         fs.unlinkSync(folder + "tenants/info.js");
+        
+        //infra
+	    if (body.deployment.deployType === 'manual') {
+		    fs.unlinkSync(folder + "infra/infra.js");
+	    }
+	    else {
+		    var infraData = fs.readFileSync(folder + "infra/infra.js", "utf8");
+		    infraData = infraData.replace(/%ipaddress%/g, body.deployment.containerHost);
+		    infraData = infraData.replace(/%token%/g, body.deployment.authentication.accessToken);
+		    var name;
+		    if ( body.deployment.remoteProvider){
+			    name = body.deployment.remoteProvider.name;
+		    }
+		    else {
+			    name = "local";
+		    }
+		    name = "ht" + name + randomString.generate({
+			    length: 13,
+			    charset: 'alphanumeric',
+			    capitalization: 'lowercase'
+		    });
+		    infraData = infraData.replace(/%name%/g, name);
+		    
+		    if (body.deployment.deployDriver.split('.')[1] === 'docker') {
+			    infraData = infraData.replace(/"%port%"/g, body.deployment.authentication.apiPort);
+			    infraData = infraData.replace(/%protocol%/g, body.deployment.authentication.protocol);
+			    infraData = infraData.replace(/%network%/g, body.deployment.docker.networkName);
+			    infraData = infraData.replace(/%technology%/g, 'docker');
+			    if (body.deployment.deployDriver.split('.')[2] === 'local') {
+				    infraData = infraData.replace(/%label%/g, 'Docker Local');
+			    }
+			    else {
+			    	if (body.deployment.remoteProvider){
+					    infraData = infraData.replace(/%label%/g, `Docker ${body.deployment.remoteProvider.name}`);
+				    }
+				    else {
+					    infraData = infraData.replace(/%label%/g, 'Docker Remote');
+				    }
+				   
+			    }
+		    }
+		    else if (body.deployment.deployDriver.split('.')[1] === 'kubernetes') {
+			    infraData = infraData.replace(/"%port%"/g, body.deployment.kubernetes.containerPort);
+			    infraData = infraData.replace(/%network%/g, body.deployment.namespaces.default);
+			    infraData = infraData.replace(/%protocol%/g, 'https');
+			    infraData = infraData.replace(/%technology%/g, 'kubernetes');
+			    if (body.deployment.deployDriver.split('.')[2] === 'local') {
+				    infraData = infraData.replace(/%label%/g, 'Kubernetes Local');
+			    }
+			    else {
+				    if (body.deployment.remoteProvider){
+					    infraData = infraData.replace(/%label%/g, `Kubernetes ${body.deployment.remoteProvider.name}`);
+				    }
+				    else {
+					    infraData = infraData.replace(/%label%/g, 'Kubernetes Remote');
+				    }
+			    }
+		    }
+		    fs.writeFile(folder + "infra/infra.js", infraData, "utf8");
+	    }
     },
 
     "unifyData": function (def, over) {

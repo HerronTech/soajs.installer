@@ -25,14 +25,16 @@ mongo.dropDatabase(function () {
 					lib.addGitAccounts(function () {
 						lib.addCatalogs(function () {
 							lib.addCiRecipes(function () {
-								mongo.closeDb();
-								profile.name = "DBTN_urac";
-								mongo = new soajs.mongo(profile);
-								mongo.dropDatabase(function () {
-									lib.addUsers(function () {
-										lib.addGroups(function () {
-											lib.uracIndex(function () {
-												mongo.closeDb();
+								lib.addInfraRecord(function () {
+									mongo.closeDb();
+									profile.name = "DBTN_urac";
+									mongo = new soajs.mongo(profile);
+									mongo.dropDatabase(function () {
+										lib.addUsers(function () {
+											lib.addGroups(function () {
+												lib.uracIndex(function () {
+													mongo.closeDb();
+												});
 											});
 										});
 									});
@@ -156,6 +158,30 @@ const lib = {
 			lib.errorLogger(error);
 			var records = require(dataFolder + "ci");
 			mongo.insert("cicd", records, cb);
+		});
+		
+	},
+	
+	/*
+	 Infra Record
+	 */
+	"addInfraRecord": function (cb) {
+		var options =
+			{
+				col: 'infra',
+				index: {type: 1}
+			};
+		
+		mongo.createIndex(options.col, options.index, null, function (error) {
+			lib.errorLogger(error);
+			try {
+				var records = require(dataFolder + "infra/infra.js");
+				mongo.insert("infra", records, cb);
+			}
+			catch (e){
+				return cb();
+			}
+		
 		});
 		
 	},

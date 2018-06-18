@@ -695,14 +695,19 @@ var lib = {
 							if(error) return callback(error);
 
 							//hpa objects have the same naming as their deployments
-							deployer.autoscaling.namespaces(oneDeployment.metadata.namespace).hpa.delete({ name: oneDeployment.metadata.name }, function (error) {
-								if(error) {
-									if(error.code === 404) return callback();
-									else return callback(error);
-								}
-
-								return callback();
-							});
+	                        if (deployer.autoscaling){
+		                        deployer.autoscaling.namespaces(oneDeployment.metadata.namespace).hpa.delete({ name: oneDeployment.metadata.name }, function (error) {
+			                        if(error) {
+				                        if(error.code === 404) return callback();
+				                        else return callback(error);
+			                        }
+			
+			                       
+		                        });
+	                        }
+	                        else {
+		                        return callback();
+	                        }
 						});
                     }, 5000);
                 });

@@ -30,6 +30,7 @@
     "mkdirp": "*",
     "ncp": "*",
     "npm": "*",
+    "randomstring": "^1.1.5",
     "request": "2.82.0",
     "rimraf": "*",
     "soajs": "2.0.7",
