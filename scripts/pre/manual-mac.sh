@@ -9,8 +9,8 @@ brew update
 brew upgrade
 brew services
 
-# Install NodeJS, MongoDB, Nginx
-brew install node mongodb nginx
+# Install NodeJS, MongoDB, Nginx, Terraform
+brew install node mongodb nginx terraform
 brew services start mongodb
 brew services stop nginx
 
