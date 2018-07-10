@@ -815,17 +815,7 @@ var catalogs = [
 						"required": false
 					}
 				},
-				"readinessProbe": {
-					"httpGet": {
-						"path": "/heartbeat",
-						"port": "maintenance"
-					},
-					"initialDelaySeconds": 5,
-					"timeoutSeconds": 2,
-					"periodSeconds": 5,
-					"successThreshold": 1,
-					"failureThreshold": 3
-				},
+				"readinessProbe": null,
 				"restartPolicy": dockerRestartPolicy,
 				"container": {
 					"network": dockerNetwork, //container network for docker
@@ -880,17 +870,7 @@ var catalogs = [
 						"required": false
 					}
 				},
-				"readinessProbe": {
-					"httpGet": {
-						"path": "/heartbeat",
-						"port": "maintenance"
-					},
-					"initialDelaySeconds": 5,
-					"timeoutSeconds": 2,
-					"periodSeconds": 5,
-					"successThreshold": 1,
-					"failureThreshold": 3
-				},
+				"readinessProbe": null,
 				"restartPolicy": dockerRestartPolicy,
 				"container": {
 					"network": dockerNetwork,
@@ -950,8 +930,8 @@ var catalogs = [
 				},
 				"readinessProbe": {
 					"httpGet": {
-						"path": "/heartbeat",
-						"port": "maintenance"
+						"path": "/",
+						"port": 9200
 					},
 					"initialDelaySeconds": 5,
 					"timeoutSeconds": 2,
