@@ -1,7 +1,6 @@
 'use strict';
 
 var dsbrdInfra = {
-	"_id": '5b27a0e391cf2200275c9a0e',
 	"api": {
 		"ipaddress": "%ipaddress%",
 		"token": "%token%",
