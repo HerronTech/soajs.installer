@@ -295,7 +295,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 					
 					$scope.deployment.authentication = {
 						accessToken: (response.authentication) ? response.authentication.accessToken: '',
-						apiPort: 32376,
+						apiPort: 443,
 						protocol: 'https'
 					};
 				}
@@ -304,7 +304,7 @@ deploymentApp.controller('deploymentCtrl', ['$scope', 'ngDataApi', '$modal', '$t
 					
 					$scope.deployment.authentication = {
 						accessToken: (response.authentication) ? response.authentication.accessToken: '',
-						apiPort: 32376,
+						apiPort: 443,
 						protocol: 'https'
 					};
 				}
