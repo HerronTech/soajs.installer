@@ -6,6 +6,8 @@
 mkdir -p ${HOME}/certs
 CERTS_PATH=${HOME}/certs
 
+DIRNAME=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+
 #Need machine IP address or domain name pointing to it in order to generate certificates properly
 INIT_SWARM="false"
 DOMAIN_NAME=""
@@ -40,7 +42,7 @@ function checkRequiredFields(){
     if [ -z ${DOMAIN_NAME} ]; then
         echo "You need to specify the machine domain name in order to generate certificates properly"
         echo " "
-        echo "Ex: sudo ./soajs.installer/scripts/pre/docker-linux.sh -d %my_domain%"
+        echo "Ex: sudo "$DIRNAME"/docker-linux.sh -d %my_domain%"
         echo " "
         echo "Using flag: -d mydomain.com     Exiting ..."
         exit 1
@@ -49,7 +51,7 @@ function checkRequiredFields(){
     if [ -z ${SWARM_ADVERTISE_ADDR} ]; then
         echo "You need to specify the swarm node advertise IP address or interface to use using flag: -a"
         echo " "
-        echo "Ex: sudo ./soajs.installer/scripts/pre/docker-linux.sh -d mydomain.com -a %ip_address%"
+        echo "Ex: sudo "$DIRNAME"/docker-linux.sh -d mydomain.com -a %ip_address%"
         echo " "
         echo "Exiting ..."
         exit 1

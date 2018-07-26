@@ -3,6 +3,8 @@
 #This script installs prerequisites that enable this machine to join a kubernetes cluster
 #Compatible with Ubuntu
 
+DIRNAME=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+
 #Need to run as root in order to install Docker
 if [ $(whoami) != 'root' ]; then
     echo "Please run this script as root, exiting ..."
@@ -77,9 +79,9 @@ function initKubernetes(){
     chown "${SUDO_USER}:${SUDO_USER}" $HOME/.kube/config
 
     sleep 2
-    
+
     kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
-    kubectl apply -f ./kubernetes/kube-flannel.yml
+    kubectl apply -f $DIRNAME/kubernetes/kube-flannel.yml
 
     kubectl create clusterrolebinding permissive-binding --clusterrole=cluster-admin --user=admin --user=kubelet --group=system:serviceaccounts;
 }
