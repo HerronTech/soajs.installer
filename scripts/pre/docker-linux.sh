@@ -39,12 +39,18 @@ function generatePass(){
 function checkRequiredFields(){
     if [ -z ${DOMAIN_NAME} ]; then
         echo "You need to specify the machine domain name in order to generate certificates properly"
+        echo " "
+        echo "Ex: sudo ./soajs.installer/scripts/pre/docker-linux.sh -d %my_domain%"
+        echo " "
         echo "Using flag: -d mydomain.com     Exiting ..."
         exit 1
     fi
 
     if [ -z ${SWARM_ADVERTISE_ADDR} ]; then
         echo "You need to specify the swarm node advertise IP address or interface to use using flag: -a"
+        echo " "
+        echo "Ex: sudo ./soajs.installer/scripts/pre/docker-linux.sh -d mydomain.com -a %ip_address%"
+        echo " "
         echo "Exiting ..."
         exit 1
     fi

@@ -492,9 +492,9 @@ var lib = {
             for(var i = 0; i < tempData.servers.length; i++){
                 if(!tempData.servers[i].host)
                     return cb("noIP");
-                //todo: note need to check this error
-                if(tempData.servers[i].host === "127.0.0.1")
-                    return cb(tempData.servers[i].host)
+	            
+	            if(req.soajs.inputmaskData.deployment.deployType === 'container' && ["localhost", "127.0.0.1"].indexOf(tempData.servers[i].host) !== -1)
+		            return cb(tempData.servers[i].host)
             }
         }
         else{
