@@ -167,6 +167,12 @@ clustersApp.controller('clustersCtrl', ['$scope', '$timeout', 'ngDataApi', funct
 				"streaming": (response && response.clusters && response.clusters.streaming) ? JSON.stringify(response.clusters.streaming, null, 2) : JSON.stringify({})
 			};
 			
+			if($scope.deployment.deployType === 'manual'){
+				if($scope.clusters.servers[0].host === '127.0.0.1'){
+					$scope.clusters.servers[0].host = 'localhost';
+				}
+			}
+			
 			if(!$scope.containerDeployment){
 				$scope.clusters.mongoExt = true;
 			}

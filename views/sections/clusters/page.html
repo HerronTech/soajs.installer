@@ -16,7 +16,7 @@
 				<accordion-group is-open="local" ng-show="containerDeployment">
 					<accordion-heading>
 						<span ng-click="doMongoExt(false)">
-							<input type="radio" ng-checked="local" value="true" name="mongo_cluster"/>&nbsp;
+							<input type="radio" ng-checked="local" value="true" name="mongo_cluster" class="hidden"/>&nbsp;
 							I do not have a MongoDB server, i want SOAJS Installer to deploy it for me.
 						</span>
 					</accordion-heading>
@@ -52,7 +52,7 @@
 				<accordion-group is-open="external">
 					<accordion-heading>
 						<span ng-click="doMongoExt(true)">
-							<input type="radio" ng-checked="external" value="true" name="mongo_cluster"/>&nbsp;
+							<input type="radio" ng-checked="external" value="true" name="mongo_cluster" class="hidden"/>&nbsp;
 							I have a MongoDB Server, and i want to connect to it
 						</span>
 					</accordion-heading>
@@ -167,7 +167,7 @@
 								<td>
 									<div id="urlParam-wrapper">
 										<label class="f-left  ">Connection Options</label>
-										<textarea class="form-control" ng-required="false" ng-model="clusters.URLParam" name="URLparam" id="URLparam" cols="30" rows="10">{{clusters.URLParam}}</textarea>
+										<textarea class="form-control" ng-required="false" ng-model="clusters.URLParam" name="URLparam" id="URLparam" cols="30" rows="5">{{clusters.URLParam}}</textarea>
 									</div>
 								</td>
 							</tr>
@@ -175,7 +175,7 @@
 								<td>
 									<div id="streaming-wrapper">
 										<label class="f-left  ">Streaming Options</label>
-										<textarea class="form-control" ng-required="false" ng-model="clusters.streaming" name="streaming" id="streaming" cols="30" rows="10">{{clusters.streaming}}</textarea>
+										<textarea class="form-control" ng-required="false" ng-model="clusters.streaming" name="streaming" id="streaming" cols="30" rows="5">{{clusters.streaming}}</textarea>
 									</div>
 								</td>
 							</tr>

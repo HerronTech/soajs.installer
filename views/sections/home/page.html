@@ -27,7 +27,7 @@
 				
 				<accordion-group ng-click="selectLocation('manual')" is-open="manual">
 					<accordion-heading>
-					<input type="radio" ng-checked="manual" value="true" name="local" disabled/>&nbsp;Manual Deployment
+					<input type="radio" ng-checked="manual" value="true" name="local" disabled class="hidden"/>&nbsp;Manual Deployment
 					</accordion-heading>
 					<p>
 						<b>Overview:</b><br/>
@@ -42,7 +42,7 @@
 				
 				<accordion-group  is-open="local" ng-click="selectLocation('local')">
 					<accordion-heading>
-						 <input type="radio" ng-checked="local" value="true" name="local" disabled/>&nbsp;Local Cloud Deployment
+						 <input type="radio" ng-checked="local" value="true" name="local" disabled class="hidden"/>&nbsp;Local Cloud Deployment
 					</accordion-heading>
 					<p>
 						<b>Overview:</b><br/>
@@ -115,7 +115,7 @@
 				
 				<accordion-group heading="Remote Cloud Deployment" is-open="remote" ng-click="selectLocation('remote')">
 					<accordion-heading>
-						<input type="radio" ng-checked="remote" value="true" name="local" disabled/>&nbsp;Remote Cloud Deployment
+						<input type="radio" ng-checked="remote" value="true" name="local" disabled class="hidden"/>&nbsp;Remote Cloud Deployment
 					</accordion-heading>
 					<p>
 						<b>Overview:</b><br/>
