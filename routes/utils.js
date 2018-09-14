@@ -212,7 +212,7 @@ var lib = {
         });
         var hashedPwd = Hasher.hash(body.gi.password);
         userData = userData.replace(/%password%/g, hashedPwd);
-        fs.writeFile(folder + "urac/users/owner.js", userData, "utf8");
+        fs.writeFileSync(folder + "urac/users/owner.js", userData, "utf8");
 
         if (body.deployment.deployType === 'manual' || body.deployment.deployDriver.indexOf("local") !== -1) {
             body.deployment.deployDockerNodes = [];
@@ -246,7 +246,7 @@ var lib = {
         
         var mongoCluster = fs.readFileSync(folder + "resources/mongo.js", "utf8");
 	    mongoCluster = mongoCluster.replace(/"%clusters%"/g, JSON.stringify(clusters, null, 2));
-		fs.writeFile(folder + "resources/mongo.js", mongoCluster, "utf8");
+		fs.writeFileSync(folder + "resources/mongo.js", mongoCluster, "utf8");
 	    
         envData = envData.replace(/%keySecret%/g, body.security.key);
         envData = envData.replace(/%sessionSecret%/g, body.security.session);
@@ -279,7 +279,7 @@ var lib = {
 		        envData = envData.replace(/"apiPort": "%kubernetesRemotePort%",/g,'');
 	        }
         }
-        fs.writeFile(folder + "environments/dashboard.js", envData, "utf8");
+        fs.writeFileSync(folder + "environments/dashboard.js", envData, "utf8");
 
         //modify tenants file
 	    let protocol = "http";
@@ -299,7 +299,7 @@ var lib = {
         tntData = tntData.replace(/%wrkDir%/g, body.gi.wrkDir);
         tntData = tntData.replace(/%extKey1%/g, body.security.extKey1);
         tntData = tntData.replace(/%extKey2%/g, body.security.extKey2);
-        fs.writeFile(folder + "tenants/owner.js", tntData, "utf8");
+        fs.writeFileSync(folder + "tenants/owner.js", tntData, "utf8");
 	
 	    var tntData = fs.readFileSync(folder + "tenants/techop.js", "utf8");
 	    tntData = tntData.replace(/%protocol%/g, protocol);
@@ -309,7 +309,7 @@ var lib = {
 	    tntData = tntData.replace(/%domain%/g, body.gi.domain);
 	    tntData = tntData.replace(/%wrkDir%/g, body.gi.wrkDir);
 	    tntData = tntData.replace(/%extKey3%/g, body.security.extKey3);
-	    fs.writeFile(folder + "tenants/techop.js", tntData, "utf8");
+	    fs.writeFileSync(folder + "tenants/techop.js", tntData, "utf8");
 
         //remove unneeded file
         fs.unlinkSync(folder + "tenants/info.js");
@@ -371,7 +371,7 @@ var lib = {
 				    }
 			    }
 		    }
-		    fs.writeFile(folder + "infra/infra.js", infraData, "utf8");
+		    fs.writeFileSync(folder + "infra/infra.js", infraData, "utf8");
 	    }
     },
 
