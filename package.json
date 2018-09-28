@@ -31,7 +31,7 @@
     "ncp": "*",
     "npm": "*",
     "randomstring": "^1.1.5",
-    "request": "2.82.0",
+    "request": "2.84.0",
     "rimraf": "*",
     "soajs": "2.0.10",
     "util": "*",

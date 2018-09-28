@@ -11,7 +11,7 @@ delete require.cache[process.env.SOAJS_PROFILE];
 const profile = require(process.env.SOAJS_PROFILE);
 
 profile.name = "core_provision";
-if(!process.env.MONGO_EXT || process.env.MONGO_EXT === 'false'){
+if (!process.env.MONGO_EXT || process.env.MONGO_EXT === 'false') {
 	profile.servers[0].port = parseInt(process.env.MONGO_PORT) || 27017;
 }
 
@@ -24,17 +24,15 @@ mongo.dropDatabase(function () {
 				lib.addTenants(function () {
 					lib.addGitAccounts(function () {
 						lib.addCatalogs(function () {
-							lib.addCiRecipes(function () {
-								lib.addInfraRecord(function () {
-									mongo.closeDb();
-									profile.name = "DBTN_urac";
-									mongo = new soajs.mongo(profile);
-									mongo.dropDatabase(function () {
-										lib.addUsers(function () {
-											lib.addGroups(function () {
-												lib.uracIndex(function () {
-													mongo.closeDb();
-												});
+							lib.addInfraRecord(function () {
+								mongo.closeDb();
+								profile.name = "DBTN_urac";
+								mongo = new soajs.mongo(profile);
+								mongo.dropDatabase(function () {
+									lib.addUsers(function () {
+										lib.addGroups(function () {
+											lib.uracIndex(function () {
+												mongo.closeDb();
 											});
 										});
 									});
@@ -54,23 +52,23 @@ const lib = {
 	 */
 	"addEnvs": function (cb) {
 		async.parallel({
-			"env": function(mCb){
+			"env": function (mCb) {
 				var record = require(dataFolder + "environments/dashboard.js");
 				record._id = mongo.ObjectId(record._id);
 				mongo.insert("environment", record, mCb);
 			},
-			"mongo": function(mCb){
+			"mongo": function (mCb) {
 				var record = require(dataFolder + "resources/mongo.js");
 				record._id = mongo.ObjectId(record._id);
 				mongo.insert("resources", record, mCb);
 			},
-			"templates": function(mCb){
+			"templates": function (mCb) {
 				var templates = require(dataFolder + "environments/templates.js");
 				mongo.insert("templates", templates, mCb);
 			}
 		}, cb);
 	},
-
+	
 	/*
 	 Products
 	 */
@@ -79,7 +77,7 @@ const lib = {
 		record._id = mongo.ObjectId(record._id);
 		mongo.insert("products", record, cb);
 	},
-
+	
 	/*
 	 Services
 	 */
@@ -87,13 +85,13 @@ const lib = {
 		var record = require(dataFolder + "services/index.js");
 		mongo.insert("services", record, cb);
 	},
-
+	
 	/*
 	 Tenants
 	 */
 	"addTenants": function (cb) {
 		async.series([
-			function(mCb){
+			function (mCb) {
 				var record = require(dataFolder + "tenants/owner.js");
 				
 				record._id = mongo.ObjectId(record._id);
@@ -103,7 +101,7 @@ const lib = {
 				
 				mongo.insert("tenants", record, mCb);
 			},
-			function(mCb){
+			function (mCb) {
 				var record = require(dataFolder + "tenants/techop.js");
 				
 				record._id = mongo.ObjectId(record._id);
@@ -115,7 +113,7 @@ const lib = {
 			},
 		], cb);
 	},
-
+	
 	/*
 	 Git Accounts
 	 */
@@ -145,24 +143,6 @@ const lib = {
 	},
 	
 	/*
-	 CI Recipes
-	 */
-	"addCiRecipes": function (cb) {
-		var options =
-			{
-				col: 'cicd',
-				index: {type: 1}
-			};
-		
-		mongo.createIndex(options.col, options.index, null, function (error) {
-			lib.errorLogger(error);
-			var records = require(dataFolder + "ci");
-			mongo.insert("cicd", records, cb);
-		});
-		
-	},
-	
-	/*
 	 Infra Record
 	 */
 	"addInfraRecord": function (cb) {
@@ -178,10 +158,10 @@ const lib = {
 				var records = require(dataFolder + "infra/infra.js");
 				mongo.insert("infra", records, cb);
 			}
-			catch (e){
+			catch (e) {
 				return cb();
 			}
-		
+			
 		});
 		
 	},
@@ -198,7 +178,7 @@ const lib = {
 		var record = require(dataFolder + "urac/users/owner.js");
 		mongo.insert("users", record, cb);
 	},
-
+	
 	/*
 	 Groups
 	 */
@@ -206,13 +186,13 @@ const lib = {
 		var record = require(dataFolder + "urac/groups/owner.js");
 		mongo.insert("groups", record, cb);
 	},
-
+	
 	"errorLogger": function (error) {
 		if (error) {
 			return console.log(error);
 		}
 	},
-
+	
 	"uracIndex": function (cb) {
 		var indexes = [
 			{
@@ -296,7 +276,7 @@ const lib = {
 				options: null
 			}
 		];
-
+		
 		async.each(indexes, function (oneIndex, callback) {
 			mongo.createIndex(oneIndex.col, oneIndex.index, oneIndex.options, function (error) {
 				lib.errorLogger(error);
