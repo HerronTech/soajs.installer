@@ -30,8 +30,8 @@ var soajs_account = {
 			"type": "service"
 		},
 		{
-			"name": "soajs/soajs.gcs",
-			"serviceName": "gcs",
+			"name": "soajs/soajs.epg",
+			"serviceName": "epg",
 			"type": "component"
 		}
 	]

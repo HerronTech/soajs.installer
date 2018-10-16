@@ -184,6 +184,121 @@ var catalogs = [
 			}
 		}
 	},
+	
+	{
+		"name": "SOAJS Endpoint Recipe",
+		"type": "service",
+		"subtype": "soajs",
+		"description": "This recipe allows you to deploy an endpoint built using the SOAJS API Builder",
+		"locked": true,
+		"restriction": {
+			"deployment": [
+				"container"
+			]
+		},
+		"recipe": {
+			"deployOptions": {
+				"image": {
+					"prefix": "soajsorg",
+					"name": "soajs",
+					"tag": "latest",
+					"pullPolicy": "IfNotPresent"
+				},
+				"sourceCode": {},
+				"readinessProbe": {
+					"httpGet": {
+						"path": "/heartbeat",
+						"port": "maintenance"
+					},
+					"initialDelaySeconds": 5,
+					"timeoutSeconds": 2,
+					"periodSeconds": 5,
+					"successThreshold": 1,
+					"failureThreshold": 3
+				},
+				"restartPolicy": dockerRestartPolicy,
+				"container": {
+					"network": dockerNetwork, //container network for docker
+					"workingDir": "/opt/soajs/deployer/" //container working directory
+				},
+				"voluming": JSON.parse(JSON.stringify(recipeVolumes))
+			},
+			"buildOptions": {
+				"settings": {
+					"accelerateDeployment": true
+				},
+				"env": {
+					"SOAJS_DEPLOY_ACC" : {
+						"type" : "static",
+						"value" : "true"
+					},
+					"NODE_TLS_REJECT_UNAUTHORIZED": {
+						"type": "static",
+						"value": "0"
+					},
+					"NODE_ENV": {
+						"type": "static",
+						"value": "production"
+					},
+					"SOAJS_ENV": {
+						"type": "computed",
+						"value": "$SOAJS_ENV"
+					},
+					"SOAJS_PROFILE": {
+						"type": "static",
+						"value": "/opt/soajs/FILES/profiles/profile.js"
+					},
+					"SOAJS_SRV_AUTOREGISTERHOST": {
+						"type": "static",
+						"value": "true"
+					},
+					"SOAJS_SRV_MEMORY": {
+						"type": "computed",
+						"value": "$SOAJS_SRV_MEMORY"
+					},
+					"SOAJS_SRV_MAIN": {
+						"type": "computed",
+						"value": "$SOAJS_SRV_MAIN"
+					},
+					"SOAJS_DEPLOY_HA": {
+						"type": "computed",
+						"value": "$SOAJS_DEPLOY_HA"
+					},
+					"SOAJS_HA_NAME": {
+						"type": "computed",
+						"value": "$SOAJS_HA_NAME"
+					},
+					"SOAJS_NX_CONTROLLER_NB" : {
+						"type" : "computed",
+						"value" : "$SOAJS_NX_CONTROLLER_NB"
+					},
+					"SOAJS_NX_CONTROLLER_IP" : {
+						"type" : "computed",
+						"value" : "$SOAJS_NX_CONTROLLER_IP_N"
+					},
+					"SOAJS_NX_CONTROLLER_PORT" : {
+						"type" : "computed",
+						"value" : "$SOAJS_NX_CONTROLLER_PORT"
+					},
+					"SOAJS_ENDPOINT_NAME" : {
+						"type" : "computed",
+						"value" : "$SOAJS_SERVICE_NAME"
+					}
+				},
+				"cmd": {
+					"deploy": {
+						"command": ["bash"],
+						"args": [
+							"-c",
+							"let registryPort=$(($SOAJS_NX_CONTROLLER_PORT+1000))",
+							"export SOAJS_REGISTRY_API=\"${SOAJS_NX_CONTROLLER_IP_1}:$registryPort\"",
+							"node . -T service"
+						]
+					}
+				}
+			}
+		}
+	},
 
 	{
 		"name": "SOAJS API Gateway Recipe",
