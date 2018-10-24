@@ -91,7 +91,7 @@ var dashboard = {
             },
             "key": {
                 "algorithm": 'aes256',
-                "password": '%keySecret%'
+                "password": 'soajs key lal massa'
             },
             "logger": {
                 "src": true,
@@ -121,11 +121,11 @@ var dashboard = {
 	            "randomInc": 100
             },
             "cookie": {
-	            "secret": "%cookieSecret%"
+	            "secret": "this is a secret sentence"
             },
             "session": {
                 "name": "soajsID",
-                "secret": "%sessionSecret%",
+                "secret": "this is antoine hage app server",
                 "cookie": {
                     "path": '/',
                     "httpOnly": true,
