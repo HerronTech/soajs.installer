@@ -57,17 +57,17 @@ let soajsModulesDirectory = path.normalize(process.env.PWD + `/../libexec/lib/`)
 let command = soajsModule + " " + processArguments.join(" ");
 exec(`${NodeLocation} ${command}`, { "cwd": soajsModulesDirectory, "env": process.env }, function (error, stdout, stderr) {
 	if (error) {
-		logger.error(error);
+		console.log(error);
 		process.exit();
 	}
 	
 	if (stderr) {
-		logger.error(stderr);
+		console.log(stderr);
 		process.exit();
 	}
 	
 	if (stdout) {
-		logger.info(stdout);
+		console.log(stdout);
 		process.exit();
 	}
 });
