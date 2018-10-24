@@ -36,5 +36,5 @@ else
     # call main installer driver nodejs script
     echo "${NODE} ${INSTALLER_MAIN_DRIVER}"
 
-    #NODE INSTALLER_MAIN_DRIVER
+    $NODE $INSTALLER_MAIN_DRIVER
 fi
