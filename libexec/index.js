@@ -43,7 +43,7 @@ const logger = bunyan.createLogger({
 	name: "SOAJS Installer",
 	"src": true,
 	"level": "debug",
-	"stream": formatOut
+	"stream": (process.env.SOAJS_CONSOLE) ? null : formatOut
 });
 
 //requested module is not supported
@@ -52,41 +52,31 @@ if(!soajsModule){
 	process.exit();
 }
 
-console.log("environment variables:")
-console.log(JSON.stringify(process.env, null, 2));
+//remove the third argument, from here on it is not needed anymore
+processArguments.shift();
 
+//calculate and append node executable to process environment variables
+let NodeLocation = path.normalize(process.env.PWD + `/../include/${process.env.NODE_LOCATION}/bin/node`);
+process.env.NODE_BIN = NodeLocation;
+
+//set the soajs module directory
 let soajsModulesDirectory = path.normalize(process.env.PWD + `/../libexec/lib/`);
-exec(` ${soajsModule}`, {
-	"cwd": soajsModulesDirectory,
-	"env": process.env
-}, function (error, stdout, stderr) {
+
+//invoke the module requested
+let command = soajsModule + " " + processArguments.join(" ");
+exec(`${NodeLocation} ${command}`, { "cwd": soajsModulesDirectory, "env": process.env }, function (error, stdout, stderr) {
 	if (error) {
-		if (error.message.indexOf("destination path '" + repoName + "' already exists") === -1) {
-			return cb(error);
-		}
-		else {
-			utilLog.log(repoName, "already exists!");
-		}
+		logger.error(error);
+		process.exit();
 	}
 	
-	utilLog.log("installing dependencies ...");
-	var modules = loadDependencies(WRK_DIR + "/" + repoName + "/package.json", noCore);
-	if (!modules || modules.length === 0) {
-		return cb();
+	if (stderr) {
+		logger.error(stderr);
+		process.exit();
 	}
-	utilLog.log(">>> ", NPM + " install " + modules.join(" "));
-	exec(NPM + " install " + modules.join(" "), {
-		"cwd": WRK_DIR + "/" + repoName,
-		"env": process.env
-	}, function (error) {
-		if (error) {
-			return cb(error);
-		}
-		return cb();
-	});
+	
+	if (stdout) {
+		logger.info(stdout);
+		process.exit();
+	}
 });
-
-console.log("Arguments:")
-console.log(JSON.stringify(processArguments, null, 2));
-
-
