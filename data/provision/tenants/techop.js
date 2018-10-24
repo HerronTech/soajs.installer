@@ -7,7 +7,7 @@ var techop = {
 	"description": "This tenant uses the Techop Package and its users are allowed to administer the cloud.",
 	"oauth": {
 		"secret": "soajs beaver",
-		"redirectURI": "%protocol%://domain.com",
+		"redirectURI": "http://domain.com",
 		"grants": [
 			"password",
 			"refresh_token"
@@ -39,7 +39,7 @@ var techop = {
 							},
 							"commonFields": {
 								"mail": {
-									"from": "%email%",
+									"from": "me@localhost.com",
 									"transport": {
 										"type": "sendmail",
 										"options": {}
@@ -50,10 +50,10 @@ var techop = {
 								"hashIterations": 1024,
 								"seedLength": 32,
 								"link": {
-									"addUser": "%protocol%://%site%.%domain%:%port%/#/setNewPassword",
-									"changeEmail": "%protocol%://%site%.%domain%:%port%/#/changeEmail/validate",
-									"forgotPassword": "%protocol%://%site%.%domain%:%port%/#/resetPassword",
-									"join": "%protocol%://%site%.%domain%:%port%/#/join/validate"
+									"addUser": "http://dashboard.soajs.org:80/#/setNewPassword",
+									"changeEmail": "http://dashboard.soajs.org:80/#/changeEmail/validate",
+									"forgotPassword": "http://dashboard.soajs.org:80/#/resetPassword",
+									"join": "http://dashboard.soajs.org:80/#/join/validate"
 								},
 								"tokenExpiryTTL": 2 * 24 * 3600 * 1000,
 								"validateJoin": true,

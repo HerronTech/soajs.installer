@@ -2,58 +2,58 @@
 var dashboard = {
     "_id": '55128442e603d7e01ab1688c',
     "code": "DASHBOARD",
-    "domain": "%domain%",
-    "sitePrefix": "%site%",
-    "apiPrefix": "%api%",
+    "domain": "soajs.org",
+    "sitePrefix": "dashboard",
+    "apiPrefix": "dashboard-api",
     "locked": true,
     "port": 80,
 	"protocol": "http",
-    "profile": "%wrkDir%/soajs/FILES/profiles/profile.js",
+    "profile": "/soajs/FILES/profiles/profile.js",
     "deployer": {
-	    "type": "%deployType%",
-	    "selected": "%deployDriver%",
+	    "type": "manual",
+	    "selected": "manual",
 	    "manual": {
-	    	"nodes": "%containerNode%",
+	    	"nodes": "127.0.0.1",
 	    },
 	    "container": {
 		    "docker": {
 			    "local": {
-				    "nodes": "%deployDockerNodes%",
+				    "nodes": "",
 				    "socketPath": "/var/run/docker.sock",
 			    },
 			    "remote": {
-				    "apiPort": "%dockerRemotePort%",
-				    "nodes": "%deployDockerNodes%",
-				    "apiProtocol": "https",
+				    "apiPort": "",
+				    "nodes": "",
+				    "apiProtocol": "",
 				    "auth": {
-					    "token": "%dockertoken%"
+					    "token": ""
 				    }
 			    }
 		    },
 		    "kubernetes":{
 			    "local":{
-				    "nodes": "%containerNode%",
-				    "apiPort": "%kubernetesRemotePort%",
-				    "namespace": "%namespace%",
+				    "nodes": "",
+				    "apiPort": "",
+				    "namespace": "",
                     "auth": {
-				        "token": "%kubetoken%"
+				        "token": ""
                     }
 			    },
 			    "remote":{
-				    "nodes": "%containerNode%",
-				    "apiPort": "%kubernetesRemotePort%",
-				    "namespace": "%namespace%",
+				    "nodes": "",
+				    "apiPort": "",
+				    "namespace": "",
                     "auth": {
-                        "token": "%kubetoken%"
+                        "token": ""
                     }
 			    }
 		    }
 	    }
     },
-    "description": "this is the Dashboard environment",
+    "description": "SOAJS Console Environment",
     "dbs": {
         "config": {
-            "prefix": "%clusterPrefix%"
+            "prefix": ""
         },
 	    "session": {
 		    "cluster": "dash_cluster",
@@ -87,7 +87,7 @@ var dashboard = {
                 "autoRegisterService": true
             },
             "agent": {
-                "topologyDir": "%wrkDir%/soajs/"
+                "topologyDir": "/opt/tmp/soajs/"
             },
             "key": {
                 "algorithm": 'aes256',
@@ -97,7 +97,6 @@ var dashboard = {
                 "src": true,
                 "level": "debug",
                 "formatter": {
-	                //"outputMode": "bunyan",
 	                "levelInString": true,
 	                "outputMode": 'long'
                 }

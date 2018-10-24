@@ -11,10 +11,7 @@ module.exports = {
 	],
 	"credentials": null,
 	"streaming": {
-		"batchSize" : 10000,
-		"colName":{
-			"batchSize" : 10000
-		}
+		"batchSize" : 1000
 	},
 	"URLParam": {
 		"maxPoolSize": 2,

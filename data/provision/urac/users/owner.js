@@ -5,7 +5,7 @@ var owner = {
 	"password": '%password%',
 	"firstName": "owner",
 	"lastName": "owner",
-	"email": "%email%",
+	"email": "me@localhost.com",
 	"ts": new Date().getTime(),
 	"status": "active",
 	"profile": {},
