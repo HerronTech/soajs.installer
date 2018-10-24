@@ -53,21 +53,24 @@ process.env.NODE_BIN = NodeLocation;
 //set the soajs module directory
 let soajsModulesDirectory = path.normalize(process.env.PWD + `/../libexec/lib/`);
 
+let myModule = require(soajsModulesDirectory + soajsModule);
+let commandRequested = processArguments[0];
+
+//remove the argument that represents the command, no longer needed
+processArguments.shift();
+
+if(!Object.hasOwnProperty.call(myModule, commandRequested)){
+	logger.error(`The requested command ${commandRequested} is not supported!`);
+	process.exit();
+}
+
 //invoke the module requested
-let command = soajsModule + " " + processArguments.join(" ");
-exec(`${NodeLocation} ${command}`, { "cwd": soajsModulesDirectory, "env": process.env }, function (error, stdout, stderr) {
+myModule[commandRequested](processArguments, (error, response) => {
 	if (error) {
-		console.log(error);
-		process.exit();
+		logger.error(error);
 	}
-	
-	if (stderr) {
-		console.log(stderr);
-		process.exit();
+	else {
+		logger.info(response);
 	}
-	
-	if (stdout) {
-		console.log(stdout);
-		process.exit();
-	}
+	process.exit();
 });
