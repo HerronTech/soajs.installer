@@ -71,7 +71,12 @@ myModule[commandRequested](processArguments, (error, response) => {
 	}
 	else {
 		if(response){
-			logger.info(response);
+			if(!response.includes("SOAJS Installer")){
+				logger.info(response);
+			}
+			else{
+				console.log(response);
+			}
 		}
 	}
 	process.exit();
