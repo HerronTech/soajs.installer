@@ -3,16 +3,14 @@
 const path = require("path");
 const fs = require("fs");
 
-//set the logger
-const logger = require("../utils/utils.js").getLogger();
-
 const profileModule = {
 	
 	/**
 	 * Create a backup file of the original soajs_profile.js if not created yet.
 	 * load soajs_profile, change the port value
 	 * rewrite the soajs_profile
-	 * @param args
+	 * @param args {Array}
+	 * @param callback {Function}
 	 */
 	'setPort': (args, callback) => {
 		//if no arguments do nothing
