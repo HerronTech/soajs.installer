@@ -3,8 +3,8 @@
 const path = require("path");
 const exec = require("child_process").exec;
 
-const bunyan = require("bunyan");
-const bunyanFormat = require('bunyan-format');
+//set the logger
+const logger = require("./utils/utils.js").getLogger();
 
 //set the process arguments and remove the first 2, they are not needed
 let processArguments = process.argv;
@@ -36,15 +36,6 @@ switch(processArguments[0]){
 		soajsModule = "remote-installer.js";
 		break;
 }
-
-//set the logger
-let formatOut = bunyanFormat({ "levelInString": true, "outputMode": 'short' });
-const logger = bunyan.createLogger({
-	name: "SOAJS Installer",
-	"src": true,
-	"level": "debug",
-	"stream": (process.env.SOAJS_CONSOLE) ? null : formatOut
-});
 
 //requested module is not supported
 if(!soajsModule){
