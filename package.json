@@ -23,11 +23,11 @@
   },
   "dependencies": {
     "async": "2.1.4",
+    "bunyan": "^1.8.12",
     "mkdirp": "*",
     "ncp": "*",
     "npm": "*",
     "rimraf": "*",
-    "util": "*",
     "whereis": "*"
   }
 }

@@ -34,7 +34,6 @@ else
 	NODE="${WORKING_DIRECTORY}/../include/${NODE_LOCATION}/bin/node"
 
     # call main installer driver nodejs script
-    echo "${NODE} ${INSTALLER_MAIN_DRIVER}"
-
+    # echo "${NODE} ${INSTALLER_MAIN_DRIVER} $@"
     $NODE $INSTALLER_MAIN_DRIVER $@
 fi
