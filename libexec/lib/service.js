@@ -3,6 +3,7 @@
 const path = require("path");
 const fs = require("fs");
 const spawn = require("child_process").spawn;
+const exec = require("child_process").exec;
 
 const installerConfig = require(path.normalize(process.env.PWD + "/../etc/config.js"));
 
@@ -163,8 +164,81 @@ const serviceModule = {
 		}
 	},
 	
+	/**
+	 * This command will find the process id of the requested service in the requested environment and kill it
+	 * @param args
+	 * @param callback
+	 * @returns {*}
+	 */
 	'stop': (args, callback) => {
-	
+		if (args.length < 2) {
+			return callback();
+		}
+		
+		//check if service is supported
+		let requestedService = args[0];
+		let serviceType = (requestedService === 'ui') ? 'SOAJS Console' : 'Service';
+		if(!SOAJS_RMS[requestedService]){
+			serviceType = (requestedService === 'ui') ? 'SOAJS Console' : 'Service';
+			return callback(`${serviceType} ${requestedService} is not supported!`);
+		}
+		
+		//check for environment
+		let requestedEnvironment = args[1];
+		if(!requestedEnvironment.includes("--env")){
+			return callback(`Specify the environment where you want ${requestedService} to be deployed!`);
+		}
+		requestedEnvironment = requestedEnvironment.split("=");
+		if(!requestedEnvironment[1] || requestedEnvironment[1] === ''){
+			return callback(`Specify the environment where you want ${requestedService} to be deployed!`);
+		}
+		requestedEnvironment = requestedEnvironment[1].toLowerCase();
+		
+		//check if there is a running process for the requested
+		exec(`ps aux | grep ${SOAJS_RMS[requestedService]}`, (error, cmdOutput) => {
+			if(error || !cmdOutput){
+				return callback();
+			}
+			
+			//go through the returned output and find the process ID
+			cmdOutput = cmdOutput.split("\n");
+			if(Array.isArray(cmdOutput) && cmdOutput.length > 0){
+				let PID;
+				cmdOutput.forEach((oneCMDLine) => {
+					
+					if(requestedService === 'ui'){
+						if(oneCMDLine.includes(SOAJS_RMS[requestedService])){
+							let oneProcess = oneCMDLine.replace(/\s+/g, ' ').split(' ');
+							PID = oneProcess[1];
+						}
+					}
+					else{
+						if(oneCMDLine.includes(SOAJS_RMS[requestedService]) && oneCMDLine.includes("--env=" + requestedEnvironment)){
+							let oneProcess = oneCMDLine.replace(/\s+/g, ' ').split(' ');
+							PID = oneProcess[1];
+						}
+					}
+				});
+				
+				//if no PID return, nothing to do
+				if(!PID){
+					return callback();
+				}
+				
+				//stop the running process
+				exec(`kill -9 ${PID}`, (error) => {
+					if(error){
+						return callback(error);
+					}
+					else{
+						return callback(null, `${serviceType} ${requestedService} Terminated ...`);
+					}
+				});
+			}
+			else {
+				return callback();
+			}
+		});
 	}
 };
 

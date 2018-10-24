@@ -70,7 +70,9 @@ myModule[commandRequested](processArguments, (error, response) => {
 		logger.error(error);
 	}
 	else {
-		logger.info(response);
+		if(response){
+			logger.info(response);
+		}
 	}
 	process.exit();
 });
