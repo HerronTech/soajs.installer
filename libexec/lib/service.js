@@ -206,16 +206,18 @@ const serviceModule = {
 				let PID;
 				cmdOutput.forEach((oneCMDLine) => {
 					
-					if(requestedService === 'ui'){
-						if(oneCMDLine.includes(SOAJS_RMS[requestedService])){
-							let oneProcess = oneCMDLine.replace(/\s+/g, ' ').split(' ');
-							PID = oneProcess[1];
+					if(!oneCMDLine.includes("grep")){
+						if(requestedService === 'ui'){
+							if(oneCMDLine.includes(SOAJS_RMS[requestedService])){
+								let oneProcess = oneCMDLine.replace(/\s+/g, ' ').split(' ');
+								PID = oneProcess[1];
+							}
 						}
-					}
-					else{
-						if(oneCMDLine.includes(SOAJS_RMS[requestedService]) && oneCMDLine.includes("--env=" + requestedEnvironment)){
-							let oneProcess = oneCMDLine.replace(/\s+/g, ' ').split(' ');
-							PID = oneProcess[1];
+						else{
+							if(oneCMDLine.includes(SOAJS_RMS[requestedService]) && oneCMDLine.includes("--env=" + requestedEnvironment)){
+								let oneProcess = oneCMDLine.replace(/\s+/g, ' ').split(' ');
+								PID = oneProcess[1];
+							}
 						}
 					}
 				});
