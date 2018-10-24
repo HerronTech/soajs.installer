@@ -23,7 +23,8 @@
   },
   "dependencies": {
     "async": "2.1.4",
-    "bunyan": "^1.8.12",
+    "bunyan": "1.8.5",
+    "bunyan-format": "0.2.1",
     "mkdirp": "*",
     "ncp": "*",
     "npm": "*",

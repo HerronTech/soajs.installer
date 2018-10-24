@@ -1,9 +1,10 @@
 "use strict";
 
 const path = require("path");
-const bunyan = require("bunyan");
 const exec = require("child_process").exec;
-const spawn = require("child_process").spawn;
+
+const bunyan = require("bunyan");
+const bunyanFormat = require('bunyan-format');
 
 //set the process arguments and remove the first 2, they are not needed
 let processArguments = process.argv;
@@ -37,15 +38,12 @@ switch(processArguments[0]){
 }
 
 //set the logger
+let formatOut = bunyanFormat({ "levelInString": true, "outputMode": 'short' });
 const logger = bunyan.createLogger({
 	name: "SOAJS Installer",
 	"src": true,
 	"level": "debug",
-	"stream": process.stdout,
-	"formatter": {
-		"levelInString": true,
-		"outputMode": 'short'
-	}
+	"stream": formatOut
 });
 
 //requested module is not supported
