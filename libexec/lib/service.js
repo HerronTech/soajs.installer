@@ -76,17 +76,28 @@ const serviceModule = {
 						//create log file
 						fs.mkdir(logLoc, { 'recursive': true}, (error) => {
 							if (error) {
-								return callback(`Unable to create a Log File for service ${requestedService}!`);
+								return callback(`Unable to create a Log File for ${serviceType} ${requestedService}!`);
 							}
-							launchService(logLoc);
+							
+							if(requestedService === 'ui'){
+								launchUI(logLoc);
+							}
+							else {
+								launchService(logLoc);
+							}
 						});
 					}
 					else{
-						return callback(`Unable to create a Log File for service ${requestedService}!`);
+						return callback(`Unable to create a Log File for ${serviceType} ${requestedService}!`);
 					}
 				}
 				else{
-					launchService(logLoc);
+					if(requestedService === 'ui'){
+						launchUI(logLoc);
+					}
+					else {
+						launchService(logLoc);
+					}
 				}
 			});
 		});
@@ -112,13 +123,14 @@ const serviceModule = {
 			let errLog = path.normalize(logLoc + `/${requestedEnvironment}-${requestedService}-err.log`);
 			let serviceErrLog = fs.openSync(errLog, "w");
 			
-			let serviceInstance = spawn(process.env.NODE_BIN, ["."], {
-				"cwd": installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/",
+			let serviceInstance = spawn(process.env.NODE_BIN, [installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + `/index.js`, `--env=${requestedEnvironment}`], {
 				"env": process.env,
 				"stdio": ['ignore', serviceOutLog, serviceErrLog],
 				"detached": true,
 			});
 			serviceInstance.unref();
+			
+			//generate out message for service
 			let output = `Service ${requestedService} started ...\n`;
 			output += "Logs:\n";
 			output += `[ out ] -> ${outLog}\n`;
@@ -126,7 +138,29 @@ const serviceModule = {
 			return callback(null, output);
 		}
 		
-		function launchUI() {}
+		//function that starts the ui express app which contains the soajs console ui.
+		function launchUI(logLoc) {
+			let outLog = path.normalize(logLoc + `/${requestedEnvironment}-${requestedService}-out.log`);
+			let serviceOutLog = fs.openSync(outLog, "w");
+			
+			let errLog = path.normalize(logLoc + `/${requestedEnvironment}-${requestedService}-err.log`);
+			let serviceErrLog = fs.openSync(errLog, "w");
+			
+			let serviceInstance = spawn(process.env.NODE_BIN, [installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/app/index.js"], {
+				"env": process.env,
+				"stdio": ['ignore', serviceOutLog, serviceErrLog],
+				"detached": true,
+			});
+			serviceInstance.unref();
+			
+			//require the ui config to learn the host and the port values
+			let uiConfig = require(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/app/config.js");
+			
+			//generate output message for ui
+			let output = `SOAJS Console UI started ...\n`;
+			output += `In your Browser, open: http://${uiConfig.host}:${uiConfig.port}/ \n`;
+			return callback(null, output);
+		}
 	},
 	
 	'stop': (args, callback) => {
