@@ -25,7 +25,7 @@ var techop = {
 					"key": "f485d5dc9ac1d0da8962e4121b3e58a9",
 					"extKeys": [
 						{
-							"extKey": "%extKey3%",
+							"extKey": "da4c95fcb1145cea8df1c7fea89cb9148999e967a28a15fd141b2292ebd160b1577008499557436bdfd1c2c9d1cb179fa6ecce2ad01100e882a63574f784e780d28e188a68732ca24acb74e751ab5d128fa64d649b5bc987a020058204b48639",
 							"device": null,
 							"geo": null,
 							"env": "DASHBOARD",

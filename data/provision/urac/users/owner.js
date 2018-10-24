@@ -1,8 +1,8 @@
 'use strict';
 var owner = {
 	"locked": true,
-	"username": "%username%",
-	"password": '%password%',
+	"username": "owner",
+	"password": 'password',
 	"firstName": "owner",
 	"lastName": "owner",
 	"email": "me@localhost.com",
