@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# set the main installer driver location
+WORKING_DIRECTORY=$PWD
+INSTALLER_MAIN_DRIVER="${WORKING_DIRECTORY}/../libexec/index.js"
+
+# calculate nodejs and mongodb versions to use and their locations
+PLATFORM=''
+NODE_LOCATION=''
+MONGO_LOCATION=''
+
+# check the platform to determine which node to use: linux | darwin
+unamestr=`uname`
+if [[ "$unamestr" == 'Linux' ]]; then
+   PLATFORM='Linux'
+   NODE_LOCATION="node-8.12.0/node-linux-x64"
+   MONGO_LOCATION="mongo-3.6.8/mongodb-linux-x86_64-ubuntu1604"
+elif [[ "$unamestr" == 'Darwin' ]]; then
+   PLATFORM='Darwin'
+   NODE_LOCATION="node-8.12.0/node-darwin-x64"
+   MONGO_LOCATION="mongo-3.6.8/mongodb-osx-x86_64"
+fi
+
+# if the platform is not supported do not proceed
+if [[ "$PLATFORM" == '' ]]; then
+	echo "The SOAJS installer does not support this platform: ${unamestr}"
+else
+	#export the nodejs and mongodb locations as environment variables
+	export PLATFORM;
+	export NODE_LOCATION;
+	export MONGO_LOCATION;
+
+	# formulate the node executable location from installer
+	NODE="${WORKING_DIRECTORY}/../include/${NODE_LOCATION}/bin/node"
+
+    # call main installer driver nodejs script
+    echo "${NODE} ${INSTALLER_MAIN_DRIVER}"
+
+    #NODE INSTALLER_MAIN_DRIVER
+fi
