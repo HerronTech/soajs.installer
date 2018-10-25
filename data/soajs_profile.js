@@ -6,7 +6,7 @@ module.exports = {
   "servers": [
     {
       "host": "127.0.0.1",
-      "port": 327017
+      "port": 32017
     }
   ],
   "credentials": null,
