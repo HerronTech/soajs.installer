@@ -81,7 +81,7 @@ function initKubernetes(){
     sleep 2
 
     kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
-    kubectl apply -f $DIRNAME/kubernetes/kube-flannel.yml
+    kubectl apply -f $DIRNAME/flannel/kube-flannel.yml
 
     kubectl create clusterrolebinding permissive-binding --clusterrole=cluster-admin --user=admin --user=kubelet --group=system:serviceaccounts;
 }
