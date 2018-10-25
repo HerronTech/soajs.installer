@@ -149,6 +149,25 @@ let mongoModule = {
 	
 	setPort: (args, callback) => {
 		//todo check args
+		if (!Array.isArray(args) || args.length === 0) {
+			return callback(null, "Missing port value!");
+		}
+		if (args.length > 1) {
+			args.shift();
+			return callback(null, `Unidentified input ${args.join(" ")}. Please use soajs mongo setPort %number%.`);
+		}
+		let portNumber;
+		
+		// check if port is number
+		try {
+			portNumber = parseInt(args[0]);
+			if (typeof portNumber !== "number" || isNaN(portNumber)) {
+				return callback(null, `Port value should be of type number...`);
+			}
+		}
+		catch (e) {
+			return callback(null, `Port value should be of type number...`);
+		}
 		let mongoDbConf = path.normalize(process.env.PWD + "/../include/" + process.env.MONGO_LOCATION + "/mongod.conf");
 		
 		//check if mongo.conf exists
@@ -158,30 +177,35 @@ let mongoModule = {
 			}
 			let mongoConf;
 			
-			//
+			//read mongo.conf file
 			fs.readFile(mongoDbConf, 'utf8', function read(err, data) {
 				if (err) {
 					return callback(null, 'MongoDB configuration file not found. Run [soajs mongo install] to create one.');
 				}
 				try {
+					//transform yaml file to json
 					mongoConf = YAML.parse(data);
 				}
 				catch (e) {
 					return callback(null, `Malformed ${mongoDbConf}!`);
 				}
+				//change port value
 				if (mongoConf.net && mongoConf.net.port) {
-					mongoConf.net.port = parseInt(args[0]);
+					mongoConf.net.port = portNumber;
 				}
+				//change data back yaml
 				let yamlFile = YAML.stringify(mongoConf, 4);
+				
+				//write the file back
 				fs.writeFile(mongoDbConf, yamlFile, (error) => {
 					if (error) {
 						return callback(error);
 					}
-					
-					exec("soajs profile setPort " + args[0], callback);
+					//call command to change the port
+					let profileModule = require("./profile");
+					profileModule.setPort(args, callback);
 				});
 			});
-			
 		});
 	},
 	clean: () => {
