@@ -5,6 +5,8 @@ const fs = require("fs");
 const spawn = require("child_process").spawn;
 const exec = require("child_process").exec;
 
+const mkdirp = require("mkdirp");
+
 const installerConfig = require(path.normalize(process.env.PWD + "/../etc/config.js"));
 
 const SOAJS_RMS = {
@@ -75,7 +77,7 @@ const serviceModule = {
 				if(error){
 					if(error.code === 'ENOENT' && !stats){
 						//create log file
-						fs.mkdir(logLoc, { 'recursive': true}, (error) => {
+						mkdirp(logLoc, (error) => {
 							if (error) {
 								return callback(`Unable to create a Log File for ${serviceType} ${requestedService}!`);
 							}

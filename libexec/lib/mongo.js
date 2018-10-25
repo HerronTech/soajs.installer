@@ -4,6 +4,7 @@ const fs = require("fs");
 const spawn = require("child_process").spawn;
 const exec = require("child_process").exec;
 const YAML = require("yamljs");
+const mkdirp = require("mkdirp");
 let Mongo = require("soajs").mongo;
 const async = require('async');
 
@@ -37,14 +38,14 @@ let mongoModule = {
 		
 		//set mongo db data and log folder depending on platform
 		if (process.env.PLATFORM === 'Darwin') {
-			config.systemLog.path = "/usr/local/var/log/mongodb/mongo.log";
-			config.storage.dbPath = "/usr/local/var/mongodb";
-			logPath = '/usr/local/var/log/mongodb/';
+			config.systemLog.path = "/usr/local/var/log/soajs/mongodb/mongo.log";
+			config.storage.dbPath = "/usr/local/var/soajs/mongodb";
+			logPath = '/usr/local/var/log/soajs/mongodb/';
 		}
 		else if (process.env.PLATFORM === 'Linux') {
-			config.systemLog.path = "/var/log/mongodb/mongo.log";
-			config.storage.dbPath = "/var/mongodb";
-			logPath = '/var/log/';
+			config.systemLog.path = "/var/log/soajs/mongodb/mongo.log";
+			config.storage.dbPath = "/var/soajs/mongodb";
+			logPath = '/var/log/soajs/';
 		}
 		//convert from json to yaml
 		let yamlFile = YAML.stringify(config, 4);
@@ -71,7 +72,7 @@ let mongoModule = {
 			fs.stat(path, (error) => {
 				if (error) {
 					//if not found create the directories needed recursively
-					fs.mkdir(path, {recursive: true}, cb);
+					mkdirp(path, cb);
 				}
 				cb();
 			});
