@@ -5,6 +5,8 @@ const fs = require("fs");
 const spawn = require("child_process").spawn;
 const exec = require("child_process").exec;
 
+const mkdirp = require("mkdirp");
+
 const installerConfig = require(path.normalize(process.env.PWD + "/../etc/config.js"));
 
 const SOAJS_RMS = {
@@ -75,7 +77,7 @@ const serviceModule = {
 				if(error){
 					if(error.code === 'ENOENT' && !stats){
 						//create log file
-						fs.mkdir(logLoc, { 'recursive': true}, (error) => {
+						mkdirp(logLoc, (error) => {
 							if (error) {
 								return callback(`Unable to create a Log File for ${serviceType} ${requestedService}!`);
 							}
@@ -155,12 +157,26 @@ const serviceModule = {
 			serviceInstance.unref();
 			
 			//require the ui config to learn the host and the port values
-			let uiConfig = require(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/app/config.js");
-			
-			//generate output message for ui
-			let output = `SOAJS Console UI started ...\n`;
-			output += `In your Browser, open: http://${uiConfig.host}:${uiConfig.port}/ \n`;
-			return callback(null, output);
+			fs.stat(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/app/config.js", (error) => {
+				if(error){
+					if(error.code === 'ENOENT'){
+						return callback(null, null);
+					}
+					else {
+						return callback(error);
+					}
+				}
+				else{
+					let uiConfig = require(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/app/config.js");
+					if(uiConfig && typeof uiConfig === 'object'){
+						//generate output message for ui
+						let output = `SOAJS Console UI started ...\n`;
+						output += `In your Browser, open: http://${uiConfig.host}:${uiConfig.port}/ \n`;
+						return callback(null, output);
+					}
+					else return callback(null, null);
+				}
+			});
 		}
 	},
 	

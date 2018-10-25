@@ -1,6 +1,18 @@
 #!/bin/bash
 
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  TARGET="$(readlink "$SOURCE")"
+  if [[ $SOURCE == /* ]]; then
+    SOURCE="$TARGET"
+  else
+    DIR="$( dirname "$SOURCE" )"
+    SOURCE="$DIR/$TARGET" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+  fi
+done
+
 # set the main installer driver location
+PWD="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 WORKING_DIRECTORY=$PWD
 INSTALLER_MAIN_DRIVER="${WORKING_DIRECTORY}/../libexec/index.js"
 

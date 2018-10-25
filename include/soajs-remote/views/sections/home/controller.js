@@ -3,7 +3,7 @@ var overApp = app.components;
 
 overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function ($scope, ngDataApi, $timeout) {
 	$scope.alerts = [];
-	
+	$scope.remote = true;
 	$scope.remoteProvider = {};
 	
 	$scope.myProviders = [
@@ -47,55 +47,24 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 	$scope.fillOverView = function () {
 		var output = {};
 		//check if no deplyment type is clicked
-		if (!$scope.manual && !$scope.local && !$scope.remote) {
-			return false;
-		}
 		//check if a container deployment is clicked but no deployment driver is clicked.
-		else if ($scope.local && !($scope.docker || $scope.kubernetes) || $scope.remote && !($scope.docker || $scope.kubernetes)) {
+		console.log($scope.remote, $scope.docker, $scope.kubernetes)
+		if (!$scope.docker && !$scope.kubernetes) {
 			return false;
-		}
-		//if manual deployment is selected
-		else if ($scope.manual && !$scope.local && !$scope.remote) {
-			output = {
-				"deployDriver": "manual",
-				"deployType": "manual"
-			}
-			
-		}
-		//if docker local is selected
-		else if (!$scope.manual && $scope.local && !$scope.remote && $scope.docker && !$scope.kubernetes) {
-			output = {
-				"deployDriver": "container.docker.local",
-				"deployType": "container"
-			};
-		}
-		//if kubernetes local is selected
-		else if (!$scope.manual && $scope.local && !$scope.remote && !$scope.docker && $scope.kubernetes) {
-			output = {
-				"deployDriver": "container.kubernetes.local",
-				"deployType": "container"
-			};
 		}
 		//if docker remote is selected
-		else if (!$scope.manual && !$scope.local && $scope.remote && $scope.docker && !$scope.kubernetes) {
+		else if ($scope.docker && !$scope.kubernetes) {
 			output = {
 				"deployDriver": "container.docker.remote",
 				"deployType": "container"
 			};
 		}
 		//if docker remote is selected
-		else if (!$scope.manual && !$scope.local && $scope.remote && !$scope.docker && $scope.kubernetes) {
+		else if (!$scope.docker && $scope.kubernetes) {
 			output = {
 				"deployDriver": "container.kubernetes.remote",
 				"deployType": "container"
 			};
-		}
-		//if docker remote is selected
-		else if (!$scope.manual && $scope.local && !$scope.remote && !$scope.docker && $scope.kubernetes) {
-			return false;
-		}
-		else if (!$scope.manual && !$scope.local && $scope.remote && !$scope.docker && $scope.kubernetes) {
-			return false;
 		}
 		
 		output.remoteProvider = $scope.remoteProvider;
@@ -121,21 +90,6 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 		$scope.docker  = $scope.docker ? $scope.docker : false;
 		$scope.kubernetes =  $scope.kubernetes ? $scope.kubernetes : false;
 		
-		if (type === 'manual') {
-			$scope.manual = true;
-			$scope.local = false;
-			$scope.remote = false;
-		}
-		if (type === 'local') {
-			$scope.manual = false;
-			$scope.local = true;
-			$scope.remote = false;
-		}
-		if (type === 'remote') {
-			$scope.manual = false;
-			$scope.local = false;
-			$scope.remote = true;
-		}
 		setTimeout(function () {
 			resizeContent();
 		}, 500);
@@ -196,42 +150,18 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 				$scope.docker = false;
 				$scope.kubernetes = false;
 				$scope.local = false;
-				$scope.remote = false;
-			}
-			else if ($scope.data.deployDriver === 'manual') {
-				$scope.manual = true;
-				$scope.docker = false;
-				$scope.kubernetes = false;
-				$scope.local = false;
-				$scope.remote = false;
-			}
-			else if ($scope.data.deployDriver.indexOf('kubernetes') !== -1 && $scope.data.deployDriver.indexOf('local') !== -1) {
-				$scope.manual = false;
-				$scope.docker = false;
-				$scope.kubernetes = true;
-				$scope.local = true;
-				$scope.remote = false;
 			}
 			else if ($scope.data.deployDriver.indexOf('kubernetes') !== -1 && $scope.data.deployDriver.indexOf('remote') !== -1) {
 				$scope.manual = false;
 				$scope.docker = false;
 				$scope.kubernetes = true;
 				$scope.local = false;
-				$scope.remote = true;
-			}
-			else if ($scope.data.deployDriver.indexOf('docker') !== -1 && $scope.data.deployDriver.indexOf('local') !== -1) {
-				$scope.manual = false;
-				$scope.docker = true;
-				$scope.kubernetes = false;
-				$scope.local = true;
-				$scope.remote = false;
 			}
 			else if ($scope.data.deployDriver.indexOf('docker') !== -1 && $scope.data.deployDriver.indexOf('remote') !== -1) {
 				$scope.manual = false;
 				$scope.docker = true;
 				$scope.kubernetes = false;
 				$scope.local = false;
-				$scope.remote = true;
 			}
 			if (!$scope.$$phase) {
 				$scope.$apply();

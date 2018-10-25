@@ -5,502 +5,415 @@
 		</div>
 		<p>
 			Hello Beaver and welcome to the SOAJS installer.<br/>
-			This Wizard will guide you through the steps needed to customize and install a fresh copy of SOAJS on your
-			local or remote machine.
+			This Wizard will guide you through the steps needed to customize and install SOAJS remotely on a cloud provider machine.
 		</p>
-		<!--<alert type="danger" ng-show="deploymentExists">
-			<div ng-bind-html="previousDeployment|toTrustedHtml"></div>
-		</alert>
-		<alert type="info" ng-show="!previousCheckComplete">Checking for Previous Deployments ... please wait.</alert>-->
-		
 		<div ng-show="previousCheckComplete && alerts.length > 0">
 			<alert ng-repeat="oneAlert in alerts" type="oneAlert.type">{{msg}}</alert>
 		</div>
 		<hr>
-		<div ng-show="previousCheckComplete">
-			<h3>Deployment</h3>
+		<div ng-show="previousCheckComplete" ng-init="selectLocation('remote')">
 			<p>
-				Before you proceed, pick a deployment type.
+				Once SOAJS is deployed, you can open its Console using your web browser via a link that this installer will provide.<br/>
+				This type of deployment is only supported on machines running Ubuntu.
 			</p>
 			<br/>
-			<accordion close-others="true">
-				
-				<accordion-group ng-click="selectLocation('manual')" is-open="manual">
-					<accordion-heading>
-					<input type="radio" ng-checked="manual" value="true" name="local" disabled class="hidden"/>&nbsp;Manual Deployment
-					</accordion-heading>
-					<p>
-						<b>Overview:</b><br/>
-						Copy the following command line and run it in your terminal to install both MongoDB and Nginx; both
-						are
-						needed if you wish to proceed.<br/>
-						Once installed, click proceed at the bottom of this page to move on to the next sections.
-					</p>
-					<pre ng-if="style.manual.t==='sh'" class="bash"><code># Install needed technologies for manual deployment
-{{style.manual.v}}</code></pre>
-				</accordion-group>
-				
-				<accordion-group  is-open="local" ng-click="selectLocation('local')">
-					<accordion-heading>
-						 <input type="radio" ng-checked="local" value="true" name="local" disabled class="hidden"/>&nbsp;Local Cloud Deployment
-					</accordion-heading>
-					<p>
-						<b>Overview:</b><br/>
-						Deploy SOAJS cloud on your local machine.<br/>
-						Once deployed, you can interact with SOAJS ready made services via a User Interface.<br/>
-						This type of deployment is only supported on machines running Ubuntu or Mac.
-					</p>
-					
-					<tabset>
-						<tab heading="First Time Deployment">
-							<br />
-							<table width="95%" border="0" style="margin: 0 auto;">
-								<tr>
-									<td colspan="2">
-										<p>Please click on the technology logo below and the Installer will help you install it on your machine so you can proceed.</p>
-									</td>
-								</tr>
-								<tr>
-									<td width="50%">
-										<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.local'}" href="" ng-click="selectDeployment('docker', 'container.docker.local')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
-									</td>
-									<td width="50%">
-										<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.local'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.local')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2">
-										<pre ng-show="docker && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
-{{style.docker.local.v}}</code></pre>
-										<pre ng-show="docker && local && osName==='mac'" class="bash"><code># Click on this link to download Docker for Mac:
-<a href="{{style.docker.local[0].v}}" target="_blank">{{style.docker.local[0].v}}</a></code></pre>
-										<pre ng-show="docker && local && osName==='mac'" class="bash"><code># Once you install Docker for Mac, execute the command below in your terminal on your local machine:
-{{style.docker.local[1].v}}</code></pre>
-										<pre ng-show="kubernetes && local && osName==='linux'" class="bash"><code># Execute the command below in your terminal on your local machine
-{{style.kubernetes.local.v}}</code></pre>
-										<pre ng-show="kubernetes && local && osName==='mac'" class="bash"><code># Execute the command below in your terminal on your local machine
-{{style.kubernetes.local.v}}</code></pre>
-									</td>
-								</tr>
-							</table>
-						</tab>
-						<tab heading="Deploy on an Existing Cloud">
-							<br />
-							<table width="95%" border="0" style="margin: 0 auto;">
-								<tr>
-									<td colspan="2">
-										<p>
-											The SOAJS Installer does not affect any existing deployments. Please select which technology you have on the remote machine to proceed.
-										</p>
-									</td>
-								</tr>
-								<tr>
-									<td width="50%" valign="top">
-										<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.local'}" href="" ng-click="selectDeployment('docker', 'container.docker.local')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
-									</td>
-									<td width="50%" valign="top">
-										<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.local'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.local')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-									</td>
-								</tr>
-								<tr ng-show="docker && local && osName==='mac'" >
-									<td colspan="2">
-										<pre class="bash"><code># Execute the command below in your terminal on your local machine:
-{{style.docker.local[1].v}}</code></pre>
-									</td>
-								</tr>
-							</table>
-						</tab>
-					</tabset>
-				</accordion-group>
-				
-				<accordion-group heading="Remote Cloud Deployment" is-open="remote" ng-click="selectLocation('remote')">
-					<accordion-heading>
-						<input type="radio" ng-checked="remote" value="true" name="local" disabled class="hidden"/>&nbsp;Remote Cloud Deployment
-					</accordion-heading>
-					<p>
-						<b>Overview:</b><br/>
-						Deploy SOAJS cloud on a remote machine.<br/>
-						Once deployed, you can interact with SOAJS ready made services via a User Interface.<br/>
-						This type of deployment is only supported on machines running Ubuntu.
-					</p>
-					<br/>
-					<b>1- Select Provider:</b>
-					<ui-select ng-model="remoteProvider" ng-change="saveremoteprovider(remoteProvider)">
-						<ui-select-match>
-							<img ng-src="{{$select.selected.url}}" height="24" style="position: relative; top: -6px;"/>&nbsp;
-							<span ng-bind="$select.selected.label"></span>
-						</ui-select-match>
-						<ui-select-choices repeat="item in (myProviders) track by item.name">
-							<img ng-src="{{item.url}}" height="24"/>&nbsp;
-							<span ng-bind="item.label"></span>
-						</ui-select-choices>
-					</ui-select>
-					
-					<div class="w100" ng-show="remoteProvider.name === 'aws'">
-						<br/>
-						<tabset>
-							<tab heading="First Time Deployment" ng-click="selectDeployment(null, false)">
-								<br />
-								<table width="95%" border="0" style="margin: 0 auto;">
-									<tr>
-										<td colspan="2">
-											<b>2- Select Technology:</b>
-											<p>Please click on the technology logo below to learn how to set it up and prepare a machine on Amazon Web Services before you proceed.</p>
-										</td>
-									</tr>
-									<tr>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
-										</td>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-										</td>
-									</tr>
-									<tr>
-										<td colspan="2">
-											<pre class="bash" ng-show="data.deployDriver==='container.docker.remote'"><code># click this link to learn how to set up the machine
-<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697737/AWS+Docker" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697737/AWS+Docker</a></code></pre>
-											
-											<pre class="bash" ng-show="data.deployDriver==='container.kubernetes.remote'"><code># click this link to learn how to set up the machine
-<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697794/AWS+Kubernetes" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697794/AWS+Kubernetes</a></code></pre>
-										</td>
-									</tr>
-								</table>
-							</tab>
-							<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
-								<br />
-								<table width="95%" border="0" style="margin: 0 auto;">
-									<tr>
-										<td colspan="2">
-											<b>2- Select Technology:</b>
-											<p>
-												The SOAJS Installer does not affect any existing deployments. Please select which technology you have on the remote machine to proceed.
-											</p>
-										</td>
-									</tr>
-									<tr>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
-										</td>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-										</td>
-									</tr>
-								</table>
-							</tab>
-						</tabset>
-					</div>
-					
-					<div class="w100" ng-show="remoteProvider.name === 'rackspace'">
-						<br/>
-						<tabset>
-							<tab heading="First Time Deployment" ng-click="selectDeployment(null, false)">
-								<br />
-								<table width="95%" border="0" style="margin: 0 auto;">
-									<tr>
-										<td colspan="2">
-											<b>2- Select Technology:</b>
-											<p>Please click on the technology logo below to learn how to set it up and prepare a machine on Rackspace before you proceed.</p>
-										</td>
-									</tr>
-									<tr>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
-										</td>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-										</td>
-									</tr>
-									<tr>
-										<td colspan="2">
-											<pre class="bash" ng-show="data.deployDriver==='container.docker.remote'"><code># click this link to learn how to set up the machine
-<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698725/Rackspace+Docker" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698725/Rackspace+Docker</a></code></pre>
-											
-											<pre class="bash" ng-show="data.deployDriver==='container.kubernetes.remote'"><code># click this link to learn how to set up the machine
-<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698935/Rackspace+Kubernetes" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698935/Rackspace+Kubernetes</a></code></pre>
-										</td>
-									</tr>
-								</table>
-							</tab>
-							<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
-								<br />
-								<table width="95%" border="0" style="margin: 0 auto;">
-									<tr>
-										<td colspan="2">
-											<b>2- Select Technology:</b>
-											<p>
-												The SOAJS Installer does not affect any existing deployments. Please select which technology you have on the remote machine to proceed.
-											</p>
-										</td>
-									</tr>
-									<tr>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
-										</td>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-										</td>
-									</tr>
-								</table>
-							</tab>
-						</tabset>
-					</div>
-					
-					<div class="w100" ng-show="remoteProvider.name === 'google'">
-						<br/>
-						<tabset>
-							<tab heading="First Time Deployment" ng-click="selectDeployment(null, false)">
-								<br />
-								<table width="95%" border="0" style="margin: 0 auto;">
-									<tr>
-										<td colspan="2">
-											<b>2- Select Technology:</b>
-											<p>Please click on the technology logo below to learn how to set it up and prepare a machine on Google Cloud before you proceed.</p>
-										</td>
-									</tr>
-									<tr>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
-										</td>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-										</td>
-									</tr>
-									<tr>
-										<td colspan="2">
-											<pre class="bash" ng-show="data.deployDriver==='container.docker.remote'"><code># click this link to learn how to set up the machine
-<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698493/Google+Docker" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698493/Google+Docker</a></code></pre>
-											
-											<pre class="bash" ng-show="data.deployDriver==='container.kubernetes.remote'"><code># click this link to learn how to set up the machine
-<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698553/Google+Kubernetes" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698553/Google+Kubernetes</a></code></pre>
-										</td>
-									</tr>
-								</table>
-							</tab>
-							<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
-								<br />
-								<table width="95%" border="0" style="margin: 0 auto;">
-									<tr>
-										<td colspan="2">
-											<b>2- Select Technology:</b>
-											<p>
-												The SOAJS Installer does not affect any existing deployments. Please select which technology you have on the remote machine to proceed.
-											</p>
-										</td>
-									</tr>
-									<tr>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
-										</td>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-										</td>
-									</tr>
-								</table>
-							</tab>
-						</tabset>
-					</div>
-					
-					<div class="w100" ng-show="remoteProvider.name === 'azure'">
-						<br/>
-						<tabset>
-							<tab heading="First Time Deployment" ng-click="selectDeployment(null, false)">
-								<br />
-								<table width="95%" border="0" style="margin: 0 auto;">
-									<tr>
-										<td colspan="2">
-											<b>2- Select Technology:</b>
-											<p>Please click on the technology logo below to learn how to set it up and prepare a machine on Microsoft Azure before you proceed.</p>
-										</td>
-									</tr>
-									<tr>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
-										</td>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-										</td>
-									</tr>
-									<tr>
-										<td colspan="2">
-											<pre class="bash" ng-show="data.deployDriver==='container.docker.remote'"><code># click this link to learn how to set up the machine
-<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64293754/Azure+Docker" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64293754/Azure+Docker</a></code></pre>
-											
-											<pre class="bash" ng-show="data.deployDriver==='container.kubernetes.remote'"><code># click this link to learn how to set up the machine
-<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64293936/Azure+Kubernetes" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64293936/Azure+Kubernetes</a></code></pre>
-										</td>
-									</tr>
-								</table>
-							</tab>
-							<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
-								<br />
-								<table width="95%" border="0" style="margin: 0 auto;">
-									<tr>
-										<td colspan="2">
-											<b>2- Select Technology:</b>
-											<p>
-												The SOAJS Installer does not affect any existing deployments. Please select which technology you have on the remote machine to proceed.
-											</p>
-										</td>
-									</tr>
-									<tr>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
-										</td>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-										</td>
-									</tr>
-								</table>
-							</tab>
-						</tabset>
-					</div>
-					
-					<div class="w100" ng-show="remoteProvider.name === 'joyent'">
-						<br/>
-						<tabset>
-							<tab heading="First Time Deployment" ng-click="selectDeployment(null, false)">
-								<br />
-								<table width="95%" border="0" style="margin: 0 auto;">
-									<tr>
-										<td colspan="2">
-											<b>2- Select Technology:</b>
-											<p>Please click on the technology logo below to learn how to set it up and prepare a machine on Joyent before you proceed.</p>
-										</td>
-									</tr>
-									<tr>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_triton.png" border="0"></a>
-										</td>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_on_triton.png" border="0"></a>
-										</td>
-									</tr>
-									<tr>
-										<td colspan="2">
-											<pre class="bash" ng-show="data.deployDriver==='container.docker.remote'"><code># click this link to learn how to set up the machine
-<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294622/Joyent+Triton+Docker" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294622/Joyent+Triton+Docker</a></code></pre>
-											
-											<pre class="bash" ng-show="data.deployDriver==='container.kubernetes.remote'"><code># click this link to learn how to set up the machine
-<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294695/Joyent+Triton+Kubernetes" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294695/Joyent+Triton+Kubernetes</a></code></pre>
-										</td>
-									</tr>
-								</table>
-							</tab>
-							<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
-								<br />
-								<table width="95%" border="0" style="margin: 0 auto;">
-									<tr>
-										<td colspan="2">
-											<b>2- Select Technology:</b>
-											<p>
-												The SOAJS Installer does not affect any existing deployments. Please select which technology you have on the remote machine to proceed.
-											</p>
-										</td>
-									</tr>
-									<tr>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_triton.png" border="0"></a>
-										</td>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_on_triton.png" border="0"></a>
-										</td>
-									</tr>
-								</table>
-								
-							</tab>
-						</tabset>
-					</div>
-					
-					<div class="w100" ng-show="remoteProvider.name === 'custom'">
-						<br/>
-						<tabset>
-							<tab heading="First Time Deployment" ng-click="selectDeployment(null, false)">
-								<br />
-								<table width="95%" border="0" style="margin: 0 auto;">
-									<tr>
-										<td colspan="2">
-											<b>2- Select Technology:</b>
-											<p>Please click on the technology logo below to learn how to set it up and prepare a machine before you proceed.</p>
-										</td>
-									</tr>
-									<tr>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
-										</td>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-										</td>
-									</tr>
-								</table>
-								
-								<pre ng-show="data.deployDriver ==='container.docker.remote'" class="bash"><code># Execute the command below on the remote machine terminal
-{{style.docker.remote.v}}</code></pre>
-								
-								<pre ng-show="data.deployDriver ==='container.kubernetes.remote'" class="bash"><code># Execute the command below on the remote machine terminal
-{{style.kubernetes.remote.v}}</code></pre>
-								
-								<alert type="warning" ng-show="data.deployDriver ==='container.docker.remote'">
-									<b><u>Preparing the Machine:</u></b><br/>
-									This deployment is only supported on machines running Ubuntu<br/>
-									Follow the instructions below before proceeding to the next page:<br/><br/>
-									<div>
-										<ol>
-											<li>Create a remote machine with Ubuntu on it.</li>
-											<li>The script above will install docker on that machine, and generate a token that you can use to connect to docker on that machine.</li>
-											<li>Provide the IP address of the remote machine and the token in the last step of this wizard when asked.</li>
-										</ol>
-									</div>
-								</alert>
-								
-								<alert type="warning" ng-show="data.deployDriver ==='container.kubernetes.remote'">
-									<b><u>Preparing the Machine:</u></b><br/>
-									This deployment is only supported on machines running Ubuntu<br/>
-									Follow the instructions below before proceeding to the next page:<br/><br/>
-									<div>
-										<ol>
-											<li>Create a remote machine with Ubuntu on it.</li>
-											<li>The script above will install kubernetes on that machine.</li>
-											<li>Provide the IP address of the remote machine and the kubernetes token in the last step of this wizard when asked.
-												<pre class="bash"><code># get kubernetes secret token
-$ kubectl describe secrets</code></pre>
-											</li>
-										</ol>
-									</div>
-								</alert>
-							</tab>
-							<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
-								<br />
-								<table width="95%" border="0" style="margin: 0 auto;">
-									<tr>
-										<td colspan="2">
-											<b>2- Select Technology:</b>
-											<p>
-												The SOAJS Installer does not affect any existing deployments. Please select which technology you have on the remote machine to proceed.
-											</p>
-										</td>
-									</tr>
-									<tr>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
-										</td>
-										<td width="50%">
-											<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
-										</td>
-									</tr>
-									<tr ng-show="docker && remote && osName==='mac'" >
-										<td colspan="2">
-										<pre class="bash"><code># Execute the command below in your terminal on your remote machine:
-{{style.docker.local[1].v}}</code></pre>
-										</td>
-									</tr>
-								</table>
-							</tab>
-						</tabset>
-					</div>
-				</accordion-group>
+			<b>1- Select Provider:</b>
+			<ui-select ng-model="remoteProvider" ng-change="saveremoteprovider(remoteProvider)">
+				<ui-select-match>
+					<img ng-src="{{$select.selected.url}}" height="24" style="position: relative; top: -6px;"/>&nbsp;
+					<span ng-bind="$select.selected.label"></span>
+				</ui-select-match>
+				<ui-select-choices repeat="item in (myProviders) track by item.name">
+					<img ng-src="{{item.url}}" height="24"/>&nbsp;
+					<span ng-bind="item.label"></span>
+				</ui-select-choices>
+			</ui-select>
 			
-			</accordion>
+			<div class="w100" ng-show="remoteProvider.name === 'aws'">
+				<br/>
+				<tabset>
+					<tab heading="First Time Deployment" ng-click="selectDeployment(null, false)">
+						<br/>
+						<table width="95%" border="0" style="margin: 0 auto;">
+							<tr>
+								<td colspan="2">
+									<b>2- Select Technology:</b>
+									<p>Please click on the technology logo below to learn how to set it up and prepare a
+										machine on Amazon Web Services before you proceed.
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
+								</td>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+										<pre class="bash" ng-show="data.deployDriver==='container.docker.remote'"><code># click this link to learn how to set up the machine
+<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697737/AWS+Docker" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697737/AWS+Docker</a></code></pre>
+									
+									<pre class="bash" ng-show="data.deployDriver==='container.kubernetes.remote'"><code># click this link to learn how to set up the machine
+<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697794/AWS+Kubernetes" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697794/AWS+Kubernetes</a></code></pre>
+								</td>
+							</tr>
+						</table>
+					</tab>
+					<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
+						<br/>
+						<table width="95%" border="0" style="margin: 0 auto;">
+							<tr>
+								<td colspan="2">
+									<b>2- Select Technology:</b>
+									<p>
+										The SOAJS Installer does not affect any existing deployments. Please select
+										which technology you have on the remote machine to proceed.
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
+								</td>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+								</td>
+							</tr>
+						</table>
+					</tab>
+				</tabset>
+			</div>
+			
+			<div class="w100" ng-show="remoteProvider.name === 'rackspace'">
+				<br/>
+				<tabset>
+					<tab heading="First Time Deployment" ng-click="selectDeployment(null, false)">
+						<br/>
+						<table width="95%" border="0" style="margin: 0 auto;">
+							<tr>
+								<td colspan="2">
+									<b>2- Select Technology:</b>
+									<p>Please click on the technology logo below to learn how to set it up and prepare a
+										machine on Rackspace before you proceed.
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
+								</td>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+										<pre class="bash" ng-show="data.deployDriver==='container.docker.remote'"><code># click this link to learn how to set up the machine
+<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698725/Rackspace+Docker" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698725/Rackspace+Docker</a></code></pre>
+									
+									<pre class="bash" ng-show="data.deployDriver==='container.kubernetes.remote'"><code># click this link to learn how to set up the machine
+<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698935/Rackspace+Kubernetes" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698935/Rackspace+Kubernetes</a></code></pre>
+								</td>
+							</tr>
+						</table>
+					</tab>
+					<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
+						<br/>
+						<table width="95%" border="0" style="margin: 0 auto;">
+							<tr>
+								<td colspan="2">
+									<b>2- Select Technology:</b>
+									<p>
+										The SOAJS Installer does not affect any existing deployments. Please select
+										which technology you have on the remote machine to proceed.
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
+								</td>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+								</td>
+							</tr>
+						</table>
+					</tab>
+				</tabset>
+			</div>
+			
+			<div class="w100" ng-show="remoteProvider.name === 'google'">
+				<br/>
+				<tabset>
+					<tab heading="First Time Deployment" ng-click="selectDeployment(null, false)">
+						<br/>
+						<table width="95%" border="0" style="margin: 0 auto;">
+							<tr>
+								<td colspan="2">
+									<b>2- Select Technology:</b>
+									<p>Please click on the technology logo below to learn how to set it up and prepare a
+										machine on Google Cloud before you proceed.
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
+								</td>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+										<pre class="bash" ng-show="data.deployDriver==='container.docker.remote'"><code># click this link to learn how to set up the machine
+<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698493/Google+Docker" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698493/Google+Docker</a></code></pre>
+									
+									<pre class="bash" ng-show="data.deployDriver==='container.kubernetes.remote'"><code># click this link to learn how to set up the machine
+<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698553/Google+Kubernetes" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698553/Google+Kubernetes</a></code></pre>
+								</td>
+							</tr>
+						</table>
+					</tab>
+					<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
+						<br/>
+						<table width="95%" border="0" style="margin: 0 auto;">
+							<tr>
+								<td colspan="2">
+									<b>2- Select Technology:</b>
+									<p>
+										The SOAJS Installer does not affect any existing deployments. Please select
+										which technology you have on the remote machine to proceed.
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
+								</td>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+								</td>
+							</tr>
+						</table>
+					</tab>
+				</tabset>
+			</div>
+			
+			<div class="w100" ng-show="remoteProvider.name === 'azure'">
+				<br/>
+				<tabset>
+					<tab heading="First Time Deployment" ng-click="selectDeployment(null, false)">
+						<br/>
+						<table width="95%" border="0" style="margin: 0 auto;">
+							<tr>
+								<td colspan="2">
+									<b>2- Select Technology:</b>
+									<p>Please click on the technology logo below to learn how to set it up and prepare a
+										machine on Microsoft Azure before you proceed.
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
+								</td>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+										<pre class="bash" ng-show="data.deployDriver==='container.docker.remote'"><code># click this link to learn how to set up the machine
+<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64293754/Azure+Docker" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64293754/Azure+Docker</a></code></pre>
+									
+									<pre class="bash" ng-show="data.deployDriver==='container.kubernetes.remote'"><code># click this link to learn how to set up the machine
+<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64293936/Azure+Kubernetes" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64293936/Azure+Kubernetes</a></code></pre>
+								</td>
+							</tr>
+						</table>
+					</tab>
+					<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
+						<br/>
+						<table width="95%" border="0" style="margin: 0 auto;">
+							<tr>
+								<td colspan="2">
+									<b>2- Select Technology:</b>
+									<p>
+										The SOAJS Installer does not affect any existing deployments. Please select
+										which technology you have on the remote machine to proceed.
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
+								</td>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+								</td>
+							</tr>
+						</table>
+					</tab>
+				</tabset>
+			</div>
+			
+			<div class="w100" ng-show="remoteProvider.name === 'joyent'">
+				<br/>
+				<tabset>
+					<tab heading="First Time Deployment" ng-click="selectDeployment(null, false)">
+						<br/>
+						<table width="95%" border="0" style="margin: 0 auto;">
+							<tr>
+								<td colspan="2">
+									<b>2- Select Technology:</b>
+									<p>Please click on the technology logo below to learn how to set it up and prepare a
+										machine on Joyent before you proceed.
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_triton.png" border="0"></a>
+								</td>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_on_triton.png" border="0"></a>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+										<pre class="bash" ng-show="data.deployDriver==='container.docker.remote'"><code># click this link to learn how to set up the machine
+<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294622/Joyent+Triton+Docker" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294622/Joyent+Triton+Docker</a></code></pre>
+									
+									<pre class="bash" ng-show="data.deployDriver==='container.kubernetes.remote'"><code># click this link to learn how to set up the machine
+<a href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294695/Joyent+Triton+Kubernetes" target="_blank">https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294695/Joyent+Triton+Kubernetes</a></code></pre>
+								</td>
+							</tr>
+						</table>
+					</tab>
+					<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
+						<br/>
+						<table width="95%" border="0" style="margin: 0 auto;">
+							<tr>
+								<td colspan="2">
+									<b>2- Select Technology:</b>
+									<p>
+										The SOAJS Installer does not affect any existing deployments. Please select
+										which technology you have on the remote machine to proceed.
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_triton.png" border="0"></a>
+								</td>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_on_triton.png" border="0"></a>
+								</td>
+							</tr>
+						</table>
+					
+					</tab>
+				</tabset>
+			</div>
+			
+			<div class="w100" ng-show="remoteProvider.name === 'custom'">
+				<br/>
+				<tabset>
+					<tab heading="First Time Deployment" ng-click="selectDeployment(null, false)">
+						<br/>
+						<table width="95%" border="0" style="margin: 0 auto;">
+							<tr>
+								<td colspan="2">
+									<b>2- Select Technology:</b>
+									<p>Please click on the technology logo below to learn how to set it up and prepare a
+										machine before you proceed.
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
+								</td>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+								</td>
+							</tr>
+						</table>
+						
+						<pre ng-show="data.deployDriver ==='container.docker.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+{{style.docker.remote.v}}</code></pre>
+						
+						<pre ng-show="data.deployDriver ==='container.kubernetes.remote'" class="bash"><code># Execute the command below on the remote machine terminal
+{{style.kubernetes.remote.v}}</code></pre>
+						
+						<alert type="warning" ng-show="data.deployDriver ==='container.docker.remote'">
+							<b><u>Preparing the Machine:</u></b><br/>
+							This deployment is only supported on machines running Ubuntu<br/>
+							Follow the instructions below before proceeding to the next page:<br/><br/>
+							<div>
+								<ol>
+									<li>Create a remote machine with Ubuntu on it.</li>
+									<li>The script above will install docker on that machine, and generate a token that
+										you can use to connect to docker on that machine.
+									</li>
+									<li>Provide the IP address of the remote machine and the token in the last step of
+										this wizard when asked.
+									</li>
+								</ol>
+							</div>
+						</alert>
+						
+						<alert type="warning" ng-show="data.deployDriver ==='container.kubernetes.remote'">
+							<b><u>Preparing the Machine:</u></b><br/>
+							This deployment is only supported on machines running Ubuntu<br/>
+							Follow the instructions below before proceeding to the next page:<br/><br/>
+							<div>
+								<ol>
+									<li>Create a remote machine with Ubuntu on it.</li>
+									<li>The script above will install kubernetes on that machine.</li>
+									<li>Provide the IP address of the remote machine and the kubernetes token in the
+										last step of this wizard when asked.
+										<pre class="bash"><code># get kubernetes secret token
+$ kubectl describe secrets</code></pre>
+									</li>
+								</ol>
+							</div>
+						</alert>
+					</tab>
+					<tab heading="Deploy on an Existing Cloud" ng-click="selectDeployment(null, false)">
+						<br/>
+						<table width="95%" border="0" style="margin: 0 auto;">
+							<tr>
+								<td colspan="2">
+									<b>2- Select Technology:</b>
+									<p>
+										The SOAJS Installer does not affect any existing deployments. Please select
+										which technology you have on the remote machine to proceed.
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.docker.remote'}" href="" ng-click="selectDeployment('docker', 'container.docker.remote')" target="_blank"><img src="images/docker_logo.png" border="0"></a>
+								</td>
+								<td width="50%">
+									<a class="nonhighlightedDriver" ng-class="{highlightedDirver: data.deployDriver==='container.kubernetes.remote'}" href="" ng-click="selectDeployment('kubernetes', 'container.kubernetes.remote')" target="_blank"><img src="images/kubernetes_logo.png" border="0"></a>
+								</td>
+							</tr>
+							<tr ng-show="docker && osName==='mac'">
+								<td colspan="2">
+									<pre class="bash"><code># Execute the command below in your terminal on your remote machine:
+{{style.docker.local[1].v}}</code></pre>
+								</td>
+							</tr>
+						</table>
+					</tab>
+				</tabset>
+			</div>
 			<br/>
 			<div class="w-100 table">
 				<input type="button" class="f-right btn btn-sm btn-primary" value="Proceed" ng-click="fillOverView()"/>

@@ -26,10 +26,9 @@
     "bunyan": "1.8.5",
     "bunyan-format": "0.2.1",
     "mkdirp": "*",
-    "ncp": "*",
     "npm": "*",
     "rimraf": "*",
-    "whereis": "*",
-    "soajs": "2.0.10"
+    "soajs": "2.0.10",
+    "yamljs": "^0.3.0"
   }
 }
