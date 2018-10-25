@@ -1,7 +1,6 @@
 "use strict";
 
 const path = require("path");
-const exec = require("child_process").exec;
 
 //set the logger
 const logger = require("./utils/utils.js").getLogger();
