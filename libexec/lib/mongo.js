@@ -4,7 +4,7 @@ const fs = require("fs");
 const spawn = require("child_process").spawn;
 const exec = require("child_process").exec;
 const YAML = require("yamljs");
-let Mongo = require("soajs.core.modules").mongo;
+let Mongo = require("soajs").mongo;
 const async = require('async');
 
 //mongo commands
@@ -161,8 +161,10 @@ let mongoModule = {
 				return callback(err);
 			}
 			
-			//start mongodb
-			mongoModule.start(args, callback);
+			setTimeout(() => {
+				//start mongodb
+				mongoModule.start(args, callback);
+			}, 1000);
 		});
 	},
 	
@@ -422,7 +424,6 @@ let mongoModule = {
 							};
 						
 						mongo.createIndex(options.col, options.index, options.options, function (error) {
-							;
 							let records = require(dataFolder + "catalogs/index.js");
 							mongo.insert("catalogs", records, mCb);
 						});
