@@ -1,7 +1,5 @@
 'use strict';
-const exec = require("child_process").exec;
 const path = require("path");
-const fs = require("fs");
 
 let dockerModule = {
 	/**
@@ -13,23 +11,11 @@ let dockerModule = {
 		let execPath = path.normalize(process.env.PWD + "/../libexec/bin/FILES/DOCKER");
 		if (process.env.PLATFORM === 'Darwin') {
 			execPath += "/docker-mac.sh";
-			exec(execPath, (err, result) => {
-				return callback(err, result)
-			});
 		}
 		else if (process.env.PLATFORM === 'Linux') {
 			execPath += "/docker-linux.sh";
 		}
-		
-		exec(execPath, (err, result) => {
-			if (err) {
-				return callback(err);
-			}
-			else {
-				console.log("Docker installed!")
-				dockerModule.connect(args, );
-			}
-		});
+		exec(execPath, callback);
 		
 	},
 	
@@ -51,10 +37,14 @@ let dockerModule = {
 	 * @param callback
 	 */
 	remove: (args, callback) => {
-		console.log("name: docker.js");
-		console.log("Arguments:");
-		console.log(JSON.stringify(process.argv, null, 2));
-		return callback(null, "done!")
+		let command;
+		if (process.env.PLATFORM === 'Darwin') {
+			command = "/Applications/Docker.app/Contents/MacOS/Docker --uninstall";
+		}
+		else if (process.env.PLATFORM === 'Linux') {
+			command = "sudo apt-get purge docker-ce && sudo rm -rf /var/lib/docker*";
+		}
+		exec(command, callback);
 	},
 	
 	/**
@@ -63,10 +53,19 @@ let dockerModule = {
 	 * @param callback
 	 */
 	start: (args, callback) => {
-		console.log("name: docker.js");
-		console.log("Arguments:");
-		console.log(JSON.stringify(process.argv, null, 2));
-		return callback(null, "done!")
+		let command;
+		if (process.env.PLATFORM === 'Darwin') {
+			command = "open /Applications/Docker.app";
+		}
+		else if (process.env.PLATFORM === 'Linux') {
+			command = path.normalize(process.env.PWD + "/../libexec/bin/FILES/DOCKER/docker-linux.sh");
+		}
+		exec(command, (err) => {
+			if (err){
+				return callback(err);
+			}
+			dockerModule.connect(args, callback);
+		});
 	},
 	
 	/**
@@ -75,10 +74,19 @@ let dockerModule = {
 	 * @param callback
 	 */
 	stop: (args, callback) => {
-		console.log("name: docker.js");
-		console.log("Arguments:");
-		console.log(JSON.stringify(process.argv, null, 2));
-		return callback(null, "done!")
+		let command;
+		if (process.env.PLATFORM === 'Darwin') {
+			command = "killall Docker";
+		}
+		else if (process.env.PLATFORM === 'Linux') {
+			command = "service docker stop";
+		}
+		exec(command, (err) => {
+			if (err){
+				return callback(err);
+			}
+			dockerModule.connect(args, callback);
+		});
 	},
 	
 	/**
