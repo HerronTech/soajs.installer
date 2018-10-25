@@ -108,11 +108,11 @@ module.exports = {
 					'validation':{
 						"type": "object",
 						"properties": {
-							"deployType" : {"type": "string", "required": true, "enum": ["manual", "container"]},
+							"deployType" : {"type": "string", "required": true, "enum": ["container"]},
 							"deployDriver": {
 								"type": "string",
 								"required": true,
-								"enum": ["manual", "container.docker.local", "container.docker.remote", "container.kubernetes.local", "container.kubernetes.remote"]
+								"enum": ["container.docker.local", "container.docker.remote", "container.kubernetes.local", "container.kubernetes.remote"]
 							},
 							"remoteProvider": {
 								"type": "object",
@@ -212,7 +212,7 @@ module.exports = {
 					"validation":{
 						"type":"object",
 						"properties":{
-							"deployType" : {"type": "string", "required": true, "enum": ["manual", "container"]},
+							"deployType" : {"type": "string", "required": true, "enum": ["container"]},
 							"mongoExposedPort": {"type": "number", "required": false}
 						}
 					}
@@ -228,11 +228,11 @@ module.exports = {
 					"validation":{
 						"type": "object",
 						"properties": {
-							"deployType" : {"type": "string", "required": true, "enum": ["manual", "container"]},
+							"deployType" : {"type": "string", "required": true, "enum": ["container"]},
 							"deployDriver": {
 								"type": "string",
 								"required": true,
-								"enum": ["manual", "container.docker.local", "container.docker.remote", "container.kubernetes.local", "container.kubernetes.remote"]
+								"enum": ["container.docker.local", "container.docker.remote", "container.kubernetes.local", "container.kubernetes.remote"]
 							},
 							"containerDir": {"type": "string", "required": false},
 							"containerHost": {"type": "string", "required": false},

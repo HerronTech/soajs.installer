@@ -11,17 +11,12 @@ var routes = {
     "getOverview": function(req, res){
         var osName;
         var data = {
-            "manual": "",
             "docker": "",
             "kubernetes": ""
         };
         var platform = process.platform;
         if(platform === 'linux'){
             osName = 'linux';
-            data.manual = {
-                "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-linux.sh"),
-                "t": "sh"
-            };
             data.docker = {
                 local: {
                     "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
@@ -46,11 +41,6 @@ var routes = {
         }
         else if(platform === 'darwin'){
             osName = 'mac';
-            data.manual = {
-                "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/manual-mac.sh"),
-                "t": "sh"
-            };
-
             data.docker = {
                 local: [
 	                {
@@ -348,14 +338,6 @@ var routes = {
 
 	                //launch deployer script
 	                switch(body.deployment.deployDriver){
-		                case 'manual':
-			                utils.deployManual(body, function (error, data) {
-				                if (error) {
-					                return res.json(req.soajs.buildResponse({"code": 500, "msg": error.message}));
-				                }
-				                return res.json(req.soajs.buildResponse(null, data));
-			                });
-			                break;
 		                case 'container.docker.local':
 			                utils.deployContainer(body, 'docker', 'local', function (error, data) {
 				                if (error) {
@@ -401,9 +383,6 @@ var routes = {
         utils.loadCustomData(null, function(customData){
             var type;
             switch(customData.deployment.deployDriver){
-                case 'manual':
-                    type = 'manual';
-                    break;
                 case 'container.docker.local':
                 case 'container.docker.remote':
                     type = 'swarm';
