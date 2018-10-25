@@ -6,6 +6,7 @@ const fs = require("fs");
 const mkdirp = require("mkdirp");
 const async = require("async");
 const npm = require("npm");
+const rimraf = require("rimraf");
 
 const installerConfig = require(path.normalize(process.env.PWD + "/../etc/config.js"));
 const serviceModule = require("./service");
@@ -249,7 +250,7 @@ const consoleModule = {
 				setTimeout(() => {
 					//remove data from mongodb
 					mongoModule.clean([], (error) => {
-						if (error) {
+						if (error && !error.message.includes("failed to connect to server")) {
 							return callback("Error while Cleaning provisioned data from mongo!");
 						}
 						//stop mongodb
@@ -264,7 +265,7 @@ const consoleModule = {
 								async.eachOfSeries(SOAJS_RMS, (oneRepo, oneService, mCb) => {
 									logger.debug(`Removing ${oneService} files ...`);
 									logger.debug(path.normalize(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[oneService]) + "\n");
-									fs.rmdir(path.normalize(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[oneService]), (error) => {
+									rimraf(path.normalize(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[oneService]), (error) => {
 										if (error) {
 											return mCb(error);
 										}
@@ -277,7 +278,7 @@ const consoleModule = {
 									}
 									
 									//remove working directory
-									fs.rmdir(path.normalize(installerConfig.workingDirectory, () => {
+									rimraf(path.normalize(installerConfig.workingDirectory), () => {
 										
 										//clean up the configuration file
 										updateConfigFile('', (error) => {
@@ -286,7 +287,7 @@ const consoleModule = {
 												return callback();
 											}, 1000);
 										});
-									}));
+									});
 								});
 								
 							}, 2000);
