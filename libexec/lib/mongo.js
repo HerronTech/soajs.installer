@@ -34,6 +34,8 @@ let mongoModule = {
 			}
 		};
 		let logPath;
+		
+		//set mongo db data and log folder depending on platform
 		if (process.env.PLATFORM === 'Darwin') {
 			config.systemLog.path = "/usr/local/var/log/mongodb/mongo.log";
 			config.storage.dbPath = "/usr/local/var/mongodb";
@@ -76,6 +78,11 @@ let mongoModule = {
 		}
 	},
 	
+	/**
+	 * Start mongoDB server
+	 * @param args
+	 * @param callback
+	 */
 	start: (args, callback) => {
 		let mongoDbConf = path.normalize(process.env.PWD + "/../include/" + process.env.MONGO_LOCATION + "/mongod.conf");
 		
@@ -95,7 +102,12 @@ let mongoModule = {
 		});
 	},
 	
-	stop: (rgs, callback) => {
+	/**
+	 * Stop mongoDB server
+	 * @param args
+	 * @param callback
+	 */
+	stop: (args, callback) => {
 		let mongoDbConf = path.normalize(process.env.PWD + "/../include/" + process.env.MONGO_LOCATION);
 		
 		//check if there is a running process for the requested
@@ -136,6 +148,11 @@ let mongoModule = {
 		});
 	},
 	
+	/**
+	 * Restart mongoDB server
+	 * @param args
+	 * @param callback
+	 */
 	restart: (args, callback) => {
 		
 		//stop mongodb
@@ -149,6 +166,14 @@ let mongoModule = {
 		});
 	},
 	
+	/**
+	 * Set port for mongoDB
+	 * change value in profile
+	 * change value in mongo.conf
+	 * @param args
+	 * @param callback
+	 * @returns {*}
+	 */
 	setPort: (args, callback) => {
 		//todo check args
 		if (!Array.isArray(args) || args.length === 0) {
@@ -210,8 +235,18 @@ let mongoModule = {
 			});
 		});
 	},
+	
+	/**
+	 * Clean all soajs data from mongo
+	 * core_provision && DBTN_urac are dropped
+	 * @param args
+	 * @param callback
+	 */
 	clean: (args, callback) => {
+		//get profile path
 		let profilePath = path.normalize(process.env.PWD + "/../data/soajs_profile.js");
+		
+		//check if profile is found
 		fs.stat(profilePath, (error) => {
 			if (error) {
 				return callback(null, 'Profile not found!');
@@ -219,20 +254,32 @@ let mongoModule = {
 			
 			//read  mongo profile file
 			let profile = require(profilePath);
+			
+			//use soajs.core.modules to create a connection to core_provision database
 			let mongoConnection = new Mongo(profile);
+			
+			//drop core_provision database
 			mongoConnection.dropDatabase((err) => {
 				if (err) {
 					return callback(err);
 				}
 				else {
+					//close mongo connection
 					mongoConnection.closeDb();
+					
+					//switch profile DBTN_urac
 					profile.name = "DBTN_urac";
+					
+					//use soajs.core.modules to create a connection to DBTN_urac database
 					mongoConnection = new Mongo(profile);
+					
+					//drop DBTN_urac database
 					mongoConnection.dropDatabase((err) => {
 						if (err) {
 							return callback(err);
 						}
 						else {
+							//close mongo connection
 							mongoConnection.closeDb();
 							return callback(null, "MongoDB SOAJS data has been removed...")
 						}
@@ -241,8 +288,17 @@ let mongoModule = {
 			});
 		});
 	},
+	
+	/**
+	 * Replace soajs provision data with a fresh new copy
+	 * @param args
+	 * @param callback
+	 */
 	patch: (args, callback) => {
+		//get profile path
 		let profilePath = path.normalize(process.env.PWD + "/../data/soajs_profile.js");
+		
+		//check if profile is found
 		fs.stat(profilePath, (error) => {
 			if (error) {
 				return callback(null, 'Profile not found!');
@@ -250,24 +306,37 @@ let mongoModule = {
 			
 			//read  mongo profile file
 			let profile = require(profilePath);
+			
+			//use soajs.core.modules to create a connection to core_provision database
 			let mongoConnection = new Mongo(profile);
 			let dataPath = path.normalize(process.env.PWD + "/../data/provision/");
+			
+			//drop old core_provision database
 			mongoConnection.dropDatabase((error) => {
 				if (error) {
 					return callback(error);
 				}
 				
+				//insert core provision data asynchronous in series
 				lib.provision(dataPath, mongoConnection, (error) => {
 					if (error) {
 						return callback(error);
 					}
+					//close mongo connection
 					mongoConnection.closeDb();
+					
+					//switch profile DBTN_urac
 					profile.name = "DBTN_urac";
+					
+					//use soajs.core.modules to create a connection to DBTN_urac database
 					mongoConnection = new Mongo(profile);
+					
+					//drop old DBTN_urac database
 					mongoConnection.dropDatabase((error) => {
 						if (error) {
 							return callback(error);
 						}
+						//insert urac data asynchronous in series
 						lib.urac(dataPath, mongoConnection, (error) => {
 							if (error) {
 								return callback(error);
@@ -280,6 +349,8 @@ let mongoModule = {
 			});
 		});
 		
+		//each function require the data file inside /data/provison
+		//add mongo id and insert it to the database
 		const lib = {
 			"provision": function (dataFolder, mongo, cb) {
 				async.series({
