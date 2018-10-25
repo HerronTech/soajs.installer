@@ -1,9 +1,11 @@
 'use strict';
 const path = require("path");
 const fs = require("fs");
-let spawn = require("child_process").spawn;
-let exec = require("child_process").exec;
-let YAML = require("yamljs");
+const spawn = require("child_process").spawn;
+const exec = require("child_process").exec;
+const YAML = require("yamljs");
+let Mongo = require("soajs.core.modules").mongo;
+const async = require('async');
 
 //mongo commands
 let mongoModule = {
@@ -208,11 +210,259 @@ let mongoModule = {
 			});
 		});
 	},
-	clean: () => {
-	
+	clean: (args, callback) => {
+		let profilePath = path.normalize(process.env.PWD + "/../data/soajs_profile.js");
+		fs.stat(profilePath, (error) => {
+			if (error) {
+				return callback(null, 'Profile not found!');
+			}
+			
+			//read  mongo profile file
+			let profile = require(profilePath);
+			let mongoConnection = new Mongo(profile);
+			mongoConnection.dropDatabase((err) => {
+				if (err) {
+					return callback(err);
+				}
+				else {
+					mongoConnection.closeDb();
+					profile.name = "DBTN_urac";
+					mongoConnection = new Mongo(profile);
+					mongoConnection.dropDatabase((err) => {
+						if (err) {
+							return callback(err);
+						}
+						else {
+							mongoConnection.closeDb();
+							return callback(null, "MongoDB SOAJS data has been removed...")
+						}
+					});
+				}
+			});
+		});
 	},
-	patch: () => {
-	
+	patch: (args, callback) => {
+		let profilePath = path.normalize(process.env.PWD + "/../data/soajs_profile.js");
+		fs.stat(profilePath, (error) => {
+			if (error) {
+				return callback(null, 'Profile not found!');
+			}
+			
+			//read  mongo profile file
+			let profile = require(profilePath);
+			let mongoConnection = new Mongo(profile);
+			let dataPath = path.normalize(process.env.PWD + "/../data/provision/");
+			mongoConnection.dropDatabase((error) => {
+				if (error) {
+					return callback(error);
+				}
+				
+				lib.provision(dataPath, mongoConnection, (error) => {
+					if (error) {
+						return callback(error);
+					}
+					mongoConnection.closeDb();
+					profile.name = "DBTN_urac";
+					mongoConnection = new Mongo(profile);
+					mongoConnection.dropDatabase((error) => {
+						if (error) {
+							return callback(error);
+						}
+						lib.urac(dataPath, mongoConnection, (error) => {
+							if (error) {
+								return callback(error);
+							}
+							mongoConnection.closeDb();
+							return callback(null, "MongoDb Soajs Data Patched!")
+						});
+					});
+				});
+			});
+		});
+		
+		const lib = {
+			"provision": function (dataFolder, mongo, cb) {
+				async.series({
+					"env": function (mCb) {
+						let record = require(dataFolder + "environments/dashboard.js");
+						record._id = mongo.ObjectId(record._id);
+						mongo.insert("environment", record, mCb);
+					},
+					
+					"mongo": function (mCb) {
+						let record = require(dataFolder + "resources/mongo.js");
+						record._id = mongo.ObjectId(record._id);
+						mongo.insert("resources", record, mCb);
+					},
+					
+					"templates": function (mCb) {
+						let templates = require(dataFolder + "environments/templates.js");
+						mongo.insert("templates", templates, mCb);
+					},
+					
+					"addProducts": function (mCb) {
+						let record = require(dataFolder + "products/dsbrd.js");
+						record._id = mongo.ObjectId(record._id);
+						mongo.insert("products", record, mCb);
+					},
+					
+					"addServices": function (mCb) {
+						let record = require(dataFolder + "services/index.js");
+						mongo.insert("services", record, mCb);
+					},
+					
+					"addTenants": function (mCb) {
+						async.series([
+							function (mCb) {
+								let record = require(dataFolder + "tenants/owner.js");
+								
+								record._id = mongo.ObjectId(record._id);
+								record.applications.forEach(function (oneApp) {
+									oneApp.appId = mongo.ObjectId(oneApp.appId);
+								});
+								
+								mongo.insert("tenants", record, mCb);
+							},
+							function (mCb) {
+								let record = require(dataFolder + "tenants/techop.js");
+								
+								record._id = mongo.ObjectId(record._id);
+								record.applications.forEach(function (oneApp) {
+									oneApp.appId = mongo.ObjectId(oneApp.appId);
+								});
+								
+								mongo.insert("tenants", record, mCb);
+							},
+						], mCb);
+					},
+					
+					"addGitAccounts": function (mCb) {
+						let record = require(dataFolder + "gitAccounts/soajsRepos.js");
+						record._id = mongo.ObjectId(record._id);
+						mongo.insert("git_accounts", record, mCb);
+					},
+					
+					"addCatalogs": function (mCb) {
+						let options =
+							{
+								col: 'catalogs',
+								index: {name: 1},
+								options: {unique: true}
+							};
+						
+						mongo.createIndex(options.col, options.index, options.options, function (error) {
+							;
+							let records = require(dataFolder + "catalogs/index.js");
+							mongo.insert("catalogs", records, mCb);
+						});
+						
+					},
+				}, cb);
+			},
+			
+			"urac": function (dataFolder, mongo, mCb) {
+				async.series({
+					"addUsers": function (cb) {
+						let record = require(dataFolder + "urac/users/owner.js");
+						mongo.insert("users", record, cb);
+					},
+					
+					"addGroups": function (cb) {
+						let record = require(dataFolder + "urac/groups/owner.js");
+						mongo.insert("groups", record, cb);
+					},
+					
+					"uracIndex": function (cb) {
+						let indexes = [
+							{
+								col: 'users',
+								index: {username: 1},
+								options: {unique: true}
+							},
+							{
+								col: 'users',
+								index: {email: 1},
+								options: {unique: true}
+							},
+							{
+								col: 'users',
+								index: {username: 1, status: 1},
+								options: null
+							},
+							{
+								col: 'users',
+								index: {email: 1, status: 1},
+								options: null
+							},
+							{
+								col: 'users',
+								index: {groups: 1, 'tenant.id': 1},
+								options: null
+							},
+							{
+								col: 'users',
+								index: {username: 1, 'tenant.id': 1},
+								options: null
+							},
+							{
+								col: 'users',
+								index: {status: 1},
+								options: null
+							},
+							{
+								col: 'users',
+								index: {locked: 1},
+								options: null
+							},
+							{
+								col: 'users',
+								index: {'tenant.id': 1},
+								options: null
+							},
+							{
+								col: 'groups',
+								index: {code: 1, 'tenant.id': 1},
+								options: null
+							},
+							{
+								col: 'groups',
+								index: {code: 1},
+								options: null
+							},
+							{
+								col: 'groups',
+								index: {'tenant.id': 1},
+								options: null
+							},
+							{
+								col: 'groups',
+								index: {locked: 1},
+								options: null
+							},
+							{
+								col: 'tokens',
+								index: {token: 1},
+								options: {unique: true}
+							},
+							{
+								col: 'tokens',
+								index: {userId: 1, service: 1, status: 1},
+								options: null
+							},
+							{
+								col: 'tokens',
+								index: {token: 1, service: 1, status: 1},
+								options: null
+							}
+						];
+						
+						async.each(indexes, function (oneIndex, callback) {
+							mongo.createIndex(oneIndex.col, oneIndex.index, oneIndex.options, callback);
+						}, cb);
+					}
+				}, mCb);
+			}
+		};
 	}
 };
 

@@ -33,7 +33,6 @@
     "randomstring": "^1.1.5",
     "request": "2.84.0",
     "rimraf": "*",
-    "soajs": "2.0.10",
     "util": "*",
     "whereis": "*"
   }

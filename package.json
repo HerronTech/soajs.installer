@@ -29,6 +29,7 @@
     "ncp": "*",
     "npm": "*",
     "rimraf": "*",
-    "whereis": "*"
+    "whereis": "*",
+    "soajs": "2.0.10"
   }
 }
