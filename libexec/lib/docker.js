@@ -16,7 +16,22 @@ let dockerModule = {
 		else if (process.env.PLATFORM === 'Linux') {
 			execPath += "/docker-linux.sh";
 		}
-		exec(execPath, callback);
+		let install = exec( execPath, ["."]);
+		install.stdout.on('data', (data) => {
+			if (data){
+				process.stdout.write(data);
+			}
+		});
+		
+		install.stderr.on('data', (error) => {
+			if (error){
+				process.stdout.write(error);
+			}
+		});
+		install.on('close', (code) => {
+			return callback(null, "Docker installed...")
+		});
+		
 		
 	},
 	
