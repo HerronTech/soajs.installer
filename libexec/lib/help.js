@@ -61,9 +61,11 @@ const helpModule = {
 				output += `${command}\t\t${commands[command]}\n`;
 			}
 			output += "\n";
-			output += "Refer to README.md file for more details about the commands and their arguments.";
-			output += "\n";
 		}
+		
+		output += "\n";
+		output += "Refer to README.md file for more details about the commands and their arguments.";
+		output += "\n";
 		
 		//print and return
 		console.log(output);
