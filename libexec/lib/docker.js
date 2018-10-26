@@ -112,14 +112,14 @@ let dockerModule = {
 	 */
 	restart: (args, callback) => {
 		
-		//stop mongodb
+		//stop docker
 		dockerModule.stop(args, (err) => {
 			if (err) {
 				return callback(err);
 			}
 			
 			setTimeout(() => {
-				//start mongodb
+				//start docker
 				dockerModule.start(args, callback);
 			}, 3000);
 		});
