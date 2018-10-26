@@ -18,19 +18,19 @@ let kubeModule = {
 		let install = exec("sudo " + execPath, {"stdio": 'inherit'});
 		install.stdout.on('data', (data) => {
 			if (data){
-				process.stdout.write(data + '\r');
+				process.stdout.write(data);
 			}
 		});
 		
 		install.stderr.on('data', (error) => {
 			if (error){
-				process.stdout.write(error + '\r');
+				process.stdout.write(error);
 			}
 		});
 		
 		install.on('close', (code) => {
 			if(code === 0){
-				return callback(null, "Kubernetes installed...")
+				return callback(null, "Kubernetes downloaded and installed...")
 			}
 			else{
 				return callback("Error while downloading and installing Kubernetes!");

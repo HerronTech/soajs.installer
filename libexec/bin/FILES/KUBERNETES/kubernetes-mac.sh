@@ -24,35 +24,62 @@ if [ $(whoami) != 'root' ]; then
     exit 1
 fi
 
+function printHeadline() {
+	echo "###############################################################"
+    echo "#"
+    echo "# KUBERNETES"
+    echo "#"
+    echo "###############################################################"
+    echo ""
+    echo "Downloading and install Kubernetes, do not stop the execution ..."
+    echo "------------------------"
+    echo ""
+}
+
 function installVirtualbox(){
     echo 'Installing virtualbox ...'
 
-    $CURL -Lo virtualbox.dmg ${VIRUTALBOX_URL}
-    local MOUNT_POINT=$(hdiutil attach virtualbox.dmg | grep /Volumes/VirtualBox | cut -f 1)
-    installer -pkg /Volumes/VirtualBox/VirtualBox.pkg -target /Volumes/Macintosh\ HD
-    hdiutil detach $MOUNT_POINT
-    rm virtualbox.dmg
+	if [ -e virtualbox.dmg ]
+    then
+        echo 'virtualbox already downloaded ...'
+    else
+        $CURL -Lo virtualbox.dmg ${VIRUTALBOX_URL}
+	    local MOUNT_POINT=$(hdiutil attach virtualbox.dmg | grep /Volumes/VirtualBox | cut -f 1)
+	    installer -pkg /Volumes/VirtualBox/VirtualBox.pkg -target /Volumes/Macintosh\ HD
+	    hdiutil detach $MOUNT_POINT
+    fi
 }
 
 function installKubectl(){
     echo 'Installing kubectl ...'
 
-    $CURL -LO ${KUBECTL_URL}
-    chmod +x ./kubectl
-    mv ./kubectl ${BINARIES_PATH}/kubectl
+	if [ -e kubectl ]
+    then
+        echo "Kubectl already downloaded ..."
+    else
+		$CURL -LO ${KUBECTL_URL}
+	    chmod +x ./kubectl
+	    cp ./kubectl ${BINARIES_PATH}/kubectl
+    fi
+
 }
 
 function installMinikube(){
     echo 'Installing minikube ...'
 
-    $CURL -Lo minikube ${MINKUBE_URL}
-    chmod +x minikube
-    mv minikube ${BINARIES_PATH}/
+	if [ -e minikube ]
+    then
+        echo 'minikube already downloaded ...'
+    else
+        $CURL -Lo minikube ${MINKUBE_URL}
+	    chmod +x minikube
+	    cp minikube ${BINARIES_PATH}/
+    fi
+
 }
 
 function runMinikube(){
     echo 'Starting minikube instance ...'
-	minikube delete
     ${BINARIES_PATH}/minikube start \
                             --vm-driver ${MINIKUBE_DRIVER} \
                             --kubernetes-version ${KUBERNETES_VERSION} \
@@ -61,6 +88,7 @@ function runMinikube(){
 }
 
 function run(){
+	printHeadline
     installVirtualbox
     installKubectl
     installMinikube
