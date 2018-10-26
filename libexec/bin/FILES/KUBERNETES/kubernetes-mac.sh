@@ -5,8 +5,8 @@ KUBERNETES_VERSION="v1.7.5"
 MINIKUBE_VERSION="v0.22.2"
 MINKUBE_URL="https://storage.googleapis.com/minikube/releases/${MINIKUBE_VERSION}/minikube-darwin-amd64"
 
-VIRTUALBOX_VERSION="5.2.2"
-VIRTUALBOX_BUILD="${VIRTUALBOX_VERSION}-119230-OSX"
+VIRTUALBOX_VERSION="5.2.20"
+VIRTUALBOX_BUILD="${VIRTUALBOX_VERSION}-125813-OSX"
 VIRUTALBOX_URL="http://download.virtualbox.org/virtualbox/${VIRTUALBOX_VERSION}/VirtualBox-${VIRTUALBOX_BUILD}.dmg"
 
 KUBECTL_VERSION="v1.7.10"
@@ -52,7 +52,7 @@ function installMinikube(){
 
 function runMinikube(){
     echo 'Starting minikube instance ...'
-
+	minikube delete
     ${BINARIES_PATH}/minikube start \
                             --vm-driver ${MINIKUBE_DRIVER} \
                             --kubernetes-version ${KUBERNETES_VERSION} \
@@ -60,21 +60,11 @@ function runMinikube(){
                             --memory ${MINIKUBE_MEMORY}
 }
 
-function printInfo(){
-    sleep 2
-    echo
-    echo '> Done'
-    echo 'Minikube machine IP address: '$(${BINARIES_PATH}/minikube ip)
-    echo 'Kubernetes API access token: '$(${BINARIES_PATH}/kubectl describe secret | grep token: | cut -f 3)
-    echo
-}
-
 function run(){
     installVirtualbox
     installKubectl
     installMinikube
     runMinikube
-    printInfo
 }
 
 run
