@@ -31,6 +31,18 @@ if [ $(whoami) != 'root' ]; then
     exit 1
 fi
 
+function displayHeadline(){
+	echo "###############################################################"
+    echo "#"
+    echo "#  DOCKER SWARM"
+    echo "#"
+    echo "###############################################################"
+    echo ""
+    echo ""
+    echo "Downloading Docker for Ubuntu, do not stop the executing ..."
+    echo ""
+}
+
 function generatePass(){
     if [ -z ${CERTS_PASSWORD} ]; then
         CERTS_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
@@ -293,6 +305,7 @@ done
 
 #Start here########
 checkRequiredFields
+displayHeadline
 generatePass
 printConfig
 installTools
