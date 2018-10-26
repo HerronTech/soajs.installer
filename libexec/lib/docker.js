@@ -29,7 +29,17 @@ let dockerModule = {
 			}
 		});
 		install.on('close', (code) => {
-			return callback(null, "Docker installed...")
+			if(code === 0){
+				if (process.env.PLATFORM === 'Darwin') {
+					return callback(null, "Docker downloaded, follow the Docker Wizard to finalize the installation ...");
+				}
+				else {
+					return callback(null, "Docker downloaded and installed.");
+				}
+			}
+			else{
+				return callback("Error while downloading and installing docker!");
+			}
 		});
 		
 		
