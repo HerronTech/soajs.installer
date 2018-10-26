@@ -99,7 +99,9 @@ let mongoModule = {
 					"stdio": ['ignore', 'ignore', 'ignore']
 				});
 			startMongo.unref();
-			callback(null, "MongoDB Started ...");
+			
+			let mongoJSONConfig = YAML.load(mongoDbConf);
+			callback(null, `MongoDB Started and is listening on ${mongoJSONConfig.net.bindIp}, port: ${mongoJSONConfig.net.port}`);
 		});
 	},
 	

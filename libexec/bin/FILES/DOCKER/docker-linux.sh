@@ -110,7 +110,7 @@ function installDocker(){
 
         apt-get install -y docker-ce
     else
-        echo "Docker is installed at "${IS_DOCKER_INSTALLED}", skipping ..."
+        echo "Docker is installed at "${IS_DOCKER_INSTALLED}" ..."
     fi
 }
 

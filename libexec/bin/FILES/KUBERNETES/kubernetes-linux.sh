@@ -11,6 +11,18 @@ if [ $(whoami) != 'root' ]; then
     exit 1
 fi
 
+function printHeadline() {
+	echo "###############################################################"
+    echo "#"
+    echo "# KUBERNETES"
+    echo "#"
+    echo "###############################################################"
+    echo ""
+    echo "Downloading and install Kubernetes, do not stop the execution ..."
+    echo "------------------------"
+    echo ""
+}
+
 function installTools(){
     installOneTool "curl"
     installOneTool "openssl"
@@ -39,6 +51,9 @@ function installKubernetes(){
     echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list
     apt-get update
 
+	#todo: from here ...
+	# if docker installed, skip installing it again
+	# check docker-linux line 102-> 114
     echo "Installing Docker ..."
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 
@@ -46,6 +61,8 @@ function installKubernetes(){
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
     apt-get update
     apt-get install -y docker-ce
+
+    #todo: till here ...
 
     echo "Docker sucessfully installed"
     echo "Installing Kubelet ..."
@@ -86,6 +103,7 @@ function initKubernetes(){
     kubectl create clusterrolebinding permissive-binding --clusterrole=cluster-admin --user=admin --user=kubelet --group=system:serviceaccounts;
 }
 #Start here########
+printHeadline
 installTools
 installKubernetes
 initKubernetes
