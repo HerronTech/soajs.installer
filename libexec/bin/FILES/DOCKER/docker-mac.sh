@@ -13,9 +13,9 @@ echo ""
 echo ""
 echo "Downloading Docker for OSX, do not stop the executing ..."
 echo ""
-echo "You can follow the download log details @ $PWD/soajs.docker.install.log"
 
-wget https://download.docker.com/mac/stable/Docker.dmg -o soajs.docker.install.log
+CURL=$(command -v curl)
+$CURL -Lo Docker.dmg  https://download.docker.com/mac/stable/Docker.dmg
 
 #open docker wizard
 open Docker.dmg
