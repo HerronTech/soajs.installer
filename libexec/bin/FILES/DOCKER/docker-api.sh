@@ -11,6 +11,8 @@ SWARM_PORT_MAINTENANCE=444
 SWARM_API_TOKEN=""
 
 function createContainer(){
+	docker swarm join
+
 	SWARM_API_TOKEN=$(openssl rand -hex $SWARM_TOKEN_LENGTH)
     docker run -d --name $SWARM_API_CONTAINER_NAME --restart=always -e DOCKER_API_TOKEN=$SWARM_API_TOKEN -e NODE_TYPE=manager -e NODE_ENV=production -e DOCKER_API_MAINTENANCE_MANAGER_PORT=$SWARM_PORT_DATA -e DOCKER_API_MAINTENANCE_WORKER_PORT=$SWARM_PORT_DATA -v /var/run/docker.sock:/var/run/docker.sock -p $SWARM_PORT_DATA:2376 -p $SWARM_PORT_MAINTENANCE:2377 -w /opt/soajs/deployer $SWARM_API_IMAGE/docker-api node . -T dockerapi >> /dev/null
 	echo ""
