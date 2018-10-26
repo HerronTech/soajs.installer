@@ -33,12 +33,15 @@ switch(processArguments[0]){
 		break;
 	case 'remote-installer':
 		soajsModule = "remote-installer.js";
+	case '--help':
+		soajsModule = "help.js";
 		break;
 }
 
 //requested module is not supported
 if(!soajsModule){
-	logger.error(`The command you have requested is not supported by the soajs installer: '${processArguments[0]}'`);
+	logger.error(`Unknown command "${processArguments[0]}" !`);
+	logger.info("Run 'soajs --help' for usage.");
 	process.exit();
 }
 
@@ -59,8 +62,14 @@ let commandRequested = processArguments[0];
 processArguments.shift();
 
 if(!Object.hasOwnProperty.call(myModule, commandRequested)){
-	logger.error(`The requested command ${commandRequested} is not supported!`);
-	process.exit();
+	if(soajsModule === 'help.js'){
+		commandRequested = 'go';
+	}
+	else{
+		logger.error(`Unknown command "${commandRequested}" !`);
+		logger.info("Run 'soajs --help' for usage.");
+		process.exit();
+	}
 }
 
 //invoke the module requested
