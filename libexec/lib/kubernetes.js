@@ -118,7 +118,6 @@ let kubeModule = {
 				}
 				
 				setTimeout(() => {
-					//start mongodb
 					kubeModule.start(args, callback);
 				}, 3000);
 			});
