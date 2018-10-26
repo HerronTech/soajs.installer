@@ -29,7 +29,12 @@ let kubeModule = {
 		});
 		
 		install.on('close', (code) => {
-			return callback(null, "Kubernetes installed...")
+			if(code === 0){
+				return callback(null, "Kubernetes installed...")
+			}
+			else{
+				return callback("Error while downloading and installing Kubernetes!");
+			}
 		});
 	},
 	

@@ -4,7 +4,18 @@
 rm -f Docker.dmg
 
 #download docker
-wget https://download.docker.com/mac/stable/Docker.dmg
+echo "###############################################################"
+echo "#"
+echo "#  DOCKER SWARM"
+echo "#"
+echo "###############################################################"
+echo ""
+echo ""
+echo "Downloading Docker for OSX, do not stop the executing ..."
+echo ""
+
+CURL=$(command -v curl)
+$CURL -Lo Docker.dmg  https://download.docker.com/mac/stable/Docker.dmg
 
 #open docker wizard
 open Docker.dmg
