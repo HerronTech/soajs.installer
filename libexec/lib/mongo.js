@@ -300,8 +300,13 @@ let mongoModule = {
 	 * @param callback
 	 */
 	patch: (args, callback) => {
+		
+		let installerConfig = path.normalize(process.env.PWD + "/../etc/config.js");
+		let workingDirectory = installerConfig.workingDirectory;
+		
 		//get profile path
 		let profilePath = path.normalize(process.env.PWD + "/../data/soajs_profile.js");
+		let profile;
 		
 		//check if profile is found
 		fs.stat(profilePath, (error) => {
@@ -310,7 +315,7 @@ let mongoModule = {
 			}
 			
 			//read  mongo profile file
-			let profile = require(profilePath);
+			profile = require(profilePath);
 			
 			//use soajs.core.modules to create a connection to core_provision database
 			let mongoConnection = new Mongo(profile);
@@ -368,6 +373,9 @@ let mongoModule = {
 					"mongo": function (mCb) {
 						let record = require(dataFolder + "resources/mongo.js");
 						record._id = mongo.ObjectId(record._id);
+						
+						//attach the profile as the dash_cluster record configuration
+						record.config = profile;
 						mongo.insert("resources", record, mCb);
 					},
 					
@@ -395,6 +403,11 @@ let mongoModule = {
 								record._id = mongo.ObjectId(record._id);
 								record.applications.forEach(function (oneApp) {
 									oneApp.appId = mongo.ObjectId(oneApp.appId);
+									oneApp.keys.forEach((oneKey) => {
+										for(let operation in oneKey.config.dashboard.urac.mail){
+											oneKey.config.dashboard.urac.mail[operation].path = oneKey.config.dashboard.urac.mail[operation].path.replace("%wrkDir%", workingDirectory);
+										}
+									});
 								});
 								
 								mongo.insert("tenants", record, mCb);
@@ -405,6 +418,11 @@ let mongoModule = {
 								record._id = mongo.ObjectId(record._id);
 								record.applications.forEach(function (oneApp) {
 									oneApp.appId = mongo.ObjectId(oneApp.appId);
+									oneApp.keys.forEach((oneKey) => {
+										for(let operation in oneKey.config.dashboard.urac.mail){
+											oneKey.config.dashboard.urac.mail[operation].path = oneKey.config.dashboard.urac.mail[operation].path.replace("%wrkDir%", workingDirectory);
+										}
+									});
 								});
 								
 								mongo.insert("tenants", record, mCb);

@@ -16,10 +16,10 @@ const mongoModule = require("./mongo");
 const logger = require("../utils/utils.js").getLogger();
 
 const SOAJS_RMS = {
-	'gateway': "soajs.controller",
 	'urac': 'soajs.urac',
 	'oauth': 'soajs.oauth',
 	'dashboard': 'soajs.dashboard',
+	'gateway': "soajs.controller",
 	'ui': 'soajs.dashboard.ui'
 };
 

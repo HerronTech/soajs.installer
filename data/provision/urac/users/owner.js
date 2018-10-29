@@ -2,7 +2,7 @@
 var owner = {
 	"locked": true,
 	"username": "owner",
-	"password": '$2a$04$yn9yaxQysIeH2VCixdovJ.TLuOEjFjS5D2Otd7sO7uMkzi9bXX1tq',
+	"password": '$2a$12$geJJfv33wkYIXEAlDkeeuOgiQ6y6MjP/YxbqLdHdDSK7LDG.7n7Pq',
 	"firstName": "owner",
 	"lastName": "owner",
 	"email": "me@localhost.com",
