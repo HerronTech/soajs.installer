@@ -54,6 +54,10 @@ const serviceModule = {
 			return callback(`${serviceType} ${requestedService} is not installed!`);
 		}
 		
+		if(requestedService === 'dashboard' && requestedEnvironment !== 'dashboard'){
+			return callback(`The Dashboard Microservice can only run in the DASHBOARD environment!`);
+		}
+		
 		//check if service folder exists
 		fs.stat(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService], (error, stats) => {
 			if(error || !stats){
