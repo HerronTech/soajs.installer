@@ -18,6 +18,6 @@ elif [[ "$unamestr" == 'Linux' ]]; then
 	echo IP ADDRESS: 127.0.0.1
 fi
 echo ""
-echo Kubernetes PORT: 6443
+echo Kubernetes PORT: 8443
 echo ""
 echo "Kubernetes TOKEN: $(${BINARIES_PATH}/kubectl describe secret | grep token: | cut -f 3)"
