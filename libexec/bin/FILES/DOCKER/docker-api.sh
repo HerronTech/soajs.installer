@@ -26,7 +26,7 @@ function createContainer(){
 		echo "Connect to Docker Swarm:"
 		echo "------------------------"
         echo ""
-		echo IP ADDRESS: 127.0.0.1
+		echo IP ADDRESS: $MACHINE_IP
         echo ""
         echo DOCKER PORTt: 443
         echo ""
@@ -59,7 +59,7 @@ function deployDockerAPI(){
         echo "Connect to Docker Swarm:"
         echo "------------------------"
         echo ""
-        echo IP ADDRESS: 127.0.0.1
+        echo IP ADDRESS: $MACHINE_IP
         echo ""
         echo DOCKER PORTt: 443
         echo ""
