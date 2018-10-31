@@ -5,6 +5,9 @@ const path = require("path");
 //set the logger
 const logger = require("./utils/utils.js").getLogger();
 
+//store the location of the soajs installer
+process.env.SOAJS_INSTALLER_LOCATION = path.normalize(process.env.PWD + "/../");
+
 //set the process arguments and remove the first 2, they are not needed
 let processArguments = process.argv;
 processArguments.shift();

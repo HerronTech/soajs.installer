@@ -1,6 +1,7 @@
 'use strict';
 const path = require("path");
 const exec = require("child_process").exec;
+
 let kubeModule = {
 	/**
 	 * install kubernetes on machine
@@ -15,7 +16,10 @@ let kubeModule = {
 		else if (process.env.PLATFORM === 'Linux') {
 			execPath += "/kubernetes-linux.sh";
 		}
-		let install = exec("sudo " + execPath, {"stdio": 'inherit'});
+		let install = exec("sudo " + execPath, {
+			cwd: process.env.SOAJS_INSTALLER_LOCATION,
+			env: process.env
+		});
 		install.stdout.on('data', (data) => {
 			if (data){
 				process.stdout.write(data);

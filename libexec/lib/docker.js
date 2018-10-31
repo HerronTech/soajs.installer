@@ -16,7 +16,10 @@ let dockerModule = {
 		else if (process.env.PLATFORM === 'Linux') {
 			execPath += "/docker-linux.sh";
 		}
-		let install = exec( execPath, ["."]);
+		let install = exec( execPath, {
+			cwd: process.env.SOAJS_INSTALLER_LOCATION,
+			env: process.env
+		});
 		install.stdout.on('data', (data) => {
 			if (data){
 				process.stdout.write(data);
@@ -119,12 +122,55 @@ let dockerModule = {
 		else if (process.env.PLATFORM === 'Linux') {
 			command = path.normalize(process.env.PWD + "/../libexec/bin/FILES/DOCKER/docker-linux.sh");
 		}
-		exec(command, (err) => {
-			if (err){
-				return callback(err);
+		
+		let start = exec(command);
+		
+		start.stdout.on('data', (data) => {
+			if (data){
+				process.stdout.write(data);
 			}
-			dockerModule.connect(args, callback);
 		});
+		
+		start.stderr.on('data', (error) => {
+			if (error){
+				return callback(error);
+			}
+		});
+		
+		start.on('close', (code) => {
+			if (process.env.PLATFORM === 'Darwin') {
+				checkIfDockerOSXisRunning(0, () => {
+					dockerModule.connect(args, callback);
+				});
+			}
+			else{
+				dockerModule.connect(args, callback);
+			}
+		});
+		
+		function checkIfDockerOSXisRunning(counter, vCb){
+			exec("docker stats --no-stream", (error, response) => {
+				if(error){
+					if(counter === 0){
+						console.log("Checking if Docker Swarm on OSX is running ...");
+					}
+					
+					counter ++;
+					
+					if(counter >= 10){
+						return callback(error);
+					}
+					else{
+						setTimeout(() => {
+							checkIfDockerOSXisRunning(counter, vCb)
+						}, 5000);
+					}
+				}
+				else{
+					return vCb();
+				}
+			});
+		}
 	},
 	
 	/**
