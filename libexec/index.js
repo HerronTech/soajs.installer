@@ -76,6 +76,7 @@ if(!Object.hasOwnProperty.call(myModule, commandRequested)){
 }
 
 //invoke the module requested
+process.env.SOAJS_INSTALLER_COMMAND = commandRequested;
 myModule[commandRequested](processArguments, (error, response) => {
 	if (error) {
 		logger.error(error);

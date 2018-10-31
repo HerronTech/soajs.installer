@@ -9,12 +9,7 @@ CERTS_PATH=${HOME}/certs
 DIRNAME=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 #Need machine IP address or domain name pointing to it in order to generate certificates properly
-INIT_SWARM="false"
-DOMAIN_NAME=""
 CERTS_PASSWORD=""
-SWARM_ADVERTISE_ADDR=""
-SWARM_INTERNAL_PORT="2377"
-SWARM_NETWORK_NAME="soajsnet"
 SWARM_API_TOKEN=""
 
 #specific variables for docker api
@@ -48,53 +43,6 @@ function generatePass(){
         CERTS_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
         echo "Generated certs password: ${CERTS_PASSWORD}"
     fi
-}
-
-function checkRequiredFields(){
-    if [ -z ${DOMAIN_NAME} ]; then
-        echo "You need to specify the machine domain name in order to generate certificates properly"
-        echo " "
-        echo "Ex: sudo "$DIRNAME"/docker-linux.sh -d %my_domain%"
-        echo " "
-        echo "Using flag: -d mydomain.com     Exiting ..."
-        exit 1
-    fi
-
-    if [ -z ${SWARM_ADVERTISE_ADDR} ]; then
-        echo "You need to specify the swarm node advertise IP address or interface to use using flag: -a"
-        echo " "
-        echo "Ex: sudo "$DIRNAME"/docker-linux.sh -d mydomain.com -a %ip_address%"
-        echo " "
-        echo "Exiting ..."
-        exit 1
-    fi
-}
-
-function printHelp(){
-    echo
-    echo "Usage:"
-    echo " > -h  Print help"
-    echo " > -a  [required] Set the node advertise IP address"
-    echo " > -d  [required] Set the domain name of the machine in order to generate certificates"
-    echo " > -p  [optional] Set a password for the certificates. Default: auto-generated"
-    echo " > -n  [optional] Set the name of the swarm overlay network. Default: soajsnet"
-    echo " > -i  [optional] Set a custom cluster management communications port. More information at: https://docs.docker.com/engine/swarm/swarm-tutorial/#open-protocols-and-ports-between-the-hosts"
-    echo " > -s  [optional] Initialize a new swarm on the node. Only use when preparing the first master node. Default: false"
-    echo
-
-    exit
-}
-
-function printConfig(){
-    echo
-    echo "Your configuration:"
-    echo " > Initialize a new swarm: ${INIT_SWARM}"
-    echo " > Domain name: ${DOMAIN_NAME}"
-    echo " > Node advertise address: ${SWARM_ADVERTISE_ADDR}"
-    echo " > Node internal port: ${SWARM_INTERNAL_PORT}"
-    echo " > Swarm overlay network name: ${SWARM_NETWORK_NAME}"
-    echo " > Certificates password: ${CERTS_PASSWORD}"
-    echo
 }
 
 function installDocker(){
@@ -194,7 +142,7 @@ function generateCertificates(){
     chown ${SUDO_USER}:${SUDO_USER} ${CERTS_PATH}/*
     popd
 
-    echo "----- DONE -----"
+    echo "----- Docker Certificates Generated -----"
 }
 
 function enableCLIAccess(){
@@ -210,75 +158,7 @@ function enableCLIAccess(){
     echo 'export DOCKER_HOST=tcp://127.0.0.1:2376' >> ${BASH_PROFILE_PATH}
     echo 'export DOCKER_TLS_VERIFY=1' >> ${BASH_PROFILE_PATH}
     popd
-    echo "----- DONE -----"
-}
-
-function reloadDocker(){
-    echo "Reloading Docker Daemon ..."
-    local CA_PATH=${CERTS_PATH}'/ca.pem'
-    local SERVER_CERT_PATH=${CERTS_PATH}'/server-cert.pem'
-    local SERVER_KEY_PATH=${CERTS_PATH}'/server-key.pem'
-
-    #Stopping docker daemon
-    service docker stop
-
-    echo "Daemon Logs:"
-    #Starting docker daemon with TLS enabled and exposed port 2376
-    #Another way to start the daemon is by using 'service docker start' and exporting the tls params in DOCKER_OPTS env variable
-    #Example: DOCKER_OPTS="-D --tls=true --tlscert=/var/docker/server.pem --tlskey=/var/docker/serverkey.pem -H tcp://192.168.59.3:2376"
-    dockerd --tlsverify --tlscacert=${CA_PATH} --tlscert=${SERVER_CERT_PATH} --tlskey=${SERVER_KEY_PATH} -H unix:///var/run/docker.sock -H=0.0.0.0:2376 &
-}
-
-function initSwarm(){
-    if [ ${INIT_SWARM} == "true" ]; then
-        echo "Initializing swarm ..."
-
-        sleep 5
-        docker swarm init --advertise-addr ${SWARM_ADVERTISE_ADDR}":"${SWARM_INTERNAL_PORT}
-
-        #Verify that docker is in swarm mode
-        while [ -z $(docker info --format {{.Swarm.NodeID}}) ]; do
-            echo "Waiting for swarm mode to become active ..."
-            sleep 1;
-        done
-
-        docker network create --driver overlay ${SWARM_NETWORK_NAME}
-    fi
-}
-
-function createContainer(){
-	SWARM_API_TOKEN=$(openssl rand -hex $SWARM_TOKEN_LENGTH)
-    echo "Deploying new manager container..."
-    docker run -d --name $SWARM_API_CONTAINER_NAME --restart=always -e DOCKER_API_TOKEN=$SWARM_API_TOKEN -e NODE_TYPE=manager -e NODE_ENV=production -v /var/run/docker.sock:/var/run/docker.sock -p $SWARM_PORT_DATA:2376 -p $SWARM_PORT_MAINTENANCE:2377 -w /opt/soajs/deployer $SWARM_API_IMAGE/docker-api node . -T dockerapi
-
-	if [ "$(docker ps -q -f name=$SWARM_API_CONTAINER_NAME)" ]; then
-		return 1
-	else
-	    docker rm -f $SWARM_API_CONTAINER_NAME
-		return 0
-	fi
-}
-
-function deployDockerAPI(){
-	echo "cleaning up old manager container"
-	docker rm -f $SWARM_API_CONTAINER_NAME
-	echo ""
-
-	createContainer
-    if [ $? == 1 ]; then
-        echo ""
-        echo "manager container deployed"
-        echo ""
-        echo "***************************************************************"
-        echo "* Use the following Token to connect to your docker deployment:"
-        echo "***************************************************************"
-        echo "Token:"
-        echo $SWARM_API_TOKEN
-    else
-        echo ""
-		echo "unable to deploy manager container, check the error details in message above"
-		echo ""
-	fi
+    echo "----- Docker connection enabled -----"
 }
 
 while getopts :hp:n:i:a:d:s OPT; do
@@ -287,16 +167,6 @@ while getopts :hp:n:i:a:d:s OPT; do
             printHelp ;;
         p)
             CERTS_PASSWORD=$OPTARG ;;
-        n)
-            SWARM_NETWORK_NAME=$OPTARG ;;
-        i)
-            SWARM_INTERNAL_PORT=$OPTARG ;;
-        a)
-            SWARM_ADVERTISE_ADDR=${OPTARG} ;;
-        d)
-            DOMAIN_NAME=${OPTARG} ;;
-        s)
-            INIT_SWARM="true" ;;
         \?)
             echo "Wrong input!"
             printHelp ;;
@@ -304,15 +174,10 @@ while getopts :hp:n:i:a:d:s OPT; do
 done
 
 #Start here########
-checkRequiredFields
 displayHeadline
 generatePass
-printConfig
 installTools
 installDocker
 checkCertificates
 enableCLIAccess
-reloadDocker
-initSwarm
-deployDockerAPI
 ###################
