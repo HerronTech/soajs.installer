@@ -188,9 +188,14 @@ let dockerModule = {
 		}
 		exec(command, (err) => {
 			if (err){
-				return callback(err);
+				if(err.toString().includes("No matching processes belonging to you were found")){
+					return callback(null, "Docker Swarm stopped..")
+				}
+				else{
+					return callback(err);
+				}
 			}
-			dockerModule.connect(args, callback);
+			return callback(null, "Docker Swarm stopped..")
 		});
 	},
 	
