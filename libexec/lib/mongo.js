@@ -45,7 +45,7 @@ let mongoModule = {
 		else if (process.env.PLATFORM === 'Linux') {
 			config.systemLog.path = "/var/log/soajs/mongodb/mongo.log";
 			config.storage.dbPath = "/var/soajs/mongodb";
-			logPath = '/var/log/soajs/';
+			logPath = '/var/log/soajs/mongodb';
 		}
 		//convert from json to yaml
 		let yamlFile = YAML.stringify(config, 4);
