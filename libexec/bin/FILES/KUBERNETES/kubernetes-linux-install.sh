@@ -51,18 +51,15 @@ function installKubernetes(){
     echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list
     apt-get update
 
-	#todo: from here ...
-	# if docker installed, skip installing it again
-	# check docker-linux line 102-> 114
     echo "Installing Docker ..."
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 
     # Set up the stable repository:
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
     apt-get update
-    apt-get install -y docker-ce
-
-    #todo: till here ...
+    #apt-get install -y docker-ce
+	#soajs docker install
+	#soajs docker start
 
     echo "Docker sucessfully installed"
     echo "Installing Kubelet ..."
@@ -84,27 +81,8 @@ function installKubernetes(){
 
 }
 
-function initKubernetes(){
-    echo "Initializing the master node"
-
-    kubeadm reset
-    systemctl start kubelet.service
-    kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=stable-1.7
-
-    mkdir -p $HOME/.kube
-    cp -rf /etc/kubernetes/admin.conf $HOME/.kube/config
-    chown "${SUDO_USER}:${SUDO_USER}" $HOME/.kube/config
-
-    sleep 2
-
-    kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
-    kubectl apply -f $DIRNAME/flannel/kube-flannel.yml
-
-    kubectl create clusterrolebinding permissive-binding --clusterrole=cluster-admin --user=admin --user=kubelet --group=system:serviceaccounts;
-}
 #Start here########
 printHeadline
 installTools
 installKubernetes
-initKubernetes
 ###################
