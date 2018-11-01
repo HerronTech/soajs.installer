@@ -57,9 +57,7 @@ function installKubernetes(){
     # Set up the stable repository:
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
     apt-get update
-    #apt-get install -y docker-ce
-	#soajs docker install
-	#soajs docker start
+    apt-get install -y docker-ce
 
     echo "Docker sucessfully installed"
     echo "Installing Kubelet ..."
