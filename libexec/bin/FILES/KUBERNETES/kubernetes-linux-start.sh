@@ -15,7 +15,7 @@ function initKubernetes(){
     systemctl enable docker && systemctl stop docker &&  systemctl start docker
 
     echo "starting kubelet"
-    systemctl enable kubelet && systemctl start kubelet
+    systemctl enable kubelet && systemctl stop kubelet && systemctl start kubelet
 
 	echo "pulling kubeadm images"
 	kubeadm config images pull
