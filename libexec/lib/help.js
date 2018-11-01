@@ -28,6 +28,10 @@ const helpModule = {
 				"clean": "Removes all the databases of SOAJS sample data from the MongoDB server",
 				"patch": "Imports the SOAJS sample data into MongoDB server and creates all the needed databases"
 			},
+			"Service Commands" :{
+				"start": "Start a SOAJS Service [gateway|urac|dashboard|oauth]",
+				"stop": "Stop a SOAJS Service [gateway|urac|dashboard|oauth]"
+			},
 			"Profile Commands" :{
 				"setPort": "Updates the MongoDB server port in the SOAJS profile"
 			},

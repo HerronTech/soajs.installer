@@ -30,36 +30,42 @@ let dockerModule = {
 			execPath += "/docker-linux-install.sh";
 			execPath = execPath;
 		}
-		let install = exec(execPath, {
-			cwd: process.env.SOAJS_INSTALLER_LOCATION,
-			env: process.env
-		});
-		install.stdout.on('data', (data) => {
-			if (data) {
-				process.stdout.write(data);
-			}
-		});
 		
-		install.stderr.on('data', (error) => {
-			if (error) {
-				process.stdout.write(error);
+		exec("docker --version", (error, data) =>{
+			if(data){
+				return callback("Docker already installed on this machine!");
+			}
+			else{
+				let install = exec(execPath, {
+					cwd: process.env.SOAJS_INSTALLER_LOCATION,
+					env: process.env
+				});
+				install.stdout.on('data', (data) => {
+					if (data) {
+						process.stdout.write(data);
+					}
+				});
+
+				install.stderr.on('data', (error) => {
+					if (error) {
+						process.stdout.write(error);
+					}
+				});
+				install.on('close', (code) => {
+					if (code === 0) {
+						if (process.env.PLATFORM === 'Darwin') {
+							return callback(null, "Docker downloaded, follow the Docker Wizard to finalize the installation ...");
+						}
+						else {
+							return callback(null, "Docker downloaded and installed.");
+						}
+					}
+					else {
+						return callback("Error while downloading and installing docker!");
+					}
+				});
 			}
 		});
-		install.on('close', (code) => {
-			if (code === 0) {
-				if (process.env.PLATFORM === 'Darwin') {
-					return callback(null, "Docker downloaded, follow the Docker Wizard to finalize the installation ...");
-				}
-				else {
-					return callback(null, "Docker downloaded and installed.");
-				}
-			}
-			else {
-				return callback("Error while downloading and installing docker!");
-			}
-		});
-		
-		
 	},
 	
 	/**
@@ -259,30 +265,36 @@ let dockerModule = {
 		else if (process.env.PLATFORM === 'Linux') {
 			
 			ifLinuxRoot(callback);
-			
-			command = path.normalize(process.env.PWD + "/../libexec/bin/FILES/DOCKER/docker-linux-start.sh");
-			
-			start = spawn(command, {
-				cwd: process.env.SOAJS_INSTALLER_LOCATION,
-				env: process.env,
-				detached: true
-			});
-			start.unref();
-			
-			start.stdout.on('data', (data) => {
-				if (data) {
-					if (data.toString().includes("----- DONE -----")) {
-						return callback(null, "Docker Swarm started on Ubuntu, please run soajs docker connect.");
-					}
-					else {
-						process.stdout.write(data);
-					}
+			exec("docker ps", (err, data) => {
+				if(data){
+					return callback("Docker already started on this machine!");
 				}
-			});
-			
-			start.stderr.on('data', (error) => {
-				if (error) {
-					process.stdout.write(error);
+				else{
+					command = path.normalize(process.env.PWD + "/../libexec/bin/FILES/DOCKER/docker-linux-start.sh");
+
+					start = spawn(command, {
+						cwd: process.env.SOAJS_INSTALLER_LOCATION,
+						env: process.env,
+						detached: true
+					});
+					start.unref();
+
+					start.stdout.on('data', (data) => {
+						if (data) {
+							if (data.toString().includes("----- DONE -----")) {
+								return callback(null, "Docker Swarm started on Ubuntu, please run soajs docker connect.");
+							}
+							else {
+								process.stdout.write(data);
+							}
+						}
+					});
+
+					start.stderr.on('data', (error) => {
+						if (error) {
+							process.stdout.write(error);
+						}
+					});
 				}
 			});
 		}

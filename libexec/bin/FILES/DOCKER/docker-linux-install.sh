@@ -10,15 +10,6 @@ DIRNAME=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 #Need machine IP address or domain name pointing to it in order to generate certificates properly
 CERTS_PASSWORD=""
-SWARM_API_TOKEN=""
-
-#specific variables for docker api
-SWARM_API_CONTAINER_NAME=manager-docker-api
-SWARM_API_IMAGE=soajsorg
-SWARM_TOKEN_LENGTH=512
-SWARM_PORT_DATA=443
-SWARM_PORT_MAINTENANCE=444
-SWARM_API_TOKEN=""
 
 #Need to be run as root in order to install Docker
 if [ $(whoami) != 'root' ]; then

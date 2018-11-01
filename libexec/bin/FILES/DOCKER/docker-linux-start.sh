@@ -3,7 +3,6 @@
 CERTS_PATH=${HOME}/certs
 SWARM_ADVERTISE_ADDR="127.0.0.1"
 SWARM_INTERNAL_PORT="2377"
-SWARM_NETWORK_NAME="soajsnet"
 
 function reloadDocker(){
     echo "Stopping Previous Docker Daemon ..."
@@ -31,9 +30,6 @@ function reloadDocker(){
         echo "Waiting for swarm mode to become active ..."
         sleep 1;
     done
-
-    echo "Creating Network ${SWARM_NETWORK_NAME} ..."
-    docker network create --driver overlay ${SWARM_NETWORK_NAME}
 
     # when this is printed, the script will know that start command is done
     echo "----- DONE -----"

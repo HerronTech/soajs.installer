@@ -9,8 +9,12 @@ SWARM_TOKEN_LENGTH=512
 SWARM_PORT_DATA=443
 SWARM_PORT_MAINTENANCE=444
 SWARM_API_TOKEN=""
+SWARM_NETWORK_NAME="soajsnet"
 
 function createContainer(){
+
+	echo "Creating Network ${SWARM_NETWORK_NAME} ..."
+    docker network create --driver overlay ${SWARM_NETWORK_NAME}
 
 	docker swarm join 0.0.0.0:2376
 
