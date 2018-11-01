@@ -21,7 +21,7 @@ function initKubernetes(){
 	kubeadm config images pull
 
 	echo "initializing kubeadm"
-    kubeadm init --apiserver-advertise-address=127.0.0.1 --pod-network-cidr=10.244.0.0/16 --kubernetes-version=stable-1.7
+    kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=stable-1.7
 
 	echo "Creating kube config @ $HOME/.kube/config"
     mkdir -p $HOME/.kube
