@@ -109,12 +109,32 @@ let dockerModule = {
 			process.env.MACHINE_IP = "127.0.0.1";
 		}
 		
-		exec(execPath + "/docker-api.sh", {
+		let connect = exec(execPath + "/docker-api.sh", {
 			cwd: process.env.SOAJS_INSTALLER_LOCATION,
 			env: process.env
-		}, (err, result) => {
-			return callback(err, result)
 		});
+		
+		connect.stdout.on('data', (data) => {
+			if(data){
+				process.stdout.write(data);
+			}
+		});
+		
+		connect.stderr.on('data', (data) => {
+			if(data){
+				return callback(data);
+			}
+		});
+		
+		connect.on('close', (code) => {
+			if(code === 0){
+				return callback(null);
+			}
+			else{
+				return callback("Error Connecting to Docker Swarm!");
+			}
+		});
+		
 	},
 	
 	/**
