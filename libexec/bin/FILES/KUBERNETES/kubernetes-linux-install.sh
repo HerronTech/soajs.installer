@@ -36,8 +36,6 @@ function installKubernetes(){
     echo "Instsalling Kubernetes-cni ..."
     apt-get install -y kubernetes-cni
     echo "Kubernetes-cni successfully installed"
-
-	systemctl stop kubelet
 }
 
 #Start here########

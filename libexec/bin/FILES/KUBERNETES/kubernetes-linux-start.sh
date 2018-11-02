@@ -6,11 +6,11 @@
 DIRNAME=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 function initKubernetes(){
-    echo "starting kubelet"
-    systemctl start kubelet && systemctl enable kubelet
-
 	echo "initializing kubeadm"
-    kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=stable-1.7
+    kubeadm init --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=192.168.0.103
+
+    #echo "starting kubelet"
+    #systemctl start kubelet && systemctl enable kubelet
 
 	echo "Creating kube config @ $HOME/.kube/config"
     mkdir -p $HOME/.kube
