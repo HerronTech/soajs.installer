@@ -206,7 +206,7 @@ let kubeModule = {
 			});
 		}
 		else if (process.env.PLATFORM === 'Linux') {
-			exec("sudo systemctl stop kubelet && sudo kubeadm reset", (err) => {
+			exec("sudo systemctl stop kubelet && sudo kubeadm reset -f", (err) => {
 				if (err) {
 					return callback(err);
 				}
