@@ -9,80 +9,17 @@ var dataDir = __dirname + "/../data/";
 
 var routes = {
     "getOverview": function(req, res){
-        var osName;
-        var data = {
-            "docker": "",
-            "kubernetes": ""
-        };
-        var platform = process.platform;
-        if(platform === 'linux'){
-            osName = 'linux';
-            data.docker = {
-                local: {
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
-                    "t": "sh"
-                },
-                remote:{
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh <%Your_Domain%>"),
-                    "t": "sh"
-                }
-            };
-
-            data.kubernetes = {
-                local: {
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
-                    "l": "sh"
-                },
-                remote: {
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
-                    "l": "sh"
-                }
-            };
-        }
-        else if(platform === 'darwin'){
-            osName = 'mac';
-            data.docker = {
-                local: [
-	                {
-		                "v": "https://download.docker.com/mac/stable/Docker.dmg",
-		                "t": "link"
-	                },
-	                {
-		                "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-api.sh"),
-		                "t": "sh"
-	                }
-                ],
-                remote:{
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/docker-linux.sh"),
-                    "t": "sh"
-                }
-            };
-
-            data.kubernetes = {
-                local: {
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-mac.sh"),
-                    "l": "sh"
-                },
-                remote: {
-                    "v": "sudo " + path.resolve(__dirname + "/../scripts/pre/kubernetes-linux.sh"),
-                    "l": "sh"
-                }
-            };
-        }
-
+        var data = {};
+      
         utils.loadCustomData('deployment', function (customData) {
             if(customData){
                 data.deployer = {
                     deployType: customData.deployType,
-                    deployDriver: customData.deployDriver,
-                    os : osName
+                    deployDriver: customData.deployDriver
                 };
-	            data.remoteProvider= customData.remoteProvider;
             }
             else {
-                data.deployer = {
-                    os : osName
-                };
+                data.deployer = {};
             }
             return res.json(req.soajs.buildResponse(null, data));
         });

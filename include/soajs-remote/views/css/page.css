@@ -335,12 +335,20 @@ a.highlightedDirver {
 .depType table td a.nonhighlightedDriver img {
     height: 67px;
 }
-table img{
-    width:70%;
-}
 
 .panel-title a:hover,
 .panel-title a{
     text-decoration:none;
     outline: 0;
+}
+
+.grid table tr{
+    border-bottom: solid 1px #cccccc;
+}
+.grid table tr td{
+    padding: 10px;
+}
+
+.grid table tr.even{
+    background-color:#efefef;
 }
