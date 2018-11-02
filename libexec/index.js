@@ -36,6 +36,7 @@ switch(processArguments[0]){
 		break;
 	case 'remote-installer':
 		soajsModule = "remote-installer.js";
+		break;
 	case '--help':
 		soajsModule = "help.js";
 		break;
