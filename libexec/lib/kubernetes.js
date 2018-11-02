@@ -146,48 +146,54 @@ let kubeModule = {
 	 * @param callback
 	 */
 	start: (args, callback) => {
-		
-		//todo: check if kubernetes is already running
-		if (process.env.PLATFORM === 'Darwin') {
-			exec("minikube start", (err) => {
-				if (err) {
-					return callback(err);
+		//check if kubernetes is running
+		exec("kubectl get ns", (error, data) => {
+			if(data){
+				return callback("Kubernetes is already running!");
+			}
+			else{
+				if (process.env.PLATFORM === 'Darwin') {
+					exec("minikube start", (err) => {
+						if (err) {
+							return callback(err);
+						}
+						kubeModule.connect(args, callback);
+					});
 				}
-				kubeModule.connect(args, callback);
-			});
-		}
-		else if (process.env.PLATFORM === 'Linux') {
-			let execPath = path.normalize(process.env.PWD + "/../libexec/bin/FILES/KUBERNETES");
-			execPath += "/kubernetes-linux-start.sh";
-			let start = exec("sudo " + execPath, {
-				cwd: process.env.SOAJS_INSTALLER_LOCATION,
-				env: process.env
-			});
-			
-			start.stdout.on('data', (data) => {
-				if (data) {
-					process.stdout.write(data);
-				}
-			});
-			
-			start.stderr.on('data', (error) => {
-				if (error) {
-					process.stdout.write(error);
-				}
-			});
-			
-			start.on('close', (code) => {
-				if (code === 0) {
-					return callback(null, "Kubernetes started on Ubuntu, please run soajs kubernetes connect.")
+				else if (process.env.PLATFORM === 'Linux') {
+					let execPath = path.normalize(process.env.PWD + "/../libexec/bin/FILES/KUBERNETES");
+					execPath += "/kubernetes-linux-start.sh";
+					let start = exec("sudo " + execPath, {
+						cwd: process.env.SOAJS_INSTALLER_LOCATION,
+						env: process.env
+					});
+					
+					start.stdout.on('data', (data) => {
+						if (data) {
+							process.stdout.write(data);
+						}
+					});
+					
+					start.stderr.on('data', (error) => {
+						if (error) {
+							process.stdout.write(error);
+						}
+					});
+					
+					start.on('close', (code) => {
+						if (code === 0) {
+							return callback(null, "Kubernetes started on Ubuntu, please run soajs kubernetes connect.")
+						}
+						else {
+							return callback("Error while starting Kubernetes!");
+						}
+					});
 				}
 				else {
-					return callback("Error while starting Kubernetes!");
+					return callback(null, "Command inapplicable on Linux machines..")
 				}
-			});
-		}
-		else {
-			return callback(null, "Command inapplicable on Linux machines..")
-		}
+			}
+		});
 	},
 	
 	/**

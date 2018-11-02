@@ -18,6 +18,7 @@ function initKubernetes(){
     sleep 2
 
     echo "Applying Kubernetes Flannel"
+    #https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network
     kubectl apply -f $DIRNAME/flannel/kube-flannel.yml
 
 	echo "Tainting Kubernetes Node"
