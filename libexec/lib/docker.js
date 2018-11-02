@@ -204,7 +204,7 @@ let dockerModule = {
 						//unmount the volumes and clean up
 						//&& umount /var/lib/docker/containers/* && rm -Rf /var/lib/docker/*
 						exec("rm -rf /var/lib/docker", (error, cmdOutput) => {
-							if(error || !cmdOutput){
+							if(error){
 								return callback("Error Removing Docker Swarm volumes!");
 							}
 							return callback(null, "Docker Swarm has been removed");
