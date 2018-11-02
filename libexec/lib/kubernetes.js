@@ -2,6 +2,15 @@
 const path = require("path");
 const exec = require("child_process").exec;
 
+function ifLinuxRoot(callback) {
+	if (process.env.LOGNAME !== 'root') {
+		let output = "This command requires you run it as Root!\n";
+		output += "[1] -> sudo su\n";
+		output += "[2] -> soajs kubernetes " + process.env.SOAJS_INSTALLER_COMMAND;
+		return callback(output);
+	}
+}
+
 let kubeModule = {
 	/**
 	 * install kubernetes on machine
@@ -9,38 +18,64 @@ let kubeModule = {
 	 * @param callback
 	 */
 	install: (args, callback) => {
+		
+		let dockerInstall = "docker --version";
+		let dockerStart = "docker ps";
 		let execPath = path.normalize(process.env.PWD + "/../libexec/bin/FILES/KUBERNETES");
+		
 		if (process.env.PLATFORM === 'Darwin') {
 			execPath += "/kubernetes-mac.sh";
 		}
 		else if (process.env.PLATFORM === 'Linux') {
+			
+			ifLinuxRoot(callback);
+			
 			execPath += "/kubernetes-linux-install.sh";
+			execPath = "sudo " + execPath;
+			dockerStart = "sudo " + dockerStart;
 		}
 		
-		//todo: check if kubernetes is already installed
-		
-		let install = exec("sudo " + execPath, {
-			cwd: process.env.SOAJS_INSTALLER_LOCATION,
-			env: process.env
-		});
-		install.stdout.on('data', (data) => {
+		//check if docker is installed
+		exec(dockerInstall, (error, data) => {
 			if (data) {
-				process.stdout.write(data);
-			}
-		});
-		
-		install.stderr.on('data', (error) => {
-			if (error) {
-				process.stdout.write(error);
-			}
-		});
-		
-		install.on('close', (code) => {
-			if (code === 0) {
-				return callback(null, "Kubernetes downloaded and installed...")
+				
+				//check if docker is running
+				exec(dockerStart, (err, data) => {
+					if (data) {
+						
+						//install kubernetes
+						let install = exec(execPath, {
+							cwd: process.env.SOAJS_INSTALLER_LOCATION,
+							env: process.env
+						});
+						install.stdout.on('data', (data) => {
+							if (data) {
+								process.stdout.write(data);
+							}
+						});
+						
+						install.stderr.on('data', (error) => {
+							if (error) {
+								process.stdout.write(error);
+							}
+						});
+						
+						install.on('close', (code) => {
+							if (code === 0) {
+								return callback(null, "Kubernetes downloaded and installed...")
+							}
+							else {
+								return callback("Error while downloading and installing Kubernetes!");
+							}
+						});
+					}
+					else {
+						return callback("Docker is installed but not running on this machine!\n[ RUN ] -> soajs docker start");
+					}
+				});
 			}
 			else {
-				return callback("Error while downloading and installing Kubernetes!");
+				return callback("Docker is not installed on this machine!\n[ RUN ] -> soajs docker install && soajs docker start");
 			}
 		});
 	},
@@ -52,7 +87,12 @@ let kubeModule = {
 	 */
 	connect: (args, callback) => {
 		let execPath = path.normalize(process.env.PWD + "/../libexec/bin/FILES/KUBERNETES/kubernetes-api.sh");
-		exec("sudo " + execPath, (err, result) => {
+		
+		if (process.env.PLATFORM === 'Linux') {
+			execPath = "sudo " + execPath;
+		}
+		
+		exec(execPath, (err, result) => {
 			return callback(err, result)
 		});
 	},
@@ -63,18 +103,18 @@ let kubeModule = {
 	 * @param callback
 	 */
 	remove: (args, callback) => {
-		let command;
-		if (process.env.PLATFORM === 'Darwin') {
-			command = "sudo minikube delete";
-		}
-		else if (process.env.PLATFORM === 'Linux') {
-			command = "apt-get purge -y kubeadm kubectl kubelet kubernetes-cni kube* && apt-get autoremove -y && rm -rf ~/.kube";
-		}
-		
-		// kubeModule.stop([], (error) => {
-		// 	if(error){
-		// 		console.log(error);
-		// 	}
+		kubeModule.stop([], (error) => {
+			if(error){
+				return callback(error);
+			}
+			
+			let command;
+			if (process.env.PLATFORM === 'Darwin') {
+				command = "sudo minikube delete";
+			}
+			else if (process.env.PLATFORM === 'Linux') {
+				command = "sudo apt-get purge -y kubeadm kubectl kubelet kubernetes-cni kube* && sudo apt-get autoremove -y && sudo  rm -rf ~/.kube";
+			}
 			
 			let remove = exec(command);
 			remove.stdout.on('data', (data) => {
@@ -90,15 +130,14 @@ let kubeModule = {
 			});
 			
 			remove.on('close', (code) => {
-				// if (code === 0) {
-				// 	return callback(null, "Kubernetes removed ...")
-				// }
-				// else {
-				// 	return callback("Error while removing Kubernetes!");
-				// }
-				console.log(code);
+				if (code === 0) {
+					return callback(null, "Kubernetes removed ...")
+				}
+				else {
+					return callback("Error while removing Kubernetes!");
+				}
 			});
-		// });
+		});
 	},
 	
 	/**
@@ -109,9 +148,8 @@ let kubeModule = {
 	start: (args, callback) => {
 		
 		//todo: check if kubernetes is already running
-		
 		if (process.env.PLATFORM === 'Darwin') {
-			exec("sudo minikube start", (err) => {
+			exec("minikube start", (err) => {
 				if (err) {
 					return callback(err);
 				}
@@ -121,10 +159,11 @@ let kubeModule = {
 		else if (process.env.PLATFORM === 'Linux') {
 			let execPath = path.normalize(process.env.PWD + "/../libexec/bin/FILES/KUBERNETES");
 			execPath += "/kubernetes-linux-start.sh";
-			let start = exec(execPath, {
+			let start = exec("sudo ", execPath, {
 				cwd: process.env.SOAJS_INSTALLER_LOCATION,
 				env: process.env
 			});
+			
 			start.stdout.on('data', (data) => {
 				if (data) {
 					process.stdout.write(data);
@@ -162,52 +201,21 @@ let kubeModule = {
 				if (err) {
 					return callback(err);
 				}
-				return callback(null, "Kubernetes stopped..")
+				
+				return callback(null, "Kubernetes stopped...")
 			});
 		}
 		else if (process.env.PLATFORM === 'Linux') {
-			
-			//get pids of port 6443 --> kubernetes
-			exec("lsof -i:6443", (err, commandLines) => {
+			exec("systemctl stop kubernetes", (err) => {
 				if (err) {
 					return callback(err);
 				}
-				if (!commandLines) {
-					return callback(null, "Kubernetes stopped..");
-				}
-				commandLines = commandLines.split("\n");
-				if (Array.isArray(commandLines) && commandLines.length > 0) {
-					let PIDs = [];
-					commandLines.forEach((oneCommandLine) => {
-						oneCommandLine = oneCommandLine.replace(/\s+/g, ' ').split(' ');
-						if (oneCommandLine[1] && oneCommandLine[1].trim() !== '' && oneCommandLine[1] !== 'PID') {
-							
-							if (PIDs.indexOf(oneCommandLine[1]) === -1) {
-								PIDs.push(oneCommandLine[1]);
-							}
-						}
-					});
-					
-					//if pids found, stop them
-					if (PIDs.length > 0) {
-						exec("kill -9 " + PIDs.join(" "), (err) => {
-							if (err) {
-								return callback(err);
-							}
-							return callback(null, "Kubernetes stopped..");
-						});
-					}
-					else {
-						return callback(null, "Kubernetes stopped..");
-					}
-				}
-				else {
-					return callback(null, "Kubernetes stopped..");
-				}
+				
+				return callback(null, "Kubernetes stopped...");
 			});
 		}
 		else {
-			return callback(null, "Command inapplicable on Linux machines..")
+			return callback(null, "Command inapplicable on Linux machines...")
 		}
 	},
 	
@@ -219,8 +227,7 @@ let kubeModule = {
 	restart: (args, callback) => {
 		kubeModule.stop(args, (err) => {
 			if (err) {
-				console.log(err);
-				// return callback(err);
+				return callback(err);
 			}
 			
 			setTimeout(() => {

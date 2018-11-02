@@ -185,7 +185,7 @@ let dockerModule = {
 				
 				ifLinuxRoot(callback);
 				//delete the installation files
-				command = "apt-get purge -y docker-ce";
+				command = "sudo apt-get purge -y docker-ce && sudo rm -rf /var/lib/docker";
 				let remove = exec(command);
 				
 				remove.stdout.on('data', (data) => {
@@ -202,14 +202,7 @@ let dockerModule = {
 				
 				remove.on('close', (code) => {
 					if (code === 0) {
-						//unmount the volumes and clean up
-						//&& umount /var/lib/docker/containers/* && rm -Rf /var/lib/docker/*
-						exec("rm -rf /var/lib/docker", (error, cmdOutput) => {
-							if(error){
-								return callback("Error Removing Docker Swarm volumes!");
-							}
-							return callback(null, "Docker Swarm has been removed");
-						});
+						return callback(null, "Docker Swarm has been removed");
 					}
 					else {
 						return callback("Error Removing Docker Swarm!");

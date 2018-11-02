@@ -6,34 +6,23 @@
 DIRNAME=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 function initKubernetes(){
-    echo "Initializing the master node"
-
-	echo "reseting kubeadm"
-    kubeadm reset
-
-    echo "restarting docker service"
-    systemctl enable docker && systemctl stop docker &&  systemctl start docker
-
     echo "starting kubelet"
-    systemctl enable kubelet && systemctl stop kubelet && systemctl start kubelet
-
-	echo "pulling kubeadm images"
-	kubeadm config images pull
+    systemctl start kubelet && systemctl enable kubelet
 
 	echo "initializing kubeadm"
-    kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=stable-1.7
+    kubeadm init --kubernetes-version=stable-1.7
 
 	echo "Creating kube config @ $HOME/.kube/config"
     mkdir -p $HOME/.kube
-    cp /etc/kubernetes/admin.conf $HOME/.kube/config
-    chown "${SUDO_USER}:${SUDO_USER}" $HOME/.kube/config
+    cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    chown "$(id -u):$(id -g)" $HOME/.kube/config
 
     sleep 2
 
 	echo "Tainting Kubernetes Node"
     kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
 
-    echo "Applying Kubernetes Flannel"
+	echo "Applying Kubernetes Flannel"
     kubectl apply -f $DIRNAME/flannel/kube-flannel.yml
 
 	echo "Creating Cluster Role Binding"
