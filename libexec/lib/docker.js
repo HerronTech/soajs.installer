@@ -107,6 +107,8 @@ let dockerModule = {
 			ifLinuxRoot(callback);
 			
 			process.env.MACHINE_IP = "127.0.0.1";
+			
+			execPath = "sudo " + execPath;
 		}
 		
 		let connect = exec(execPath + "/docker-api.sh", {
