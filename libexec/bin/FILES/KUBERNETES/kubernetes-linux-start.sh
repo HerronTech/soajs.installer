@@ -30,10 +30,16 @@ function initKubernetes(){
 
     sleep 2
 
+	echo "Tainting Kubernetes Node"
     kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
+
+    echo "Applying Kubernetes Flannel"
     kubectl apply -f $DIRNAME/flannel/kube-flannel.yml
 
+	echo "Creating Cluster Role Binding"
     kubectl create clusterrolebinding permissive-binding --clusterrole=cluster-admin --user=admin --user=kubelet --group=system:serviceaccounts;
+
+    echo "----- DONE -----"
 }
 
 initKubernetes
