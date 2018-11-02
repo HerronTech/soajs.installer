@@ -159,7 +159,7 @@ let kubeModule = {
 		else if (process.env.PLATFORM === 'Linux') {
 			let execPath = path.normalize(process.env.PWD + "/../libexec/bin/FILES/KUBERNETES");
 			execPath += "/kubernetes-linux-start.sh";
-			let start = exec("sudo ", execPath, {
+			let start = exec("sudo " + execPath, {
 				cwd: process.env.SOAJS_INSTALLER_LOCATION,
 				env: process.env
 			});
