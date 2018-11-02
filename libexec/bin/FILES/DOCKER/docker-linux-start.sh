@@ -11,7 +11,7 @@ echo "Initializing Docker Swarm ..."
 sudo docker swarm init --advertise-addr ${SWARM_ADVERTISE_ADDR}:${SWARM_INTERNAL_PORT}
 
 #Verify that docker is in swarm mode
-while [ -z $(docker info --format {{.Swarm.NodeID}}) ]; do
+while [ -z $(sudo docker info --format {{.Swarm.NodeID}}) ]; do
    echo "Waiting for swarm mode to become active ..."
    sleep 1;
 done

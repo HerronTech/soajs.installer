@@ -40,6 +40,7 @@ function installDocker(){
     apt-get update -y
 
     apt-get install -y docker-ce
+    systemctl stop docker
     echo "----- DONE -----"
 }
 
