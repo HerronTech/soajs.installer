@@ -1,6 +1,6 @@
 "use strict";
 var securityApp = app.components;
-securityApp.controller('securityCtrl', ['$scope', 'ngDataApi', '$modal', function($scope, ngDataApi, $modal) {
+securityApp.controller('securityCtrl', ['$scope', 'ngDataApi', '$modal', 'uuid', function($scope, ngDataApi, $modal, uuid) {
 	$scope.alerts = [];
 	
 	$scope.goBack = function(){
@@ -12,7 +12,8 @@ securityApp.controller('securityCtrl', ['$scope', 'ngDataApi', '$modal', functio
 	};
 	
 	$scope.skip = function(){
-		$scope.$parent.go("#/resources");
+		$scope.security = $scope.defaultValues;
+		$scope.fillSecurity();
 	};
 	
 	$scope.fillSecurity = function(){
@@ -31,25 +32,7 @@ securityApp.controller('securityCtrl', ['$scope', 'ngDataApi', '$modal', functio
 				return false;
 			}
 			
-			if(response.extKey){
-				var currentScope = $scope;
-				var keyModal = $modal.open({
-					templateUrl: 'keyModal.tmpl',
-					size: 'lg',
-					backdrop: true,
-					keyboard: true,
-					controller: function ($scope) {
-						$scope.newExtKey = response.extKey;
-						$scope.proceedToClusters = function () {
-							keyModal.close();
-							currentScope.$parent.go("#/resources");
-						};
-					}
-				});
-			}
-			else{
-				$scope.$parent.go("#/resources");
-			}
+			$scope.$parent.go("#/resources");
 		});
 	};
 	
@@ -72,8 +55,22 @@ securityApp.controller('securityCtrl', ['$scope', 'ngDataApi', '$modal', functio
 				}
 			}
 			
+			if(!$scope.security.key || $scope.security.key.trim() === ''){
+				$scope.security.key = uuid.v4();
+			}
+			
+			if(!$scope.security.cookie || $scope.security.cookie.trim() === ''){
+				$scope.security.cookie = uuid.v4();
+			}
+			
+			if(!$scope.security.session || $scope.security.session.trim() === ''){
+				$scope.security.session = uuid.v4();
+			}
+			
+			$scope.defaultValues = angular.copy($scope.security);
 			resizeContent();
 		});
 	};
+	
 	$scope.loadSecurity();
 }]);
