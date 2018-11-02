@@ -198,36 +198,16 @@ let dockerModule = {
 						process.stdout.write(error);
 					}
 				});
+				
 				remove.on('close', (code) => {
 					if (code === 0) {
 						//unmount the volumes and clean up
 						//&& umount /var/lib/docker/containers/* && rm -Rf /var/lib/docker/*
-						exec("cat /proc/mounts | grep docker", (error, cmdOutput) => {
+						exec("rm -rf /var/lib/docker", (error, cmdOutput) => {
 							if(error || !cmdOutput){
-								return callback("Error Removing Docker Swarm!");
+								return callback("Error Removing Docker Swarm volumes!");
 							}
-							
-							cmdOutput = cmdOutput.split("\n");
-							if (Array.isArray(cmdOutput) && cmdOutput.length > 0) {
-								let counter = 0, max = 0;
-								cmdOutput.forEach((oneCMDLine) => {
-									oneCMDLine = oneCMDLine.replace(/\s+/g, ' ').split(' ');
-									if(oneCMDLine[1] && oneCMDLine[1].trim() !== ''){
-										max++;
-										exec(`umount ${oneCMDLine[1]}`, () => {
-											//remove the lib folder
-											counter++;
-											if(counter >= max){
-												removeLibFolder();
-											}
-										});
-									}
-								});
-							}
-							else{
-								//remove the lib folder
-								removeLibFolder();
-							}
+							return callback(null, "Docker Swarm has been removed");
 						});
 					}
 					else {
@@ -236,15 +216,6 @@ let dockerModule = {
 				});
 			}
 		});
-		
-		function removeLibFolder(){
-			exec(`rm -Rf /var/lib/docker/*`, (error) => {
-				if(error){
-					return callback(error);
-				}
-				return callback(null, "Docker Swarm has been removed");
-			});
-		}
 	},
 	
 	/**
@@ -285,7 +256,7 @@ let dockerModule = {
 		else if (process.env.PLATFORM === 'Linux') {
 			
 			ifLinuxRoot(callback);
-			exec("docker ps", (err, data) => {
+			exec("sudo docker ps", (err, data) => {
 				if(data){
 					return callback("Docker already started on this machine!");
 				}
@@ -372,48 +343,12 @@ let dockerModule = {
 			ifLinuxRoot(callback);
 			
 			//remove all the docker processes found
-			exec(`ps aux | grep docker`, (error, cmdOutput) => {
+			exec(`systemctl stop docker`, (error, cmdOutput) => {
 				if (error || !cmdOutput) {
 					return callback();
 				}
-				
-				//go through the returned output and find the process ID
-				cmdOutput = cmdOutput.split("\n");
-				let counter = 0;
-				let max = 0;
-				if (Array.isArray(cmdOutput) && cmdOutput.length > 0) {
-					cmdOutput.forEach((oneCMDLine) => {
-						//command is not null, does not include grep or docker stop or docker restart
-						if (oneCMDLine.trim() !== '' && !oneCMDLine.includes("grep") && !oneCMDLine.includes("docker stop") && !oneCMDLine.includes("docker restart") && !oneCMDLine.includes("docker remove")) {
-							max++;
-							let oneProcess = oneCMDLine.replace(/\s+/g, ' ').split(' ');
-							let PID = oneProcess[1];
-							if (PID) {
-								exec(`kill -9 ${PID}`, (err) => {
-									counter++;
-									//see if you are done to leave
-									leaveMe(counter, max);
-								});
-							}
-						}
-					});
-					
-					if (max === 0) {
-						//no matching commands representing processes
-						leaveMe(0, 0);
-					}
-				}
-				else {
-					//nothing
-					leaveMe(0, 0);
-				}
-			});
-		}
-		
-		function leaveMe(counter, max) {
-			if (counter >= max) {
 				return callback(null, "Docker Swarm Stopped ...");
-			}
+			});
 		}
 	},
 	
