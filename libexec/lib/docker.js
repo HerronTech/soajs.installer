@@ -264,7 +264,7 @@ let dockerModule = {
 				else{
 					command = path.normalize(process.env.PWD + "/../libexec/bin/FILES/DOCKER/docker-linux-start.sh");
 
-					start = spawn("sudo " + command, {
+					start = spawn("sudo", [command], {
 						cwd: process.env.SOAJS_INSTALLER_LOCATION,
 						env: process.env,
 						detached: true
