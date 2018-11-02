@@ -10,7 +10,7 @@ function initKubernetes(){
     systemctl start kubelet && systemctl enable kubelet
 
 	echo "initializing kubeadm"
-    kubeadm init --kubernetes-version=stable-1.7
+    kubeadm init --pod-network-cidr=10.244.0.0/16 --kubernetes-version=stable-1.7
 
 	echo "Creating kube config @ $HOME/.kube/config"
     mkdir -p $HOME/.kube
@@ -19,11 +19,11 @@ function initKubernetes(){
 
     sleep 2
 
+    echo "Applying Kubernetes Flannel"
+    kubectl apply -f $DIRNAME/flannel/kube-flannel.yml
+
 	echo "Tainting Kubernetes Node"
     kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
-
-	echo "Applying Kubernetes Flannel"
-    kubectl apply -f $DIRNAME/flannel/kube-flannel.yml
 
 	echo "Creating Cluster Role Binding"
     kubectl create clusterrolebinding permissive-binding --clusterrole=cluster-admin --user=admin --user=kubelet --group=system:serviceaccounts;

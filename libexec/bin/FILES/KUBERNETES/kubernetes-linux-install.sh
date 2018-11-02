@@ -22,19 +22,19 @@ function installKubernetes(){
     apt-get update -y
 
     echo "Installing Kubelet ..."
-    apt-get install -y kubelet=1.7.11-00
+    apt-get install -y kubelet
     echo "Kubelet successfully intstalled"
 
     echo "Installing KubeAdm ..."
-    apt-get install -y kubeadm=1.7.11-00
+    apt-get install -y kubeadm
     echo "Kubeadm successfully installed"
 
     echo "Installing kubectl ..."
-    apt-get install -y kubectl=1.7.11-00
+    apt-get install -y kubectl
     echo "Kubectl successfully installed"
 
     echo "Instsalling Kubernetes-cni ..."
-    apt-get install -y kubernetes-cni=1.7.11-00
+    apt-get install -y kubernetes-cni
     echo "Kubernetes-cni successfully installed"
 
 	systemctl stop kubelet
