@@ -19,7 +19,7 @@ function createContainer(){
 	docker swarm join 0.0.0.0:2376
 
 	echo "Pulling soajsorg/docker-api ..."
-	docker pull soajsorg/docker-api
+	docker pull soajsorg/docker-api >> /dev/null
 	echo "Docker Image Pulled, creating manager container ..."
 
 	SWARM_API_TOKEN=$(openssl rand -hex $SWARM_TOKEN_LENGTH)
