@@ -343,8 +343,8 @@ let dockerModule = {
 			ifLinuxRoot(callback);
 			
 			//remove all the docker processes found
-			exec(`systemctl stop docker`, (error, cmdOutput) => {
-				if (error || !cmdOutput) {
+			exec(`systemctl stop docker`, (error) => {
+				if (error) {
 					return callback();
 				}
 				return callback(null, "Docker Swarm Stopped ...");
