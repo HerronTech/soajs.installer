@@ -113,7 +113,7 @@ let kubeModule = {
 				command = "sudo minikube delete";
 			}
 			else if (process.env.PLATFORM === 'Linux') {
-				command = "sudo apt-get purge -y kubeadm kubectl kubelet kubernetes-cni kube* && sudo apt-get autoremove -y && sudo  rm -rf ~/.kube";
+				command = "sudo apt-get purge -y kubeadm kubectl kubelet kubernetes-cni && sudo apt-get autoremove -y && sudo  rm -rf ~/.kube";
 			}
 			
 			let remove = exec(command);
