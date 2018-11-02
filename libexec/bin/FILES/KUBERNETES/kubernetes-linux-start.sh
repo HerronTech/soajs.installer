@@ -7,14 +7,12 @@ DIRNAME=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 function initKubernetes(){
 	echo "initializing kubeadm"
-    kubeadm init --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=192.168.0.103
-
-    #echo "starting kubelet"
-    #systemctl start kubelet && systemctl enable kubelet
+    sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 
 	echo "Creating kube config @ $HOME/.kube/config"
     mkdir -p $HOME/.kube
-    cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    rm -f $HOME/.kube/config
+    cp -if /etc/kubernetes/admin.conf $HOME/.kube/config
     chown "$(id -u):$(id -g)" $HOME/.kube/config
 
     sleep 2
