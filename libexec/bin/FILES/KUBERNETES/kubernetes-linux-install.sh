@@ -39,6 +39,6 @@ function installKubernetes(){
 }
 
 #Start here########
-printHeadline
+displayHeadline
 installKubernetes
 ###################
