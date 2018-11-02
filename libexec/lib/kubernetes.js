@@ -206,7 +206,7 @@ let kubeModule = {
 			});
 		}
 		else if (process.env.PLATFORM === 'Linux') {
-			exec("systemctl stop kubernetes", (err) => {
+			exec("systemctl stop kubelet", (err) => {
 				if (err) {
 					return callback(err);
 				}
