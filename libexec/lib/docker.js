@@ -252,7 +252,7 @@ let dockerModule = {
 			ifLinuxRoot(callback);
 			exec("sudo docker ps", (err, data) => {
 				if(data){
-					return callback("Docker already started on this machine!");
+					return callback("Docker already running on this machine!");
 				}
 				else{
 					command = path.normalize(process.env.PWD + "/../libexec/bin/FILES/DOCKER/docker-linux-start.sh");

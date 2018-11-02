@@ -149,7 +149,7 @@ let kubeModule = {
 		//check if kubernetes is running
 		exec("kubectl get ns", (error, data) => {
 			if(data){
-				return callback("Kubernetes is already running!");
+				return callback("Kubernetes is already running on this machine!");
 			}
 			else{
 				if (process.env.PLATFORM === 'Darwin') {
