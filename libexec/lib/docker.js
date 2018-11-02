@@ -122,7 +122,7 @@ let dockerModule = {
 		
 		connect.stderr.on('data', (data) => {
 			if(data){
-				return callback(data);
+				process.stdout.write(data);
 			}
 		});
 		
