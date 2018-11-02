@@ -13,10 +13,11 @@ SWARM_NETWORK_NAME="soajsnet"
 
 function createContainer(){
 
+	echo "Joining swarm"
+	docker swarm join 0.0.0.0:2376
+
 	echo "Creating Network ${SWARM_NETWORK_NAME} ..."
     docker network create --driver overlay ${SWARM_NETWORK_NAME}
-
-	docker swarm join 0.0.0.0:2376
 
 	echo "Pulling soajsorg/docker-api ..."
 	docker pull soajsorg/docker-api >> /dev/null
