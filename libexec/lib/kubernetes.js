@@ -25,6 +25,7 @@ let kubeModule = {
 		
 		if (process.env.PLATFORM === 'Darwin') {
 			execPath += "/kubernetes-mac.sh";
+			execPath = "sudo " + execPath;
 		}
 		else if (process.env.PLATFORM === 'Linux') {
 			
@@ -38,11 +39,9 @@ let kubeModule = {
 		//check if docker is installed
 		exec(dockerInstall, (error, data) => {
 			if (data) {
-				
 				//check if docker is running
 				exec(dockerStart, (err, data) => {
 					if (data) {
-						
 						//install kubernetes
 						let install = exec(execPath, {
 							cwd: process.env.SOAJS_INSTALLER_LOCATION,
@@ -87,13 +86,17 @@ let kubeModule = {
 	 */
 	connect: (args, callback) => {
 		let execPath = path.normalize(process.env.PWD + "/../libexec/bin/FILES/KUBERNETES/kubernetes-api.sh");
+		execPath = "sudo " + execPath;
 		
-		if (process.env.PLATFORM === 'Linux') {
-			execPath = "sudo " + execPath;
-		}
-		
-		exec(execPath, (err, result) => {
-			return callback(err, result)
+		exec("kubectl get ns", (error, data) => {
+			if (error) {
+				return callback("Kubernetes is not installed or not running.\n[ Install ] -> soajs kubernetes install\n[ Start ] -> soajs kubernetes start");
+			}
+			else {
+				exec(execPath, (err, result) => {
+					return callback(err, result)
+				});
+			}
 		});
 	},
 	
@@ -104,7 +107,7 @@ let kubeModule = {
 	 */
 	remove: (args, callback) => {
 		kubeModule.stop([], (error) => {
-			if(error){
+			if(error && error.toString() !== 'Command failed: sudo minikube stop'){
 				return callback(error);
 			}
 			
@@ -148,12 +151,15 @@ let kubeModule = {
 	start: (args, callback) => {
 		//check if kubernetes is running
 		exec("kubectl get ns", (error, data) => {
-			if(data){
+			if(error){
+				return callback("Kubernetes is not installed. [ RUN ] -> soajs kubernetes install");
+			}
+			else if(data){
 				return callback("Kubernetes is already running on this machine!");
 			}
 			else{
 				if (process.env.PLATFORM === 'Darwin') {
-					exec("minikube start", (err) => {
+					exec("sudo minikube start", (err) => {
 						if (err) {
 							return callback(err);
 						}
@@ -232,7 +238,7 @@ let kubeModule = {
 	 */
 	restart: (args, callback) => {
 		kubeModule.stop(args, (err) => {
-			if (err) {
+			if (err && err.toString() !== 'Command failed: sudo minikube stop') {
 				return callback(err);
 			}
 			

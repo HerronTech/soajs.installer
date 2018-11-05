@@ -110,32 +110,39 @@ let dockerModule = {
 			execPath = "sudo " + execPath;
 		}
 		
-		let connect = exec(execPath + "/docker-api.sh", {
-			cwd: process.env.SOAJS_INSTALLER_LOCATION,
-			env: process.env
-		});
-		
-		connect.stdout.on('data', (data) => {
-			if(data){
-				process.stdout.write(data);
+		//check if docker is running
+		exec("sudo docker ps", (err, data) => {
+			if (err) {
+				return callback("Docker is not installed or not running.\n[ Install ] -> soajs docker install\n[ Start ] -> soajs docker start");
+			}
+			else {
+				let connect = exec(execPath + "/docker-api.sh", {
+					cwd: process.env.SOAJS_INSTALLER_LOCATION,
+					env: process.env
+				});
+				
+				connect.stdout.on('data', (data) => {
+					if(data){
+						process.stdout.write(data);
+					}
+				});
+				
+				connect.stderr.on('data', (data) => {
+					if(data){
+						process.stdout.write(data);
+					}
+				});
+				
+				connect.on('close', (code) => {
+					if(code === 0){
+						return callback(null);
+					}
+					else{
+						return callback("Error Connecting to Docker Swarm!");
+					}
+				});
 			}
 		});
-		
-		connect.stderr.on('data', (data) => {
-			if(data){
-				process.stdout.write(data);
-			}
-		});
-		
-		connect.on('close', (code) => {
-			if(code === 0){
-				return callback(null);
-			}
-			else{
-				return callback("Error Connecting to Docker Swarm!");
-			}
-		});
-		
 	},
 	
 	/**
@@ -251,7 +258,10 @@ let dockerModule = {
 			
 			ifLinuxRoot(callback);
 			exec("sudo docker ps", (err, data) => {
-				if(data){
+				if(err){
+					return callback("Docker is not installed. [ RUN ] -> soajs docker install");
+				}
+				else if(data){
 					return callback("Docker already running on this machine!");
 				}
 				else{

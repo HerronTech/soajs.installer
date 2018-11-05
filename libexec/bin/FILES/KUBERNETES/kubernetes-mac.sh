@@ -19,11 +19,6 @@ MINIKUBE_DRIVER="virtualbox"
 CURL=$(command -v curl)
 BINARIES_PATH="/usr/local/bin"
 
-if [ $(whoami) != 'root' ]; then
-    echo "Please run this script as root, exiting ..."
-    exit 1
-fi
-
 function printHeadline() {
 	echo "###############################################################"
     echo "#"
@@ -44,10 +39,11 @@ function installVirtualbox(){
         echo 'virtualbox already downloaded ...'
     else
         $CURL -Lo virtualbox.dmg ${VIRUTALBOX_URL}
-	    local MOUNT_POINT=$(hdiutil attach virtualbox.dmg | grep /Volumes/VirtualBox | cut -f 1)
-	    installer -pkg /Volumes/VirtualBox/VirtualBox.pkg -target /Volumes/Macintosh\ HD
-	    hdiutil detach $MOUNT_POINT
     fi
+
+    local MOUNT_POINT=$(hdiutil attach virtualbox.dmg | grep /Volumes/VirtualBox | cut -f 1)
+    installer -pkg /Volumes/VirtualBox/VirtualBox.pkg -target /Volumes/Macintosh\ HD
+    hdiutil detach $MOUNT_POINT
 }
 
 function installKubectl(){
@@ -58,9 +54,10 @@ function installKubectl(){
         echo "Kubectl already downloaded ..."
     else
 		$CURL -LO ${KUBECTL_URL}
-	    chmod +x ./kubectl
-	    cp ./kubectl ${BINARIES_PATH}/kubectl
     fi
+
+    chmod +x ./kubectl
+    cp ./kubectl ${BINARIES_PATH}/kubectl
 
 }
 
@@ -72,9 +69,10 @@ function installMinikube(){
         echo 'minikube already downloaded ...'
     else
         $CURL -Lo minikube ${MINKUBE_URL}
-	    chmod +x minikube
-	    cp minikube ${BINARIES_PATH}/
     fi
+
+    chmod +x minikube
+    cp minikube ${BINARIES_PATH}/
 
 }
 
