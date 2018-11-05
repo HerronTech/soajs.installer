@@ -44,6 +44,7 @@ function createContainer(){
         echo DOCKER PORTt: 443
         echo ""
 		echo "DOCKER TOKEN: $SWARM_API_TOKEN"
+		linuxNote
 	else
         echo 'It Appears Docker Swarm is not installed or not running'
         echo ''
@@ -78,8 +79,20 @@ function deployDockerAPI(){
         echo ""
 		SWARM_API_TOKEN=$(docker exec $SWARM_API_CONTAINER_NAME bash -c 'echo "$DOCKER_API_TOKEN"')
         echo "DOCKER TOKEN: $SWARM_API_TOKEN"
+        linuxNote
     fi
 
+}
+
+function linuxNote(){
+	# check the platform to determine which ip to use: linux | darwin
+    unamestr=`uname`
+
+    if [[ "$unamestr" == 'Linux' ]]; then
+		echo "\nNOTE:\n"
+		echo "Please use (sudo) when you want to interact with Docker Swarm via your terminal.\n"
+		echo "Ex: sudo docker ps"
+    fi
 }
 
 #Start here########
