@@ -45,13 +45,3 @@ then
 else
 	ln -s $SOAJS_INSTALLER"/include/"$NODE_LOCATION"/bin/node" .
 fi
-
-echo "Linking NPM: "
-if [ -e npm ]
-then
-	echo "npm already installed"
-else
-	$SOAJS_INSTALLER/npm_install.sh
-fi
-
-popd
