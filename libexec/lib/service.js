@@ -201,7 +201,6 @@ const serviceModule = {
 		
 		//function that starts the ui express app which contains the soajs console ui.
 		function launchUI(logLoc) {
-			let uiConfig = require(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/app/config.js");
 			checkIfServiceIsRunning(requestedService, requestedEnvironment, (PID) => {
 				if (PID) {
 					nextInUI();
@@ -235,6 +234,7 @@ const serviceModule = {
 						}
 					}
 					else{
+						let uiConfig = require(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/app/config.js");
 						if(uiConfig && typeof uiConfig === 'object'){
 							//generate output message for ui
 							let output = `SOAJS Console UI started ...\n`;
