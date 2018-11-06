@@ -290,6 +290,10 @@ const consoleModule = {
 	 * @param callback
 	 */
 	'remove': (args, callback) => {
+		if (!installerConfig.workingDirectory || installerConfig.workingDirectory === '') {
+			return callback(`SOAJS Console is not installed!`);
+		}
+		
 		logger.info("Removing SOAJS Console ...\n\n");
 		setTimeout(() => {
 			//stop microservices
@@ -363,6 +367,10 @@ const consoleModule = {
 	 * @param callback
 	 */
 	'restart': (args, callback) => {
+		if (!installerConfig.workingDirectory || installerConfig.workingDirectory === '') {
+			return callback(`SOAJS Console is not installed!`);
+		}
+		
 		logger.info("Restarting SOAJS Console ...\n\n");
 		setTimeout(() => {
 			consoleModule.stop(args, (error) => {
