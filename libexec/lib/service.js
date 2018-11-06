@@ -17,6 +17,53 @@ const SOAJS_RMS = {
 	'ui': 'soajs.dashboard.ui'
 };
 
+/**
+ * Check if the requested service in the requested environment has a running process
+ * @param requestedService
+ * @param requestedEnvironment
+ * @param callback
+ */
+function checkIfServiceIsRunning(requestedService, requestedEnvironment, callback){
+	//check if there is a running process for the requested
+	exec(`ps aux | grep ${SOAJS_RMS[requestedService]}`, (error, cmdOutput) => {
+		if(error || !cmdOutput){
+			return callback(false);
+		}
+		
+		//go through the returned output and find the process ID
+		cmdOutput = cmdOutput.split("\n");
+		if(Array.isArray(cmdOutput) && cmdOutput.length > 0){
+			let PID;
+			cmdOutput.forEach((oneCMDLine) => {
+				
+				if(!oneCMDLine.includes("grep")){
+					if(requestedService === 'ui'){
+						if(oneCMDLine.includes(SOAJS_RMS[requestedService])){
+							let oneProcess = oneCMDLine.replace(/\s+/g, ' ').split(' ');
+							PID = oneProcess[1];
+						}
+					}
+					else{
+						if(oneCMDLine.includes(SOAJS_RMS[requestedService]) && oneCMDLine.includes("--env=" + requestedEnvironment)){
+							let oneProcess = oneCMDLine.replace(/\s+/g, ' ').split(' ');
+							PID = oneProcess[1];
+						}
+					}
+				}
+			});
+			
+			//if no PID return, nothing to do
+			if(!PID){
+				return callback(false);
+			}
+			return callback(PID)
+		}
+		else {
+			return callback(false);
+		}
+	});
+}
+
 const serviceModule = {
 	
 	/**
@@ -116,33 +163,40 @@ const serviceModule = {
 			process.env.SOAJS_SRVIP = '127.0.0.1';
 			process.env.SOAJS_PROFILE = path.normalize(process.env.PWD + "/../data/soajs_profile.js" );
 			
-			//check for custom port
-			if(args[2] && args[2].includes("--port")){
-				let customServicePort = args[2].split("=");
-				if(customServicePort[1] && customServicePort[1] !== ''){
-					process.env.SOAJS_SRVPORT = customServicePort[1];
+			checkIfServiceIsRunning(requestedService, requestedEnvironment, (PID) => {
+				if(PID){
+					return callback(null, `Service ${requestedService} is already running.`);
 				}
-			}
-			
-			let outLog = path.normalize(logLoc + `/${requestedEnvironment}-${requestedService}-out.log`);
-			let serviceOutLog = fs.openSync(outLog, "w");
-			
-			let errLog = path.normalize(logLoc + `/${requestedEnvironment}-${requestedService}-err.log`);
-			let serviceErrLog = fs.openSync(errLog, "w");
-			
-			let serviceInstance = spawn(process.env.NODE_BIN, [installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + `/index.js`, `--env=${requestedEnvironment}`], {
-				"env": process.env,
-				"stdio": ['ignore', serviceOutLog, serviceErrLog],
-				"detached": true,
+				else{
+					//check for custom port
+					if(args[2] && args[2].includes("--port")){
+						let customServicePort = args[2].split("=");
+						if(customServicePort[1] && customServicePort[1] !== ''){
+							process.env.SOAJS_SRVPORT = customServicePort[1];
+						}
+					}
+					
+					let outLog = path.normalize(logLoc + `/${requestedEnvironment}-${requestedService}-out.log`);
+					let serviceOutLog = fs.openSync(outLog, "w");
+					
+					let errLog = path.normalize(logLoc + `/${requestedEnvironment}-${requestedService}-err.log`);
+					let serviceErrLog = fs.openSync(errLog, "w");
+					
+					let serviceInstance = spawn(process.env.NODE_BIN, [installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + `/index.js`, `--env=${requestedEnvironment}`], {
+						"env": process.env,
+						"stdio": ['ignore', serviceOutLog, serviceErrLog],
+						"detached": true,
+					});
+					serviceInstance.unref();
+					
+					//generate out message for service
+					let output = `Service ${requestedService} started ...\n`;
+					output += "Logs:\n";
+					output += `[ out ] -> ${outLog}\n`;
+					output += `[ err ] -> ${errLog}\n`;
+					return callback(null, output);
+				}
 			});
-			serviceInstance.unref();
-			
-			//generate out message for service
-			let output = `Service ${requestedService} started ...\n`;
-			output += "Logs:\n";
-			output += `[ out ] -> ${outLog}\n`;
-			output += `[ err ] -> ${errLog}\n`;
-			return callback(null, output);
 		}
 		
 		//function that starts the ui express app which contains the soajs console ui.
@@ -215,38 +269,8 @@ const serviceModule = {
 		requestedEnvironment = requestedEnvironment[1].toLowerCase();
 		
 		//check if there is a running process for the requested
-		exec(`ps aux | grep ${SOAJS_RMS[requestedService]}`, (error, cmdOutput) => {
-			if(error || !cmdOutput){
-				return callback();
-			}
-			
-			//go through the returned output and find the process ID
-			cmdOutput = cmdOutput.split("\n");
-			if(Array.isArray(cmdOutput) && cmdOutput.length > 0){
-				let PID;
-				cmdOutput.forEach((oneCMDLine) => {
-					
-					if(!oneCMDLine.includes("grep")){
-						if(requestedService === 'ui'){
-							if(oneCMDLine.includes(SOAJS_RMS[requestedService])){
-								let oneProcess = oneCMDLine.replace(/\s+/g, ' ').split(' ');
-								PID = oneProcess[1];
-							}
-						}
-						else{
-							if(oneCMDLine.includes(SOAJS_RMS[requestedService]) && oneCMDLine.includes("--env=" + requestedEnvironment)){
-								let oneProcess = oneCMDLine.replace(/\s+/g, ' ').split(' ');
-								PID = oneProcess[1];
-							}
-						}
-					}
-				});
-				
-				//if no PID return, nothing to do
-				if(!PID){
-					return callback();
-				}
-				
+		checkIfServiceIsRunning(requestedService, requestedEnvironment, (PID) => {
+			if(PID){
 				//stop the running process
 				exec(`kill -9 ${PID}`, (error) => {
 					if(error){
@@ -257,7 +281,7 @@ const serviceModule = {
 					}
 				});
 			}
-			else {
+			else{
 				return callback();
 			}
 		});
