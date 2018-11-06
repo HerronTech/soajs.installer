@@ -30,7 +30,7 @@ function updateConfigFile(workingDirectory, cb) {
 	fs.writeFile(path.normalize(process.env.PWD + "/../etc/config.js"), newData, cb);
 }
 
-function installConsoleComponents(cb) {
+function installConsoleComponents(upgrade, cb) {
 	let myPath = installerConfig.workingDirectory + "/node_modules/";
 	fs.stat(myPath, (error, stats) => {
 		if (error) {
@@ -47,40 +47,70 @@ function installConsoleComponents(cb) {
 		}
 	});
 	
+	function checkIfModuleIsInstalled(oneRepo, cb){
+		if(!upgrade){
+			return cb(null, false);
+		}
+		
+		fs.stat(path.normalize(myPath + "/" + oneRepo), (error, stats) => {
+			if (error) {
+				if (error.code === 'ENOENT' && !stats) {
+					//not found
+					return cb(null, false);
+				}
+				else {
+					return cb(error);
+				}
+			}
+			else {
+				return cb(null, true)
+			}
+		});
+	}
+	
 	//install repos in component
 	function runNPM() {
 		logger.debug("\nInstalling SOAJS Console Components ...");
-		
 		async.eachOfSeries(SOAJS_RMS, (oneRepo, oneService, mCb) => {
-			
-			logger.info(`Installing ${oneService} from NPM ${oneRepo} in ${installerConfig.workingDirectory} ...`);
-			logger.debug(`sudo ${process.env.NPM_BIN} install ${oneRepo}`);
-			let modInstall = exec(`sudo ${process.env.NPM_BIN} install ${oneRepo}`, {
-				cwd: path.normalize(installerConfig.workingDirectory + "/node_modules")
-			});
-			
-			modInstall.stdout.on('data', (data) => {
-				if (data) {
-					process.stdout.write(data);
+			checkIfModuleIsInstalled(oneRepo, (error, exists) => {
+				if(error){
+					return mCb(error);
 				}
-			});
-			
-			modInstall.stderr.on('data', (error) => {
-				if (error) {
-					process.stdout.write(error);
+				
+				if(exists){
+					return mCb(null, true);
 				}
-			});
-			
-			modInstall.on('close', (code) => {
-				if (code === 0) {
-					logger.debug(`${oneService} installed!`);
-					setTimeout(() => {
-						return mCb(null, true);
-					}, 500);
-				}
-				else {
-					return mCb("Error installing " + oneService);
-				}
+				
+				logger.info(`Installing ${oneService} from NPM ${oneRepo} in ${installerConfig.workingDirectory} ...`);
+				logger.debug(`sudo ${process.env.NPM_BIN} install ${oneRepo}`);
+				let modInstall = exec(`sudo ${process.env.NPM_BIN} install ${oneRepo}`, {
+					cwd: path.normalize(installerConfig.workingDirectory + "/node_modules")
+				});
+				
+				modInstall.stdout.on('data', (data) => {
+					if (data) {
+						process.stdout.write(data);
+					}
+				});
+				
+				modInstall.stderr.on('data', (error) => {
+					if (error) {
+						process.stdout.write(error);
+					}
+				});
+				
+				modInstall.on('close', (code) => {
+					if (code === 0) {
+						logger.debug(`${oneService} installed!`);
+						setTimeout(() => {
+							return mCb(null, true);
+						}, 500);
+					}
+					else {
+						return mCb("Error installing " + oneService);
+					}
+				});
+				
 			});
 		}, (error) => {
 			if (error) {
@@ -200,7 +230,7 @@ const consoleModule = {
 		function installSOAJSConsole() {
 			logger.debug(`Installing SOAJS Console ...`);
 			//install all repository content
-			installConsoleComponents((error) => {
+			installConsoleComponents(false, (error) => {
 				if (error) {
 					return callback("Error while isntalling the SOAJS Console files!")
 				}
@@ -234,7 +264,7 @@ const consoleModule = {
 				}
 				
 				//update all repository content
-				installConsoleComponents((error) => {
+				installConsoleComponents(true, (error) => {
 					if (error) {
 						return callback("Error while updating the SOAJS Console files!")
 					}
