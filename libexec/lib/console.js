@@ -60,9 +60,9 @@ function installConsoleComponents(cb) {
 			
 			async.eachOfSeries(SOAJS_RMS, (oneRepo, oneService, mCb) => {
 				
-				logger.debug(`Installing ${oneService} from NPM ${oneRepo} ...`);
-				
-				exec(`npm install ${oneRepo}`, (error) => {
+				logger.info(`Installing ${oneService} from NPM ${oneRepo} ...`);
+				logger.debug(`${NPMBIN} install ${oneRepo}`);
+				exec(`${NPMBIN} install ${oneRepo}`, (error) => {
 					if (error) {
 						return mCb(error);
 					}
