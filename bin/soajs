@@ -26,12 +26,10 @@ unamestr=`uname`
 if [[ "$unamestr" == 'Linux' ]]; then
    PLATFORM='Linux'
    NODE_LOCATION="node-8.12.0/node-linux-x64"
-   NPM_LOCATION="node-8.12.0/node-linux-x64"
    MONGO_LOCATION="mongo-3.6.8/mongodb-linux-x86_64-ubuntu1604"
 elif [[ "$unamestr" == 'Darwin' ]]; then
    PLATFORM='Darwin'
    NODE_LOCATION="node-8.12.0/node-darwin-x64"
-   NPM_LOCATION="node-8.12.0/node-darwin-x64"
    MONGO_LOCATION="mongo-3.6.8/mongodb-osx-x86_64"
 fi
 
@@ -43,7 +41,6 @@ else
 	export PLATFORM;
 	export NODE_LOCATION;
 	export MONGO_LOCATION;
-	export NPM_LOCATION;
 
 	# formulate the node executable location from installer
 	NODE="${WORKING_DIRECTORY}/../include/${NODE_LOCATION}/bin/node"
