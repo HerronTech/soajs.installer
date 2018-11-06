@@ -97,7 +97,7 @@ function ifNotSudo(callback) {
 		let output = "This command requires you run it as Root!\n";
 		return callback(output);
 	}
-	else if(process.env.PLATFORM === 'Darwin'){
+	else if(process.env.PLATFORM === 'Darwin' && process.env.LOGNAME !== 'root'){
 		let output = "This command requires you run it as: sudo soajs console " + process.env.SOAJS_INSTALLER_COMMAND;
 		return callback(output);
 	}
