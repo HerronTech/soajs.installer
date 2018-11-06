@@ -201,38 +201,46 @@ const serviceModule = {
 		
 		//function that starts the ui express app which contains the soajs console ui.
 		function launchUI(logLoc) {
-			let outLog = path.normalize(logLoc + `/${requestedEnvironment}-${requestedService}-out.log`);
-			let serviceOutLog = fs.openSync(outLog, "w");
-			
-			let errLog = path.normalize(logLoc + `/${requestedEnvironment}-${requestedService}-err.log`);
-			let serviceErrLog = fs.openSync(errLog, "w");
-			
-			let serviceInstance = spawn(process.env.NODE_BIN, [installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/app/index.js"], {
-				"env": process.env,
-				"stdio": ['ignore', serviceOutLog, serviceErrLog],
-				"detached": true,
-			});
-			serviceInstance.unref();
-			
-			//require the ui config to learn the host and the port values
-			fs.stat(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/app/config.js", (error) => {
-				if(error){
-					if(error.code === 'ENOENT'){
-						return callback(null, null);
-					}
-					else {
-						return callback(error);
-					}
+			let uiConfig = require(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/app/config.js");
+			checkIfServiceIsRunning(requestedService, requestedEnvironment, (PID) => {
+				if (PID) {
+					let output = `SOAJS UI Console is already running, In your Browser, open: http://${uiConfig.host}:${uiConfig.port}/ \\n`;
+					return callback(null, output);
 				}
-				else{
-					let uiConfig = require(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/app/config.js");
-					if(uiConfig && typeof uiConfig === 'object'){
-						//generate output message for ui
-						let output = `SOAJS Console UI started ...\n`;
-						output += `In your Browser, open: http://${uiConfig.host}:${uiConfig.port}/ \n`;
-						return callback(null, output);
-					}
-					else return callback(null, null);
+				else {
+					let outLog = path.normalize(logLoc + `/${requestedEnvironment}-${requestedService}-out.log`);
+					let serviceOutLog = fs.openSync(outLog, "w");
+					
+					let errLog = path.normalize(logLoc + `/${requestedEnvironment}-${requestedService}-err.log`);
+					let serviceErrLog = fs.openSync(errLog, "w");
+					
+					let serviceInstance = spawn(process.env.NODE_BIN, [installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/app/index.js"], {
+						"env": process.env,
+						"stdio": ['ignore', serviceOutLog, serviceErrLog],
+						"detached": true,
+					});
+					serviceInstance.unref();
+					
+					//require the ui config to learn the host and the port values
+					fs.stat(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/app/config.js", (error) => {
+						if(error){
+							if(error.code === 'ENOENT'){
+								return callback(null, null);
+							}
+							else {
+								return callback(error);
+							}
+						}
+						else{
+							if(uiConfig && typeof uiConfig === 'object'){
+								//generate output message for ui
+								let output = `SOAJS Console UI started ...\n`;
+								output += `In your Browser, open: http://${uiConfig.host}:${uiConfig.port}/ \n`;
+								return callback(null, output);
+							}
+							else return callback(null, null);
+						}
+					});
 				}
 			});
 		}
