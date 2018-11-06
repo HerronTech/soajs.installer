@@ -51,7 +51,8 @@ if [ -e npm ]
 then
 	echo "npm already installed"
 else
-	ln -s $SOAJS_INSTALLER"/node_modules/npm/bin/npm-cli.js" .
+	ln -s $SOAJS_INSTALLER"/node_modules/npm/bin/npm-cli.js" npm
+	ln -s $SOAJS_INSTALLER"/node_modules/npm/bin/npx-cli.js" npx
 fi
 
 popd
