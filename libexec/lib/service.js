@@ -204,8 +204,7 @@ const serviceModule = {
 			let uiConfig = require(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/app/config.js");
 			checkIfServiceIsRunning(requestedService, requestedEnvironment, (PID) => {
 				if (PID) {
-					let output = `SOAJS UI Console is already running, In your Browser, open: http://${uiConfig.host}:${uiConfig.port}/ \\n`;
-					return callback(null, output);
+					nextInUI();
 				}
 				else {
 					let outLog = path.normalize(logLoc + `/${requestedEnvironment}-${requestedService}-out.log`);
@@ -220,29 +219,32 @@ const serviceModule = {
 						"detached": true,
 					});
 					serviceInstance.unref();
-					
-					//require the ui config to learn the host and the port values
-					fs.stat(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/app/config.js", (error) => {
-						if(error){
-							if(error.code === 'ENOENT'){
-								return callback(null, null);
-							}
-							else {
-								return callback(error);
-							}
-						}
-						else{
-							if(uiConfig && typeof uiConfig === 'object'){
-								//generate output message for ui
-								let output = `SOAJS Console UI started ...\n`;
-								output += `In your Browser, open: http://${uiConfig.host}:${uiConfig.port}/ \n`;
-								return callback(null, output);
-							}
-							else return callback(null, null);
-						}
-					});
+					nextInUI();
 				}
 			});
+			
+			function nextInUI(){
+				//require the ui config to learn the host and the port values
+				fs.stat(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[requestedService] + "/app/config.js", (error) => {
+					if(error){
+						if(error.code === 'ENOENT'){
+							return callback(null, null);
+						}
+						else {
+							return callback(error);
+						}
+					}
+					else{
+						if(uiConfig && typeof uiConfig === 'object'){
+							//generate output message for ui
+							let output = `SOAJS Console UI started ...\n`;
+							output += `In your Browser, open: http://${uiConfig.host}:${uiConfig.port}/ \n`;
+							return callback(null, output);
+						}
+						else return callback(null, null);
+					}
+				});
+			}
 		}
 	},
 	
