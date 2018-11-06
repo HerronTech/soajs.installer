@@ -51,7 +51,7 @@ if [ -e npm ]
 then
 	echo "npm already installed"
 else
-	./npm_install.sh
+	$SOAJS_INSTALLER/npm_install.sh
 fi
 
 popd
