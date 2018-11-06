@@ -277,7 +277,10 @@ let dockerModule = {
 					start.stdout.on('data', (data) => {
 						if (data) {
 							if (data.toString().includes("----- DONE -----")) {
-								return callback(null, "Docker Swarm started on Ubuntu, please run soajs docker connect.");
+								let out = "Docker Swarm started on Ubuntu, please run soajs docker connect.";
+								out += "\nDocker CLI Commands require (sudo) to work, ex: sudo docker ps"
+								
+								return callback(null, out);
 							}
 							else {
 								process.stdout.write(data);
