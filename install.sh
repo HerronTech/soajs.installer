@@ -39,7 +39,7 @@ else
 fi
 
 echo "Linking NodeJS: "
-if [ -e soajs ]
+if [ -e node ]
 then
 	echo "nodejs already installed"
 else
@@ -47,7 +47,7 @@ else
 fi
 
 echo "Linking NPM: "
-if [ -e soajs ]
+if [ -e npm ]
 then
 	echo "npm already installed"
 else
