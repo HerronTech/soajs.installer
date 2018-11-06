@@ -54,7 +54,7 @@ function installConsoleComponents(cb) {
 			
 			logger.info(`Installing ${oneService} from NPM ${oneRepo} in ${installerConfig.workingDirectory} ...`);
 			logger.debug(`${process.env.NPM_BIN} install ${oneRepo}`);
-			let modInstall = exec(`sudo ${process.env.NPMBIN} install ${oneRepo}`, {
+			let modInstall = exec(`sudo ${process.env.NPM_BIN} install ${oneRepo}`, {
 				cwd: installerConfig.workingDirectory
 			});
 			
