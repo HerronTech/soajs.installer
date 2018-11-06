@@ -48,7 +48,7 @@ function installConsoleComponents(upgrade, cb) {
 	});
 	
 	function checkIfModuleIsInstalled(oneRepo, cb){
-		if(!upgrade){
+		if(upgrade){
 			return cb(null, false);
 		}
 		
