@@ -255,6 +255,10 @@ const consoleModule = {
 	 * @param callback
 	 */
 	'update': (args, callback) => {
+		if (!installerConfig.workingDirectory || installerConfig.workingDirectory === '') {
+			return callback(`SOAJS Console is not installed!`);
+		}
+		
 		logger.info("Updating SOAJS Console ...\n\n");
 		setTimeout(() => {
 			//stop microservices
