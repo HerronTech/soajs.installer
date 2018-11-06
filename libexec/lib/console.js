@@ -51,8 +51,9 @@ function installConsoleComponents(upgrade, cb) {
 		if(upgrade){
 			return cb(null, false);
 		}
-		
+		logger.debug("checking if repo is downloaded:", oneRepo);
 		fs.stat(path.normalize(myPath + "/" + oneRepo), (error, stats) => {
+			console.log(error, stats);
 			if (error) {
 				if (error.code === 'ENOENT' && !stats) {
 					//not found
