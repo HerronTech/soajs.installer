@@ -91,7 +91,7 @@ function linuxNote(){
     if [[ "$unamestr" == 'Linux' ]]; then
 		echo ""
 		echo "NOTE:"
-		echo "Please use (sudo) when you want to interact with Docker Swarm via your terminal.\n"
+		echo "Please use (sudo) when you want to interact with Docker Swarm via your terminal."
 		echo "Ex: sudo docker ps"
     fi
 }
