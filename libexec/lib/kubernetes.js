@@ -151,7 +151,7 @@ let kubeModule = {
 	start: (args, callback) => {
 		//check if kubernetes is running
 		exec("kubectl get ns", (error, data) => {
-			if(error){
+			if(error && !error.toString().includes("The connection to the server localhost:8080 was refused - did you specify the right host or port?")){
 				return callback("Kubernetes is not installed. [ RUN ] -> soajs kubernetes install");
 			}
 			else if(data){
