@@ -59,9 +59,11 @@ function installConsoleComponents(cb) {
 			
 			async.eachOfSeries(SOAJS_RMS, (oneRepo, oneService, mCb) => {
 				
-				logger.info(`Installing ${oneService} from NPM ${oneRepo} ...`);
+				logger.info(`Installing ${oneService} from NPM ${oneRepo} in ${installerConfig.workingDirectory} ...`);
 				logger.debug(`${process.env.NPM_BIN} install ${oneRepo}`);
-				exec(`${process.env.NPMBIN} install ${oneRepo}`, (error) => {
+				exec(`${process.env.NPMBIN} install ${oneRepo}`, {
+					cwd: installerConfig.workingDirectory
+				},(error) => {
 					if (error) {
 						return mCb(error);
 					}
