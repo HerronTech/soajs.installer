@@ -92,6 +92,17 @@ function installConsoleComponents(cb) {
 	}
 }
 
+function ifNotSudo(callback) {
+	if (process.env.PLATFORM === 'Linux' && process.env.LOGNAME !== 'root') {
+		let output = "This command requires you run it as Root!\n";
+		return callback(output);
+	}
+	else if(process.env.PLATFORM === 'Darwin'){
+		let output = "This command requires you run it as: sudo soajs console " + process.env.SOAJS_INSTALLER_COMMAND;
+		return callback(output);
+	}
+}
+
 const consoleModule = {
 	
 	/**
@@ -398,6 +409,9 @@ const consoleModule = {
 	 * @returns {*}
 	 */
 	'stop': (args, callback) => {
+		
+		ifNotSudo(callback);
+		
 		let requestedEnvironment = 'dashboard';
 		
 		//check if service is installed and downloaded
