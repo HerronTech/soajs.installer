@@ -66,7 +66,7 @@ function installConsoleComponents(cb) {
 			
 			modInstall.stderr.on('data', (error) => {
 				if (error) {
-					process.stdout.write(data);
+					process.stdout.write(error);
 				}
 			});
 			
