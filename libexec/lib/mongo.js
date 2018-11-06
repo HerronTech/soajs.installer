@@ -8,6 +8,17 @@ const mkdirp = require("mkdirp");
 let Mongo = require("soajs").mongo;
 const async = require('async');
 
+function ifNotSudo(callback) {
+	if (process.env.PLATFORM === 'Linux' && process.env.LOGNAME !== 'root') {
+		let output = "This command requires you run it as Root!\n";
+		return callback(output);
+	}
+	else if(process.env.PLATFORM === 'Darwin' && process.env.LOGNAME !== 'root'){
+		let output = "This command requires you run it as: sudo soajs mongo " + process.env.SOAJS_INSTALLER_COMMAND;
+		return callback(output);
+	}
+}
+
 //mongo commands
 let mongoModule = {
 	/**
@@ -85,6 +96,9 @@ let mongoModule = {
 	 * @param callback
 	 */
 	start: (args, callback) => {
+		
+		ifNotSudo(callback)
+		
 		let mongoDbConf = path.normalize(process.env.PWD + "/../include/" + process.env.MONGO_LOCATION + "/mongod.conf");
 		
 		//check ig mongo.conf is found
@@ -93,7 +107,7 @@ let mongoModule = {
 				return callback(null, `MongoDB configuration file not found. Run [soajs mongo install] to create one.`)
 			}
 			let mongoPath = process.env.PWD + "/../include/" + process.env.MONGO_LOCATION + "/bin/mongod";
-			const startMongo = spawn(mongoPath, [`--config=${mongoDbConf}`],
+			const startMongo = spawn("sudo", [mongoPath, `--config=${mongoDbConf}`],
 				{
 					detached: true,
 					"stdio": ['ignore', 'ignore', 'ignore']
@@ -136,7 +150,7 @@ let mongoModule = {
 				}
 				
 				//stop the running process
-				exec(`kill -9 ${PID}`, (error) => {
+				exec(`sudo kill -9 ${PID}`, (error) => {
 					if (error) {
 						return callback(error);
 					}
