@@ -19,6 +19,10 @@ BINLOCACTION=''
 # check the platform to determine which node to use: linux | darwin
 unamestr=`uname`
 if [[ "$unamestr" == 'Linux' ]]; then
+
+	# install make, it is needed
+	apt-get install -y make
+
 	BINLOCACTION='/usr/bin'
 	NODE_LOCATION="node-8.12.0/node-linux-x64"
 
