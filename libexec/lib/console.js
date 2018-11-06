@@ -294,7 +294,7 @@ const consoleModule = {
 		setTimeout(() => {
 			//stop microservices
 			consoleModule.stop(args, (error) => {
-				if (error) {
+				if (error && error.toString() !== `SOAJS Console is not installed!`) {
 					return callback("Unable to Stop the SOAJS Console!");
 				}
 				
@@ -366,7 +366,7 @@ const consoleModule = {
 		logger.info("Restarting SOAJS Console ...\n\n");
 		setTimeout(() => {
 			consoleModule.stop(args, (error) => {
-				if (error) {
+				if (error && error.toString() !== `SOAJS Console is not installed!`) {
 					return callback("Unable to Stop the SOAJS Console!");
 				}
 				
