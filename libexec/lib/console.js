@@ -2,6 +2,7 @@
 
 const path = require("path");
 const fs = require("fs");
+const exec = require("child_process").exec;
 
 const mkdirp = require("mkdirp");
 const async = require("async");
@@ -49,17 +50,19 @@ function installConsoleComponents(cb) {
 	
 	//install repos in component
 	function runNPM() {
+		let NPMBIN = process.env.NPM_LOCATION + "/bin/npm";
 		logger.debug("\nInstalling SOAJS Console Components ...");
-		process.argv = [installerConfig.workingDirectory];
-		npm.load({prefix: installerConfig.workingDirectory}, (err) => {
-			if (err) {
-				return cb(err);
-			}
+		// process.argv = [installerConfig.workingDirectory];
+		// npm.load({prefix: installerConfig.workingDirectory}, (err) => {
+		// 	if (err) {
+		// 		return cb(err);
+		// 	}
 			
 			async.eachOfSeries(SOAJS_RMS, (oneRepo, oneService, mCb) => {
 				
 				logger.debug(`Installing ${oneService} from NPM ${oneRepo} ...`);
-				npm.commands.install([oneRepo], (error) => {
+				
+				exec(`npm install ${oneRepo}`, (error) => {
 					if (error) {
 						return mCb(error);
 					}
@@ -69,6 +72,9 @@ function installConsoleComponents(cb) {
 						return mCb(null, true);
 					}, 500);
 				});
+				// npm.commands.install([oneRepo], (error) => {
+				//
+				// });
 			}, (error) => {
 				if (error) {
 					return cb(error);
@@ -76,7 +82,7 @@ function installConsoleComponents(cb) {
 				
 				return cb(null, true);
 			});
-		});
+		// });
 	}
 }
 
