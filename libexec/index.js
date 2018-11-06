@@ -55,6 +55,8 @@ processArguments.shift();
 //calculate and append node executable to process environment variables
 let NodeLocation = path.normalize(process.env.PWD + `/../include/${process.env.NODE_LOCATION}/bin/node`);
 process.env.NODE_BIN = NodeLocation;
+let NPMLocation = path.normalize(process.env.PWD + `/../include/${process.env.NODE_LOCATION}/bin/npm`);
+process.env.NPM_BIN = NPMLocation;
 
 //set the soajs module directory
 let soajsModulesDirectory = path.normalize(process.env.PWD + `/../libexec/lib/`);

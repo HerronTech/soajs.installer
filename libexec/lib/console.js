@@ -50,7 +50,6 @@ function installConsoleComponents(cb) {
 	
 	//install repos in component
 	function runNPM() {
-		let NPMBIN = process.env.NPM_LOCATION + "/bin/npm";
 		logger.debug("\nInstalling SOAJS Console Components ...");
 		// process.argv = [installerConfig.workingDirectory];
 		// npm.load({prefix: installerConfig.workingDirectory}, (err) => {
@@ -61,8 +60,8 @@ function installConsoleComponents(cb) {
 			async.eachOfSeries(SOAJS_RMS, (oneRepo, oneService, mCb) => {
 				
 				logger.info(`Installing ${oneService} from NPM ${oneRepo} ...`);
-				logger.debug(`${NPMBIN} install ${oneRepo}`);
-				exec(`${NPMBIN} install ${oneRepo}`, (error) => {
+				logger.debug(`${process.env.NPM_BIN} install ${oneRepo}`);
+				exec(`${process.env.NPMBIN} install ${oneRepo}`, (error) => {
 					if (error) {
 						return mCb(error);
 					}
