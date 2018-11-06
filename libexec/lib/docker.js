@@ -258,7 +258,7 @@ let dockerModule = {
 			
 			ifLinuxRoot(callback);
 			exec("sudo docker ps", (err, data) => {
-				if(err){
+				if(err && !err.toString().includes("Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?")){
 					return callback("Docker is not installed. [ RUN ] -> soajs docker install");
 				}
 				else if(data){
