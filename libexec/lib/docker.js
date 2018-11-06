@@ -121,9 +121,10 @@ let dockerModule = {
 					env: process.env
 				});
 				
+				let connectOutput = '';
 				connect.stdout.on('data', (data) => {
 					if(data){
-						process.stdout.write(data);
+						connectOutput += data.toString();
 					}
 				});
 				
@@ -135,7 +136,7 @@ let dockerModule = {
 				
 				connect.on('close', (code) => {
 					if(code === 0){
-						return callback(null);
+						return callback(null, connectOutput);
 					}
 					else{
 						return callback("Error Connecting to Docker Swarm!");
