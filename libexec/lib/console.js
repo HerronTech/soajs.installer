@@ -159,7 +159,7 @@ const consoleModule = {
 			if (myPath[myPath.length - 1] === 'node_modules') {
 				myPath.pop();
 				myPath = myPath.join(path.sep);
-				args[0] = myPath;
+				args[0] = path.normalize(myPath);
 			}
 		}
 		
