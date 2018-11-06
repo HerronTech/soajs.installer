@@ -145,10 +145,14 @@ const consoleModule = {
 	 */
 	'install': (args, callback) => {
 		if (args.length === 0) {
-			return callback("Please provide where you want to install the SOAJS Console. Ex: soajs console install %folder_path%");
+			return callback("Please provide where you want to install the SOAJS Console. Ex: soajs console install /%folder_path%");
 		}
 		
 		//clean up the path ...
+		if(args[0].charAt(0) !== '/'){
+			return callback("Invalid folder path; please provide an absolute folder path to install the console. Ex: soajs console install /%folder_path%.");
+		}
+		
 		if (args[0].includes("node_modules")) {
 			let myPath = args[0].split(path.sep);
 			for(let i = myPath.length -1; i > 0; i--){
