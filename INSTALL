@@ -32,22 +32,22 @@ elif [[ "$unamestr" == 'Darwin' ]]; then
 
 fi
 
-pushd $$BINLOCATION
+pushd $BINLOCATION
 
 echo "Linking SOAJS Installer: "
 if [ -e soajs ]
 then
-	echo "soajs installer already linked to your $$BINLOCATION"
+	echo "soajs installer already linked to your $BINLOCATION"
 else
-	echo "Linking soajs installer to your $$BINLOCATION"
+	echo "Linking soajs installer to your $BINLOCATION"
 	ln -s $SOAJS_INSTALLER"/bin/soajs" .
 fi
 
 echo "Linking NodeJS: "
 if [ -e node ]
 then
-	echo "nodejs already linked to your $$BINLOCATION"
+	echo "nodejs already linked to your $BINLOCATION"
 else
-	echo "Linking nodejs installer to your $$BINLOCATION"
+	echo "Linking nodejs installer to your $BINLOCATION"
 	ln -s $SOAJS_INSTALLER"/include/"$NODE_LOCATION"/bin/node" .
 fi
