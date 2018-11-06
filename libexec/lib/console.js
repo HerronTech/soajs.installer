@@ -191,7 +191,7 @@ const consoleModule = {
 								logger.debug(response);
 								installSOAJSConsole();
 							});
-						}, 2000);
+						}, 10000); //wait for mongo to become ready
 					});
 				}, 100);
 			});
