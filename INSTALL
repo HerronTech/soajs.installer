@@ -23,11 +23,11 @@ if [[ "$unamestr" == 'Linux' ]]; then
 	# install make, it is needed
 	apt-get install -y make
 
-	$BINLOCATION='/usr/bin'
+	BINLOCATION='/usr/bin'
 	NODE_LOCATION="node-8.12.0/node-linux-x64"
 
 elif [[ "$unamestr" == 'Darwin' ]]; then
-	$BINLOCATION='/usr/local/bin'
+	BINLOCATION='/usr/local/bin'
 	NODE_LOCATION="node-8.12.0/node-darwin-x64"
 
 fi
