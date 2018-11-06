@@ -279,6 +279,7 @@ const consoleModule = {
 									logger.debug(path.normalize(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[oneService]) + "\n");
 									rimraf(path.normalize(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[oneService]), (error) => {
 										if (error) {
+											logger.error(error);
 											return mCb(error);
 										}
 										logger.debug(`${oneService} --> ${oneRepo}: Removed!`);
@@ -290,7 +291,11 @@ const consoleModule = {
 									}
 									
 									//remove working directory
-									rimraf(path.normalize(installerConfig.workingDirectory), () => {
+									rimraf(path.normalize(installerConfig.workingDirectory), (error) => {
+										if (error) {
+											logger.error(error);
+											return callback(error);
+										}
 										
 										//clean up the configuration file
 										updateConfigFile('', (error) => {
