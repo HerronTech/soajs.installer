@@ -14,7 +14,7 @@ done
 SOAJS_INSTALLER="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 #location of /usr/bin based on operating system
-BINLOCACTION=''
+$BINLOCATION=''
 
 # check the platform to determine which node to use: linux | darwin
 unamestr=`uname`
@@ -23,29 +23,31 @@ if [[ "$unamestr" == 'Linux' ]]; then
 	# install make, it is needed
 	apt-get install -y make
 
-	BINLOCACTION='/usr/bin'
+	$BINLOCATION='/usr/bin'
 	NODE_LOCATION="node-8.12.0/node-linux-x64"
 
 elif [[ "$unamestr" == 'Darwin' ]]; then
-	BINLOCACTION='/usr/local/bin'
+	$BINLOCATION='/usr/local/bin'
 	NODE_LOCATION="node-8.12.0/node-darwin-x64"
 
 fi
 
-pushd $BINLOCACTION
+pushd $$BINLOCATION
 
 echo "Linking SOAJS Installer: "
 if [ -e soajs ]
 then
-	echo "soajs installer already installed"
+	echo "soajs installer already linked to your $$BINLOCATION"
 else
+	echo "Linking soajs installer to your $$BINLOCATION"
 	ln -s $SOAJS_INSTALLER"/bin/soajs" .
 fi
 
 echo "Linking NodeJS: "
 if [ -e node ]
 then
-	echo "nodejs already installed"
+	echo "nodejs already linked to your $$BINLOCATION"
 else
+	echo "Linking nodejs installer to your $$BINLOCATION"
 	ln -s $SOAJS_INSTALLER"/include/"$NODE_LOCATION"/bin/node" .
 fi
