@@ -54,17 +54,32 @@ function installConsoleComponents(cb) {
 			
 			logger.info(`Installing ${oneService} from NPM ${oneRepo} in ${installerConfig.workingDirectory} ...`);
 			logger.debug(`${process.env.NPM_BIN} install ${oneRepo}`);
-			exec(`sudo ${process.env.NPMBIN} install ${oneRepo}`, {
+			let modInstall = exec(`sudo ${process.env.NPMBIN} install ${oneRepo}`, {
 				cwd: installerConfig.workingDirectory
-			},(error) => {
-				if (error) {
-					return mCb(error);
+			});
+			
+			modInstall.stdout.on('data', (data) => {
+				if (data) {
+					process.stdout.write(data);
 				}
-				
-				logger.debug(`${oneService} installed!`);
-				setTimeout(() => {
-					return mCb(null, true);
-				}, 500);
+			});
+			
+			modInstall.stderr.on('data', (error) => {
+				if (error) {
+					process.stdout.write(data);
+				}
+			});
+			
+			modInstall.on('close', (code) => {
+				if(code === 0){
+					logger.debug(`${oneService} installed!`);
+					setTimeout(() => {
+						return mCb(null, true);
+					}, 500);
+				}
+				else{
+					return mCb("Error Install " + oneRepo);
+				}
 			});
 		}, (error) => {
 			if (error) {
