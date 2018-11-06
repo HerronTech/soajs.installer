@@ -191,7 +191,7 @@ const consoleModule = {
 								logger.debug(response);
 								installSOAJSConsole();
 							});
-						}, 1000);
+						}, 2000);
 					});
 				}, 100);
 			});
