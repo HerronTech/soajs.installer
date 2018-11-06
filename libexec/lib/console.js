@@ -151,6 +151,11 @@ const consoleModule = {
 		//clean up the path ...
 		if (args[0].includes("node_modules")) {
 			let myPath = args[0].split(path.sep);
+			for(let i = myPath.length -1; i >= 0; i--){
+				if(myPath[i].trim() === ''){
+					myPath.splice(i, 1);
+				}
+			}
 			if (myPath[myPath.length - 1] === 'node_modules') {
 				myPath.pop();
 				myPath = myPath.join(path.sep);
