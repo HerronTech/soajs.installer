@@ -6,7 +6,6 @@ const exec = require("child_process").exec;
 
 const mkdirp = require("mkdirp");
 const async = require("async");
-const npm = require("npm");
 const rimraf = require("rimraf");
 
 const installerConfig = require(path.normalize(process.env.PWD + "/../etc/config.js"));
@@ -51,39 +50,29 @@ function installConsoleComponents(cb) {
 	//install repos in component
 	function runNPM() {
 		logger.debug("\nInstalling SOAJS Console Components ...");
-		// process.argv = [installerConfig.workingDirectory];
-		// npm.load({prefix: installerConfig.workingDirectory}, (err) => {
-		// 	if (err) {
-		// 		return cb(err);
-		// 	}
+		async.eachOfSeries(SOAJS_RMS, (oneRepo, oneService, mCb) => {
 			
-			async.eachOfSeries(SOAJS_RMS, (oneRepo, oneService, mCb) => {
-				
-				logger.info(`Installing ${oneService} from NPM ${oneRepo} in ${installerConfig.workingDirectory} ...`);
-				logger.debug(`${process.env.NPM_BIN} install ${oneRepo}`);
-				exec(`${process.env.NPMBIN} install ${oneRepo}`, {
-					cwd: installerConfig.workingDirectory
-				},(error) => {
-					if (error) {
-						return mCb(error);
-					}
-					
-					logger.debug(`${oneService} installed!`);
-					setTimeout(() => {
-						return mCb(null, true);
-					}, 500);
-				});
-				// npm.commands.install([oneRepo], (error) => {
-				//
-				// });
-			}, (error) => {
+			logger.info(`Installing ${oneService} from NPM ${oneRepo} in ${installerConfig.workingDirectory} ...`);
+			logger.debug(`${process.env.NPM_BIN} install ${oneRepo}`);
+			exec(`sudo ${process.env.NPMBIN} install ${oneRepo}`, {
+				cwd: installerConfig.workingDirectory
+			},(error) => {
 				if (error) {
-					return cb(error);
+					return mCb(error);
 				}
 				
-				return cb(null, true);
+				logger.debug(`${oneService} installed!`);
+				setTimeout(() => {
+					return mCb(null, true);
+				}, 500);
 			});
-		// });
+		}, (error) => {
+			if (error) {
+				return cb(error);
+			}
+			
+			return cb(null, true);
+		});
 	}
 }
 

@@ -26,7 +26,6 @@
     "bunyan": "1.8.5",
     "bunyan-format": "0.2.1",
     "mkdirp": "*",
-    "npm": "*",
     "rimraf": "*",
     "soajs": "2.0.*",
     "yamljs": "^0.3.0"
