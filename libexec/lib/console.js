@@ -5,8 +5,8 @@ const fs = require("fs");
 
 const mkdirp = require("mkdirp");
 const async = require("async");
-const npm = require("npm");
 const rimraf = require("rimraf");
+const exec = require("child_process").exec;
 
 const installerConfig = require(path.normalize(process.env.PWD + "/../etc/config.js"));
 const serviceModule = require("./service");
@@ -50,32 +50,44 @@ function installConsoleComponents(cb) {
 	//install repos in component
 	function runNPM() {
 		logger.debug("\nInstalling SOAJS Console Components ...");
-		process.argv = [installerConfig.workingDirectory];
-		npm.load({prefix: installerConfig.workingDirectory}, (err) => {
-			if (err) {
-				return cb(err);
-			}
+		
+		async.eachOfSeries(SOAJS_RMS, (oneRepo, oneService, mCb) => {
 			
-			async.eachOfSeries(SOAJS_RMS, (oneRepo, oneService, mCb) => {
-				
-				logger.info(`Installing ${oneService} from NPM ${oneRepo} in ${installerConfig.workingDirectory} ...`);
-				npm.commands.install([oneRepo], (error) => {
-					if (error) {
-						return mCb(error);
-					}
-					
+			logger.info(`Installing ${oneService} from NPM ${oneRepo} in ${installerConfig.workingDirectory} ...`);
+			logger.debug(`sudo ${process.env.NPM_BIN} install ${oneRepo}`);
+			let modInstall = exec(`sudo ${process.env.NPM_BIN} install ${oneRepo}`, {
+				cwd: path.normalize(installerConfig.workingDirectory + "/node_modules")
+			});
+			
+			modInstall.stdout.on('data', (data) => {
+				if (data) {
+					process.stdout.write(data);
+				}
+			});
+			
+			modInstall.stderr.on('data', (error) => {
+				if (error) {
+					process.stdout.write(error);
+				}
+			});
+			
+			modInstall.on('close', (code) => {
+				if (code === 0) {
 					logger.debug(`${oneService} installed!`);
 					setTimeout(() => {
 						return mCb(null, true);
 					}, 500);
-				});
-			}, (error) => {
-				if (error) {
-					return cb(error);
 				}
-				
-				return cb(null, true);
+				else {
+					return mCb("Error installing " + oneService);
+				}
 			});
+		}, (error) => {
+			if (error) {
+				return cb(error);
+			}
+			
+			return cb(null, true);
 		});
 	}
 }
