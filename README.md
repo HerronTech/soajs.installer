@@ -1,47 +1,47 @@
 # soajs.installer
 
-The SOAJS installer is a ready to use application that facilitates installing the SOAJS Console on your machine as well as installing docker swarm and kubernetes and connecting to them.
-
-The installer also extends the functionality of the SOAJS Console after the later is installed and empowers it with the ability to start and stop SOAJS Ready Made Services under manual development environments.
-
-The installer is also equipped with a remote cloud deployer that allow you to deploy the SOAJS Console using container technology on any remote container cluster running Docker Swarm or Kubernetes.
-
-## Package Content
-This package contains:
-- MongoDB Server 
-- NodeJS
-- NPM
-- Docker 
-- Kubernetes
-- Remote Cloud SOAJS installer
- 
+Installing SOAJS has never been easier. Simply download the installer from [soajs.org](https://soajsorg.atlassian.net/wiki/spaces/IN/overview) and follow the instruction.
 
 ## Installation
-After you download and unzip the installer, simply run the **INSTALL** script which creates symbolic links to the executable files in your /usr/bin (ubuntu) or /usr/local/bin (osx) directory.
+After you download and unzip the installer, simply run the **INSTALL** script as follow:
 ```
 # run the installation script
 > cd soajs.installer
 > ./INSTALL
 ```
-Once the installation is complete, you can invoke both **node** and **soajs** executables from your terminal regardless of the location you are in.
-Ex:
+
+Once the installation is complete, you can start SOAJS console as follow:
+
 ```
-# go to your home directory
-> cd ~
+# install SOAJS console
 
-# start mongodb server using soajs installer
-> soajs mongo start
-
-# install soajs console
 > soajs console install [% destination_folder %]
+> soajs console start
+
+# then go to this URL: http://localhost:4005
 ```
+
+## Install in the cloud
+
+Installing SOAJS in the cloud is extremely easy. Follow the following steps:
+```
+# installer SOAJS in the cloud
+
+> soajs remote-installer start
+
+# then go to this URL: http://localhost:1337
+```
+
 
 ## Usage
-The installer is equipped with multiple commands that you can become familiar with by opening its manual.
+The installer is equipped with multiple commands.
 ```
 # Open the installer manual
 > soajs --help
 ``` 
 
-#### Compatibility
+####  Compatibility
 The installer is compatible with **Mac OSX** and **Ubuntu** distributions.
+
+## Additional Information
+Go to this [soajs.org](https://soajsorg.atlassian.net/wiki/spaces/IN/overview)
