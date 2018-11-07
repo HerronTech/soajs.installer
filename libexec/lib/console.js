@@ -148,6 +148,8 @@ const consoleModule = {
 			return callback("Please provide where you want to install the SOAJS Console. Ex: soajs console install /%folder_path%");
 		}
 		
+		ifNotSudo(callback);
+		
 		//clean up the path ...
 		if(args[0].charAt(0) !== '/'){
 			return callback("Invalid folder path; please provide an absolute folder path to install the console. Ex: soajs console install /%folder_path%.");
@@ -269,6 +271,8 @@ const consoleModule = {
 			return callback(`SOAJS Console is not installed!`);
 		}
 		
+		ifNotSudo(callback);
+		
 		logger.info("Updating SOAJS Console ...\n\n");
 		setTimeout(() => {
 			//stop microservices
@@ -307,6 +311,8 @@ const consoleModule = {
 		if (!installerConfig.workingDirectory || installerConfig.workingDirectory === '') {
 			return callback(`SOAJS Console is not installed!`);
 		}
+		
+		ifNotSudo(callback);
 		
 		logger.info("Removing SOAJS Console ...\n\n");
 		setTimeout(() => {
@@ -385,6 +391,8 @@ const consoleModule = {
 			return callback(`SOAJS Console is not installed!`);
 		}
 		
+		ifNotSudo(callback);
+		
 		logger.info("Restarting SOAJS Console ...\n\n");
 		setTimeout(() => {
 			consoleModule.stop(args, (error) => {
@@ -416,6 +424,8 @@ const consoleModule = {
 		if (!installerConfig.workingDirectory || installerConfig.workingDirectory === '') {
 			return callback(`SOAJS Console is not installed!`);
 		}
+		
+		ifNotSudo(callback);
 		
 		logger.debug("Checking MongoDB Server ....");
 		mongoModule.start([], (error, response) => {
