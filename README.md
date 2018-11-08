@@ -1,6 +1,6 @@
 # soajs.installer
 
-Installing SOAJS has never been easier. Simply download the installer from [soajs.org](https://soajsorg.atlassian.net/wiki/spaces/IN/overview) and follow the instruction.
+Installing SOAJS has never been easier. Simply download the installer from [soajs.org](https://www.soajs.org/install) and follow the instruction.
 
 ## Installation
 After you download and unzip the installer, simply run the **INSTALL** script as follow:
@@ -38,10 +38,10 @@ The installer is equipped with multiple commands.
 ```
 # Open the installer manual
 > soajs --help
-``` 
+```
 
 ####  Compatibility
 The installer is compatible with **Mac OSX** and **Ubuntu** distributions.
 
 ## Additional Information
-Go to this [soajs.org](https://soajsorg.atlassian.net/wiki/spaces/IN/overview)
+Go to this [soajs.org](https://www.soajs.org/install)
