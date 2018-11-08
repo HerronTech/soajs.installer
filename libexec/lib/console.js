@@ -3,6 +3,7 @@
 const path = require("path");
 const fs = require("fs");
 
+const request = require("request");
 const mkdirp = require("mkdirp");
 const async = require("async");
 const rimraf = require("rimraf");
@@ -451,16 +452,41 @@ const consoleModule = {
 						return callback("Error starting the SOAJS Console");
 					}
 					
-					logger.info("=========================\nSOAJS Console started!\n=========================\n\n");
-					setTimeout(() => {
-						return callback();
-					}, 1000);
+					reloadControllerAwareness((error) => {
+						if(error){
+							return callback(error);
+						}
+						else{
+							logger.info("=========================\nSOAJS Console started!\n=========================\n\n");
+							setTimeout(() => {
+								return callback();
+							}, 1000);
+						}
+					});
+					
 				});
 			}, 1000);
 		});
 		
 		function launchMyService(oneService, mCb) {
 			serviceModule.start([oneService, "--env=" + requestedEnvironment], mCb)
+		}
+		
+		function reloadControllerAwareness(cb){
+			logger.debug("Updating controller registry ...");
+			setTimeout(() => {
+				request.get({"uri": "http://localhost:5000/reloadRegistry"}, (err) => {
+					if(err){
+						return cb(err);
+					}
+					request.get({"uri": "http://localhost:5000/awarenessStat"}, (err) => {
+						if(err){
+							return cb(err);
+						}
+						return cb(null);
+					});
+				});
+			}, 5000);
 		}
 	},
 	
