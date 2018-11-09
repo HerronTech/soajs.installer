@@ -42,51 +42,6 @@ overApp.controller('overviewCtrl', ['$scope', 'ngDataApi', '$timeout', function 
 		}
 	};
 	
-	$scope.myProviders = [
-		{
-			name: 'aws',
-			label: 'Amazon Web Services',
-			url: 'sections/home/images/aws.png',
-			docker: 'https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697737/AWS+Docker',
-			kubernetes: 'https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63697794/AWS+Kubernetes'
-		},
-		{
-			name: 'rackspace',
-			label: 'Rackspace',
-			url: 'sections/home/images/rackspace.png',
-			docker: 'https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698725/Rackspace+Docker',
-			kubernetes: 'https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698935/Rackspace+Kubernetes'
-		},
-		{
-			name: 'google',
-			label: 'Google Cloud',
-			url: 'sections/home/images/google.png',
-			docker: 'https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698493/Google+Docker',
-			kubernetes: 'https://soajsorg.atlassian.net/wiki/spaces/IN/pages/63698553/Google+Kubernetes'
-		},
-		{
-			name: 'azure',
-			label: 'Microsoft Azure',
-			url: 'sections/home/images/azure.png',
-			docker: 'https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64293754/Azure+Docker',
-			kubernetes: 'https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64293936/Azure+Kubernetes'
-		},
-		{
-			name: 'joyent',
-			label: 'Joyent',
-			url: 'sections/home/images/joyent.png',
-			docker: 'https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294622/Joyent+Triton+Docker',
-			kubernetes: 'https://soajsorg.atlassian.net/wiki/spaces/IN/pages/64294695/Joyent+Triton+Kubernetes'
-		},
-		{
-			name: 'custom',
-			label: 'custom',
-			url: 'sections/home/images/ubuntu.png',
-			docker: 'https://soajsorg.atlassian.net/wiki/spaces/IN/pages/142180428/Custom+with+Docker',
-			kubernetes: 'https://soajsorg.atlassian.net/wiki/spaces/IN/pages/142344284/Custom+with+Kubernetes'
-		}
-	];
-	
 	$scope.previousCheckComplete = (Object.keys($scope.remoteTechnology).length > 0);
 	
 	$scope.fillOverView = function () {

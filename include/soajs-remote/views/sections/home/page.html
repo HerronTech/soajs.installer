@@ -32,22 +32,13 @@
 					<span ng-bind="item.label"></span>
 				</ui-select-choices>
 			</ui-select>
-			
-			<div class="grid w100" ng-show="remoteTechnology.name">
-				<br/>
-				<table width="100%" border="0">
-					<tr ng-repeat="oneProvider in myProviders" ng-class-odd="'odd'" ng-class-even="'even'">
-						<td width="10%" align="center">
-							<img ng-src="{{oneProvider.url}}" style="width: 24px;" alt="" />
-						</td>
-						<td width="30%" align="left">
-							{{oneProvider.label}}
-						</td>
-						<td width="60%" align="left">
-							<a title="Click on the link below to learn how to set up a machine with {{remoteTechnology.label}} on it." href="{{oneProvider[remoteTechnology.name]}}" target="_blank">{{oneProvider[remoteTechnology.name]}}</a>
-						</td>
-					</tr>
-				</table>
+			<br/>
+			<div>
+				<p>
+					Make sure your container cluster is ready on your favorite Cloud Provider before you proceed.<br/>
+					Click <a title="Click on the link for more information" href="https://soajsorg.atlassian.net/wiki/spaces/IN/pages/950599683/MODULE+-+remote-installer" target="_blank">Here</a> for more information.
+				</p>
+				<hr>
 			</div>
 			<br/>
 			
