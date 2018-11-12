@@ -1,5 +1,11 @@
 #!/bin/bash
 
+function command_exists {
+  #this should be a very portable way of checking if something is on the path
+  #usage: "if command_exists foo; then echo it exists; fi"
+  type "$1" &> /dev/null
+}
+
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
   TARGET="$(readlink "${SOURCE}")"
@@ -34,16 +40,21 @@ elif [[ "$unamestr" == 'Darwin' ]]; then
     fi
 fi
 
-pushd ${BINLOCATION} > /dev/null 2>&1
+if command_exists git; then
+    pushd ${BINLOCATION} > /dev/null 2>&1
 
-if [ ! -e soajs ]; then
-	echo "Creating soajs command @: ${BINLOCATION}"
-	ln -s ${SOAJS_INSTALLER}/bin/soajs .
+    if [ ! -e soajs ]; then
+        echo "Creating soajs command @: ${BINLOCATION}"
+        ln -s ${SOAJS_INSTALLER}/bin/soajs .
+    fi
+
+    if [ ! -e node ]; then
+        echo "Creating node command @: ${BINLOCATION}"
+        ln -s ${SOAJS_INSTALLER}/include/${NODE_LOCATION}/bin/node .
+    fi
+
+    echo "Done successfully"
+else
+
+    echo "You need to install git and re-run ./INSTALL again"
 fi
-
-if [ ! -e node ]; then
-	echo "Creating node command @: ${BINLOCATION}"
-	ln -s ${SOAJS_INSTALLER}/include/${NODE_LOCATION}/bin/node .
-fi
-
-echo "Done successfully"
