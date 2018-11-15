@@ -44,6 +44,7 @@ if command_exists git; then
     pushd ${BINLOCATION} > /dev/null 2>&1
 
     if [ ! -e soajs ]; then
+        rm -f soajs
         echo "Creating soajs command @: ${BINLOCATION}"
         ln -s ${SOAJS_INSTALLER}/bin/soajs .
     fi
