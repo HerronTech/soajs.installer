@@ -48,6 +48,7 @@ if command_exists git; then
     ln -s ${SOAJS_INSTALLER}/bin/soajs .
 
     if [ ! -e node ]; then
+        rm -f node
         echo "Creating node command @: ${BINLOCATION}"
         ln -s ${SOAJS_INSTALLER}/include/${NODE_LOCATION}/bin/node .
     fi
