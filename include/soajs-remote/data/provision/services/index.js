@@ -294,6 +294,9 @@ var services = [
 						"m": "delete",
 						"group": "Owner"
 					}
+				],
+				"branches": [
+					"master"
 				]
 			}
 		}
@@ -1631,6 +1634,9 @@ var services = [
 						"v": "/tokens/tenant/:clientId",
 						"m": "delete"
 					}
+				],
+				"branches": [
+					"master"
 				]
 			}
 		}
