@@ -61,7 +61,7 @@ let kubeModule = {
 						
 						install.on('close', (code) => {
 							if (code === 0) {
-								return callback(null, "Kubernetes downloaded and installed...")
+								return callback(null, "Kubernetes downloaded and installed..... PLease wait couple of minutes before you connect to it")
 							}
 							else {
 								return callback("Error while downloading and installing Kubernetes!");
@@ -90,7 +90,7 @@ let kubeModule = {
 		
 		exec("kubectl get ns", (error, data) => {
 			if (error) {
-				return callback("Kubernetes is not installed or not running.\n[ Install ] -> soajs kubernetes install\n[ Start ] -> soajs kubernetes start");
+				return callback("Kubernetes is not installed or not running.... if you just installed it wait couple of minutes before you connect.\n[ Install ] -> soajs kubernetes install\n[ Start ] -> soajs kubernetes start");
 			}
 			else {
 				exec(execPath, (err, result) => {
