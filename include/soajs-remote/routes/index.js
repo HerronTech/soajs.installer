@@ -58,59 +58,77 @@ var routes = {
             //load tenant record
             delete require.cache[require.resolve(dataDir + "provision/tenants/info.js")];
             var defaultTenant = require(dataDir + "provision/tenants/info.js");
-
-            //generate extKey for Main
-            var opts = {
-                "tenantId": defaultTenant._id,
+            
+            //generate extKey for guest
+            var guest = {
+                "tenantId": defaultTenant.guest._id,
                 "secret": req.soajs.inputmaskData.security.key,
-                "package": defaultTenant.applications[0].package,
-                "key": defaultTenant.applications[0].key
+                "package": defaultTenant.guest.applications.package,
+                "key": defaultTenant.guest.applications.key
             };
-            utils.generateExtKeys(opts, function (error) {
+            utils.generateExtKeys(guest, function (error) {
                 if (error) {
                     return res.json(req.soajs.buildResponse({"code": 400, "msg": error.message}));
                 }
 
-                req.soajs.inputmaskData.security.extKey1 = opts.extKey;
-
-                //generate extKey for Owner
-                var opts2 = {
-                    "tenantId": defaultTenant._id,
-                    "secret": req.soajs.inputmaskData.security.key,
-                    "package": defaultTenant.applications[1].package,
-                    "key": defaultTenant.applications[1].key
-                };
-                utils.generateExtKeys(opts2, function (error) {
-                    if (error) {
-                        return res.json(req.soajs.buildResponse({"code": 400, "msg": error.message}));
-                    }
-
-                    req.soajs.inputmaskData.security.extKey2 = opts2.extKey;
-
-                    utils.updateCustomData(req, res, req.soajs.inputmaskData.security, "security", function () {
-	                    
-	                    //generate extKey for Techop
-	                    var opts3 = {
-		                    "tenantId": defaultTenant._id,
-		                    "secret": req.soajs.inputmaskData.security.key,
-		                    "package": defaultTenant.applications[2].package,
-		                    "key": defaultTenant.applications[2].key
-	                    };
-	                    utils.generateExtKeys(opts3, function (error) {
-		                    if (error) {
-			                    return res.json(req.soajs.buildResponse({"code": 400, "msg": error.message}));
-		                    }
-		
-		                    req.soajs.inputmaskData.security.extKey3 = opts3.extKey;
-		
-		                    utils.updateCustomData(req, res, req.soajs.inputmaskData.security, "security", function () {
-			                    return res.json(req.soajs.buildResponse(null, {
-				                    "extKey": req.soajs.inputmaskData.security.extKey1
-			                    }));
-		                    });
-	                    });
-                    });
-                });
+                req.soajs.inputmaskData.security.guestExtKey = guest.extKey;
+                
+	            utils.updateCustomData(req, res, req.soajs.inputmaskData.security, "security", function () {
+	            	
+		            //generate extKey for Owner
+		            var owner = {
+			            "tenantId": defaultTenant.owner._id,
+			            "secret": req.soajs.inputmaskData.security.key,
+			            "package": defaultTenant.owner.applications.package,
+			            "key": defaultTenant.owner.applications.key
+		            };
+		            utils.generateExtKeys(owner, function (error) {
+			            if (error) {
+				            return res.json(req.soajs.buildResponse({"code": 400, "msg": error.message}));
+			            }
+			
+			            req.soajs.inputmaskData.security.ownerExtKey = owner.extKey;
+			            
+			            utils.updateCustomData(req, res, req.soajs.inputmaskData.security, "security", function () {
+				            //generate extKey for developer
+				            var developer = {
+					            "tenantId": defaultTenant.developer._id,
+					            "secret": req.soajs.inputmaskData.security.key,
+					            "package": defaultTenant.developer.applications.package,
+					            "key": defaultTenant.developer.applications.key
+				            };
+				            utils.generateExtKeys(developer, function (error) {
+					            if (error) {
+						            return res.json(req.soajs.buildResponse({"code": 400, "msg": error.message}));
+					            }
+					            req.soajs.inputmaskData.security.developerExtKey = developer.extKey;
+					
+					            utils.updateCustomData(req, res, req.soajs.inputmaskData.security, "security", function () {
+						            //generate extKey for devOps
+						            var devOps = {
+							            "tenantId": defaultTenant.devOps._id,
+							            "secret": req.soajs.inputmaskData.security.key,
+							            "package": defaultTenant.devOps.applications.package,
+							            "key": defaultTenant.devOps.applications.key
+						            };
+						
+						            utils.generateExtKeys(devOps, function (error) {
+							            if (error) {
+								            return res.json(req.soajs.buildResponse({"code": 400, "msg": error.message}));
+							            }
+							            req.soajs.inputmaskData.security.devOpsExtKey = developer.extKey;
+							            utils.updateCustomData(req, res, req.soajs.inputmaskData.security, "security", function () {
+								            return res.json(req.soajs.buildResponse(null, {
+									            "extKey": req.soajs.inputmaskData.security.guestExtKey
+								            }));
+							            });
+						            });
+					            });
+					           
+				            });
+			            });
+		            });
+	            });
             });
         }
         else {

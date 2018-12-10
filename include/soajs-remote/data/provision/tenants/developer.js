@@ -1,45 +1,47 @@
 'use strict';
 var techop = {
-	"_id": "5a00532812394b0046c46c43",
+	"_id": "5c0505a9cc199208a0ebf3b1",
 	"type": "client",
-	"code": "TECO",
-	"name": "TECOP",
-	"description": "This tenant uses the Techop Package and its users are allowed to administer the cloud.",
+	"code": "DEVE",
+	"locked": true,
+	"name": "Developer",
+	"description": "This package is ideal for a developer. You are not giving much access but yet it is enough to sail and fast.",
 	"oauth": {
-		"secret": "soajs beaver",
+		"secret": "this is a secret",
 		"redirectURI": "http://domain.com",
 		"grants": [
 			"password",
 			"refresh_token"
-		]
+		],
+		"disabled": 0.0,
+		"type": 2.0,
+		"loginMode": "urac"
 	},
 	"applications": [
 		{
 			"product": "DSBRD",
-			"package": "DSBRD_TECOP",
-			"appId": "5a00532812394b0046c46c44",
-			"description": "Dashboard application for DSBRD_TECOP package",
+			"package": "DSBRD_DEVEL",
+			"appId": "5c0505a9cc199208a0ebf3b2",
+			"description": "This application is ideal for a developer. You are not giving much access but yet it is enough to sail and fast.",
 			"_TTL": 604800000,
 			"keys": [
 				{
-					"key": "f485d5dc9ac1d0da8962e4121b3e58a9",
+					"key": "499e214f8e1c17d0be793a842074c2cc",
 					"extKeys": [
 						{
-							"extKey": "da4c95fcb1145cea8df1c7fea89cb9148999e967a28a15fd141b2292ebd160b1577008499557436bdfd1c2c9d1cb179fa6ecce2ad01100e882a63574f784e780d28e188a68732ca24acb74e751ab5d128fa64d649b5bc987a020058204b48639",
+							"extKey": "%developerExtKey%",
 							"device": null,
 							"geo": null,
 							"env": "DASHBOARD",
-							"dashboardAccess": true
+							"dashboardAccess": true,
+							"expDate": null
 						}
 					],
 					"config": {
 						"dashboard": {
-							"oauth": {
-								"loginMode": "urac"
-							},
 							"commonFields": {
 								"mail": {
-									"from": "me@localhost.com",
+									"from": "%email%",
 									"transport": {
 										"type": "sendmail",
 										"options": {}
@@ -50,10 +52,10 @@ var techop = {
 								"hashIterations": 1024,
 								"seedLength": 32,
 								"link": {
-									"addUser": "http://dashboard.soajs.org:80/#/setNewPassword",
-									"changeEmail": "http://dashboard.soajs.org:80/#/changeEmail/validate",
-									"forgotPassword": "http://dashboard.soajs.org:80/#/resetPassword",
-									"join": "http://dashboard.soajs.org:80/#/join/validate"
+									"addUser": "%protocol%://%site%.%domain%:%port%/#/setNewPassword",
+									"changeEmail": "%protocol%://%site%.%domain%:%port%/#/changeEmail/validate",
+									"forgotPassword": "%protocol%://%site%.%domain%:%port%/#/resetPassword",
+									"join": "%protocol%://%site%.%domain%:%port%/#/join/validate"
 								},
 								"tokenExpiryTTL": 2 * 24 * 3600 * 1000,
 								"validateJoin": true,
@@ -87,7 +89,7 @@ var techop = {
 			]
 		}
 	],
-	"tag": "techop"
+	"tag": "developer"
 };
 
 module.exports = techop;

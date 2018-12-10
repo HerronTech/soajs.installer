@@ -285,19 +285,39 @@ var lib = {
 		tntData = tntData.replace(/%site%/g, body.gi.site);
 		tntData = tntData.replace(/%domain%/g, body.gi.domain);
 		tntData = tntData.replace(/%wrkDir%/g, body.gi.wrkDir);
-		tntData = tntData.replace(/%extKey1%/g, body.security.extKey1);
-		tntData = tntData.replace(/%extKey2%/g, body.security.extKey2);
+		tntData = tntData.replace(/%ownerExtKey%/g, body.security.ownerExtKey);
 		fs.writeFileSync(folder + "tenants/owner.js", tntData, "utf8");
 		
-		var tntData = fs.readFileSync(folder + "tenants/techop.js", "utf8");
+		var tntData = fs.readFileSync(folder + "tenants/devOps.js", "utf8");
 		tntData = tntData.replace(/%protocol%/g, protocol);
 		tntData = tntData.replace(/%port%/g, port);
 		tntData = tntData.replace(/%email%/g, body.gi.email);
 		tntData = tntData.replace(/%site%/g, body.gi.site);
 		tntData = tntData.replace(/%domain%/g, body.gi.domain);
 		tntData = tntData.replace(/%wrkDir%/g, body.gi.wrkDir);
-		tntData = tntData.replace(/%extKey3%/g, body.security.extKey3);
-		fs.writeFileSync(folder + "tenants/techop.js", tntData, "utf8");
+		tntData = tntData.replace(/%devOpsExtKey%/g, body.security.devOpsExtKey);
+		fs.writeFileSync(folder + "tenants/devOps.js", tntData, "utf8");
+		
+		var tntData = fs.readFileSync(folder + "tenants/guest.js", "utf8");
+		tntData = tntData.replace(/%protocol%/g, protocol);
+		tntData = tntData.replace(/%port%/g, port);
+		tntData = tntData.replace(/%email%/g, body.gi.email);
+		tntData = tntData.replace(/%site%/g, body.gi.site);
+		tntData = tntData.replace(/%domain%/g, body.gi.domain);
+		tntData = tntData.replace(/%wrkDir%/g, body.gi.wrkDir);
+		tntData = tntData.replace(/%guestExtKey%/g, body.security.guestExtKey);
+		fs.writeFileSync(folder + "tenants/guest.js", tntData, "utf8");
+		
+		var tntData = fs.readFileSync(folder + "tenants/developer.js", "utf8");
+		tntData = tntData.replace(/%protocol%/g, protocol);
+		tntData = tntData.replace(/%port%/g, port);
+		tntData = tntData.replace(/%email%/g, body.gi.email);
+		tntData = tntData.replace(/%site%/g, body.gi.site);
+		tntData = tntData.replace(/%domain%/g, body.gi.domain);
+		tntData = tntData.replace(/%wrkDir%/g, body.gi.wrkDir);
+		tntData = tntData.replace(/%developerExtKey%/g, body.security.developerExtKey);
+		fs.writeFileSync(folder + "tenants/developer.js", tntData, "utf8");
+		
 		
 		//remove unneeded file
 		fs.unlinkSync(folder + "tenants/info.js");

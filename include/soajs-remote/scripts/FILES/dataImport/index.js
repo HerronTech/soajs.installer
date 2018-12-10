@@ -102,7 +102,27 @@ const lib = {
 				mongo.insert("tenants", record, mCb);
 			},
 			function (mCb) {
-				var record = require(dataFolder + "tenants/techop.js");
+				var record = require(dataFolder + "tenants/developer.js");
+				
+				record._id = mongo.ObjectId(record._id);
+				record.applications.forEach(function (oneApp) {
+					oneApp.appId = mongo.ObjectId(oneApp.appId);
+				});
+				
+				mongo.insert("tenants", record, mCb);
+			},
+			function (mCb) {
+				var record = require(dataFolder + "tenants/devOps.js");
+				
+				record._id = mongo.ObjectId(record._id);
+				record.applications.forEach(function (oneApp) {
+					oneApp.appId = mongo.ObjectId(oneApp.appId);
+				});
+				
+				mongo.insert("tenants", record, mCb);
+			},
+			function (mCb) {
+				var record = require(dataFolder + "tenants/guest.js");
 				
 				record._id = mongo.ObjectId(record._id);
 				record.applications.forEach(function (oneApp) {

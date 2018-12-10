@@ -15,8 +15,8 @@ var owner = {
 		"keys": {}
 	},
 	"tenant":{
-		"id": '5551aca9e179c39b760f7a1a',
-		"code": 'DBTN'
+		"id": '5c0e72d59acc3c5a84a51257',
+		"code": 'OWNE'
 	}
 };
 

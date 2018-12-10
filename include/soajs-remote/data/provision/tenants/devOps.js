@@ -1,42 +1,44 @@
 'use strict';
 var techop = {
-	"_id": "5a00532812394b0046c46c43",
+	"_id": "5c0504c8cc199208a0ebf3ac",
 	"type": "client",
-	"code": "TECO",
-	"name": "TECOP",
-	"description": "This tenant uses the Techop Package and its users are allowed to administer the cloud.",
+	"locked": true,
+	"code": "DEVO",
+	"name": "DevOps",
+	"description": "This is the tenant that holds the access rights and configuration for user devOps",
 	"oauth": {
-		"secret": "soajs beaver",
-		"redirectURI": "%protocol%://domain.com",
+		"secret": "this is a secret",
+		"redirectURI": "http://domain.com",
 		"grants": [
 			"password",
 			"refresh_token"
-		]
+		],
+		"disabled": 0.0,
+		"type": 2.0,
+		"loginMode": "urac"
 	},
 	"applications": [
 		{
 			"product": "DSBRD",
-			"package": "DSBRD_TECOP",
-			"appId": "5a00532812394b0046c46c44",
-			"description": "Dashboard application for DSBRD_TECOP package",
+			"package": "DSBRD_DEVOP",
+			"appId": "5c0504c8cc199208a0ebf3ad",
+			"description": "This application has the right privileges a DevOps user will need to be able to configure, control, and monitor what is happening across the board.",
 			"_TTL": 604800000,
 			"keys": [
 				{
-					"key": "f485d5dc9ac1d0da8962e4121b3e58a9",
+					"key": "c3bd703616775fe70feb5846ca865893",
 					"extKeys": [
 						{
-							"extKey": "%extKey3%",
+							"extKey": "%devOpsExtKey%",
 							"device": null,
 							"geo": null,
 							"env": "DASHBOARD",
-							"dashboardAccess": true
+							"dashboardAccess": true,
+							"expDate": null
 						}
 					],
 					"config": {
 						"dashboard": {
-							"oauth": {
-								"loginMode": "urac"
-							},
 							"commonFields": {
 								"mail": {
 									"from": "%email%",
@@ -87,7 +89,7 @@ var techop = {
 			]
 		}
 	],
-	"tag": "techop"
+	"tag": "devOps"
 };
 
 module.exports = techop;

@@ -1,17 +1,36 @@
+
+let guest = {
+	"_id": "5c0e74ba9acc3c5a84a51259",
+	"applications": {
+		"package": "DSBRD_GUEST",
+		"key": "a139786a6e6d18e48b4987e83789430b"
+	}
+};
+
+let owner = {
+	"_id": "5c0e72d59acc3c5a84a51257",
+	"applications": {
+		"package": "DSBRD_OWNER",
+		"key": "3471a73d438f697cea3344bbf0d4723c"
+	}
+};
+
+let developer = {
+	"_id": "5c0505a9cc199208a0ebf3b1",
+	"applications": {
+		"package": "DSBRD_DEVEL",
+		"key": "499e214f8e1c17d0be793a842074c2cc"
+	}
+};
+
+let devOps = {
+	"_id": "5c0504c8cc199208a0ebf3ac",
+	"applications": {
+		"package": "DSBRD_DEVOP",
+		"key": "c3bd703616775fe70feb5846ca865893"
+	}
+};
+
 module.exports = {
-	"_id": "5551aca9e179c39b760f7a1a",
-	"applications": [
-		{
-			"package": "DSBRD_MAIN",
-			"key": "38145c67717c73d3febd16df38abf311"
-		},
-		{
-			"package": "DSBRD_OWNER",
-			"key": "9ccfb3cdaf5f61cf0cff5c78215b2292"
-		},
-		{
-			"package": "DSBRD_TECOP",
-			"key": "f485d5dc9ac1d0da8962e4121b3e58a9"
-		}
-	]
+	guest, owner, developer, devOps
 };
