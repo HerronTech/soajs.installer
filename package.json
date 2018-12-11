@@ -1,7 +1,7 @@
 {
   "name": "soajs.installer",
   "description": "soajs installer to install soajs dashboard",
-  "version": "3.0.3",
+  "version": "3.1.0",
   "author": {
     "name": "soajs team",
     "email": "team@soajs.org"
@@ -28,7 +28,7 @@
     "mkdirp": "*",
     "npm": "*",
     "rimraf": "*",
-    "soajs": "2.0.*",
+    "soajs": "2.1.*",
     "yamljs": "^0.3.0"
   }
 }
