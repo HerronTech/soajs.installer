@@ -129,7 +129,7 @@ var components = {
 								},
 								{
 									"name": "SOAJS_EXTKEY",
-									"value": gConfig.extKey1
+									"value": gConfig.guestExtKey
 								},
 								{
 									"name": "SOAJS_GIT_DASHBOARD_BRANCH",

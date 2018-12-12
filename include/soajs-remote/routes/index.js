@@ -45,9 +45,10 @@ var routes = {
     "getSecurity": function (req, res) {
         utils.loadCustomData('security', function (customData) {
             if(customData){
-                delete customData.extKey1;
-                delete customData.extKey2;
-                delete customData.extKey3;
+	            delete customData.guestExtKey;
+	            delete customData.ownerExtKey;
+	            delete customData.developerExtKey;
+	            delete customData.devOpsExtKey;
             }
 
             return res.json(req.soajs.buildResponse(null, customData || null));
@@ -116,7 +117,7 @@ var routes = {
 							            if (error) {
 								            return res.json(req.soajs.buildResponse({"code": 400, "msg": error.message}));
 							            }
-							            req.soajs.inputmaskData.security.devOpsExtKey = developer.extKey;
+							            req.soajs.inputmaskData.security.devOpsExtKey = devOps.extKey;
 							            utils.updateCustomData(req, res, req.soajs.inputmaskData.security, "security", function () {
 								            return res.json(req.soajs.buildResponse(null, {
 									            "extKey": req.soajs.inputmaskData.security.guestExtKey
@@ -245,8 +246,10 @@ var routes = {
         utils.updateCustomData(req, res, deployment, "deployment", function(){
             utils.loadCustomData(null, function(data){
                 if(data.security){
-                    delete data.security.extKey1;
-                    delete data.security.extKey2;
+	                delete data.security.guestExtKey;
+	                delete data.security.ownerExtKey;
+	                delete data.security.developerExtKey;
+	                delete data.security.devOpsExtKey;
                 }
                 if(data.gi){
                     data.gi.password = "******";
@@ -259,8 +262,10 @@ var routes = {
 	"reconfirmDeployment": function(req, res){
 		utils.loadCustomData(null, function(data){
 			if(data.security){
-				delete data.security.extKey1;
-				delete data.security.extKey2;
+				delete data.security.guestExtKey;
+				delete data.security.ownerExtKey;
+				delete data.security.developerExtKey;
+				delete data.security.devOpsExtKey;
 			}
 			if(data.gi){
 				data.gi.password = "******";

@@ -453,7 +453,7 @@ var lib = {
 					"SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
 					"NODE_PATH": nodePath,
 					
-					"SOAJS_EXTKEY": body.security.extKey1,
+					"SOAJS_EXTKEY": body.security.guestExtKey,
 					"API_PREFIX": body.gi.api,
 					"SITE_PREFIX": body.gi.site,
 					"MASTER_DOMAIN": body.gi.domain,
@@ -549,7 +549,7 @@ var lib = {
 					"SOAJS_PROFILE": path.normalize(dataDir + "startup/profile.js"),
 					"NODE_PATH": nodePath,
 					
-					"SOAJS_EXTKEY": body.security.extKey1,
+					"SOAJS_EXTKEY": body.security.guestExtKey,
 					"API_PREFIX": body.gi.api,
 					"SITE_PREFIX": body.gi.site,
 					"MASTER_DOMAIN": body.gi.domain,
