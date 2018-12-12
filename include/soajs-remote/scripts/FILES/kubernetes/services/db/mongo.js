@@ -100,7 +100,7 @@ var components = {
                             },
                             "volumeMounts": [
                                 {
-                                    "mountPath": "/data/db/",
+                                    "mountPath": "/var/data/db/",
                                     "name": "dashboard-soajsdata"
                                 }
                             ]
@@ -110,7 +110,7 @@ var components = {
                         {
                             "name": "dashboard-soajsdata",
                             "hostPath": {
-                                "path": "/data/db/"
+                                "path": "/var/data/db/"
                             }
                         }
                     ]

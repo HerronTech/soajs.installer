@@ -18,9 +18,15 @@ progressApp.controller('progressCtrl', ['$scope', 'ngDataApi', '$timeout', funct
 				$scope.alerts.push({'type': 'danger', 'msg': error.message});
 				return false;
 			}
+			$scope.type = response.type;
+			$scope.mongoExt = response.mongoExt;
 			$scope.ui = response.ui;
 			$scope.cmd = response.cmd;
 			$scope.hosts = response.hosts;
+			if (!response.mongoExt){
+				$scope.localMongo = response.hosts.mongo;
+				delete $scope.hosts.mongo;
+			}
 		});
 	};
 

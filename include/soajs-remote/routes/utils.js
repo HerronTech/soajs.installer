@@ -691,6 +691,9 @@ var lib = {
 		else {
 			obj['hosts'].mongo = body.clusters.servers[0].host + " dashboard-soajsdata";
 		}
+		obj.type = type;
+		obj.mongoExt = !!body.deployment.mongoExt;
+		
 		return cb(null, obj);
 	},
 	

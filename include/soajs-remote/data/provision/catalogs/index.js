@@ -62,11 +62,11 @@ let mongovolumes = [
 			volume: {
 				"name": "custom-mongo-volume",
 				"hostPath": {
-					"path": "/data/custom/db/"
+					"path": "/var/data/custom/db/"
 				}
 			},
 			volumeMount: {
-				"mountPath": "/data/db/",
+				"mountPath": "/var/data/db/",
 				"name": "custom-mongo-volume"
 			}
 		}

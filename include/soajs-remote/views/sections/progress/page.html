@@ -10,7 +10,17 @@
 	</p>
 	<pre class="bash"><code>{{hosts.api}}
 {{hosts.site}}
-{{hosts.mongo}}</code></pre>
+{{hosts.mongo}}
+<span ng-if="!mongoExt">#If {{type}} is running on a remote machine different from where the installer is running,
+you need the IP of that machine:
+
+%remote.{{type}}.ip% dashboard-soajsdata.soajs
+
+#If {{type}} is running on the same machine where the installer is running, you can use the following:
+
+{{localMongo}} dashboard-soajsdata.soajs
+
+</span></code></pre>
 	<p>
 		Run the following command in your terminal and SOAJS will be downloaded and installed:
 	</p>
