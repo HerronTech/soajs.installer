@@ -294,19 +294,56 @@ var lib = {
 
             //Add secret volume to the recipe's volumes
             if (!nginxRecipe.recipe.deployOptions.voluming) {
-                nginxRecipe.recipe.deployOptions.voluming = { volumes: [], volumeMounts: [] };
+                nginxRecipe.recipe.deployOptions.voluming = [];
             }
-            nginxRecipe.recipe.deployOptions.voluming.volumes.push({
-                name: 'ssl',
-    			secret: {
-    				secretName: process.env.SOAJS_NX_SSL_SECRET
-    			}
-            });
+            let volume =
+                {
+                    "docker": {
+                        "volume": {
+                            "Type": "volume",
+                            "Source": "soajs_certs_volume",
+                            "Target": "/var/certs/soajs/"
+                        }
+                    },
+                    "kubernetes" : {
+                        "volume" : {
+                            "name" : "saas-certs-volume",
+                            "secret" : {
+                                "secretName" : process.env.SOAJS_NX_SSL_SECRET
+                            }
+                        },
+                        "volumeMount" : {
+                            "mountPath" : "/etc/soajs/ssl/",
+                            "name" : "saas-certs-volume",
+                            "readOnly" : true
+                        }
+                    }
+                };
+
+            nginxRecipe.recipe.deployOptions.voluming.push(volume);
+            /*
             nginxRecipe.recipe.deployOptions.voluming.volumeMounts.push({
                 name: 'ssl',
     			mountPath: '/etc/soajs/ssl/',
     			readOnly: true
             });
+            */
+        }
+        else {
+            if (!nginxRecipe.recipe.deployOptions.voluming) {
+                nginxRecipe.recipe.deployOptions.voluming = [];
+            }
+            let volume =
+                {
+                    "docker": {
+                        "volume": {
+                            "Type": "volume",
+                            "Source": "soajs_certs_volume",
+                            "Target": "/var/certs/soajs/"
+                        }
+                    }
+                };
+            nginxRecipe.recipe.deployOptions.voluming.push(volume);
         }
 
         return nginxRecipe;

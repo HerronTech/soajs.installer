@@ -36,16 +36,10 @@ let recipeVolumes = [
 				"Source": "/var/run/docker.sock",
 				"Target": "/var/run/docker.sock"
 			}
-		}
-	},
-	{
-		docker: {
-			volume: {
-				"Type": "volume",
-				"Source": "soajs_certs_volume",
-				"Target": "/var/certs/soajs/"
-			}
-		}
+		},
+        kubernetes : {
+
+        }
 	}
 ];
 
