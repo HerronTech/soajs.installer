@@ -281,22 +281,42 @@ const consoleModule = {
 				if (error) {
 					return callback("Unable to Stop the SOAJS Console!");
 				}
-				
-				//update all repository content
-				installConsoleComponents(true, (error) => {
-					if (error) {
-						return callback("Error while updating the SOAJS Console files!")
-					}
-					
-					//start microservices
-					consoleModule.start(args, (error) => {
-						if (error) {
-							return callback("Unable to Restart the SOAJS Console!");
-						}
-						
-						return callback(null, "SOAJS Console Updated!");
-					});
-				});
+
+                logger.info("Cleaning up before updating SOAJS Console ...");
+                setTimeout(() => {
+                    //remove folders of microservices
+                    async.eachOfSeries(SOAJS_RMS, (oneRepo, oneService, mCb) => {
+                        logger.debug(`Removing ${oneService} files ...`);
+                        logger.debug(path.normalize(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[oneService]) + "\n");
+                        rimraf(path.normalize(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[oneService]), (error) => {
+                            if (error) {
+                                logger.error(error);
+                                return mCb(error);
+                            }
+                            logger.debug(`${oneService} --> ${oneRepo}: Removed!`);
+                            return mCb();
+                        });
+                    }, (error) => {
+                        if (error) {
+                            return callback("Error Cleaning up before updating SOAJS Console ...");
+                        }
+                        //update all repository content
+                        installConsoleComponents(true, (error) => {
+                            if (error) {
+                                return callback("Error while updating the SOAJS Console files!")
+                            }
+
+                            //start microservices
+                            consoleModule.start(args, (error) => {
+                                if (error) {
+                                    return callback("Unable to Restart the SOAJS Console!");
+                                }
+
+                                return callback(null, "SOAJS Console Updated!");
+                            });
+                        });
+                    });
+                }, 2000);
 			});
 		}, 2000);
 	},
