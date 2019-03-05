@@ -36,12 +36,8 @@ function unpdateUsersAndGroups(mongoConnection, tenant, callback) {
     */
 }
 
-module.exports = (callback) => {
-
-    //get profile path
-    let profilePath = path.normalize(process.env.PWD + "/../data/soajs_profile.js");
+module.exports = (profilePath, callback) => {
     let profile;
-
     //check if profile is found
     fs.stat(profilePath, (error) => {
         if (error) {

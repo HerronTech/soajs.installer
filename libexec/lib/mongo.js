@@ -333,7 +333,8 @@ let mongoModule = {
             return callback(null, `Select one of the following strategies: ${strategies.join(" ")}.`);
         }
         let strategyFunction = require("../migrate/" + strategy + ".js");
-        return strategyFunction(callback);
+        let profilePath = path.normalize(process.env.PWD + "/../data/soajs_profile.js");
+        return strategyFunction(profilePath, callback);
     },
     /**
      * Replace soajs provision data with a fresh new copy
