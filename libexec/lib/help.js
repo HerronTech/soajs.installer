@@ -45,7 +45,8 @@ const helpModule = {
 				"stop": "Stop a SOAJS Service [gateway|urac|dashboard|oauth]"
 			},
 			"profile Operations" :{
-				"setPort": "Updates the MongoDB server port in the SOAJS profile"
+				"setPort": "Updates the MongoDB server port in the SOAJS profile",
+                "setHost": "Updates the MongoDB server host in the SOAJS profile"
 			},
 			"docker Operations" :{
 				"install": "Downloads, installs and starts Docker on your machine",

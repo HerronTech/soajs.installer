@@ -315,6 +315,54 @@ let mongoModule = {
      * @param args
      * @param callback
      */
+    migrate: (args, callback) => {
+        //todo check args
+        if (!Array.isArray(args) || args.length === 0) {
+            return callback(null, "Missing migration strategy!");
+        }
+        let strategies = ["to_urac_v2"];
+
+        if (args.length > 1) {
+            args.shift();
+            return callback(null, `Unidentified input ${args.join(" ")}. Please use soajs mongo migrate %strategy%.`);
+        }
+
+        // check if strategy is available
+        let strategy = args[0];
+        if (strategies.indexOf(strategy) === -1) {
+            return callback(null, `Select one of the following strategies: ${strategies.join(" ")}.`);
+        }
+
+        let installerConfig = path.normalize(process.env.PWD + "/../etc/config.js");
+        let workingDirectory = installerConfig.workingDirectory;
+
+        //get profile path
+        let profilePath = path.normalize(process.env.PWD + "/../data/soajs_profile.js");
+        let profile;
+
+        //check if profile is found
+        fs.stat(profilePath, (error) => {
+            if (error) {
+                return callback(null, 'Profile not found!');
+            }
+
+            //read  mongo profile file
+            profile = require(profilePath);
+
+            //use soajs.core.modules to create a connection to core_provision database
+            let mongoConnection = new Mongo(profile);
+            let dataPath = path.normalize(process.env.PWD + "/../data/provision/");
+
+            //close mongo connection
+            mongoConnection.closeDb();
+            return callback(null, "MongoDb Soajs Data migrate!")
+        });
+    },
+            /**
+     * Replace soajs provision data with a fresh new copy
+     * @param args
+     * @param callback
+     */
     patch: (args, callback) => {
 
         let installerConfig = path.normalize(process.env.PWD + "/../etc/config.js");
