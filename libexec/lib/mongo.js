@@ -99,7 +99,7 @@ let mongoModule = {
      */
     start: (args, callback) => {
 
-        ifNotSudo(callback)
+        ifNotSudo(callback);
 
         let mongoDbConf = path.normalize(process.env.PWD + "/../include/" + process.env.MONGO_LOCATION + "/mongod.conf");
 
@@ -139,7 +139,7 @@ let mongoModule = {
             cmdOutput = cmdOutput.split("\n");
 
             if (Array.isArray(cmdOutput) && cmdOutput.length > 0) {
-                let PID;
+                let PID = null;
                 cmdOutput.forEach((oneCMDLine) => {
                     if (oneCMDLine.includes(`--config=${mongoDbConf}/mongod.conf`)) {
                         let oneProcess = oneCMDLine.replace(/\s+/g, ' ').split(' ');
@@ -320,7 +320,7 @@ let mongoModule = {
         if (!Array.isArray(args) || args.length === 0) {
             return callback(null, "Missing migration strategy!");
         }
-        let strategies = ["to_urac_v2"];
+        let strategies = require("../migrate/config.js");
 
         if (args.length > 1) {
             args.shift();
@@ -332,33 +332,10 @@ let mongoModule = {
         if (strategies.indexOf(strategy) === -1) {
             return callback(null, `Select one of the following strategies: ${strategies.join(" ")}.`);
         }
-
-        let installerConfig = path.normalize(process.env.PWD + "/../etc/config.js");
-        let workingDirectory = installerConfig.workingDirectory;
-
-        //get profile path
-        let profilePath = path.normalize(process.env.PWD + "/../data/soajs_profile.js");
-        let profile;
-
-        //check if profile is found
-        fs.stat(profilePath, (error) => {
-            if (error) {
-                return callback(null, 'Profile not found!');
-            }
-
-            //read  mongo profile file
-            profile = require(profilePath);
-
-            //use soajs.core.modules to create a connection to core_provision database
-            let mongoConnection = new Mongo(profile);
-            let dataPath = path.normalize(process.env.PWD + "/../data/provision/");
-
-            //close mongo connection
-            mongoConnection.closeDb();
-            return callback(null, "MongoDb Soajs Data migrate!")
-        });
+        let strategyFunction = require("../migrate/" + strategy + ".js");
+        return strategyFunction(callback);
     },
-            /**
+    /**
      * Replace soajs provision data with a fresh new copy
      * @param args
      * @param callback
@@ -491,36 +468,36 @@ let mongoModule = {
 
                                 mongo.insert("tenants", record, mCb);
                             },
-	                        function (mCb) {
-		                        let record = require(dataFolder + "tenants/guest.js");
-		
-		                        record._id = mongo.ObjectId(record._id);
-		                        record.applications.forEach(function (oneApp) {
-			                        oneApp.appId = mongo.ObjectId(oneApp.appId);
-			                        oneApp.keys.forEach((oneKey) => {
-				                        for (let operation in oneKey.config.dashboard.urac.mail) {
-					                        oneKey.config.dashboard.urac.mail[operation].path = oneKey.config.dashboard.urac.mail[operation].path.replace("%wrkDir%", workingDirectory);
-				                        }
-			                        });
-		                        });
-		
-		                        mongo.insert("tenants", record, mCb);
-	                        },
-	                        function (mCb) {
-		                        let record = require(dataFolder + "tenants/developer.js");
-		
-		                        record._id = mongo.ObjectId(record._id);
-		                        record.applications.forEach(function (oneApp) {
-			                        oneApp.appId = mongo.ObjectId(oneApp.appId);
-			                        oneApp.keys.forEach((oneKey) => {
-				                        for (let operation in oneKey.config.dashboard.urac.mail) {
-					                        oneKey.config.dashboard.urac.mail[operation].path = oneKey.config.dashboard.urac.mail[operation].path.replace("%wrkDir%", workingDirectory);
-				                        }
-			                        });
-		                        });
-		
-		                        mongo.insert("tenants", record, mCb);
-	                        },
+                            function (mCb) {
+                                let record = require(dataFolder + "tenants/guest.js");
+
+                                record._id = mongo.ObjectId(record._id);
+                                record.applications.forEach(function (oneApp) {
+                                    oneApp.appId = mongo.ObjectId(oneApp.appId);
+                                    oneApp.keys.forEach((oneKey) => {
+                                        for (let operation in oneKey.config.dashboard.urac.mail) {
+                                            oneKey.config.dashboard.urac.mail[operation].path = oneKey.config.dashboard.urac.mail[operation].path.replace("%wrkDir%", workingDirectory);
+                                        }
+                                    });
+                                });
+
+                                mongo.insert("tenants", record, mCb);
+                            },
+                            function (mCb) {
+                                let record = require(dataFolder + "tenants/developer.js");
+
+                                record._id = mongo.ObjectId(record._id);
+                                record.applications.forEach(function (oneApp) {
+                                    oneApp.appId = mongo.ObjectId(oneApp.appId);
+                                    oneApp.keys.forEach((oneKey) => {
+                                        for (let operation in oneKey.config.dashboard.urac.mail) {
+                                            oneKey.config.dashboard.urac.mail[operation].path = oneKey.config.dashboard.urac.mail[operation].path.replace("%wrkDir%", workingDirectory);
+                                        }
+                                    });
+                                });
+
+                                mongo.insert("tenants", record, mCb);
+                            },
                         ], mCb);
                     },
 
