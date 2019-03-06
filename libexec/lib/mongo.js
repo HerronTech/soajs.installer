@@ -438,68 +438,17 @@ let mongoModule = {
                     },
 
                     "addTenants": function (mCb) {
-                        async.series([
-                            function (mCb) {
-                                let record = require(dataFolder + "tenants/owner.js");
-
-                                record._id = mongo.ObjectId(record._id);
-                                record.applications.forEach(function (oneApp) {
-                                    oneApp.appId = mongo.ObjectId(oneApp.appId);
-                                    oneApp.keys.forEach((oneKey) => {
-                                        for (let operation in oneKey.config.dashboard.urac.mail) {
-                                            oneKey.config.dashboard.urac.mail[operation].path = oneKey.config.dashboard.urac.mail[operation].path.replace("%wrkDir%", workingDirectory);
-                                        }
-                                    });
-                                });
-
-                                mongo.insert("tenants", record, mCb);
-                            },
-                            function (mCb) {
-                                let record = require(dataFolder + "tenants/devOps.js");
-
-                                record._id = mongo.ObjectId(record._id);
-                                record.applications.forEach(function (oneApp) {
-                                    oneApp.appId = mongo.ObjectId(oneApp.appId);
-                                    oneApp.keys.forEach((oneKey) => {
-                                        for (let operation in oneKey.config.dashboard.urac.mail) {
-                                            oneKey.config.dashboard.urac.mail[operation].path = oneKey.config.dashboard.urac.mail[operation].path.replace("%wrkDir%", workingDirectory);
-                                        }
-                                    });
-                                });
-
-                                mongo.insert("tenants", record, mCb);
-                            },
-                            function (mCb) {
-                                let record = require(dataFolder + "tenants/guest.js");
-
-                                record._id = mongo.ObjectId(record._id);
-                                record.applications.forEach(function (oneApp) {
-                                    oneApp.appId = mongo.ObjectId(oneApp.appId);
-                                    oneApp.keys.forEach((oneKey) => {
-                                        for (let operation in oneKey.config.dashboard.urac.mail) {
-                                            oneKey.config.dashboard.urac.mail[operation].path = oneKey.config.dashboard.urac.mail[operation].path.replace("%wrkDir%", workingDirectory);
-                                        }
-                                    });
-                                });
-
-                                mongo.insert("tenants", record, mCb);
-                            },
-                            function (mCb) {
-                                let record = require(dataFolder + "tenants/developer.js");
-
-                                record._id = mongo.ObjectId(record._id);
-                                record.applications.forEach(function (oneApp) {
-                                    oneApp.appId = mongo.ObjectId(oneApp.appId);
-                                    oneApp.keys.forEach((oneKey) => {
-                                        for (let operation in oneKey.config.dashboard.urac.mail) {
-                                            oneKey.config.dashboard.urac.mail[operation].path = oneKey.config.dashboard.urac.mail[operation].path.replace("%wrkDir%", workingDirectory);
-                                        }
-                                    });
-                                });
-
-                                mongo.insert("tenants", record, mCb);
-                            },
-                        ], mCb);
+                        let record = require(dataFolder + "tenants/guest.js");
+                        record._id = mongo.ObjectId(record._id);
+                        record.applications.forEach(function (oneApp) {
+                            oneApp.appId = mongo.ObjectId(oneApp.appId);
+                            oneApp.keys.forEach((oneKey) => {
+                                for (let operation in oneKey.config.dashboard.urac.mail) {
+                                    oneKey.config.dashboard.urac.mail[operation].path = oneKey.config.dashboard.urac.mail[operation].path.replace("%wrkDir%", workingDirectory);
+                                }
+                            });
+                        });
+                        mongo.insert("tenants", record, mCb);
                     },
 
                     "addGitAccounts": function (mCb) {
