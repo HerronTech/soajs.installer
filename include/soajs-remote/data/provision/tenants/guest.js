@@ -4,15 +4,10 @@ var techop = {
 	"type": "product",
 	"code": "DBTN",
 	"locked": true,
-	"name": "Guest",
-	"description": "This is the tenant that holds the access rights and configuration for guests to be able to login and reset their passwords",
+	"name": "Console Tenant",
+	"description": "This is the tenant that holds the access rights and configuration for the console users with DSBRD_GUEST as Guest default package",
 	"oauth": {
 		"secret": "this is a secret",
-		"redirectURI": "http://domain.com",
-		"grants": [
-			"password",
-			"refresh_token"
-		],
 		"disabled": 0,
 		"type": 2,
 		"loginMode": "urac"
@@ -88,7 +83,7 @@ var techop = {
 			]
 		}
 	],
-	"tag": "guest"
+	"tag": "Console"
 };
 
 module.exports = techop;
