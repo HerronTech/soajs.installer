@@ -13,9 +13,13 @@ const profileModule = {
      * @param callback {Function}
      */
     'setPort': (args, callback) => {
-        //if no arguments do nothing
-        if (args.length === 0) {
-            return callback();
+        //Verify argument
+        if (!Array.isArray(args) || args.length === 0) {
+            return callback(null, "Missing port value!");
+        }
+        if (args.length > 1) {
+            args.shift();
+            return callback(null, `Unidentified input ${args.join(" ")}. Please use soajs profile setPort %number%.`);
         }
 
         let profileDir = path.normalize(process.env.PWD + "/../data/");
@@ -69,9 +73,13 @@ const profileModule = {
      * @param callback {Function}
      */
     'setHost': (args, callback) => {
-        //if no arguments do nothing
-        if (args.length === 0) {
-            return callback();
+        //Verify argument
+        if (!Array.isArray(args) || args.length === 0) {
+            return callback(null, "Missing host value!");
+        }
+        if (args.length > 1) {
+            args.shift();
+            return callback(null, `Unidentified input ${args.join(" ")}. Please use soajs profile setHost %host_domain%.`);
         }
 
         let profileDir = path.normalize(process.env.PWD + "/../data/");

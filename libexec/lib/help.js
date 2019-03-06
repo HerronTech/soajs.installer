@@ -29,7 +29,8 @@ const helpModule = {
 				"remove": "Stops SOAJS Console, stops MongoDB server and deletes all the downloaded Console Microservices",
 				"start": "Starts all the Microservices of the SOAJS Console",
 				"stop": "Stops all the Microservices of the SOAJS Console",
-				"restart": "Restarts all the Microservices of the SOAJS Console"
+				"restart": "Restarts all the Microservices of the SOAJS Console",
+                "setHost": "Updates the console server host domain"
 			},
 			"mongo Operations" :{
 				"install": "Creates the MongoDB configuration file and updates the SOAJS profile",
