@@ -334,7 +334,8 @@ let mongoModule = {
         }
         let strategyFunction = require("../migrate/" + strategy + ".js");
         let profilePath = path.normalize(process.env.PWD + "/../data/soajs_profile.js");
-        return strategyFunction(profilePath, callback);
+        let dataPath = path.normalize(process.env.PWD + "/../data/provision/");
+        return strategyFunction(profilePath, dataPath, callback);
     },
     /**
      * Replace soajs provision data with a fresh new copy
