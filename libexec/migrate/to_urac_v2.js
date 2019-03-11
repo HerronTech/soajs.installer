@@ -17,14 +17,8 @@ function unpdateUsersAndGroups(mongoConnection, tenant, callback) {
     });
 }
 
-function fixOwnerAndTenants(profile, tenant, callback) {
-    //switch profile DBTN_urac
-    profile.name = "DBTN_urac";
-
-    let mongoConnection = new Mongo(profile);
-
+function fixOwnerAndTenants(mongoConnection, profile, tenant, callback) {
     let condition = {username: "owner"};
-
     mongoConnection.find("users", condition, (error, ownerUser) => {
         if (error) {
             //close mongo connection
@@ -87,16 +81,7 @@ function fixOwnerAndTenants(profile, tenant, callback) {
                         mongoConnection.closeDb();
                         return callback(error);
                     }
-
-                    unpdateUsersAndGroups(mongoConnection, {
-                        "id": tenant._id.toString(),
-                        "code": tenant.code
-                    }, () => {
-                        //close mongo connection
-                        mongoConnection.closeDb();
-                        return callback(null, "MongoDb Soajs Data migrate!")
-
-                    });
+                   return callback(null, null);
                 });
             });
 
@@ -151,7 +136,21 @@ module.exports = (profilePath, dataPath, callback) => {
                         //close mongo connection
                         mongoConnectionTenant.closeDb();
 
-                        fixOwnerAndTenants(profile, tenant, callback);
+                        //switch profile DBTN_urac
+                        profile.name = "DBTN_urac";
+                        let mongoConnection = new Mongo(profile);
+                        fixOwnerAndTenants(mongoConnection, profile, tenant, (error, response)=>{
+                            if (error || response)
+                                return callback(error, response);
+                            unpdateUsersAndGroups(mongoConnection, {
+                                "id": tenant._id.toString(),
+                                "code": tenant.code
+                            }, () => {
+                                //close mongo connection
+                                mongoConnection.closeDb();
+                                return callback(null, "MongoDb Soajs Data migrate!")
+                            });
+                        });
                     });
                 });
             });
