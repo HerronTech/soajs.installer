@@ -951,7 +951,7 @@ var lib = {
             mongoEnv.push({ name: 'SOAJS_MONGO_NB', value: '' + profile.servers.length });
             for(var i = 0; i < profile.servers.length; i++){
                 mongoEnv.push({name: 'SOAJS_MONGO_IP_' + (i + 1), value: profile.servers[i].host});
-                mongoEnv.push({name: 'SOAJS_MONGO_PORT_' + (i + 1), value: '' + profile.servers[i].port});
+                mongoEnv.push({name: 'SOAJS_MONGO_PORT_' + (i + 1), value: profile.servers[i].port});
             }
 
             if (profile.credentials && profile.credentials.username && profile.credentials.password) {
@@ -967,7 +967,7 @@ var lib = {
         else {
             mongoEnv.push({ name: 'SOAJS_MONGO_NB', value: '1' });
             mongoEnv.push({ name: 'SOAJS_MONGO_IP_1', value: profile.servers[0].host});
-            mongoEnv.push({ name: 'SOAJS_MONGO_PORT_1', value: '27017'});
+            mongoEnv.push({ name: 'SOAJS_MONGO_PORT_1', value: 27017});
         }
 
         services.forEach(function (oneService) {
