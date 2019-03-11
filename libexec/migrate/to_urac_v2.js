@@ -3,16 +3,25 @@ const fs = require("fs");
 let Mongo = require("soajs").mongo;
 
 
-function unpdateUsersAndGroups(mongoConnection, tenant, callback) {
+function unpdateUsersAndGroups(mongoConnection, tenantInfo, tenant, callback) {
     let condition = {$or: [{'tenant.code': "DEVE"}, {'tenant.code': "DEVO"}, {'tenant.code': "OWNE"}]};
-    let s = {
-        '$set': {
-            'tenant': tenant
-        }
-    };
-    mongoConnection.update("users", condition, s, {'multi': true}, (error) => {
-        mongoConnection.update("groups", condition, s, {'multi': true}, (error) => {
-            return callback();
+    let s = {'$set': {'tenant': tenantInfo}};
+    mongoConnection.update("users", condition, s, {'multi': true}, () => {
+        condition = {'tenant.code': "DEVE"};
+        s['$set'].config = {"allowedPackages": {}};
+        s['$set'].config.allowedPackages[tenant.applications[0].product] = ["DSBRD_DEVEL"];
+        mongoConnection.update("groups", condition, s, {'multi': true}, () => {
+            condition = {'tenant.code': "DEVO"};
+            s['$set'].config = {"allowedPackages": {}};
+            s['$set'].config.allowedPackages[tenant.applications[0].product] = ["DSBRD_DEVOP"];
+            mongoConnection.update("groups", condition, s, {'multi': true}, () => {
+                condition = {'tenant.code': "OWNE"};
+                s['$set'].config = {"allowedPackages": {}};
+                s['$set'].config.allowedPackages[tenant.applications[0].product] = ["DSBRD_OWNER"];
+                mongoConnection.update("groups", condition, s, {'multi': true}, () => {
+                    return callback();
+                });
+            });
         });
     });
 }
@@ -81,7 +90,7 @@ function fixOwnerAndTenants(mongoConnection, profile, tenant, callback) {
                         mongoConnection.closeDb();
                         return callback(error);
                     }
-                   return callback(null, null);
+                    return callback(null, null);
                 });
             });
 
@@ -139,13 +148,13 @@ module.exports = (profilePath, dataPath, callback) => {
                         //switch profile DBTN_urac
                         profile.name = "DBTN_urac";
                         let mongoConnection = new Mongo(profile);
-                        fixOwnerAndTenants(mongoConnection, profile, tenant, (error, response)=>{
+                        fixOwnerAndTenants(mongoConnection, profile, tenant, (error, response) => {
                             if (error || response)
                                 return callback(error, response);
                             unpdateUsersAndGroups(mongoConnection, {
                                 "id": tenant._id.toString(),
                                 "code": tenant.code
-                            }, () => {
+                            }, tenant, () => {
                                 //close mongo connection
                                 mongoConnection.closeDb();
                                 return callback(null, "MongoDb Soajs Data migrate!")
