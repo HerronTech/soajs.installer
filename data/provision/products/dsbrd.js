@@ -7,142 +7,287 @@ var dsbrdProduct = {
 	"name" : "Console UI Product",
 	"description" : "This is the main Console UI Product.",
 	"scope": {
-		"acl": {
-			"dashboard": {
-				"urac": {
+		acl: {
+			dashboard: {
+				urac: {
 					"2": {
-						"access": false,
-						"get": {
-							"apis": {
-								"/passport/login/:strategy": {
-									"access": false
-								},
-								"/changeEmail/validate": {
-									"access": true
-								},
-								"/account/getUser": {
-									"access": true
-								},
-								"/checkUsername": {
-									"access": false
-								},
-								"/admin/changeUserStatus": {
-									"access": true
-								},
-								"/admin/listUsers": {
-									"access": true
-								},
-								"/admin/users/count": {
-									"access": true
-								},
-								"/admin/getUser": {
-									"access": true
-								},
-								"/admin/group/list": {
-									"access": true
-								},
-								"/admin/all": {
-									"access": true
-								},
-								"/tenant/list": {
-									"access": true
-								},
-								"/tenant/getUserAclInfo": {
-									"access": true
+						access: false,
+						get: [
+							{
+								group: "Guest Email Account Settings",
+								apis: {
+									"/changeEmail/validate": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "Guest",
+								apis: {
+									"/join/validate": {
+										access: false
+									}
+								}
+							},
+							{
+								group: "Guest",
+								apis: {
+									"/passport/login/:strategy": {
+										access: false
+									}
+								}
+							},
+							{
+								group: "Guest",
+								apis: {
+									"/passport/validate/:strategy": {
+										access: false
+									}
+								}
+							},
+							{
+								group: "Guest Account Settings",
+								apis: {
+									"/checkUsername": {
+										access: false
+									}
+								}
+							},
+							{
+								group: "Guest Account Settings",
+								apis: {
+									"/forgotPassword": {
+										access: false
+									}
+								}
+							},
+							{
+								group: "Administration",
+								apis: {
+									"/admin/users/count": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "Administration",
+								apis: {
+									"/admin/changeUserStatus": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "Administration",
+								apis: {
+									"/admin/listUsers": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "Administration",
+								apis: {
+									"/admin/getUser": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "Administration",
+								apis: {
+									"/admin/group/list": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "Administration",
+								apis: {
+									"/admin/all": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "My Account",
+								apis: {
+									"/account/getUser": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "Tenant",
+								apis: {
+									"/tenant/list": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "Tenant",
+								apis: {
+									"/tenant/getUserAclInfo": {
+										access: true
+									}
 								}
 							}
-						},
-						"post": {
-							"apis": {
-								"/resetPassword": {
-									"access": true
-								},
-								"/account/changePassword": {
-									"access": true
-								},
-								"/account/changeEmail": {
-									"access": true
-								},
-								"/account/editProfile": {
-									"access": true
-								},
-								"/admin/group/addUsers": {
-									"access": true
-								},
-								"/admin/group/edit": {
-									"access": true
-								},
-								"/admin/group/add": {
-									"access": true
-								},
-								"/admin/editUserConfig": {
-									"access": true
-								},
-								"/admin/editUser": {
-									"access": true
-								},
-								"/admin/addUser": {
-									"access": true
+						],
+						post: [
+							{
+								group: "Guest Account Settings",
+								apis: {
+									"/resetPassword": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "Guest",
+								apis: {
+									"/join": {
+										access: false
+									}
+								}
+							},
+							{
+								group: "Guest",
+								apis: {
+									"/ldap/login": {
+										access: false
+									}
+								}
+							},
+							{
+								group: "Guest",
+								apis: {
+									"/openam/login": {
+										access: false
+									}
+								}
+							},
+							{
+								group: "My Account",
+								apis: {
+									"/account/editProfile": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "My Account",
+								apis: {
+									"/account/changePassword": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "My Account",
+								apis: {
+									"/account/changeEmail": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "Administration",
+								apis: {
+									"/admin/addUser": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "Administration",
+								apis: {
+									"/admin/editUser": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "Administration",
+								apis: {
+									"/admin/editUserConfig": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "Administration",
+								apis: {
+									"/admin/group/add": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "Administration",
+								apis: {
+									"/admin/group/edit": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "Administration",
+								apis: {
+									"/admin/group/addUsers": {
+										access: true
+									}
 								}
 							}
-						},
-						"delete": {
-							"apis": {
-								"/admin/group/delete": {
-									"access": true
+						],
+						delete: [
+							{
+								group: "Administration",
+								apis: {
+									"/admin/group/delete": {
+										access: true
+									}
 								}
 							}
-						}
+						]
 					}
 				},
-				"dashboard": {
+				dashboard: {
 					"1": {
-						"access": true,
-						"post": {
-							"apis": {
-								"/tenant/acl/get": {
-									"access": true
-								},
-								"/cd/deploy": {
-									"access": false
+						access: true,
+						post: [
+							{
+								group: "Continuous Delivery Deployment",
+								apis: {
+									"/cd/deploy": {
+										access: false
+									}
 								}
 							}
-						}
+						]
 					}
 				},
-				"oauth": {
+				oauth: {
 					"1": {
-						"access": false,
-						"delete": {
-							"apis": {
-								"/accessToken/:token": {
-									"access": true
-								},
-								"/refreshToken/:token": {
-									"access": true
-								},
-								"/tokens/user/:userId": {
-									"access": false
-								},
-								"/tokens/tenant/:clientId": {
-									"access": false
+						access: false,
+						delete: [
+							{
+								group: "Tokenization",
+								apis: {
+									"/accessToken/:token": {
+										access: true
+									}
+								}
+							},
+							{
+								group: "Tokenization",
+								apis: {
+									"/refreshToken/:token": {
+										access: true
+									}
 								}
 							}
-						},
-						"get": {
-							"apis": {
-								"/authorization": {
-									"access": false
-								}
-							}
-						},
-						"post": {
-							"apis": {
-								"/token": {
-									"access": false
-								}
-							}
-						}
+						]
 					}
 				}
 			}
