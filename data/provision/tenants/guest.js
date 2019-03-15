@@ -8,11 +8,6 @@ var techop = {
     "description": "This is the tenant that holds the access rights and configuration for the console users with DSBRD_GUEST as Guest default package",
 	"oauth": {
 		"secret": "this is a secret",
-		"redirectURI": "http://domain.com",
-		"grants": [
-			"password",
-			"refresh_token"
-		],
 		"disabled": 0,
 		"type": 2,
 		"loginMode": "urac"
@@ -33,6 +28,7 @@ var techop = {
 							"device": null,
 							"geo": null,
 							"env": "DASHBOARD",
+                            "dashboardAccess" : true,
 							"expDate": null
 						}
 					],

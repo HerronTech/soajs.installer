@@ -28,6 +28,7 @@ var techop = {
 							"device": null,
 							"geo": null,
 							"env": "DASHBOARD",
+                            "dashboardAccess" : true,
 							"expDate": null
 						}
 					],
