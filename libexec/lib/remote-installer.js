@@ -83,7 +83,41 @@ const serviceModule = {
 				return callback();
 			}
 		});
-	}
+	},
+
+    /**
+     * Migrate soajs provision data
+     * @param args
+     * @param callback
+     */
+    migrate: (args, callback) => {
+        //todo check args
+        if (!Array.isArray(args) || args.length === 0) {
+            return callback(null, "Missing migration strategy!");
+        }
+        let strategies = require("../migrate/config.js");
+
+        if (args.length > 1) {
+            args.shift();
+            return callback(null, `Unidentified input ${args.join(" ")}. Please use soajs remote-installer migrate %strategy%.`);
+        }
+
+        // check if strategy is available
+        let strategy = args[0];
+        if (strategies.indexOf(strategy) === -1) {
+            return callback(null, `Select one of the following strategies: ${strategies.join(" ")}.`);
+        }
+        let strategyFunction = require("../migrate/" + strategy + ".js");
+        let profilePath = path.normalize(process.env.PWD + "/../include/soajs-remote/data/startup/profile.js");
+        let dataPath = path.normalize(process.env.PWD + "/../include/soajs-remote/data/startup/");
+
+        if (!fs.existsSync(profilePath))
+            return callback(null, `Unable to find profile to connect to remote-installer mongo at: ${profilePath}.`);
+        if (!fs.existsSync(dataPath))
+            return callback(null, `Unable to find custom data path to connect to remote-installer mongo at: ${dataPath}.`);
+
+        return strategyFunction(profilePath, dataPath, callback);
+    }
 };
 
 module.exports = serviceModule;

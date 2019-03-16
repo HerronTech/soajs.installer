@@ -311,7 +311,7 @@ let mongoModule = {
     },
 
     /**
-     * Replace soajs provision data with a fresh new copy
+     * Migrate soajs provision data
      * @param args
      * @param callback
      */
@@ -337,6 +337,7 @@ let mongoModule = {
         let dataPath = path.normalize(process.env.PWD + "/../data/provision/");
         return strategyFunction(profilePath, dataPath, callback);
     },
+
     /**
      * Replace soajs provision data with a fresh new copy
      * @param args
