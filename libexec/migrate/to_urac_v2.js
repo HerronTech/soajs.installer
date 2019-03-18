@@ -3,24 +3,43 @@ const fs = require("fs");
 let Mongo = require("soajs").mongo;
 
 
-function unpdateUsersAndGroups(mongoConnection, tenantInfo, tenant, callback) {
+function unpdateUsersAndGroups(mongoConnection, tenantInfo, tenant, dataPath, callback) {
     let condition = {$or: [{'tenant.code': "DEVE"}, {'tenant.code': "DEVO"}, {'tenant.code': "OWNE"}]};
     let s = {'$set': {'tenant': tenantInfo}};
     mongoConnection.update("users", condition, s, {'multi': true}, () => {
+
         condition = {'tenant.code': "DEVE"};
-        s['$set'].config = {"allowedPackages": {}};
-        s['$set'].config.allowedPackages[tenant.applications[0].product] = ["DSBRD_DEVEL"];
+        let develGroup = require(dataPath + "urac/groups/devel.js");
+        delete (develGroup._id);
+        s['$set'].config = develGroup.config;
         mongoConnection.update("groups", condition, s, {'multi': true}, () => {
-            condition = {'tenant.code': "DEVO"};
-            s['$set'].config = {"allowedPackages": {}};
-            s['$set'].config.allowedPackages[tenant.applications[0].product] = ["DSBRD_DEVOP"];
-            mongoConnection.update("groups", condition, s, {'multi': true}, () => {
-                condition = {'tenant.code': "OWNE"};
-                s['$set'].config = {"allowedPackages": {}};
-                s['$set'].config.allowedPackages[tenant.applications[0].product] = ["DSBRD_OWNER"];
+
+            mongoConnection.update("groups", {"code": develGroup.code}, develGroup, {'upsert': true}, ()=>{
+
+                condition = {'tenant.code': "DEVO"};
+                let devopGroup = require(dataPath + "urac/groups/devop.js");
+                delete (devopGroup._id);
+                s['$set'].config = devopGroup.config;
                 mongoConnection.update("groups", condition, s, {'multi': true}, () => {
-                    return callback();
+
+                    mongoConnection.update("groups", {"code": devopGroup.code}, devopGroup, {'upsert': true}, ()=>{
+
+                        condition = {'tenant.code': "OWNE"};
+                        let ownwerGroup = require(dataPath + "urac/groups/owner.js");
+                        delete (ownwerGroup._id);
+                        s['$set'].config = ownwerGroup.config;
+                        mongoConnection.update("groups", condition, s, {'multi': true}, () => {
+
+                            mongoConnection.update("groups", {"code": ownwerGroup.code}, ownwerGroup, {'upsert': true}, ()=>{
+
+                            return callback();
+
+                            });
+                        });
+
+                    });
                 });
+
             });
         });
     });
@@ -154,7 +173,7 @@ module.exports = (profilePath, dataPath, callback) => {
                             unpdateUsersAndGroups(mongoConnection, {
                                 "id": tenant._id.toString(),
                                 "code": tenant.code
-                            }, tenant, () => {
+                            }, tenant, dataPath, () => {
                                 //close mongo connection
                                 mongoConnection.closeDb();
                                 return callback(null, "MongoDb Soajs Data migrate!")
