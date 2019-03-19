@@ -7,283 +7,283 @@ var dsbrdProduct = {
 	"name" : "Console UI Product",
 	"description" : "This is the main Console UI Product.",
 	"scope": {
-		acl: {
-			dashboard: {
-				urac: {
+		"acl": {
+			"dashboard": {
+				"urac": {
 					"2": {
-						access: false,
-						get: [
+						"access": false,
+						"get": [
 							{
-								group: "Guest Email Account Settings",
-								apis: {
+								"group": "Guest Email Account Settings",
+								"apis": {
 									"/changeEmail/validate": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "Guest",
-								apis: {
+								"group": "Guest",
+								"apis": {
 									"/join/validate": {
-										access: false
+										"access": false
 									}
 								}
 							},
 							{
-								group: "Guest",
-								apis: {
+								"group": "Guest",
+								"apis": {
 									"/passport/login/:strategy": {
-										access: false
+										"access": false
 									}
 								}
 							},
 							{
-								group: "Guest",
-								apis: {
+								"group": "Guest",
+								"apis": {
 									"/passport/validate/:strategy": {
-										access: false
+										"access": false
 									}
 								}
 							},
 							{
-								group: "Guest Account Settings",
-								apis: {
+								"group": "Guest Account Settings",
+								"apis": {
 									"/checkUsername": {
-										access: false
+										"access": false
 									}
 								}
 							},
 							{
-								group: "Guest Account Settings",
-								apis: {
+								"group": "Guest Account Settings",
+								"apis": {
 									"/forgotPassword": {
-										access: false
+										"access": false
 									}
 								}
 							},
 							{
-								group: "Administration",
-								apis: {
+								"group": "Administration",
+								"apis": {
 									"/admin/users/count": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "Administration",
-								apis: {
+								"group": "Administration",
+								"apis": {
 									"/admin/changeUserStatus": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "Administration",
-								apis: {
+								"group": "Administration",
+								"apis": {
 									"/admin/listUsers": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "Administration",
-								apis: {
+								"group": "Administration",
+								"apis": {
 									"/admin/getUser": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "Administration",
-								apis: {
+								"group": "Administration",
+								"apis": {
 									"/admin/group/list": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "Administration",
-								apis: {
+								"group": "Administration",
+								"apis": {
 									"/admin/all": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "My Account",
-								apis: {
+								"group": "My Account",
+								"apis": {
 									"/account/getUser": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "Tenant",
-								apis: {
+								"group": "Tenant",
+								"apis": {
 									"/tenant/list": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "Tenant",
-								apis: {
+								"group": "Tenant",
+								"apis": {
 									"/tenant/getUserAclInfo": {
-										access: true
+										"access": true
 									}
 								}
 							}
 						],
-						post: [
+						"post": [
 							{
-								group: "Guest Account Settings",
-								apis: {
+								"group": "Guest Account Settings",
+								"apis": {
 									"/resetPassword": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "Guest",
-								apis: {
+								"group": "Guest",
+								"apis": {
 									"/join": {
-										access: false
+										"access": false
 									}
 								}
 							},
 							{
-								group: "Guest",
-								apis: {
+								"group": "Guest",
+								"apis": {
 									"/ldap/login": {
-										access: false
+										"access": false
 									}
 								}
 							},
 							{
-								group: "Guest",
-								apis: {
+								"group": "Guest",
+								"apis": {
 									"/openam/login": {
-										access: false
+										"access": false
 									}
 								}
 							},
 							{
-								group: "My Account",
-								apis: {
+								"group": "My Account",
+								"apis": {
 									"/account/editProfile": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "My Account",
-								apis: {
+								"group": "My Account",
+								"apis": {
 									"/account/changePassword": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "My Account",
-								apis: {
+								"group": "My Account",
+								"apis": {
 									"/account/changeEmail": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "Administration",
-								apis: {
+								"group": "Administration",
+								"apis": {
 									"/admin/addUser": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "Administration",
-								apis: {
+								"group": "Administration",
+								"apis": {
 									"/admin/editUser": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "Administration",
-								apis: {
+								"group": "Administration",
+								"apis": {
 									"/admin/editUserConfig": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "Administration",
-								apis: {
+								"group": "Administration",
+								"apis": {
 									"/admin/group/add": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "Administration",
-								apis: {
+								"group": "Administration",
+								"apis": {
 									"/admin/group/edit": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "Administration",
-								apis: {
+								"group": "Administration",
+								"apis": {
 									"/admin/group/addUsers": {
-										access: true
+										"access": true
 									}
 								}
 							}
 						],
-						delete: [
+						"delete": [
 							{
-								group: "Administration",
-								apis: {
+								"group": "Administration",
+								"apis": {
 									"/admin/group/delete": {
-										access: true
+										"access": true
 									}
 								}
 							}
 						]
 					}
 				},
-				dashboard: {
+				"dashboard": {
 					"1": {
-						access: true,
-						post: [
+						"access": true,
+						"post": [
 							{
-								group: "Continuous Delivery Deployment",
-								apis: {
+								"group": "Continuous Delivery Deployment",
+								"apis": {
 									"/cd/deploy": {
-										access: false
+										"access": false
 									}
 								}
 							}
 						]
 					}
 				},
-				oauth: {
+				"oauth": {
 					"1": {
-						access: false,
-						delete: [
+						"access": false,
+						"delete": [
 							{
-								group: "Tokenization",
-								apis: {
+								"group": "Tokenization",
+								"apis": {
 									"/accessToken/:token": {
-										access: true
+										"access": true
 									}
 								}
 							},
 							{
-								group: "Tokenization",
-								apis: {
+								"group": "Tokenization",
+								"apis": {
 									"/refreshToken/:token": {
-										access: true
+										"access": true
 									}
 								}
 							}
@@ -301,40 +301,40 @@ var dsbrdProduct = {
 			"description": "This package is used to provide anyone access to login and forgot password. Once logged in the package linked to the user tenant will take over thus providing the right access to the logged in user.",
 			"acl": {
 				"dashboard": {
-					oauth: [
+					"oauth": [
 						{
-							version: "1",
-							get: [
+							"version": "1",
+							"get": [
 								"Guest"
 							],
-							post: [
+							"post": [
 								"Guest"
 							],
-							delete: [
+							"delete": [
 								"Tokenization"
 							]
 						}
 					],
-					urac: [
+					"urac": [
 						{
-							version: "2",
-							get: [
+							"version": "2",
+							"get": [
 								"Guest Account Settings",
 								"Guest Email Account Settings",
 								"My Account",
 								"Administration"
 							],
-							post: [
+							"post": [
 								"Guest Account Settings",
 								"My Account",
 								"Administration"
 							]
 						}
 					],
-					dashboard: [
+					"dashboard": [
 						{
-							version: "1",
-							post: [
+							"version": "1",
+							"post": [
 								"Private Tenant ACL"
 							]
 						}
@@ -348,48 +348,48 @@ var dsbrdProduct = {
 			"name": "Owner",
 			"description": "This package is used to provide owner level access. This means the user who has this package will have access to everything.",
 			"locked": true,
-			acl: {
-				dashboard: {
-					oauth: [
+			"acl": {
+				"dashboard": {
+					"oauth": [
 						{
-							version: "1",
-							get: [
+							"version": "1",
+							"get": [
 								"Guest"
 							],
-							post: [
+							"post": [
 								"Guest"
 							],
-							delete: [
+							"delete": [
 								"Tokenization",
 								"User Tokenization",
 								"Cient Tokenization"
 							]
 						}
 					],
-					urac: [
+					"urac": [
 						{
-							version: "2",
-							get: [
+							"version": "2",
+							"get": [
 								"Tenant",
 								"Administration",
 								"My Account",
 								"Guest Email Account Settings",
 								"Guest Account Settings"
 							],
-							post: [
+							"post": [
 								"Administration",
 								"My Account",
 								"Guest Account Settings"
 							],
-							delete: [
+							"delete": [
 								"Administration"
 							]
 						}
 					],
-					dashboard: [
+					"dashboard": [
 						{
-							version: "1",
-							get: [
+							"version": "1",
+							"get": [
 								"Continuous Delivery",
 								"Environment",
 								"Templates",
@@ -416,7 +416,7 @@ var dsbrdProduct = {
 								"Git Accounts",
 								"Continuous Integration"
 							],
-							post: [
+							"post": [
 								"Continuous Delivery",
 								"Environment",
 								"Templates",
@@ -444,7 +444,7 @@ var dsbrdProduct = {
 								"Git Accounts",
 								"Continuous Integration"
 							],
-							put: [
+							"put": [
 								"Continuous Delivery",
 								"Environment",
 								"Environment Databases",
@@ -466,7 +466,7 @@ var dsbrdProduct = {
 								"Git Accounts",
 								"Continuous Integration"
 							],
-							delete: [
+							"delete": [
 								"Environment",
 								"Templates",
 								"Environment Databases",
@@ -498,41 +498,41 @@ var dsbrdProduct = {
 			"name" : "DevOps",
 			"locked" : true,
 			"description" : "This package has the right privileges a DevOps user will need to be able to configure, control, and monitor what is happening across the board.",
-			acl: {
-				dashboard: {
-					oauth: [
+			"acl": {
+				"dashboard": {
+					"oauth": [
 						{
-							version: "1",
-							delete: [
+							"version": "1",
+							"delete": [
 								"Tokenization",
 								"User Tokenization",
 								"Cient Tokenization"
 							],
-							get: [
+							"get": [
 								"Guest"
 							],
-							post: [
+							"post": [
 								"Guest"
 							]
 						}
 					],
-					urac: [
+					"urac": [
 						{
-							version: "2",
-							get: [
+							"version": "2",
+							"get": [
 								"Guest Email Account Settings",
 								"Tenant",
 								"My Account"
 							],
-							post: [
+							"post": [
 								"My Account"
 							]
 						}
 					],
-					dashboard: [
+					"dashboard": [
 						{
-							version: "1",
-							get: [
+							"version": "1",
+							"get": [
 								"Continuous Delivery",
 								"Environment",
 								"Templates",
@@ -555,7 +555,7 @@ var dsbrdProduct = {
 								"Tenant oAuth",
 								"Tenant Application"
 							],
-							post: [
+							"post": [
 								"Continuous Delivery",
 								"Environment",
 								"Environment Databases",
@@ -580,7 +580,7 @@ var dsbrdProduct = {
 								"Tenant oAuth",
 								"Tenant Application"
 							],
-							put: [
+							"put": [
 								"Continuous Delivery",
 								"Environment",
 								"Environment Databases",
@@ -598,7 +598,7 @@ var dsbrdProduct = {
 								"Tenant oAuth",
 								"Tenant Application"
 							],
-							delete: [
+							"delete": [
 								"Environment",
 								"Environment Databases",
 								"Resources",
@@ -626,41 +626,41 @@ var dsbrdProduct = {
 			"name" : "Developer",
 			"locked" : true,
 			"description" : "This package is ideal for a developer. You are not giving much access but yet it is enough to sail and fast.",
-			acl: {
-				dashboard: {
-					oauth: [
+			"acl": {
+				"dashboard": {
+					"oauth": [
 						{
-							version: "1",
-							delete: [
+							"version": "1",
+							"delete": [
 								"Tokenization",
 								"User Tokenization",
 								"Cient Tokenization"
 							],
-							get: [
+							"get": [
 								"Guest"
 							],
-							post: [
+							"post": [
 								"Guest"
 							]
 						}
 					],
-					urac: [
+					"urac": [
 						{
-							version: "2",
-							get: [
+							"version": "2",
+							"get": [
 								"My Account",
 								"Tenant",
 								"Guest Email Account Settings"
 							],
-							post: [
+							"post": [
 								"My Account"
 							]
 						}
 					],
-					dashboard: [
+					"dashboard": [
 						{
-							version: "1",
-							get: [
+							"version": "1",
+							"get": [
 								"Continuous Delivery",
 								"Environment",
 								"Templates",
@@ -678,7 +678,7 @@ var dsbrdProduct = {
 								"API Builder",
 								"Secrets"
 							],
-							post: [
+							"post": [
 								"Continuous Delivery",
 								"Environment",
 								"Templates",
@@ -699,7 +699,7 @@ var dsbrdProduct = {
 								"Simulate",
 								"swagger"
 							],
-							put: [
+							"put": [
 								"Continuous Delivery",
 								"Environment",
 								"Environment Databases",
@@ -713,7 +713,7 @@ var dsbrdProduct = {
 								"Git Accounts",
 								"API Builder"
 							],
-							delete: [
+							"delete": [
 								"Environment",
 								"Templates",
 								"Environment Databases",
