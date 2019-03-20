@@ -24,6 +24,14 @@ const SOAJS_RMS = {
     'ui': 'soajs.dashboard.ui'
 };
 
+const SOAJS_CORE = {
+    'soajs': 'soajs',
+    'libs': 'soajs.core.libs',
+    'drivers': 'soajs.core.drivers',
+    'modules': 'soajs.core.modules',
+    'uracDriver': 'soajs.urac.driver',
+}
+
 function updateConfigFile(workingDirectory, cb) {
     installerConfig.workingDirectory = workingDirectory;
     let newData = "'use strict';\n\n";
@@ -105,7 +113,7 @@ function installConsoleComponents(upgrade, cb) {
                         logger.debug(`${oneService} installed!`);
                         setTimeout(() => {
                             return mCb(null, true);
-                        }, 500);
+                        }, 1000);
                     }
                     else {
                         return mCb("Error installing " + oneService);
@@ -284,11 +292,15 @@ const consoleModule = {
 
                 logger.info("Cleaning up before updating SOAJS Console ...");
                 setTimeout(() => {
-                    //remove folders of microservices
-                    async.eachOfSeries(SOAJS_RMS, (oneRepo, oneService, mCb) => {
+                    //remove folders of microservices && core
+                    let ms_and_core = SOAJS_CORE;
+                    for (let ms in SOAJS_RMS){
+                        ms_and_core[ms] = SOAJS_RMS[ms];
+                    }
+                    async.eachOfSeries(ms_and_core, (oneRepo, oneService, mCb) => {
                         logger.debug(`Removing ${oneService} files ...`);
-                        logger.debug(path.normalize(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[oneService]) + "\n");
-                        rimraf(path.normalize(installerConfig.workingDirectory + "/node_modules/" + SOAJS_RMS[oneService]), (error) => {
+                        logger.debug(path.normalize(installerConfig.workingDirectory + "/node_modules/" + ms_and_core[oneService]) + "\n");
+                        rimraf(path.normalize(installerConfig.workingDirectory + "/node_modules/" + ms_and_core[oneService]), (error) => {
                             if (error) {
                                 logger.error(error);
                                 return mCb(error);
