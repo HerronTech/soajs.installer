@@ -14,7 +14,7 @@ function unpdateUsersAndGroups(mongoConnection, tenantInfo, tenant, dataPath, ca
         s['$set'].config = develGroup.config;
         mongoConnection.update("groups", condition, s, {'multi': true}, () => {
 
-            mongoConnection.update("groups", {"code": develGroup.code}, develGroup, {'upsert': true}, ()=>{
+            mongoConnection.update("groups", {"code": develGroup.code}, develGroup, {'upsert': true}, () => {
 
                 condition = {'tenant.code': "DEVO"};
                 let devopGroup = require(dataPath + "urac/groups/devop.js");
@@ -22,7 +22,7 @@ function unpdateUsersAndGroups(mongoConnection, tenantInfo, tenant, dataPath, ca
                 s['$set'].config = devopGroup.config;
                 mongoConnection.update("groups", condition, s, {'multi': true}, () => {
 
-                    mongoConnection.update("groups", {"code": devopGroup.code}, devopGroup, {'upsert': true}, ()=>{
+                    mongoConnection.update("groups", {"code": devopGroup.code}, devopGroup, {'upsert': true}, () => {
 
                         condition = {'tenant.code': "OWNE"};
                         let ownwerGroup = require(dataPath + "urac/groups/owner.js");
@@ -30,9 +30,9 @@ function unpdateUsersAndGroups(mongoConnection, tenantInfo, tenant, dataPath, ca
                         s['$set'].config = ownwerGroup.config;
                         mongoConnection.update("groups", condition, s, {'multi': true}, () => {
 
-                            mongoConnection.update("groups", {"code": ownwerGroup.code}, ownwerGroup, {'upsert': true}, ()=>{
+                            mongoConnection.update("groups", {"code": ownwerGroup.code}, ownwerGroup, {'upsert': true}, () => {
 
-                            return callback();
+                                return callback();
 
                             });
                         });
@@ -151,6 +151,19 @@ module.exports = (profilePath, dataPath, callback) => {
             tenant.name = "Console Tenant";
             tenant.description = "This is the tenant that holds the access rights and configuration for the console users with DSBRD_GUEST as Guest default package";
             tenant.tag = "Console";
+            if (tenant.applications) {
+                for (let i = 0; i < tenant.applications.length; i++) {
+                    if (tenant.applications[i].keys) {
+                        for (let j = 0; j < tenant.applications[i].keys.length; j++) {
+                            if (tenant.applications[i].keys[j].extKeys) {
+                                for (let k = 0; k < tenant.applications[i].keys[j].extKeys.length; k++) {
+                                    tenant.applications[i].keys[j].extKeys[k].dashboardAccess = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             mongoConnectionTenant.update("tenants", condition, tenant, () => {
                 //delete unneeded console tenants
                 condition = {$or: [{code: "DEVE"}, {code: "DEVO"}, {code: "OWNE"}]};
