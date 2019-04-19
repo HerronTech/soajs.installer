@@ -507,9 +507,20 @@ let mongoModule = {
                             },
                             {
                                 col: 'users',
+                                index: {username: 1, email: 1, status: 1},
+                                options: null
+                            },
+                            {
+                                col: 'users',
+                                index: {username: 1, email: 1, firstName: 1, lastName: 1},
+                                options: null
+                            },
+                            {
+                                col: 'users',
                                 index: {email: 1, status: 1},
                                 options: null
                             },
+
                             {
                                 col: 'users',
                                 index: {groups: 1, 'tenant.id': 1},
@@ -522,7 +533,23 @@ let mongoModule = {
                             },
                             {
                                 col: 'users',
+                                index: {'tenant.id': 1},
+                                options: null
+                            },
+                            {
+                                col: 'users',
+                                index: {'tenant.code': 1},
+                                options: null
+                            },
+
+                            {
+                                col: 'users',
                                 index: {status: 1},
+                                options: null
+                            },
+                            {
+                                col: 'users',
+                                index: {_id: 1, status: 1},
                                 options: null
                             },
                             {
@@ -530,11 +557,7 @@ let mongoModule = {
                                 index: {locked: 1},
                                 options: null
                             },
-                            {
-                                col: 'users',
-                                index: {'tenant.id': 1},
-                                options: null
-                            },
+
                             {
                                 col: 'groups',
                                 index: {code: 1, 'tenant.id': 1},
@@ -542,11 +565,6 @@ let mongoModule = {
                             },
                             {
                                 col: 'groups',
-                                index: {code: 1},
-                                options: null
-                            },
-                            {
-                                col: 'groups',
                                 index: {'tenant.id': 1},
                                 options: null
                             },
@@ -555,6 +573,7 @@ let mongoModule = {
                                 index: {locked: 1},
                                 options: null
                             },
+
                             {
                                 col: 'tokens',
                                 index: {token: 1},
