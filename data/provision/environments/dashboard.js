@@ -2,11 +2,9 @@
 var dashboard = {
     "_id": '55128442e603d7e01ab1688c',
     "code": "DASHBOARD",
-    "domain": "soajs.org",
-    "sitePrefix": "dashboard",
-    "apiPrefix": "dashboard-api",
+    "domain": "localhost",
     "locked": true,
-    "port": 80,
+    "port": 4005,
 	"protocol": "http",
     "profile": "/soajs/FILES/profiles/profile.js",
     "deployer": {
