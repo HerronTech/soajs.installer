@@ -542,6 +542,13 @@ let mongoModule = {
                                 options: null
                             },
 
+
+                            {
+                                col: 'users',
+                                index: {'config.allowedTenants.tenant.id': 1, 'config.allowedTenants.tenant.pin.code': 1},
+                                options: {unique: true}
+                            },
+
                             {
                                 col: 'users',
                                 index: {status: 1},
