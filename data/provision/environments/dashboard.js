@@ -4,7 +4,7 @@ var dashboard = {
     "code": "DASHBOARD",
     "domain": "localhost",
     "locked": true,
-    "port": 4005,
+    "port": 4000,
 	"protocol": "http",
     "profile": "/soajs/FILES/profiles/profile.js",
     "deployer": {
