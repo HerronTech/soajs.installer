@@ -110,6 +110,7 @@ var dashboard = {
             "oauth": {
                 "grants": ['password', 'refresh_token'],
                 "debug": false,
+                "getUserFromToken": true,
 	            "accessTokenLifetime": 7200,
 	            "refreshTokenLifetime": 1209600
             },

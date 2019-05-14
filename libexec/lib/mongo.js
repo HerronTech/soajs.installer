@@ -338,6 +338,31 @@ let mongoModule = {
         return strategyFunction(profilePath, dataPath, callback);
     },
 
+    custom: (args, callback) => {
+        if (!Array.isArray(args) || args.length === 0) {
+            return callback(null, "Missing custom folder!");
+        }
+        if (args.length > 1) {
+            args.shift();
+            return callback(null, `Unidentified input ${args.join(" ")}. Please use soajs mongo custom %folder%.`);
+        }
+        if (args[0].charAt(0) !== '/') {
+            return callback("Invalid custom folder; please provide an absolute custom folder path. Ex: sudo soajs mongo custom /%folder%.");
+        }
+        let dataPath = args[0];
+        if (dataPath.charAt(dataPath.length - 1) !== '/')
+            dataPath = dataPath + '/';
+
+        if (fs.existsSync(dataPath)) {
+            let profilePath = path.normalize(process.env.PWD + "/../data/soajs_profile.js");
+            let mongoCustom = require("../custom/index.js");
+            return mongoCustom (profilePath, dataPath, callback);
+        }
+        else {
+            return callback(null, `Custom folder [folder] not found!`);
+        }
+    },
+
     /**
      * Replace soajs provision data with a fresh new copy
      * @param args
@@ -545,7 +570,10 @@ let mongoModule = {
 
                             {
                                 col: 'users',
-                                index: {'config.allowedTenants.tenant.id': 1, 'config.allowedTenants.tenant.pin.code': 1},
+                                index: {
+                                    'config.allowedTenants.tenant.id': 1,
+                                    'config.allowedTenants.tenant.pin.code': 1
+                                },
                                 options: {unique: true}
                             },
 
