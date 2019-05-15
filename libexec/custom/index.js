@@ -77,6 +77,30 @@ let lib = {
         else
             return cb();
     },
+    oauth: (dataPath, mongoConnection, cb) => {
+        let records = [];
+        fs.readdirSync(dataPath).forEach(function (file) {
+            let rec = require(dataPath + file);
+            //TODO: validate tenant
+            records.push(rec);
+        });
+        if (records && Array.isArray(records) && records.length > 0) {
+            async.each(
+                records,
+                (e, cb) => {
+                    let condition = {token: e.token};
+                    e._id = mongoConnection.ObjectId(e._id);
+                    mongoConnection.update("oauth_token", condition, e, {'upsert': true}, () => {
+                        return cb();
+                    });
+                },
+                () => {
+                    return cb();
+                });
+        }
+        else
+            return cb();
+    },
     users: (dataPath, profile, cb) => {
         let records = [];
         fs.readdirSync(dataPath).forEach(function (file) {
@@ -166,6 +190,14 @@ module.exports = (profilePath, dataPath, callback) => {
                     //check for tenants data
                     if (fs.existsSync(dataPath + "tenants/")) {
                         return lib.tenant(dataPath + "tenants/", mongoConnection, cb);
+                    }
+                    else
+                        return cb(null);
+                },
+                function (cb) {
+                    //check for tenants data
+                    if (fs.existsSync(dataPath + "oauth/")) {
+                        return lib.oauth(dataPath + "oauth/", mongoConnection, cb);
                     }
                     else
                         return cb(null);
