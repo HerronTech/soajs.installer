@@ -81,7 +81,7 @@ let lib = {
         let records = [];
         fs.readdirSync(dataPath).forEach(function (file) {
             let rec = require(dataPath + file);
-            //TODO: validate tenant
+            //TODO: validate oauth
             records.push(rec);
         });
         if (records && Array.isArray(records) && records.length > 0) {
@@ -105,7 +105,7 @@ let lib = {
         let records = [];
         fs.readdirSync(dataPath).forEach(function (file) {
             let rec = require(dataPath + file);
-            //TODO: validate users
+            //TODO: validate user
             records.push(rec);
         });
         if (records && Array.isArray(records) && records.length > 0) {
@@ -132,7 +132,7 @@ let lib = {
         let records = [];
         fs.readdirSync(dataPath).forEach(function (file) {
             let rec = require(dataPath + file);
-            //TODO: validate users
+            //TODO: validate group
             records.push(rec);
         });
         if (records && Array.isArray(records) && records.length > 0) {
