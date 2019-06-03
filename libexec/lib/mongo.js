@@ -574,7 +574,7 @@ let mongoModule = {
                                     'config.allowedTenants.tenant.id': 1,
                                     'config.allowedTenants.tenant.pin.code': 1
                                 },
-                                options: {unique: true}
+                                options: {unique: true, sparse: true}
                             },
 
                             {
