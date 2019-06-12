@@ -90,6 +90,8 @@ let lib = {
                 (e, cb) => {
                     let condition = {token: e.token};
                     e._id = mongoConnection.ObjectId(e._id);
+                    if (e && e.user && e.user._id)
+                        e.user._id = mongoConnection.ObjectId(e.user._id);
                     mongoConnection.update("oauth_token", condition, e, {'upsert': true}, () => {
                         return cb();
                     });
