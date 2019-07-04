@@ -28,9 +28,13 @@
     "mkdirp": "*",
     "npm": "*",
     "rimraf": "*",
-
     "soajs": "2.3.*",
-
-    "yamljs": "^0.3.0"
-  }
+    "yamljs": "^0.3.0",
+    "snyk": "^1.189.0"
+  },
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
