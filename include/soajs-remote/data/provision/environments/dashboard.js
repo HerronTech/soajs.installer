@@ -107,7 +107,7 @@ var dashboard = {
                 "origin": '*',
                 "credentials": 'true',
                 "methods": 'GET,HEAD,PUT,PATCH,POST,DELETE',
-                "headers": 'key,soajsauth,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization',
+                "headers": 'key,soajsauth,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,__env',
                 "maxage": 1728000
             },
             "oauth": {
