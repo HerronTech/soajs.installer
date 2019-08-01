@@ -5,6 +5,35 @@ let Mongo = require("soajs").mongo;
 
 
 let lib = {
+
+    basic: (config, dataPath, mongoConnection, cb) => {
+        let colName = config.colName;
+        let condAnchor = config.condAnchor;
+        let objId = config.objId;
+        let records = [];
+        fs.readdirSync(dataPath).forEach(function (file) {
+            let rec = require(dataPath + file);
+            //TODO: validate env
+            records.push(rec);
+        });
+        if (records && Array.isArray(records) && records.length > 0) {
+            async.each(
+                records,
+                (e, cb) => {
+                    let condition = {[condAnchor]: e[condAnchor]};
+                    e[objId] = mongoConnection.ObjectId(e[objId]);
+                    mongoConnection.update(colName, condition, e, {'upsert': true}, (error, result) => {
+                        console.log(colName, error);
+                        return cb();
+                    });
+                },
+                () => {
+                    return cb();
+                });
+        }
+        else
+            return cb();
+    },
     environment: (dataPath, mongoConnection, cb) => {
         let records = [];
         fs.readdirSync(dataPath).forEach(function (file) {
@@ -92,7 +121,8 @@ let lib = {
                     e._id = mongoConnection.ObjectId(e._id);
                     if (e && e.user && e.user._id)
                         e.user._id = mongoConnection.ObjectId(e.user._id);
-                    mongoConnection.update("oauth_token", condition, e, {'upsert': true}, () => {
+                    mongoConnection.update("oauth_token", condition, e, {'upsert': true}, (error, result) => {
+                        console.log("oauth_token", error);
                         return cb();
                     });
                 },
@@ -118,7 +148,8 @@ let lib = {
                     let mongoConnection = new Mongo(profile);
                     let condition = {email: e.email};
                     e._id = mongoConnection.ObjectId(e._id);
-                    mongoConnection.update("users", condition, e, {'upsert': true}, () => {
+                    mongoConnection.update("users", condition, e, {'upsert': true}, (error, result) => {
+                        console.log("users", error);
                         mongoConnection.closeDb();
                         return cb();
                     });
@@ -145,7 +176,8 @@ let lib = {
                     let mongoConnection = new Mongo(profile);
                     let condition = {code: e.code};
                     e._id = mongoConnection.ObjectId(e._id);
-                    mongoConnection.update("groups", condition, e, {'upsert': true}, () => {
+                    mongoConnection.update("groups", condition, e, {'upsert': true}, (error, result) => {
+                        console.log("groups", error);
                         mongoConnection.closeDb();
                         return cb();
                     });
@@ -175,6 +207,46 @@ module.exports = (profilePath, dataPath, callback) => {
                 function (cb) {
                     //check for environment data
                     if (fs.existsSync(dataPath + "environment/")) {
+                        let config = {
+                            "colName": "environment",
+                            "condAnchor": "code",
+                            "objId": "_id"
+                        };
+                        return lib.basic(config, dataPath + "environment/", mongoConnection, cb);
+                    }
+                    else
+                        return cb(null);
+                },
+                function (cb) {
+                    //check for products data
+                    if (fs.existsSync(dataPath + "products/")) {
+                        let config = {
+                            "colName": "products",
+                            "condAnchor": "code",
+                            "objId": "_id"
+                        };
+                        return lib.basic(config, dataPath + "products/", mongoConnection, cb);
+                    }
+                    else
+                        return cb(null);
+                },
+                function (cb) {
+                    //check for tenants data
+                    if (fs.existsSync(dataPath + "tenants/")) {
+                        let config = {
+                            "colName": "tenants",
+                            "condAnchor": "code",
+                            "objId": "_id"
+                        };
+                        return lib.basic(config, dataPath + "tenants/", mongoConnection, cb);
+                    }
+                    else
+                        return cb(null);
+                },
+                /*
+                function (cb) {
+                    //check for environment data
+                    if (fs.existsSync(dataPath + "environment/")) {
                         return lib.environment(dataPath + "environment/", mongoConnection, cb);
                     }
                     else
@@ -196,6 +268,7 @@ module.exports = (profilePath, dataPath, callback) => {
                     else
                         return cb(null);
                 },
+                */
                 function (cb) {
                     //check for tenants data
                     if (fs.existsSync(dataPath + "oauth/")) {
