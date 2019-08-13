@@ -342,13 +342,24 @@ let mongoModule = {
         if (!Array.isArray(args) || args.length === 0) {
             return callback(null, "Missing custom folder!");
         }
-        if (args.length > 1) {
+        if (args.length > 2) {
             args.shift();
-            return callback(null, `Unidentified input ${args.join(" ")}. Please use soajs mongo custom %folder%.`);
+            return callback(null, `Unidentified input ${args.join(" ")}. Please use soajs mongo custom %folder% [--clean].`);
         }
         if (args[0].charAt(0) !== '/') {
-            return callback("Invalid custom folder; please provide an absolute custom folder path. Ex: sudo soajs mongo custom /%folder%.");
+            return callback("Invalid custom folder; please provide an absolute custom folder path. Ex: sudo soajs mongo custom /%folder% [--clean].");
         }
+        let cleanDataBefore = false;
+        if (args.length === 2) {
+            if (args[1] === "--clean") {
+                cleanDataBefore = true;
+            }
+            else{
+                args.shift();
+                return callback(null, `Unidentified input ${args.join(" ")}. Please use soajs mongo custom %folder% [--clean].`);
+            }
+        }
+
         let dataPath = args[0];
         if (dataPath.charAt(dataPath.length - 1) !== '/')
             dataPath = dataPath + '/';
@@ -356,7 +367,7 @@ let mongoModule = {
         if (fs.existsSync(dataPath)) {
             let profilePath = path.normalize(process.env.PWD + "/../data/soajs_profile.js");
             let mongoCustom = require("../custom/index.js");
-            return mongoCustom (profilePath, dataPath, callback);
+            return mongoCustom(profilePath, dataPath, cleanDataBefore, callback);
         }
         else {
             return callback(null, `Custom folder [folder] not found!`);
