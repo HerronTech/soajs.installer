@@ -261,6 +261,20 @@ module.exports = (profilePath, dataPath, cleanDataBefore, callback) => {
                         return cb(null);
                 },
                 function (cb) {
+                    //check for custom registry data
+                    if (fs.existsSync(dataPath + "customRegistry/")) {
+                        let config = {
+                            "colName": "custom_registry",
+                            "condAnchor": "name",
+                            "objId": "_id",
+                            "delete": cleanDataBefore
+                        };
+                        return lib.basic(config, dataPath + "customRegistry/", mongoConnection, cb);
+                    }
+                    else
+                        return cb(null);
+                },
+                function (cb) {
                     //check for tenants data
                     if (fs.existsSync(dataPath + "oauth/")) {
                         let config = {
