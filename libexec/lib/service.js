@@ -17,6 +17,7 @@ const SOAJS_RMS = {
     'urac': 'soajs.urac',
     'oauth': 'soajs.oauth',
     'dashboard': 'soajs.dashboard',
+    'multitenant': "soajs.multitenant",
     'ui': 'soajs.dashboard.ui'
 };
 

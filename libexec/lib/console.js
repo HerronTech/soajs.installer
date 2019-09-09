@@ -21,6 +21,7 @@ const SOAJS_RMS = {
     'oauth': 'soajs.oauth',
     'dashboard': 'soajs.dashboard',
     'gateway': "soajs.controller",
+    'multitenant': "soajs.multitenant",
     'ui': 'soajs.dashboard.ui'
 };
 

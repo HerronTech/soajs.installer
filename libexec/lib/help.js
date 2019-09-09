@@ -44,8 +44,8 @@ const helpModule = {
                 "custom": "Import custom data"
 			},
 			"service Operations" :{
-				"start": "Start a SOAJS Service [gateway|urac|dashboard|oauth]",
-				"stop": "Stop a SOAJS Service [gateway|urac|dashboard|oauth]"
+				"start": "Start a SOAJS Service [gateway|urac|dashboard|oauth|multitenant]",
+				"stop": "Stop a SOAJS Service [gateway|urac|dashboard|oauth|multitenant]"
 			},
 			"profile Operations" :{
 				"setPort": "Updates the MongoDB server port in the SOAJS profile",
