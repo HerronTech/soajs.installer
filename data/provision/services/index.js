@@ -93,6 +93,35 @@ var services = [
         }
     },
     {
+        "name": "multitenant",
+        "group": "SOAJS Core Services",
+        "program": ["soajs"],
+        "port": 4004,
+        "requestTimeout": 30,
+        "requestTimeoutRenewal": 5,
+        "swagger": false,
+        "src": {
+            "provider": "github",
+            "owner": "soajs",
+            "repo": "soajs.multitenant"
+        },
+        "maintenance": {
+            "port": {
+                "type": "maintenance"
+            },
+            "readiness": "/heartbeat",
+            "commands": [{
+                "label": "Releoad Registry",
+                "path": "/reloadRegistry",
+                "icon": "registry"
+            }, {
+                "label": "Resource Info",
+                "path": "/resourceInfo",
+                "icon": "info"
+            }]
+        }
+    },
+    {
         "name": "dashboard",
         "group": "SOAJS Core Services",
         "program": ["soajs"],

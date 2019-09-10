@@ -29,6 +29,11 @@ var soajs_account = {
 			"serviceName": "oauth",
 			"type": "service"
 		},
+        {
+            "name": "soajs/soajs.multitenant",
+            "serviceName": "multitenant",
+            "type": "service"
+        },
 		{
 			"name": "soajs/soajs.epg",
 			"serviceName": "epg",
