@@ -21,9 +21,32 @@ module.exports = (profilePath, dataPath, callback) => {
         delete (record._id);
         let condition = {"owner": "soajs", "provider": "github"};
         mongoConnectionTenant.update("git_accounts", condition, record, {'upsert': true}, () => {
-            //close mongo connection
-            mongoConnectionTenant.closeDb();
-            return callback(null, "MongoDb Soajs Data migrate!")
+	
+	        let condition = {code: "DBTN"};
+	        mongoConnectionTenant.find("tenants", condition, (error, tenant) => {
+		        if (error) {
+			        mongoConnectionTenant.closeDb();
+			        return callback(error);
+		        }
+		        if (!tenant) {
+			        //close mongo connection
+			        mongoConnectionTenant.closeDb();
+			        return callback(null, 'Unable to migrate: Tenant record not found!');
+		        }
+		        if (tenant.length > 1) {
+			        //close mongo connection
+			        mongoConnectionTenant.closeDb();
+			        return callback(null, 'Unable to migrate: Many Tenant record found!');
+		        }
+		        tenant = tenant[0];
+		        tenant.console = true;
+		        mongoConnectionTenant.update("tenants", condition, tenant, () => {
+			
+			        //close mongo connection
+			        mongoConnectionTenant.closeDb();
+			        return callback(null, "MongoDb Soajs Data migrate!");
+		        });
+	        });
         });
     });
 };
