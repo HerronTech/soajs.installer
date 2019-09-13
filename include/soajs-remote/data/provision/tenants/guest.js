@@ -4,6 +4,7 @@ var techop = {
 	"type": "product",
 	"code": "DBTN",
 	"locked": true,
+	"console": true,
 	"name": "Console Tenant",
 	"description": "This is the tenant that holds the access rights and configuration for the console users with DSBRD_GUEST as Guest default package",
 	"oauth": {
