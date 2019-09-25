@@ -15,7 +15,8 @@ processArguments.shift();
 
 //find the correct module to load
 let soajsModule;
-switch(processArguments[0]){
+let askedModule = processArguments[0];
+switch(askedModule){
 	case 'mongo':
 		soajsModule = "mongo.js";
 		break;
@@ -24,6 +25,8 @@ switch(processArguments[0]){
 		break;
 	case 'service':
 		soajsModule = "service.js";
+	case 'services':
+		soajsModule = "services.js";
 		break;
 	case 'console':
 		soajsModule = "console.js";
@@ -44,7 +47,7 @@ switch(processArguments[0]){
 
 //requested module is not supported
 if(!soajsModule){
-	logger.error(`Unknown command "${processArguments[0]}" !`);
+	logger.error(`Unknown soajs MODULE "${askedModule}" !`);
 	logger.info("Run 'soajs --help' for usage.");
 	process.exit();
 }
@@ -72,7 +75,7 @@ if(!Object.hasOwnProperty.call(myModule, commandRequested)){
 		commandRequested = 'go';
 	}
 	else{
-		logger.error(`Unknown command "${commandRequested}" !`);
+		logger.error(`Unknown command "${commandRequested}" for soajs "${askedModule}" !`);
 		logger.info("Run 'soajs --help' for usage.");
 		process.exit();
 	}

@@ -17,6 +17,7 @@ const helpModule = {
         output += "   console\n";
         output += "   mongo\n";
         output += "   service\n";
+		output += "   services\n";
         output += "   profile\n";
         output += "   docker\n";
         output += "   kubernetes\n";
@@ -47,6 +48,11 @@ const helpModule = {
 				"start": "Start a SOAJS Service [gateway|urac|dashboard|oauth|multitenant]",
 				"stop": "Stop a SOAJS Service [gateway|urac|dashboard|oauth|multitenant]",
                 "restart": "reStart a SOAJS Service [gateway|urac|dashboard|oauth|multitenant]"
+			},
+			"services Operations" :{
+				"start": "Start all SOAJS Services [gateway|urac|oauth|multitenant]",
+				"stop": "Stop all SOAJS Services [gateway|urac|oauth|multitenant]",
+				"restart": "reStart all SOAJS Services [gateway|urac|oauth|multitenant]"
 			},
 			"profile Operations" :{
 				"setPort": "Updates the MongoDB server port in the SOAJS profile",
