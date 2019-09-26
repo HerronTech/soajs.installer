@@ -25,6 +25,7 @@ switch(askedModule){
 		break;
 	case 'service':
 		soajsModule = "service.js";
+		break;
 	case 'services':
 		soajsModule = "services.js";
 		break;
