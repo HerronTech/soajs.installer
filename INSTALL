@@ -53,6 +53,12 @@ if command_exists git; then
         ln -s ${SOAJS_INSTALLER}/include/${NODE_LOCATION}/bin/node .
     fi
 
+    pushd ${SOAJS_INSTALLER} > /dev/null 2>&1
+	rm -rf soajs.installer.local
+	git clone https://github.com/soajs/soajs.installer.local.git
+	rm -rf soajs.installer.remote
+	git clone https://github.com/soajs/soajs.installer.remote.git
+
     echo "Done successfully"
 else
 

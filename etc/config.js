@@ -1,5 +1,6 @@
 "use strict";
 
 module.exports = {
-	workingDirectory : ''
+	workingDirectory : '',
+	version: ''
 };

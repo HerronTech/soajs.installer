@@ -1,7 +1,7 @@
 {
   "name": "soajs.installer",
   "description": "soajs installer to install soajs dashboard",
-  "version": "3.3.17",
+  "version": "4.0.0",
   "author": {
     "name": "soajs team",
     "email": "team@soajs.org"
@@ -22,15 +22,6 @@
     "node": "*"
   },
   "dependencies": {
-    "async": "2.1.4",
-    "bunyan": "1.8.5",
-    "bunyan-format": "0.2.1",
-    "mkdirp": "*",
-    "npm": "*",
-    "rimraf": "*",
-
-    "soajs": "2.3.*",
-
-    "yamljs": "^0.3.0"
+    "npm": "6.12.0"
   }
 }

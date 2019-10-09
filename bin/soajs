@@ -14,7 +14,7 @@ done
 # set the main installer driver location
 PWD="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 WORKING_DIRECTORY=$PWD
-INSTALLER_MAIN_DRIVER="${WORKING_DIRECTORY}/../libexec/index.js"
+INSTALLER_MAIN_DRIVER="${WORKING_DIRECTORY}/../soajs.installer.local/libexec/index.js"
 
 # calculate nodejs and mongodb versions to use and their locations
 PLATFORM=''
