@@ -22,6 +22,21 @@
     "node": "*"
   },
   "dependencies": {
+    "async": "3.1.0",
+    "mkdirp": "0.5.1",
+    "path": "0.12.7",
+    "request": "2.88.0",
+    "rimraf": "3.0.0",
+    "soajs": "2.5.19",
+    "yamljs": "0.3.0",
+    "clone": "2.1.2",
+    "dockerode": "soajs/dockerode.git",
+    "express": "4.17.1",
+    "kubernetes-client": "soajs/kubernetes-client.git",
+    "ncp": "2.0.0",
+    "randomstring": "1.1.5",
+    "util": "0.12.1",
+    "whereis": "1.0.0",
     "npm": "6.12.0"
   }
 }

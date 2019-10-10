@@ -58,6 +58,8 @@ if command_exists git; then
 	git clone https://github.com/soajs/soajs.installer.local.git
 	rm -rf soajs.installer.remote
 	git clone https://github.com/soajs/soajs.installer.remote.git
+	rm -rf soajs.installer.versions
+	git clone https://github.com/soajs/soajs.installer.versions.git
 
     echo "Done successfully"
 else
