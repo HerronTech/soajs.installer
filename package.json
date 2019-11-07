@@ -27,7 +27,7 @@
     "path": "0.12.7",
     "request": "2.88.0",
     "rimraf": "3.0.0",
-    "soajs": "2.5.19",
+    "soajs": "2.5.23",
     "yamljs": "0.3.0",
     "clone": "2.1.2",
     "dockerode": "soajs/dockerode.git",
