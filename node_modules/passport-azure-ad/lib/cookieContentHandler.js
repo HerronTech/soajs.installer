@@ -25,15 +25,17 @@
 
 var crypto = require('crypto');
 var createBuffer = require('./jwe').createBuffer;
+var sameSiteNotAllowed = require('./aadutils').sameSiteNotAllowed;
 
 /*
  * the handler for state/nonce/policy
  * @maxAmount          - the max amount of {state: x, nonce: x, policy: x} tuples you want to save in cookie
  * @maxAge            - when a tuple in session expires in seconds
- * @cookieEncryptionKeys  
+ * @cookieEncryptionKeys
  *                    - keys used to encrypt and decrypt cookie
- */ 
-function CookieContentHandler(maxAmount, maxAge, cookieEncryptionKeys) {
+ * @domain            - sets the cookie's domain
+ */
+function CookieContentHandler(maxAmount, maxAge, cookieEncryptionKeys, domain, cookieSameSite) {
   if (!maxAge || (typeof maxAge !== 'number' || maxAge <= 0))
     throw new Error('CookieContentHandler: maxAge must be a positive number');
   this.maxAge = maxAge;  // seconds
@@ -44,6 +46,11 @@ function CookieContentHandler(maxAmount, maxAge, cookieEncryptionKeys) {
 
   if (!cookieEncryptionKeys || !Array.isArray(cookieEncryptionKeys) || cookieEncryptionKeys.length === 0)
     throw new Error('CookieContentHandler: cookieEncryptionKeys must be a non-emptry array');
+
+  if (typeof cookieSameSite !== 'boolean') {
+    throw new Error('CookieContentHandler: cookieSameSite must be a boolean');
+  }
+  this.cookieSameSite = cookieSameSite
 
   for (var i = 0; i < cookieEncryptionKeys.length; i++) {
     var item = cookieEncryptionKeys[i];
@@ -56,12 +63,14 @@ function CookieContentHandler(maxAmount, maxAge, cookieEncryptionKeys) {
   }
 
   this.cookieEncryptionKeys = cookieEncryptionKeys;
+
+  this.domain = domain;
 }
 
 CookieContentHandler.prototype.findAndDeleteTupleByState = function(req, res, stateToFind) {
   if (!req.cookies)
     throw new Error('Cookie is not found in request. Did you forget to use cookie parsing middleware such as cookie-parser?');
-  
+
   var cookieEncryptionKeys = this.cookieEncryptionKeys;
 
   var tuple = null;
@@ -72,7 +81,7 @@ CookieContentHandler.prototype.findAndDeleteTupleByState = function(req, res, st
     var key = createBuffer(item.key);
     var iv = createBuffer(item.iv);
 
-    for (var cookie in req.cookies) {     
+    for (var cookie in req.cookies) {
       if (req.cookies.hasOwnProperty(cookie) && cookie.startsWith('passport-aad.')) {
         var encrypted = cookie.substring(13);
 
@@ -85,7 +94,7 @@ CookieContentHandler.prototype.findAndDeleteTupleByState = function(req, res, st
 
         if (tuple.state === stateToFind) {
           res.clearCookie(cookie);
-          return tuple;      
+          return tuple;
         }
       }
     }
@@ -98,7 +107,7 @@ CookieContentHandler.prototype.add = function(req, res, tupleToAdd) {
   var cookies = [];
 
   // collect the related cookies
-  for (var cookie in req.cookies) {     
+  for (var cookie in req.cookies) {
     if (req.cookies.hasOwnProperty(cookie) && cookie.startsWith('passport-aad.'))
       cookies.push(cookie);
   }
@@ -125,7 +134,17 @@ CookieContentHandler.prototype.add = function(req, res, tupleToAdd) {
 
   var encrypted = encryptCookie(tupleString, key, iv);
 
-  res.cookie('passport-aad.' + Date.now() + '.' + encrypted, 0, { maxAge: this.maxAge * 1000, httpOnly: true });
+  let options = { maxAge: this.maxAge * 1000, httpOnly: true }
+  if (this.domain) {
+    options.domain = this.domain;
+  }
+
+  if (this.cookieSameSite && !sameSiteNotAllowed(req.get('User-Agent'))) {
+    options.sameSite = 'none';
+    options.secure = true;
+  }
+
+  res.cookie('passport-aad.' + Date.now() + '.' + encrypted, 0, options);
 };
 
 var encryptCookie = function(content, key, iv) {

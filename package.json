@@ -1,7 +1,7 @@
 {
   "name": "soajs.installer",
   "description": "soajs installer to install soajs dashboard",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "author": {
     "name": "soajs team",
     "email": "team@soajs.org"
@@ -27,12 +27,13 @@
     "path": "0.12.7",
     "request": "2.88.0",
     "rimraf": "3.0.0",
-    "soajs": "2.5.19",
+    "semver": "6.3.0",
+    "soajs": "2.6.1",
     "yamljs": "0.3.0",
     "clone": "2.1.2",
     "dockerode": "soajs/dockerode.git",
     "express": "4.17.1",
-    "kubernetes-client": "soajs/kubernetes-client.git",
+    "kubernetes-client": "8.3.4",
     "ncp": "2.0.0",
     "randomstring": "1.1.5",
     "util": "0.12.1",
