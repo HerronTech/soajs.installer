@@ -1,6 +1,6 @@
 {
   "name": "soajs.installer",
-  "description": "soajs installer to install soajs dashboard",
+  "description": "soajs installer to install soajs console",
   "version": "4.3.0",
   "author": {
     "name": "soajs team",
@@ -8,10 +8,12 @@
   },
   "keywords": [
     "soajs",
-    "api",
+    "api catalog",
     "visualizations",
-    "dashboards",
-    "dashboarding"
+    "devops",
+    "cloudops",
+    "kuberntets console",
+    "continuous delivery"
   ],
   "repository": {
     "type": "git",
