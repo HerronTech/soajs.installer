@@ -13,7 +13,8 @@
     "devops",
     "cloudops",
     "kuberntets console",
-    "continuous delivery"
+    "continuous delivery",
+    "analytics"
   ],
   "repository": {
     "type": "git",
