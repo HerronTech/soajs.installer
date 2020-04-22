@@ -54,9 +54,37 @@ if command_exists git; then
         echo "Creating node command @: ${BINLOCATION}"
         ln -s ${SOAJS_INSTALLER}/include/${NODE_LOCATION}/bin/node .
     fi
+
     pushd ${SOAJS_INSTALLER} > /dev/null 2>&1
 
-    ${NODE_LOCATION}/bin/npm install soajs.installer.local
+	NPM_LOCATION=${SOAJS_INSTALLER}/node_modules/npm/bin/npm-cli.js
+
+	if [ -d ${SOAJS_INSTALLER}/node_modules/soajs.installer.local ]; then
+		rm -Rf ${SOAJS_INSTALLER}/node_modules/soajs.installer.local
+	fi
+	if [ -d ${SOAJS_INSTALLER}/node_modules/soajs.installer.remote ]; then
+		rm -Rf ${SOAJS_INSTALLER}/node_modules/soajs.installer.remote
+	fi
+	if [ -d ${SOAJS_INSTALLER}/node_modules/soajs.installer.versions ]; then
+		rm -Rf ${SOAJS_INSTALLER}/node_modules/soajs.installer.versions
+	fi
+	if [ -d soajs.installer.local ]; then
+		rm -Rf soajs.installer.local
+	fi
+	if [ -d soajs.installer.remote ]; then
+		rm -Rf soajs.installer.remote
+	fi
+	if [ -d soajs.installer.versions ]; then
+		rm -Rf soajs.installer.versions
+	fi
+
+    ${NPM_LOCATION} install soajs.installer.local
+    ${NPM_LOCATION} install soajs.installer.remote
+    ${NPM_LOCATION} install soajs.installer.versions
+
+    mv ${SOAJS_INSTALLER}/node_modules/soajs.installer.local .
+    mv ${SOAJS_INSTALLER}/node_modules/soajs.installer.remote .
+    mv ${SOAJS_INSTALLER}/node_modules/soajs.installer.versions .
 
     echo "Done successfully"
 else
