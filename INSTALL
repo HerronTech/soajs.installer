@@ -1,5 +1,7 @@
 #!/bin/bash
 
+NODE_VER="node-10.12.0"
+
 function command_exists {
   #this should be a very portable way of checking if something is on the path
   #usage: "if command_exists foo; then echo it exists; fi"
@@ -30,11 +32,11 @@ if [[ "$unamestr" == 'Linux' ]]; then
 	apt-get install -y make
 
 	BINLOCATION='/usr/bin'
-	NODE_LOCATION="node-8.12.0/node-linux-x64"
+	NODE_LOCATION="$NODE_VER/node-linux-x64"
 
 elif [[ "$unamestr" == 'Darwin' ]]; then
 	BINLOCATION='/usr/local/bin'
-	NODE_LOCATION="node-8.12.0/node-darwin-x64"
+	NODE_LOCATION="$NODE_VER/node-darwin-x64"
 	if [ ! -d "${BINLOCATION}" ]; then
         mkdir -p ${BINLOCATION}
     fi
@@ -54,12 +56,35 @@ if command_exists git; then
     fi
 
     pushd ${SOAJS_INSTALLER} > /dev/null 2>&1
-	rm -rf soajs.installer.local
-	git clone https://github.com/soajs/soajs.installer.local.git
-	rm -rf soajs.installer.remote
-	git clone https://github.com/soajs/soajs.installer.remote.git
-	rm -rf soajs.installer.versions
-	git clone https://github.com/soajs/soajs.installer.versions.git
+
+	NPM_LOCATION=${SOAJS_INSTALLER}/node_modules/npm/bin/npm-cli.js
+
+	if [ -d ${SOAJS_INSTALLER}/node_modules/soajs.installer.local ]; then
+		rm -Rf ${SOAJS_INSTALLER}/node_modules/soajs.installer.local
+	fi
+	if [ -d ${SOAJS_INSTALLER}/node_modules/soajs.installer.remote ]; then
+		rm -Rf ${SOAJS_INSTALLER}/node_modules/soajs.installer.remote
+	fi
+	if [ -d ${SOAJS_INSTALLER}/node_modules/soajs.installer.versions ]; then
+		rm -Rf ${SOAJS_INSTALLER}/node_modules/soajs.installer.versions
+	fi
+	if [ -d soajs.installer.local ]; then
+		rm -Rf soajs.installer.local
+	fi
+	if [ -d soajs.installer.remote ]; then
+		rm -Rf soajs.installer.remote
+	fi
+	if [ -d soajs.installer.versions ]; then
+		rm -Rf soajs.installer.versions
+	fi
+
+    ${NPM_LOCATION} install soajs.installer.local
+    ${NPM_LOCATION} install soajs.installer.remote
+    ${NPM_LOCATION} install soajs.installer.versions
+
+    mv ${SOAJS_INSTALLER}/node_modules/soajs.installer.local .
+    mv ${SOAJS_INSTALLER}/node_modules/soajs.installer.remote .
+    mv ${SOAJS_INSTALLER}/node_modules/soajs.installer.versions .
 
     echo "Done successfully"
 else

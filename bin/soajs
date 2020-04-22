@@ -1,5 +1,8 @@
 #!/bin/bash
 
+NODE_VER="node-10.12.0"
+MONGO_VER="mongo-3.6.8"
+
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
   TARGET="$(readlink "$SOURCE")"
@@ -25,12 +28,12 @@ MONGO_LOCATION=''
 unamestr=`uname`
 if [[ "$unamestr" == 'Linux' ]]; then
    PLATFORM='Linux'
-   NODE_LOCATION="node-8.12.0/node-linux-x64"
-   MONGO_LOCATION="mongo-3.6.8/mongodb-linux-x86_64-ubuntu1604"
+   NODE_LOCATION="$NODE_VER/node-linux-x64"
+   MONGO_LOCATION="$MONGO_VER/mongodb-linux-x86_64-ubuntu1604"
 elif [[ "$unamestr" == 'Darwin' ]]; then
    PLATFORM='Darwin'
-   NODE_LOCATION="node-8.12.0/node-darwin-x64"
-   MONGO_LOCATION="mongo-3.6.8/mongodb-osx-x86_64"
+   NODE_LOCATION="$NODE_VER/node-darwin-x64"
+   MONGO_LOCATION="$MONGO_VER/mongodb-osx-x86_64"
 fi
 
 # if the platform is not supported do not proceed
