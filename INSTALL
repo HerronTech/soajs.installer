@@ -59,15 +59,12 @@ if command_exists git; then
 
 	NPM_LOCATION=${SOAJS_INSTALLER}/node_modules/npm/bin/npm-cli.js
 
-	if [ -e ${SOAJS_INSTALLER}/node_modules/soajs.installer.local ]; then
-		rm -Rf ${SOAJS_INSTALLER}/node_modules/soajs.installer.local
+	if [ -e ${SOAJS_INSTALLER}/tmp ]; then
+		rm -Rf ${SOAJS_INSTALLER}/tmp
 	fi
-	if [ -e ${SOAJS_INSTALLER}/node_modules/soajs.installer.remote ]; then
-		rm -Rf ${SOAJS_INSTALLER}/node_modules/soajs.installer.remote
-	fi
-	if [ -e ${SOAJS_INSTALLER}/node_modules/soajs.installer.versions ]; then
-		rm -Rf ${SOAJS_INSTALLER}/node_modules/soajs.installer.versions
-	fi
+
+	mkdir -p ${SOAJS_INSTALLER}/tmp/node_modules
+
 	if [ -e soajs.installer.local ]; then
 		rm -Rf soajs.installer.local
 	fi
@@ -78,16 +75,20 @@ if command_exists git; then
 		rm -Rf soajs.installer.versions
 	fi
 
-    pushd ${SOAJS_INSTALLER}/node_modules > /dev/null 2>&1
+    pushd ${SOAJS_INSTALLER}/tmp/node_modules > /dev/null 2>&1
 
     ${NPM_LOCATION} install soajs.installer.local --no-save
-    mv ${SOAJS_INSTALLER}/node_modules/soajs.installer.local ../
+    mv ${SOAJS_INSTALLER}/tmp/node_modules/soajs.installer.local ../../
 
     ${NPM_LOCATION} install soajs.installer.remote --no-save
-    mv ${SOAJS_INSTALLER}/node_modules/soajs.installer.remote ../
+    mv ${SOAJS_INSTALLER}/tmp/node_modules/soajs.installer.remote ../../
 
     ${NPM_LOCATION} install soajs.installer.versions --no-save
-    mv ${SOAJS_INSTALLER}/node_modules/soajs.installer.versions ../
+    mv ${SOAJS_INSTALLER}/tmp/node_modules/soajs.installer.versions ../../
+
+	if [ -e ${SOAJS_INSTALLER}/tmp ]; then
+		rm -Rf ${SOAJS_INSTALLER}/tmp
+	fi
 
 	popd > /dev/null 2>&1
 
