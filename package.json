@@ -36,6 +36,6 @@
     "kubernetes-client": "8.3.4",
     "randomstring": "1.1.5",
     "uuid": "7.0.2",
-    "npm": "6.13.4"
+    "npm": "6.14.6"
   }
 }
