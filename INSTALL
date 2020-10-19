@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NODE_VER="node-10.12.0"
+NODE_VER="node-12.19.0"
 
 function command_exists {
   #this should be a very portable way of checking if something is on the path
