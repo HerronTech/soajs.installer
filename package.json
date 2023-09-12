@@ -31,7 +31,7 @@
     "request": "2.88.2",
     "rimraf": "3.0.2",
     "semver": "7.3.2",
-    "soajs": "4.0.33",
+    "soajs": "4.1.1",
     "yamljs": "0.3.0",
     "kubernetes-client": "9.0.0",
     "randomstring": "1.1.5",
